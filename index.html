@@ -5303,3 +5303,164 @@ v51RenderRewardTexts();
   window.buySpecial=buySpecial;
 })();
 </script>
+
+<!-- v58 no-game-over / emergency dog rescue -->
+<style>
+#gameOver{
+  background:radial-gradient(circle at 50% 42%,rgba(93,58,171,.88),rgba(8,12,32,.97) 58%,#02030a)!important;
+  gap:10px!important;
+  pointer-events:none!important;
+}
+#gameOverTitle{
+  font-size:clamp(25px,7vw,42px)!important;
+  letter-spacing:.08em!important;
+  color:#e9fbff!important;
+  text-shadow:0 0 10px #fff,0 0 22px #75e8ff,0 0 36px #ff79df!important;
+}
+#gameOverSub{
+  font-size:12px!important;
+  line-height:1.65!important;
+  color:#e6e8ff!important;
+}
+#gameOver .rescueUfo{
+  font-size:64px;
+  filter:drop-shadow(0 0 18px #7be9ff) drop-shadow(0 0 26px #ff7bd8);
+  animation:v58RescueFloat .45s ease-in-out infinite alternate;
+}
+#gameOver .insurance{
+  display:inline-block;margin-top:5px;padding:5px 11px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.10);
+  color:#fff6a8;font-weight:1000;letter-spacing:.06em;
+}
+@keyframes v58RescueFloat{to{transform:translateY(-7px) rotate(2deg)}}
+#critical{
+  border-color:#ff8edc!important;
+  background:linear-gradient(180deg,rgba(73,25,100,.93),rgba(31,16,69,.94))!important;
+  color:#fff!important;
+  box-shadow:0 0 18px rgba(255,103,215,.55),0 0 28px rgba(93,225,255,.25)!important;
+}
+#wrap.rescueDanger{box-shadow:inset 0 0 74px rgba(255,70,154,.24)!important}
+</style>
+<script>
+(function(){
+  let rescueHits=0;
+  let lastRescueHitAt=0;
+  let rescueInProgress=false;
+  let rescueCooldownUntil=0;
+  let rescueOriginX=115;
+
+  const overlay=gameOverEl;
+  const overlayTitle=document.getElementById('gameOverTitle');
+  const overlaySub=document.getElementById('gameOverSub');
+
+  function resetRescueDanger(){
+    rescueHits=0;
+    lastRescueHitAt=0;
+    criticalEl?.classList.remove('on');
+    wrap?.classList.remove('criticalMode','rescueDanger');
+  }
+
+  function previousSafeSystem(){
+    const candidates=systems.map((s,i)=>({s,i,r:systemDistanceRank[i]??0}))
+      .filter(o=>o.i!==BLACK_HOLE_SYSTEM&&!o.s.secret&&!o.s.dream&&o.r<=Math.max(1,furthestRank));
+    candidates.sort((a,b)=>b.r-a.r);
+    return candidates[0]||{i:0,r:0};
+  }
+
+  function showRescueOverlay(blackHoleRescue){
+    if(!overlay)return;
+    overlay.innerHTML=`<div class="rescueUfo">🛸</div><div id="gameOverTitle">⚠ EMERGENCY DOG RESCUE</div><div id="gameOverSub">🐕 犬星くんを救助中…<br>${blackHoleRescue?'⚫ ブラックホールから緊急離脱！':'📡 宇宙救助信号を受信しました'}<br><span class="insurance">宇宙保険が適用されました</span></div>`;
+    overlay.classList.add('on');
+  }
+
+  function emergencyRescue(reason='damage'){
+    if(rescueInProgress||performance.now()<rescueCooldownUntil)return;
+    rescueInProgress=true;
+    rescueOriginX=p.x;
+    const fromBlackHole=system===BLACK_HOLE_SYSTEM;
+    paused=true;
+    reward?.classList.remove('on');
+    invincibleUntil=performance.now()+6000;
+    showRescueOverlay(fromBlackHole);
+    eventEl.textContent='🛸 EMERGENCY DOG RESCUE — 救助中！';
+
+    setTimeout(()=>{
+      if(fromBlackHole){
+        const pick=previousSafeSystem();
+        system=pick.i;
+        stage=system===0?0:Math.max(0,Math.min(stage,systems[system].stages.length-1));
+        playerDog='🐕';morphUntil=0;
+        stageStart();
+        showToast('🛸 ブラックホールから救助！ 少し前の星域へ戻された',1900);
+      }else{
+        const backTo=Math.max(115,rescueOriginX-850);
+        stageStart();
+        p.x=backTo;
+        p.y=groundY()-p.h;
+        p.vy=0;p.on=true;
+        camera=Math.max(0,p.x-W*.34);
+        showToast('🛸 救助完了！ 少し前から旅を再開',1700);
+      }
+
+      if(food<3)food=3;
+      if(points<5){const add=5-points;points=5;starTotal+=Math.max(0,add)}
+      syncHUD();
+      resetRescueDanger();
+      overlay?.classList.remove('on');
+      paused=false;
+      invincibleUntil=performance.now()+2600;
+      rescueCooldownUntil=performance.now()+5000;
+      rescueInProgress=false;
+      eventEl.textContent='🛸 RESCUE COMPLETE — 旅を続けよう！';
+    },1800);
+  }
+  window.emergencyDogRescue=emergencyRescue;
+
+  const previousHitHazard=hitHazard;
+  hitHazard=function(h){
+    if(rescueInProgress)return;
+    const beforeFood=food,beforePoints=points;
+    previousHitHazard(h);
+    const damaged=food<beforeFood||points<beforePoints;
+    if(!damaged)return;
+
+    const now=performance.now();
+    if(now-lastRescueHitAt>11000)rescueHits=0;
+    rescueHits++;
+    lastRescueHitAt=now;
+
+    const limit=system===BLACK_HOLE_SYSTEM?3:4;
+    if((food<=0&&points<=0)||rescueHits>=limit){
+      setTimeout(()=>emergencyRescue(food<=0&&points<=0?'resources':'damage'),180);
+    }else if(rescueHits===limit-1){
+      showToast('🐕💫 犬星くんがふらふら… 次の大ダメージで救助UFO！',1300);
+    }
+  };
+  window.hitHazard=hitHazard;
+
+  updateCritical=function(){
+    if(rescueInProgress){criticalEl?.classList.remove('on');wrap?.classList.remove('rescueDanger','criticalMode');return}
+    const now=performance.now();
+    if(lastRescueHitAt&&now-lastRescueHitAt>11000){resetRescueDanger();return}
+    const limit=system===BLACK_HOLE_SYSTEM?3:4;
+    if(rescueHits>=limit-1){
+      if(criticalEl){
+        criticalEl.textContent='⚠️ DOG RESCUE SIGNAL — かなりふらふら！';
+        criticalEl.classList.add('on');
+      }
+      wrap?.classList.add('rescueDanger');
+    }else{
+      criticalEl?.classList.remove('on');
+      wrap?.classList.remove('rescueDanger','criticalMode');
+    }
+  };
+  window.updateCritical=updateCritical;
+
+  gameOver=function(){emergencyRescue('legacy')};
+  window.gameOver=gameOver;
+
+  if(overlayTitle)overlayTitle.textContent='⚠ EMERGENCY DOG RESCUE';
+  if(overlaySub)overlaySub.innerHTML='🐕 犬星くんを救助中…<br><span class="insurance">宇宙保険が適用されました</span>';
+  if(criticalEl)criticalEl.textContent='⚠️ DOG RESCUE SIGNAL';
+})();
+</script>
