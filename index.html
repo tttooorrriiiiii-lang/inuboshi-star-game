@@ -240,6 +240,299 @@ canvas{display:block;width:100%;height:100%}
 }
 </style>
 
+
+<style id="v46-final-doghouse-overrides">
+/* MAIN HUD: keep ⭐ 🦴 👽 on one line */
+@media(max-width:520px){
+  #hud{width:54%!important}
+  #hud .stack{display:flex!important;gap:4px!important;flex-wrap:wrap!important}
+  #hud #location{flex:0 0 100%!important}
+  #hud #points,
+  #hud #food,
+  #hud #alienHitCount{
+    flex:1 1 0!important;
+    min-width:0!important;
+    width:auto!important;
+    padding:6px 3px!important;
+    font-size:14px!important;
+    white-space:nowrap!important;
+    text-align:center!important;
+  }
+}
+
+/* DOGHOUSE HUD counts too */
+.dhGameHud .stack{display:flex!important;gap:4px!important;flex-wrap:wrap!important}
+.dhGameHud .dhLocation{flex:0 0 100%!important}
+.dhGameHud .dhCount{
+  flex:1 1 0!important;
+  width:auto!important;
+  min-width:0!important;
+  padding:6px 4px!important;
+  white-space:nowrap!important;
+  text-align:center!important;
+}
+
+/* remove decor that reads as stray bones/dogs */
+.dhNeonPaw,.dhNeonBone,.dhFriends,.dhBonePile{display:none!important}
+
+/* HUGE DOG — main character scale */
+.dhDogMover,
+.dhDogMover.ready{
+  position:absolute!important;
+  z-index:16!important;
+  left:-4%!important;
+  bottom:6.5%!important;
+  font-size:300px!important;
+  line-height:1!important;
+  transform:scaleX(1)!important;
+  transform-origin:center bottom!important;
+  filter:drop-shadow(0 12px 11px rgba(0,0,0,.34))!important;
+}
+
+/* bone cluster */
+.dhEatPile{
+  display:block!important;
+  position:absolute!important;
+  z-index:17!important;
+  left:31%!important;
+  bottom:8.5%!important;
+  width:165px!important;
+  text-align:center!important;
+  font-size:31px!important;
+  line-height:.88!important;
+  letter-spacing:-9px!important;
+  opacity:0!important;
+  transform:translateY(-18px) scale(.75)!important;
+  filter:drop-shadow(0 6px 4px rgba(0,0,0,.28)) drop-shadow(0 0 9px rgba(255,234,170,.42))!important;
+  transition:opacity .25s ease,transform .32s ease!important;
+  pointer-events:none!important;
+}
+.dhEatPile.show{
+  opacity:1!important;
+  transform:translateY(0) scale(1)!important;
+}
+.dhEatPile.eating{
+  animation:v46PileNibble .28s 5 alternate!important;
+}
+.dhEatPile.gone{
+  opacity:0!important;
+  transform:translateY(12px) scale(.35)!important;
+}
+@keyframes v46PileNibble{
+  from{transform:translateY(0) scale(1)}
+  to{transform:translateY(4px) scale(.96)}
+}
+
+/* falling bones stay clustered in front of dog */
+.dhBoneRain{
+  z-index:18!important;
+  pointer-events:none!important;
+}
+.dhBoneRain span{
+  animation-name:v46BoneDrop!important;
+  animation-timing-function:cubic-bezier(.2,.7,.25,1)!important;
+  animation-fill-mode:forwards!important;
+}
+@keyframes v46BoneDrop{
+  0%{top:-70px;opacity:0;transform:translateX(0) rotate(0deg)}
+  10%{opacity:1}
+  88%{opacity:1}
+  100%{top:73%;opacity:0;transform:translateX(var(--drift)) rotate(var(--rot))}
+}
+
+/* DOG MOTION */
+.dhDogMover.runToBones{
+  animation:v46RunToBones 1.05s ease-in-out forwards!important;
+}
+@keyframes v46RunToBones{
+  0%{left:-4%;bottom:6.5%;font-size:300px;transform:scaleX(1) translateY(0)}
+  25%{transform:scaleX(1) translateY(-10px)}
+  52%{transform:scaleX(1) translateY(0)}
+  78%{transform:scaleX(1) translateY(-9px)}
+  100%{left:9%;bottom:6.5%;font-size:300px;transform:scaleX(1)}
+}
+
+.dhDogMover.eatBones{
+  left:9%!important;
+  bottom:6.5%!important;
+  font-size:300px!important;
+  animation:v46Eat 1.15s ease-in-out infinite!important;
+}
+@keyframes v46Eat{
+  0%,100%{transform:scaleX(1) rotate(0deg) translateY(0)}
+  35%{transform:scaleX(1) rotate(7deg) translateY(13px)}
+  65%{transform:scaleX(1) rotate(3deg) translateY(7px)}
+}
+
+.dhDogMover.runToBed{
+  animation:v46RunBed 1.05s ease-in-out forwards!important;
+}
+@keyframes v46RunBed{
+  0%{left:9%;bottom:6.5%;font-size:300px;transform:scaleX(1)}
+  30%{left:25%;bottom:7.5%;transform:scaleX(1) translateY(-11px)}
+  62%{left:42%;bottom:6.8%;transform:scaleX(1)}
+  82%{transform:scaleX(1) translateY(-10px)}
+  100%{left:52%;bottom:7%;font-size:280px;transform:scaleX(1)}
+}
+
+.dhDogMover.jumpBed{
+  z-index:19!important;
+  animation:v46JumpBed 1.3s cubic-bezier(.18,.8,.24,1) forwards!important;
+}
+@keyframes v46JumpBed{
+  0%{left:52%;bottom:7%;font-size:280px;transform:scaleX(1) rotate(0deg)}
+  38%{left:58%;bottom:30%;font-size:300px;transform:scaleX(1) rotate(-11deg)}
+  68%{left:63%;bottom:37%;font-size:275px;transform:scaleX(1) rotate(-5deg)}
+  100%{left:66%;bottom:17%;font-size:210px;transform:scaleX(1) rotate(0deg)}
+}
+
+/* BED: enough room for landing */
+.dhBedCss{
+  right:-1%!important;
+  bottom:7%!important;
+  width:44%!important;
+  height:31%!important;
+  min-width:250px!important;
+}
+
+/* BUTTON — literally same visual family as Earth controls */
+#convertStarsBtn{
+  position:absolute!important;
+  z-index:30!important;
+  left:50%!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:max(18px,env(safe-area-inset-bottom))!important;
+  transform:translateX(-50%)!important;
+
+  width:126px!important;
+  min-width:126px!important;
+  max-width:126px!important;
+  height:76px!important;
+  min-height:76px!important;
+  max-height:76px!important;
+
+  border:2px solid #fff!important;
+  border-radius:22px!important;
+  background:linear-gradient(180deg,#fff 0%,#f8d9ff 27%,#b8a9ff 57%,#63ddf2 100%)!important;
+  color:#1a1030!important;
+  font-weight:1000!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(72,42,119,.48),
+    inset 0 8px 12px rgba(255,255,255,.85),
+    0 0 0 2px rgba(255,79,216,.24),
+    0 0 17px rgba(86,231,255,.35),
+    0 6px 0 rgba(32,13,66,.82)!important;
+
+  padding:8px 8px!important;
+  overflow:hidden!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  font-size:11px!important;
+  line-height:1.05!important;
+  text-align:center!important;
+  text-shadow:none!important;
+}
+#convertStarsBtn:before{
+  content:""!important;
+  position:absolute!important;
+  left:10%!important;
+  right:10%!important;
+  top:5px!important;
+  height:28%!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.72)!important;
+}
+#convertStarsBtn small{
+  display:block!important;
+  position:relative!important;
+  z-index:2!important;
+  color:#291744!important;
+  margin:3px 0 0!important;
+  font-size:8px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+#convertStarsBtn:not(:disabled){
+  opacity:1!important;
+  filter:none!important;
+}
+#convertStarsBtn:disabled{
+  opacity:.72!important;
+  filter:saturate(.65)!important;
+}
+
+/* sleep closeup: huge dog shifted so the HEAD is the shot */
+.dhSleepClose{
+  background:radial-gradient(circle at 35% 38%,#321c54 0%,#160c24 50%,#030204 100%)!important;
+}
+.dhSleepFace{
+  position:absolute!important;
+  left:119%!important;
+  bottom:-28%!important;
+  transform:translateX(-50%)!important;
+  font-size:185vw!important;
+  line-height:1!important;
+  filter:drop-shadow(0 0 34px rgba(255,255,255,.09))!important;
+  animation:v46SleepBreath 2.7s ease-in-out infinite!important;
+}
+@keyframes v46SleepBreath{
+  0%,100%{transform:translateX(-50%) translateY(0) scale(1)}
+  50%{transform:translateX(-50%) translateY(5px) scale(1.01)}
+}
+.dhGoodnight{
+  left:50%!important;
+  bottom:10%!important;
+  transform:translateX(-50%)!important;
+  font-size:18px!important;
+  z-index:44!important;
+}
+
+/* phone-specific proportions */
+@media(max-width:520px){
+  .dhDogMover,
+  .dhDogMover.ready{
+    left:-8%!important;
+    bottom:6%!important;
+    font-size:315px!important;
+  }
+
+  .dhEatPile{
+    left:30%!important;
+    bottom:8%!important;
+    width:150px!important;
+    font-size:29px!important;
+  }
+
+  .dhBedCss{
+    right:-5%!important;
+    bottom:7%!important;
+    width:48%!important;
+    height:29%!important;
+    min-width:225px!important;
+  }
+
+  #convertStarsBtn{
+    width:120px!important;
+    min-width:120px!important;
+    max-width:120px!important;
+    height:72px!important;
+    min-height:72px!important;
+    max-height:72px!important;
+    bottom:max(15px,env(safe-area-inset-bottom))!important;
+  }
+
+  .dhSleepFace{
+    left:124%!important;
+    bottom:-32%!important;
+    font-size:195vw!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -270,6 +563,7 @@ canvas{display:block;width:100%;height:100%}
     <div class="dhFloor"></div>
 
     <div class="dhBoneRain"></div>
+    <div class="dhEatPile">🦴🦴🦴🦴🦴<br>🦴🦴🦴🦴</div>
 
     <div class="dhBedCss">
       <div class="dhBedBack">✦　✦　☾</div>
@@ -629,22 +923,24 @@ function doghouseChoice(){
 
 function spawnDoghouseBoneRain(amount=6){
  const layer=doghouseInterior.querySelector('.dhBoneRain');
+ const pile=doghouseInterior.querySelector('.dhEatPile');
  if(!layer)return;
  layer.innerHTML='';
- const count=Math.max(9,Math.min(18,amount*2+6));
+ if(pile){pile.className='dhEatPile'}
+ const count=Math.max(12,Math.min(22,amount*2+10));
  for(let i=0;i<count;i++){
    const bone=document.createElement('span');
    bone.textContent='🦴';
-   const lane=24+Math.random()*18; // cluster in front of the dog
-   bone.style.left=`${lane}%`;
-   bone.style.animationDelay=`${Math.random()*.45}s`;
-   bone.style.animationDuration=`${1.1+Math.random()*.45}s`;
-   bone.style.fontSize=`${26+Math.random()*16}px`;
-   bone.style.setProperty('--drift',`${-10+Math.random()*20}px`);
+   bone.style.left=`${20+Math.random()*18}%`;
+   bone.style.animationDelay=`${Math.random()*.38}s`;
+   bone.style.animationDuration=`${1.05+Math.random()*.42}s`;
+   bone.style.fontSize=`${28+Math.random()*18}px`;
+   bone.style.setProperty('--drift',`${-8+Math.random()*16}px`);
    bone.style.setProperty('--rot',`${-90+Math.random()*180}deg`);
    layer.appendChild(bone);
  }
- setTimeout(()=>{if(layer)layer.innerHTML=''},3000);
+ setTimeout(()=>{if(pile)pile.classList.add('show')},720);
+ setTimeout(()=>{if(layer)layer.innerHTML=''},2700);
 }
 
 function feedDoghouse(){
@@ -652,30 +948,48 @@ function feedDoghouse(){
  doghouseFed=true;
  const dog=doghouseInterior.querySelector('.dhDogMover');
  const btn=doghouseInterior.querySelector('#convertStarsBtn');
+ const pile=doghouseInterior.querySelector('.dhEatPile');
  const spend=points>0?Math.min(points,6):0;
  if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food=Math.min(10,food+spend);syncHUD()}
  spawnDoghouseBoneRain(spend||4);
  updateConvertStarsButton();
  if(btn)btn.style.display='none';
 
- // 骨へ走る → 食べる
- setTimeout(()=>{if(dog)dog.className='dhDogMover runToBones'},420);
- setTimeout(()=>{if(dog)dog.className='dhDogMover eatBones'},1380);
+ // 骨が手前に落ちて固まる
+ setTimeout(()=>{if(dog)dog.className='dhDogMover runToBones'},700);
 
- // ベッドへ向かう → ピョン
- setTimeout(()=>{if(dog)dog.className='dhDogMover runToBed'},2550);
- setTimeout(()=>{if(dog)dog.className='dhDogMover jumpBed'},3600);
+ // 骨の山に顔を下げて、しっかり食べる
+ setTimeout(()=>{
+   if(dog)dog.className='dhDogMover eatBones';
+   if(pile)pile.classList.add('eating');
+ },1750);
 
- // ふっと暗くなる → 消灯
- setTimeout(()=>{doghouseInterior.classList.add('softDim')},4620);
- setTimeout(()=>{doghouseInterior.classList.add('lightsOff')},5250);
+ // 食べ終わって骨が減る
+ setTimeout(()=>{if(pile)pile.classList.add('gone')},3150);
 
- // 暗転して、すでに大きい犬のアップへ切り替える
- setTimeout(()=>{doghouseInterior.classList.add('blackout')},5900);
- setTimeout(()=>{doghouseInterior.classList.remove('blackout');doghouseInterior.classList.add('faceClose')},6800);
+ // ベッドへ歩く
+ setTimeout(()=>{if(dog)dog.className='dhDogMover runToBed'},3450);
 
- // 少し見せて、夢のぐるぐるへ
- setTimeout(()=>{doghouseInterior.className='';trans.style.display='grid';dreamRestart()},8620);
+ // ピョン！とベッドへ飛び乗る
+ setTimeout(()=>{if(dog)dog.className='dhDogMover jumpBed'},4550);
+
+ // 少し落ち着いてから消灯
+ setTimeout(()=>{doghouseInterior.classList.add('softDim')},5850);
+ setTimeout(()=>{doghouseInterior.classList.add('lightsOff')},6500);
+
+ // 暗転 → 別カットの犬アップ
+ setTimeout(()=>{doghouseInterior.classList.add('blackout')},7200);
+ setTimeout(()=>{
+   doghouseInterior.classList.remove('blackout');
+   doghouseInterior.classList.add('faceClose');
+ },8100);
+
+ // 夢へ
+ setTimeout(()=>{
+   doghouseInterior.className='';
+   trans.style.display='grid';
+   dreamRestart();
+ },10200);
 }
 
 function dreamRestart(){
