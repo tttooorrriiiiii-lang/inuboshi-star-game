@@ -65,10 +65,10 @@ canvas{display:block;width:100%;height:100%}
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
 <canvas id="game"></canvas>
-<div id="hud"><div class="stack"><div class="pill" id="location"></div><div class="pill" id="points"></div><div class="pill" id="food"></div><div class="pill" id="alienHitCount">🌌 0</div></div><div id="powerBox"><div id="powerTop"><span>巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
+<div id="hud"><div class="stack"><div class="pill" id="location"></div><div class="pill countBig" id="points"></div><div class="pill countBig" id="food"></div><div class="pill countBig" id="alienHitCount">👽 0</div></div><div id="powerBox"><div id="powerTop"><span>巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
 <div id="mission"></div><div id="event"></div><div id="astroInfo"></div><div id="toast"></div>
 <div id="bigBanner">✦ 巨大化！ ✦<small>犬星くん巨大化フィーバー！ ジャンプもできる！</small></div>
-<div class="controls"><button class="ctrl" id="special">⭐ 星アイテム<small id="chipText">30⭐〜</small></button><button class="ctrl" id="big">🦴 ブーメラン<small>元気3で発射</small></button><button class="ctrl" id="laser">🔫 レーザー<small id="laserAmmoText">8 / 30</small></button><button class="ctrl" id="cosmicPower">🌌 宇宙パワー<small id="cosmicPowerText">👾5で発動</small></button><button class="ctrl" id="jump">↑<small>JUMP ×4</small></button></div>
+<div class="controls"><button class="ctrl" id="special">⭐ 星アイテム<small id="chipText">30⭐〜</small></button><button class="ctrl" id="big">🦴 ブーメラン<small>元気3で発射</small></button><button class="ctrl" id="laser">🔫 レーザー<small id="laserAmmoText">8 / 30</small></button><button class="ctrl" id="cosmicPower">👽 宇宙パワー<small id="cosmicPowerText">宇宙パワー発動</small></button><button class="ctrl" id="jump">↑<small>JUMP ×4</small></button></div>
 <div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><div id="rewardTitle">⭐ 星アイテム</div><div id="rewardSub">集めた⭐でアイテムや能力を使える</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant">🐕 巨大化・無敵 8秒<br>35⭐</button><button class="rewardBtn" data-special="laser">🔫 レーザー弾 +20<br>60⭐（最大30発）</button><button class="rewardBtn" data-special="wormhole">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" id="homeWarpBtn" data-special="home" disabled>🏠 地球へ帰る<br>🔒 犬の星で解禁</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
 <div id="comm"><div id="commTitle">📡 SIGNAL RECEIVED</div><div id="commText"></div><div id="commWave">▂▄▆█▆▄▂</div></div>
 <div id="critical">⚠️ CRITICAL! あと1回でGAME OVER</div><div id="gameOver"><div id="gameOverTitle">GAME OVER</div><div id="gameOverSub">宇宙はそんなにやさしくない…<br>⭐ 20 LOST<br><br>RETRYING…</div></div>
@@ -79,7 +79,7 @@ canvas{display:block;width:100%;height:100%}
     <div class="dhLamp">💡</div>
     <div class="dhShelf">🦴 🦴 🦴<br>🥩 🥫 🍖</div>
     <div class="dhFood">🥣　🍖　🦴　🥩　🦴　🍗</div>
-    <div class="dhBed">🛏️<span>🐕</span></div>
+    <div class="dhDogMover">🐕</div><div class="dhBed">🛏️</div>
     <div class="dhCaption">やっと帰って来れた。疲れたから寝よう。</div>
   </div>
 </div>
@@ -206,7 +206,7 @@ const SECRET_MOON_SYSTEM=systems.findIndex(s=>s.secretKey==='moon');
 let system=0,stage=0,camera=0,points=0,power=0,bigFoodProgress=0,level=1,xp=0,hp=3,food=5,big=false,bigUntil=0,paused=false,last=performance.now(),eventPhase=0,nextCosmic=320,nextSwarm=520,shake=0,jumps=0,invincibleUntil=0,playerDog='🐕',morphUntil=0;
 let chips=0,starTotal=0,sparkUntil=0,satelliteUntil=0,magnetUntil=0,laserUnlocked=true,laserAmmo=8,laserAmmoMax=30,companionCount=0,shopUnlocked=false;
 let alienContacts=0,alienRideUntil=0,secretUnlocked=false,nextSecretEvent=900,secretPickups=[];let satellites=[],nextSatellite=240,lasers=[],lastLaserAt=0,bosses=[],nextBossAt=980;let homeRouteReady=false,homeRouteAnnounced=false,blackHoleVisited=false,whiteHoleEscaped=false;let furthestRank=0,nextTargetAlien=110;
-let wormholeActive=false,blackHoleActive=false,blackHoleY=0,difficultyTier=0,lastDifficultyTier=-1,whiteHoleTriggered=false,expansionWarpCount=0,dreamReached=false,nextLoreAt=760,deepWarpCount=0,rocketLaunched=false,alienHitTotal=0,cosmicCharge=0,cosmicPowerReady=false,cosmicPowerUntil=0,cosmicBonus=0,returnFromDogStar=false,lastAlienTouchAt=0;
+let wormholeActive=false,blackHoleActive=false,blackHoleY=0,difficultyTier=0,lastDifficultyTier=-1,whiteHoleTriggered=false,expansionWarpCount=0,dreamReached=false,nextLoreAt=760,deepWarpCount=0,rocketLaunched=false,alienHitTotal=0,cosmicCharge=0,cosmicPowerReady=false,cosmicPowerUntil=0,cosmicBonus=0,returnFromDogStar=false,lastAlienTouchAt=0,alienContactFlashUntil=0;
 const p={x:115,y:100,vy:0,w:54,h:55,on:false};let items=[],hazards=[],aliens=[],morphs=[],swarm=[],shootingStars=[],gasClouds=[],fallingStars=[],boneShots=[],earthWalkers=[];let portalX=3050;const rocketX=2860,blackHoleX=3220,worldLength=3500,blackHoleWormholes=[1450,2750],whiteHoleX=3320;
 const wormholeEnabled=()=>wormholeActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
@@ -225,15 +225,15 @@ function syncHUD(){
  locationEl.textContent=`${systems[system].name}  ·  ${s.name}`;
  pointsEl.textContent=`⭐ ${points}`;
  foodEl.textContent=`🦴 ${food}`;
- if(alienHitEl)alienHitEl.textContent=`🌌 ${cosmicCharge}`;
+ if(alienHitEl)alienHitEl.textContent=`👽 ${cosmicCharge}`;
  const earth=system===0&&stage===0,dream=!!systems[system].dream;
  missionEl.innerHTML=earth?(returnFromDogStar?'🏠 やっと地球に帰ってきた。いつもの道を歩こう':'🐕 いつもの散歩道。先にロケットが見える…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ⭐星アイテムから地球へ帰れる':`🌀 ワームホール ${deepWarpCount}<br>${areaNames[difficultyTier]}`;
  eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌳 WALK EVENT — 犬や人とすれ違う普通の散歩'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`⚡ ${s.event} — ${s.eventText}`;
  const dist=(s.distance||systems[system].distance.replace('地球から','')),endless=systems[system].endless;
- const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'超遠方！ ワープのたび地球が遠ざかる':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
+ const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
  const distanceLabel=endless?'観測不能域 / 膨張フロンティア':dist;
- const gravLabel=s.gravity<=.38?'🪶 超低重力':s.gravity<=.44?'🪽 低重力':s.gravity<=.52?'⚖️ 標準重力':s.gravity<=.62?'⬇️ 高重力':'🕳️ 超高重力';
- astroInfo.innerHTML=earth?`<b>🌍 地球・散歩道</b><br>${returnFromDogStar?'宇宙一周のあと、帰ってきた街':'ビルと木のあるいつもの街'}<br><span class="distanceBig">${returnFromDogStar?'🏠 地球帰還':'🚶 まだ地球'}</span><span class="distanceHint">${returnFromDogStar?'やっと帰ってきた地球':'いつもの街。まだ宇宙の旅は始まっていない'}</span>`:`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig">🌍 地球から ${distanceLabel}</span><span class="distanceHint">${gravLabel}・ジャンプ高度が変化<br>${farHint}</span>`;
+ const gravLabel=s.gravity<=.40?'🪽 ジャンプ力UP':s.gravity>=.56?'⬇️ ジャンプ力DOWN':'⚖️ ジャンプ力NORMAL';
+ astroInfo.innerHTML=earth?`<b>🌍 地球・散歩道</b><br>${returnFromDogStar?'宇宙一周のあと、帰ってきた街':'ビルと木のあるいつもの街'}<br><span class="distanceBig">${returnFromDogStar?'🏠 地球帰還':'🚶 まだ地球'}</span><span class="distanceHint">${returnFromDogStar?'やっと帰ってきた地球':'いつもの街。まだ宇宙の旅は始まっていない'}</span>`:`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig">🌍 地球から ${distanceLabel}</span><span class="distanceHint">${gravLabel}<br>${farHint}</span>`;
  bigBtn.classList.toggle('ready',food>=3);
  chipText.textContent=shopUnlocked?'アイテム':'30⭐で解禁';
  specialBtn.classList.toggle('ready',shopUnlocked||points>=30);
@@ -241,7 +241,7 @@ function syncHUD(){
  laserBtn.style.display=earth?'none':'';
  if(laserAmmoText)laserAmmoText.textContent=`${laserAmmo} / ${laserAmmoMax}`;
  if(cosmicBtn){cosmicBtn.style.display=earth?'none':'';cosmicBtn.classList.toggle('ready',cosmicPowerReady||performance.now()<cosmicPowerUntil)}
- if(cosmicPowerText)cosmicPowerText.textContent=performance.now()<cosmicPowerUntil?'🕳️ 時空歪曲中':cosmicPowerReady?'READY! 🕳️/📡':'👾に当てて貯める';
+ if(cosmicPowerText)cosmicPowerText.textContent=performance.now()<cosmicPowerUntil?'🕳️ 時空歪曲中':cosmicPowerReady?'宇宙パワー発動':'宇宙パワー発動';
  bigBtn.style.display=earth?'none':'';
  const homeBtn=document.getElementById('homeWarpBtn');
  if(homeBtn){homeBtn.disabled=!dream;homeBtn.innerHTML=dream?'🏠 地球へ帰る<br>🐕 犬小屋へ！':'🏠 地球へ帰る<br>🔒 犬の星で解禁'}
@@ -262,7 +262,7 @@ function makeWorld(){
  const hazardBands=[{a:700,b:1250,n:1},{a:1250,b:1900,n:2},{a:1900,b:2500,n:3},{a:2500,b:3050,n:4},{a:3050,b:3450,n:5}];
  if(system!==BLACK_HOLE_SYSTEM&&!isDream)for(const band of hazardBands)for(let i=0;i<Math.max(0,Math.round(band.n*bandScale));i++){const hy=20+Math.random()*Math.max(140,H*.42);hazards.push({x:band.a+Math.random()*(band.b-band.a),y:hy,w:46,h:46,got:false,symbol:'☄️',diagonal:true,vx:-1.25-Math.random()*.7,vy:1.0+Math.random()*.65})}
  if(isSun&&system!==BLACK_HOLE_SYSTEM){for(let i=0;i<42;i++){const hx=620+Math.random()*2750;const hy=10+Math.random()*Math.max(160,H*.48);hazards.push({x:hx,y:hy,w:48,h:52,got:false,symbol:'🔥',diagonal:true,vx:-.75-Math.random()*.9,vy:1.1+Math.random()*1.35})}}
- if(system!==BLACK_HOLE_SYSTEM&&!isDream)for(let i=0;i<7;i++)aliens.push({x:850+i*600,y:groundY()-95-Math.random()*120,w:46,h:46,got:false});
+ if(system!==BLACK_HOLE_SYSTEM&&!isDream)for(let i=0;i<7;i++)aliens.push({x:850+i*520,y:groundY()-95-Math.random()*120,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
  const forms=system===BLACK_HOLE_SYSTEM?['🪨','💿','📡','⚙️','🧊','🪞','💎','🔩','🧿','🛰️']:isDream?['🐕','🐩','🦮','🐕‍🦺']:['🐩','🐕‍🦺','🦮'];
  const morphCount=system===BLACK_HOLE_SYSTEM?9:isDream?90:4;
  for(let i=0;i<morphCount;i++)morphs.push({x:250+i*(isDream?105:650)+Math.random()*55,y:isDream?groundY()-55-Math.random()*150:groundY()-110-Math.random()*145,r:isDream?24:26,got:false,dog:forms[i%forms.length]})
@@ -326,7 +326,25 @@ const secretTips=[
 function spawnSecretEvent(){if(!secretUnlocked)return;eventEl.textContent='🔐 SECRET SIGNAL ✦ なにか飛んできた！';showToast('🔐 秘密のアイテム接近！ 🌸 🌝',1300);const kinds=['flower','moon'];for(let i=0;i<2;i++)secretPickups.push({kind:kinds[i],icon:i?'🌝':'🌸',x:p.x+W+180+i*240,y:80+Math.random()*(H*.48),v:2.2+Math.random()*1.1,phase:Math.random()*6.2,r:28,got:false});setTimeout(syncHUD,2100)}
 function unlockAlienRide(){secretUnlocked=true;alienRideUntil=performance.now()+15000;invincibleUntil=Math.max(invincibleUntil,alienRideUntil);comm.classList.remove('on');comm.classList.add('milestone');comm.querySelector('#commTitle').textContent='📡 交信タイム！ 10 / 10';commText.textContent=secretTips[Math.floor(Math.random()*secretTips.length)];showToast('👽 宇宙パワー通信！',1600);spawnSecretEvent();syncHUD();setTimeout(()=>{comm.classList.remove('milestone');comm.querySelector('#commTitle').textContent='📡 SIGNAL RECEIVED'},2600)}
 function startCommunication(obj){
- if(!cosmicPowerReady){if(performance.now()-lastAlienTouchAt>1600){lastAlienTouchAt=performance.now();showToast('👽 宇宙パワーが満ちると交信できそう…',900)}return}
+ const now=performance.now();
+ if(now-lastAlienTouchAt<900)return;
+ lastAlienTouchAt=now;
+
+ // 犬と👽が直接ぶつかった時のリアクション
+ alienContactFlashUntil=now+650;
+ if(obj){obj.hitFlash=16;obj.chargeHits=(obj.chargeHits||0)+1;obj.y-=18}
+ p.vy=-7.5;
+ invincibleUntil=Math.max(invincibleUntil,now+500);
+ wrap.style.boxShadow='inset 0 0 110px rgba(74,255,112,.88)';
+ setTimeout(()=>{if(performance.now()>=alienContactFlashUntil)wrap.style.boxShadow=''},650);
+
+ if(!cosmicPowerReady){
+   registerAlienHit(1);
+   showToast('👽💚 CONTACT！ 宇宙パワー +1',850);
+   return;
+ }
+
+ // 満タン時は直接触れると交信へ
  cosmicPowerReady=false;
  cosmicCharge=0;
  if(obj)obj.got=true;
@@ -335,7 +353,7 @@ function startCommunication(obj){
  comm.classList.add('on');
  comm.querySelector('#commTitle').textContent='📡 👽 COSMIC SIGNAL';
  commText.textContent=['「時空は曲げられる」','「遠くへ行くほど、帰る場所が大切になる」','「ブラックホールの向こうにも道はある」','「犬の星は、夢と宇宙の境目にある」'][alienContacts%4];
- showToast('📡 👽と交信成功！ 宇宙パワーを1回消費',1300);
+ showToast('📡 👽と接触交信！',1200);
  setTimeout(()=>comm.classList.remove('on'),2200);
  syncHUD()
 }
@@ -498,7 +516,7 @@ function drawCosmicWarpFX(){
 function drawGround(){const s=S(),gy=groundY(),g=ctx.createLinearGradient(0,gy,0,H);if(system===0&&stage===0){ctx.fillStyle='#777f88';ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='#c8ccd1';ctx.fillRect(0,gy,W,42);ctx.fillStyle='#fff';ctx.fillRect(0,gy+40,W,3);return}g.addColorStop(0,s.ground);g.addColorStop(1,s.ground2);ctx.fillStyle=g;ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(0,gy,W,3);for(let i=0;i<16;i++){const sx=((i*173-camera*.7)%(W+200)+W+200)%(W+200)-100;ctx.globalAlpha=.16;ctx.fillStyle=s.ground2;ctx.beginPath();ctx.ellipse(sx,gy+30+(i%4)*22,25+(i%3)*9,8+(i%2)*4,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
 function drawGood(it){const sx=it.x-camera;if(sx<-60||sx>W+60||it.got)return;if(system===BLACK_HOLE_SYSTEM&&!it.food){const glyphs=['✦','◉','⌁','⟡','∞','◌'];const g=glyphs[Math.abs(Math.floor(it.x))%glyphs.length];ctx.save();ctx.translate(sx,it.y);ctx.rotate(performance.now()/900+(it.x%7));ctx.shadowColor=it.color;ctx.shadowBlur=24;ctx.fillStyle=it.color;ctx.font='900 28px system-ui';ctx.fillText(g,-12,10);ctx.restore();return}if(it.food){ctx.save();ctx.font='34px system-ui';ctx.shadowColor=it.inert?'#7cf7ff':'#ffd65a';ctx.shadowBlur=18;ctx.fillText(it.inert?'🔋':'🦴',sx-17,it.y+12);ctx.restore();return}ctx.save();ctx.translate(sx,it.y);ctx.shadowColor=it.color;ctx.shadowBlur=18;ctx.fillStyle=it.color;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?18:8,px=Math.cos(a)*rr,py=Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.restore()}
 function drawHazard(h){const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;ctx.save();ctx.translate(sx+23,h.y+23);ctx.shadowColor=h.symbol==='🔥'?'#ff9b24':'#ff542e';ctx.shadowBlur=h.symbol==='🔥'?24:18;ctx.font=`${h.symbol==='🔥'?46:42}px system-ui`;ctx.fillText(h.symbol,-22,17);ctx.restore()}
-function drawAlien(a){if(a.got)return;const sx=a.x-camera;if(sx<-70||sx>W+70)return;ctx.save();ctx.shadowColor='#7dff70';ctx.shadowBlur=15;ctx.font='43px system-ui';ctx.fillText('👽',sx,a.y+40);ctx.restore()}
+function drawAlien(a){if(a.got)return;const sx=a.x-camera;if(sx<-70||sx>W+70)return;ctx.save();if(a.hitFlash>0){a.hitFlash--;const rr=34+(14-a.hitFlash)*5;ctx.globalAlpha=.65*(a.hitFlash/14);ctx.strokeStyle='#62ff72';ctx.lineWidth=4;ctx.shadowColor='#62ff72';ctx.shadowBlur=30;ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,rr,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.28*(a.hitFlash/14);ctx.fillStyle='#50ff6e';ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,28,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}ctx.shadowColor='#7dff70';ctx.shadowBlur=15;ctx.font='43px system-ui';ctx.fillText('👽',sx,a.y+40);ctx.restore()}
 function drawMorph(m){if(m.got)return;const sx=m.x-camera;if(sx<-70||sx>W+70)return;ctx.save();ctx.translate(sx,m.y);ctx.rotate(Math.sin(performance.now()/220)*.18);ctx.shadowColor='#64f5ff';ctx.shadowBlur=24;ctx.fillStyle='rgba(60,20,90,.82)';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,27,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.font='30px system-ui';ctx.fillText('❓',-15,11);ctx.restore()}
 function drawSwarm(o){if(o.got)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;ctx.save();ctx.shadowColor=o.kind==='crow'?'#9b8cff':o.kind==='dino'?'#ff954d':o.kind==='evil'?'#ff174d':'#7dff70';ctx.shadowBlur=o.kind==='evil'?26:13;ctx.font=`${o.kind==='dino'?58:o.kind==='evil'?44:36}px system-ui`;ctx.fillText(o.kind==='crow'?'🐦‍⬛':o.kind==='dino'?'🦖':'👾',sx,o.y+(o.kind==='dino'?55:36));if(o.kind==='evil'){ctx.fillStyle='#fff';ctx.font='900 8px system-ui';ctx.fillText('DANGER',sx-3,o.y-6)}ctx.restore()}
 function drawSecretPickup(o){if(o.got)return;const sx=o.x-camera;if(sx<-80||sx>W+100)return;ctx.save();const bob=Math.sin(performance.now()/180+o.phase)*12;ctx.translate(sx,o.y+bob);ctx.shadowColor=o.kind==='flower'?'#ff78d1':'#fff1a0';ctx.shadowBlur=28;ctx.font='48px system-ui';ctx.fillText(o.icon,-24,18);ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.globalAlpha=.65;ctx.beginPath();ctx.arc(0,0,33,0,Math.PI*2);ctx.stroke();ctx.restore()}
@@ -552,16 +570,10 @@ sx=blackHoleX-camera;if(blackHoleEnabled()&&sx>-190&&sx<W+190){const t=performan
 }
 
 function registerAlienHit(amount=1){
- alienHitTotal+=amount;
  if(cosmicPowerReady)return;
  cosmicCharge=Math.min(5,cosmicCharge+amount);
- if(cosmicCharge>=5){
-   cosmicCharge=5;
-   cosmicPowerReady=true;
-   showToast('🌌 宇宙パワー満タン！ 🕳️時空歪曲か 📡👽交信に使える',1800)
- }else{
-   showToast(`👾 HIT！ 🌌 +${amount}`,600)
- }
+ if(cosmicCharge>=5){cosmicCharge=5;cosmicPowerReady=true;showToast('👽✨ 宇宙パワー満タン！ 発動できる',1500)}
+ else showToast(`👽 宇宙パワー +${amount}`,650);
  syncHUD()
 }
 function useCosmicPower(){
@@ -577,7 +589,7 @@ function useCosmicPower(){
 }
 
 function fireBoneBoomerang(){if(paused||system===0&&stage===0)return;if(food<3){showToast('🦴 元気が3必要！ 骨を集めよう',1000);return}food-=3;boneShots.push({x:p.x+55,y:p.y+25,v:11,life:150,phase:0,baseY:p.y+25});showToast('🦴💫 ワイド骨ブーメラン！',700);syncHUD()}
-function updateBoneShots(dt){for(const b of boneShots){b.phase+=dt;b.x+=b.v*dt;b.y=b.baseY+Math.sin(b.phase*.12)*125;b.life-=dt;if(b.life<72)b.v=-11;for(const h of hazards){if(h.got)continue;if(Math.abs(b.x-(h.x+h.w/2))<78&&Math.abs(b.y-(h.y+h.h/2))<130){h.got=true;points+=2;b.v=-11;break}}for(const o of swarm){if(o.got)continue;if(Math.abs(b.x-(o.x+o.w/2))<88&&Math.abs(b.y-(o.y+o.h/2))<150){o.got=true;points+=3;b.v=-11;if(o.kind==='alien'||o.kind==='evil'||o.kind==='target')registerAlienHit();break}}for(const boss of bosses){if(boss.dead)continue;if(Math.abs(b.x-(boss.x+boss.w/2))<100&&Math.abs(b.y-(boss.y+boss.h/2))<170){boss.hp=Math.max(0,boss.hp-2);boss.hitFlash=8;b.v=-11;if(boss.hp<=0){boss.dead=true;points+=30}}}}boneShots=boneShots.filter(b=>b.life>0&&Math.abs(b.x-p.x)<W+450);syncHUD()}
+function updateBoneShots(dt){for(const b of boneShots){b.phase+=dt;b.x+=b.v*dt;b.y=b.baseY+Math.sin(b.phase*.12)*125;b.life-=dt;if(b.life<72)b.v=-11;for(const h of hazards){if(h.got)continue;if(Math.abs(b.x-(h.x+h.w/2))<78&&Math.abs(b.y-(h.y+h.h/2))<130){h.got=true;points+=2;b.v=-11;break}}for(const a of aliens){if(a.got)continue;if(Math.abs(b.x-(a.x+a.w/2))<95&&Math.abs(b.y-(a.y+a.h/2))<155){if(performance.now()-a.lastHit>420){a.lastHit=performance.now();a.hitFlash=14;a.chargeHits++;registerAlienHit(1);if(a.chargeHits>=3){a.got=true;points+=3;showToast('👽✨ SIGNAL BURST！',700)}}b.v=-11;break}}for(const o of swarm){if(o.got)continue;if(Math.abs(b.x-(o.x+o.w/2))<88&&Math.abs(b.y-(o.y+o.h/2))<150){o.got=true;points+=3;b.v=-11;break}}for(const boss of bosses){if(boss.dead)continue;if(Math.abs(b.x-(boss.x+boss.w/2))<100&&Math.abs(b.y-(boss.y+boss.h/2))<170){boss.hp=Math.max(0,boss.hp-2);boss.hitFlash=8;b.v=-11;if(boss.hp<=0){boss.dead=true;points+=30}}}}boneShots=boneShots.filter(b=>b.life>0&&Math.abs(b.x-p.x)<W+450);syncHUD()}
 function drawBoneShots(){ctx.save();ctx.font='34px system-ui';for(const b of boneShots){const sx=b.x-camera;ctx.save();ctx.translate(sx,b.y);ctx.rotate(b.phase*.3);ctx.shadowColor='#ffe26d';ctx.shadowBlur=18;ctx.fillText('🦴',-17,12);ctx.restore()}ctx.restore()}
 function updateFallingStars(dt){for(const s of fallingStars){s.x+=s.vx*dt;s.vy+=.28*dt;s.y+=s.vy*dt;s.life-=dt;if(s.y>groundY()-8){s.y=groundY()-8;s.vy*=-.48;s.vx*=.82}}fallingStars=fallingStars.filter(s=>s.life>0)}
 function drawFallingStars(){ctx.save();ctx.font='22px system-ui';ctx.shadowColor='#ffe45a';ctx.shadowBlur=14;for(const s of fallingStars)ctx.fillText('⭐',s.x-camera,s.y);ctx.restore()}
@@ -585,14 +597,32 @@ function drawFallingStars(){ctx.save();ctx.font='22px system-ui';ctx.shadowColor
 function fireLaser(){if(paused)return;const now=performance.now();if(now-lastLaserAt<300)return;if(laserAmmo<=0){showToast('🔫 弾切れ！ ⭐交換所で補充',1100);return}lastLaserAt=now;laserAmmo--;lasers.push({x:p.x+62,y:p.y+27,v:15,life:98,startX:p.x+62,spread:performance.now()<cosmicPowerUntil?185:115});if(laserAmmo===3)showToast('⚠️ レーザー残り3発！',900);else if(laserAmmo===0)showToast('🔫 弾切れ！ ⭐交換所で補充',1100);syncHUD()}
 function laserHit(l,obj,vertical=115){const cx=obj.x+(obj.w||0)/2,cy=obj.y+(obj.h||0)/2;const ahead=cx>=l.startX-20&&cx<=l.x+95;const travel=Math.max(0,cx-l.startX);const spread=l.spread+travel*.075;return ahead&&Math.abs(cy-l.y)<Math.max(vertical,spread)}
 function updateLasers(dt){for(const l of lasers){l.x+=l.v*dt;l.life-=dt;
- for(const h of hazards){if(h.got)continue;if(laserHit(l,h,125)){h.got=true;points+=2;break}}
- for(const o of swarm){if(o.got)continue;if(laserHit(l,o,155)){o.got=true;const bonus=o.kind==='evil'?5:o.kind==='dino'?4:(o.kind==='alien'||o.kind==='target')?3:2;points+=bonus;if(o.kind==='alien'||o.kind==='evil'||o.kind==='target')registerAlienHit();break}}
+ for(const h of hazards){if(h.got)continue;if(laserHit(l,h,125)){h.got=true;points+=2;break}}for(const a of aliens){if(a.got)continue;if(laserHit(l,a,165)){if(performance.now()-a.lastHit>420){a.lastHit=performance.now();a.hitFlash=14;a.chargeHits++;registerAlienHit(1);if(a.chargeHits>=3){a.got=true;points+=3;showToast('👽✨ SIGNAL BURST！',700)}}break}}
+ for(const o of swarm){if(o.got)continue;if(laserHit(l,o,155)){o.got=true;const bonus=o.kind==='evil'?5:o.kind==='dino'?4:(o.kind==='alien'||o.kind==='target')?3:2;points+=bonus;break}}
  for(const b of bosses){if(b.dead)continue;if(laserHit(l,b,170)){b.hp--;b.hitFlash=8;if(b.hp<=0){b.dead=true;points+=30;showToast('🧌 撃破！ ⭐+30',1000)}break}}
- if(performance.now()<cosmicPowerUntil){for(const h of hazards)if(!h.got&&laserHit(l,h,230))h.got=true;for(const o of swarm)if(!o.got&&laserHit(l,o,230)){o.got=true;if(o.kind==='alien'||o.kind==='evil'||o.kind==='target')registerAlienHit();}}
+ if(performance.now()<cosmicPowerUntil){for(const h of hazards)if(!h.got&&laserHit(l,h,230))h.got=true;for(const o of swarm)if(!o.got&&laserHit(l,o,230)){o.got=true;}}
  }lasers=lasers.filter(l=>l.life>0&&l.x<p.x+W+520);syncHUD()}
 function drawLasers(){ctx.save();ctx.lineCap='round';for(const l of lasers){const sx=l.x-camera,start=l.startX-camera,len=Math.max(55,sx-start);const wide=performance.now()<cosmicPowerUntil?145:82;const grad=ctx.createLinearGradient(start,l.y,sx,l.y);grad.addColorStop(0,'rgba(86,231,255,.35)');grad.addColorStop(.45,'rgba(255,255,255,.85)');grad.addColorStop(1,'rgba(86,231,255,.08)');ctx.shadowColor='#56e7ff';ctx.shadowBlur=22;ctx.strokeStyle=grad;ctx.lineWidth=performance.now()<cosmicPowerUntil?18:10;ctx.beginPath();ctx.moveTo(start,l.y);ctx.lineTo(sx+60,l.y);ctx.stroke();ctx.globalAlpha=.17;ctx.fillStyle='#56e7ff';ctx.beginPath();ctx.moveTo(start,l.y-10);ctx.lineTo(sx+100,l.y-wide);ctx.lineTo(sx+100,l.y+wide);ctx.closePath();ctx.fill();ctx.globalAlpha=1}ctx.restore()}
 function drawStarPile(sx,py,big){if(system===BLACK_HOLE_SYSTEM)return;const count=Math.min(points,180),cols=big?9:7,step=big?7:4.8,size=big?9:6;ctx.save();ctx.textAlign='center';ctx.globalAlpha=.92;ctx.shadowColor='#ffe45a';ctx.shadowBlur=5;ctx.font=`${size}px system-ui`;for(let i=0;i<count;i++){const row=Math.floor(i/cols),col=i%cols;const x=sx+(big?58:34)+(col-(cols-1)/2)*step*.72;const y=py+(big?72:43)-row*step*.60;ctx.fillText('⭐',x,y)}if(points>180){ctx.font=`900 ${big?15:10}px system-ui`;ctx.fillStyle='#fff';ctx.shadowBlur=8;ctx.fillText(`+${points-180}`,sx+(big?58:34),py-(big?30:20))}ctx.restore()}
 function drawPlayer(){const now=performance.now(),sx=p.x-camera;const alienGlow=Math.min(42,alienHitTotal*2.2);
+ if(now<alienContactFlashUntil){
+   const t=(alienContactFlashUntil-now)/650;
+   ctx.save();
+   ctx.globalAlpha=.9*t;
+   ctx.strokeStyle='#62ff72';
+   ctx.lineWidth=5;
+   ctx.shadowColor='#62ff72';
+   ctx.shadowBlur=30;
+   ctx.beginPath();
+   ctx.arc(sx+28,p.y+28,42+(1-t)*55,0,Math.PI*2);
+   ctx.stroke();
+   ctx.globalAlpha=.24*t;
+   ctx.fillStyle='#62ff72';
+   ctx.beginPath();
+   ctx.arc(sx+28,p.y+28,34,0,Math.PI*2);
+   ctx.fill();
+   ctx.restore()
+ }
  if(now<cosmicPowerUntil){
    ctx.save();ctx.translate(sx+28,p.y+28);
    const pulse=1+Math.sin(now/120)*.08;
@@ -741,4 +771,18 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
  .dhBed span{font-size:42px}
  .dhCaption{font-size:13px;top:55%}
 }
+</style>
+
+<style>
+.countBig{font-size:18px!important;font-weight:1000!important;padding:7px 9px!important}
+#cosmicPower{border-radius:22px!important}
+.dhDogMover{position:absolute;left:4%;bottom:14%;font-size:56px;z-index:4;transform-origin:center bottom;filter:drop-shadow(0 8px 5px rgba(0,0,0,.45))}
+.dhDogMover.walkIn{animation:dhWalk 1.55s ease-in-out forwards}
+@keyframes dhWalk{0%{left:3%;transform:translateY(0)}20%{transform:translateY(-5px)}40%{transform:translateY(0)}60%{transform:translateY(-6px)}100%{left:58%;transform:translateY(0)}}
+.dhDogMover.jumpBed{animation:dhJump 1.35s cubic-bezier(.2,.8,.25,1) forwards}
+@keyframes dhJump{0%{left:58%;bottom:14%;transform:rotate(0) scale(1)}45%{left:69%;bottom:38%;transform:rotate(-10deg) scale(1.08)}100%{left:73%;bottom:24%;transform:rotate(0) scale(.92)}}
+.dhDogMover.sleepFace{animation:dhFace 1.25s ease-in forwards}
+@keyframes dhFace{from{left:73%;bottom:24%;font-size:56px;transform:scale(.92)}to{left:50%;bottom:38%;font-size:180px;transform:translateX(-50%) scale(1.25)}}
+#doghouseInterior.blackout:after{content:"";position:absolute;inset:0;background:#000;z-index:99;animation:blackIn 1.1s ease-in forwards}
+@keyframes blackIn{from{opacity:0}to{opacity:1}}
 </style>
