@@ -365,37 +365,79 @@ function triggerSwarm(kind){const crow=kind==='crow',dino=kind==='dino',evil=kin
 function doghouseChoice(){
  if(paused)return;
  paused=true;
+ doghouseInterior.classList.remove('blackout');
  doghouseInterior.classList.add('on');
- showToast('🏠 家に着いた。',900);
+
+ const cap=doghouseInterior.querySelector('.dhCaption');
+ const dog=doghouseInterior.querySelector('.dhDogMover');
+
+ if(cap)cap.textContent='やっと帰って来れた。疲れたから寝よう。';
+
+ if(dog){
+   dog.className='dhDogMover';
+   void dog.offsetWidth;
+   dog.classList.add('walkIn');
+ }
+
+ // 歩く → ベッドへ
  setTimeout(()=>{
-   const cap=doghouseInterior.querySelector('.dhCaption');
-   if(cap)cap.textContent='やっと帰って来れた。疲れたから寝よう。';
- },700);
+   if(dog){dog.className='dhDogMover jumpBed'}
+   if(cap)cap.textContent='ベッドまで、あと少し…';
+ },1600);
+
+ // ベッドに飛び乗る
  setTimeout(()=>{
-   const dog=doghouseInterior.querySelector('.dhBed span');
-   if(dog)dog.textContent='🐕💤';
-   const cap=doghouseInterior.querySelector('.dhCaption');
-   if(cap)cap.textContent='すやすや…';
- },1900);
+   if(cap)cap.textContent='ふぅ……やっと帰ってきた。';
+ },2500);
+
+ // 犬の顔をアップ
  setTimeout(()=>{
-   doghouseInterior.classList.remove('on');
+   if(dog){dog.className='dhDogMover sleepFace'}
+   if(cap)cap.textContent='おやすみ…';
+ },3200);
+
+ // ブラックアウト
+ setTimeout(()=>{
+   doghouseInterior.classList.add('blackout');
+ },4450);
+
+ // 真っ黒になった後、夢の渦へ
+ setTimeout(()=>{
+   doghouseInterior.classList.remove('on','blackout');
    trans.style.display='grid';
    dreamRestart();
- },3300)
+ },5650);
 }
+
 function dreamRestart(){
+ trans.style.background='radial-gradient(circle at center,#6d38a6 0%,#281044 38%,#07030d 72%,#000 100%)';
  transTitle.innerHTML='💤 DREAM WORMHOLE';
- nextEl.textContent='眠りがぐにゃ〜っと時空につながっていく…';
- subEl.textContent='夢のワームホールが開いた';
+ nextEl.textContent='眠りの中で、ぐるぐる時空が回り始める…';
+ subEl.textContent='SLEEP → DREAM → MOON';
  warpDog.textContent='🐕💤';
- warpDog.className='spaghetti';
+ warpDog.className='spin';
+
  setTimeout(()=>{
    transTitle.innerHTML='🌀🌙 DREAM WORMHOLE!';
-   nextEl.textContent='夢の中で月へ吸い込まれていく！';
-   subEl.textContent='SLEEP → DREAM → MOON';
+   nextEl.textContent='夢の渦が月につながった！';
+   subEl.textContent='MOON APPROACH';
    warpDog.textContent='🐕🌙';
-   setTimeout(()=>{returnFromDogStar=false;deepWarpCount=0;expansionWarpCount=0;dreamReached=false;cosmicCharge=0;cosmicPowerReady=false;system=0;stage=1;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌙 夢から月へ！ また宇宙旅行が始まった。',2200)},1900)
- },1700)
+   setTimeout(()=>{
+     returnFromDogStar=false;
+     deepWarpCount=0;
+     expansionWarpCount=0;
+     dreamReached=false;
+     cosmicCharge=0;
+     cosmicPowerReady=false;
+     system=0;stage=1;
+     stageStart();
+     trans.style.display='none';
+     trans.style.background='';
+     warpDog.className='';
+     paused=false;
+     showToast('🌙 夢から月へ！',1800);
+   },2100);
+ },1900);
 }
 
 function debugJumpToHome(){
@@ -785,4 +827,36 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
 @keyframes dhFace{from{left:73%;bottom:24%;font-size:56px;transform:scale(.92)}to{left:50%;bottom:38%;font-size:180px;transform:translateX(-50%) scale(1.25)}}
 #doghouseInterior.blackout:after{content:"";position:absolute;inset:0;background:#000;z-index:99;animation:blackIn 1.1s ease-in forwards}
 @keyframes blackIn{from{opacity:0}to{opacity:1}}
+</style>
+<style>
+.dhDogMover{
+  position:absolute;left:5%;bottom:14%;font-size:58px;z-index:5;
+  transform-origin:center bottom;
+  filter:drop-shadow(0 8px 5px rgba(0,0,0,.45));
+}
+.dhDogMover.walkIn{animation:dogWalkIn 1.55s ease-in-out forwards}
+@keyframes dogWalkIn{
+  0%{left:5%;bottom:14%;transform:translateY(0)}
+  18%{transform:translateY(-7px)}
+  36%{transform:translateY(0)}
+  54%{transform:translateY(-8px)}
+  72%{transform:translateY(0)}
+  100%{left:58%;bottom:14%;transform:translateY(0)}
+}
+.dhDogMover.jumpBed{animation:dogJumpBed 1.3s cubic-bezier(.2,.8,.25,1) forwards}
+@keyframes dogJumpBed{
+  0%{left:58%;bottom:14%;font-size:58px;transform:rotate(0deg)}
+  45%{left:70%;bottom:42%;font-size:62px;transform:rotate(-10deg)}
+  100%{left:73%;bottom:25%;font-size:54px;transform:rotate(0deg)}
+}
+.dhDogMover.sleepFace{animation:dogSleepFace 1.2s ease-in forwards}
+@keyframes dogSleepFace{
+  0%{left:73%;bottom:25%;font-size:54px;transform:translateX(0) scale(1)}
+  100%{left:50%;bottom:34%;font-size:190px;transform:translateX(-50%) scale(1.15)}
+}
+#doghouseInterior.blackout:after{
+  content:"";position:absolute;inset:0;z-index:99;background:#000;
+  animation:doghouseBlackout 1.05s ease-in forwards;
+}
+@keyframes doghouseBlackout{from{opacity:0}to{opacity:1}}
 </style>
