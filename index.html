@@ -4950,3 +4950,131 @@ v51RenderRewardTexts();
   renderBottom();renderItems();syncHUD();
 })();
 </script>
+
+<!-- v56 transparent bottom controls + unlimited bones/cosmic -->
+<style>
+/* remove bottom panel so the ground stays visible */
+.controls{
+  background:transparent!important;
+  border:none!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  padding:0 12px calc(max(12px,env(safe-area-inset-bottom)))!important;
+}
+.controls::before{display:none!important;content:none!important}
+/* change colors: beam = cool blue, jump = candy pink */
+#laser{
+  background:linear-gradient(180deg,#f9ffff 0%,#ddf7ff 14%,#7cecff 34%,#2ca7ff 66%,#5d63ff 100%)!important;
+  box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.62),inset 0 -10px 16px rgba(24,42,138,.28),0 0 0 2px rgba(76,211,255,.28),0 0 17px rgba(55,178,255,.60),0 7px 0 #1a2751!important;
+}
+#jump{
+  background:linear-gradient(180deg,#fff9ff 0%,#ffdff6 14%,#ff90dd 34%,#ff67b3 66%,#9e63ff 100%)!important;
+  box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.62),inset 0 -10px 16px rgba(118,24,99,.30),0 0 0 2px rgba(255,126,228,.25),0 0 17px rgba(255,95,196,.52),0 7px 0 #4d1847!important;
+}
+#special .btnMain,#laser .btnMain,#jump .btnMain{font-size:13px!important}
+#special,#laser,#jump{backdrop-filter:none!important}
+</style>
+<script>
+(function(){
+  const UNLIMITED_CAP = Number.MAX_SAFE_INTEGER;
+  const $ = id => document.getElementById(id);
+  const foodEl = $('food');
+  const alienHitEl = $('alienHitCount');
+  const reward = $('reward');
+  const specialBtn = $('special');
+  const laserBtn = $('laser');
+  const jumpBtn = $('jump');
+
+  function renderBottomV56(){
+    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
+    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
+    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
+  }
+
+  collectGood = function(it){
+    if(!it || it.got) return;
+    it.got = true;
+    if(it.magnet){
+      magnetUntil = performance.now() + 12000;
+      showToast('🧲 星磁石 発動！ 12秒',1200);
+      syncHUD();
+      return;
+    }
+    if(it.food){
+      food += 1;
+      showToast(it.inert ? '🔋 無機エネルギー GET！' : `🦴 +1　${food}` ,700);
+      syncHUD();
+      return;
+    }
+    const gain = big ? 2 : 1;
+    points += gain;
+    starTotal += gain;
+    if(points>=30 && !shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}
+    syncHUD();
+  };
+  window.collectGood = collectGood;
+
+  awardFetchedItem = function(b){
+    if(!b || !b.fetched) return;
+    if(b.fetched==='🦴'){
+      food += 1;
+      showToast('🦴 とってきた！ 骨 +1',900);
+    }else if(b.fetched==='⭐'){
+      points += 2;
+      starTotal += 2;
+      showToast('⭐ とってきた！ 星 +2',900);
+    }
+    syncHUD();
+  };
+  window.awardFetchedItem = awardFetchedItem;
+
+  registerAlienHit = function(amount=1){
+    const beforeReady = cosmicPowerReady;
+    cosmicCharge += amount;
+    alienHitTotal += amount;
+    if(cosmicCharge >= 5){
+      cosmicPowerReady = true;
+      if(!beforeReady) showToast('👽✨ 宇宙パワー満タン！ 発動できる',1500);
+      else showToast(`👽 宇宙パワー +${amount}`,650);
+    }else{
+      showToast(`👽 宇宙パワー +${amount}`,650);
+    }
+    syncHUD();
+  };
+  window.registerAlienHit = registerAlienHit;
+
+  useCosmicPower = function(){
+    if(paused || system===0&&stage===0) return;
+    if(cosmicCharge < 5){
+      showToast(`👽 あと ${Math.max(0,5-cosmicCharge)} で宇宙パワー！`,1000);
+      return;
+    }
+    cosmicCharge = Math.max(0, cosmicCharge - 5);
+    cosmicPowerReady = cosmicCharge >= 5;
+    cosmicPowerUntil = performance.now() + 9000;
+    cosmicBonus = 1;
+    invincibleUntil = Math.max(invincibleUntil, cosmicPowerUntil);
+    showToast('🕳️🌌 宇宙パワー発動！ 時空歪曲ボーナスタイム 9秒！',1900);
+    spawnStarRain(20);
+    syncHUD();
+  };
+  window.useCosmicPower = useCosmicPower;
+
+  const prevSync = syncHUD;
+  syncHUD = function(){
+    if(typeof prevSync==='function') prevSync();
+    renderBottomV56();
+    if(foodEl) foodEl.textContent = `🦴 ${food}`;
+    if(alienHitEl) alienHitEl.textContent = `👽 ${cosmicCharge}`;
+    if(reward?.classList.contains('on')){
+      reward.style.top='50%';
+      reward.style.bottom='auto';
+      reward.style.transform='translate(-50%,-50%)';
+    }
+  };
+  window.syncHUD = syncHUD;
+
+  renderBottomV56();
+  syncHUD();
+})();
+</script>
