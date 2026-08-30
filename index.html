@@ -541,7 +541,7 @@ canvas{display:block;width:100%;height:100%}
 <div id="mission"></div><div id="event"></div><div id="astroInfo"></div><div id="toast"></div>
 <div id="bigBanner">✦ 巨大化！ ✦<small>犬星くん巨大化フィーバー！ ジャンプもできる！</small></div>
 <div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3で発射</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザービーム<small id="laserAmmoText">8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">👽<small id="cosmicPowerText">宇宙パワー発動</small></button><button class="ctrl jumpCtrl" id="jump">⬆️<small>ジャンプ</small></button></div>
-<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ 星アイテム</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 巨大化・無敵 8秒<br>35⭐</button><button class="rewardBtn attack" data-special="laser" data-cost="60">🔫 レーザー弾 +20<br>60⭐（最大30発）</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 骨の雨<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
+<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ 星アイテム</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 巨大化<br>35⭐</button><button class="rewardBtn attack" data-special="laser" data-cost="60">🔫 レーザー弾 +20<br>60⭐（最大30発）</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 ホネホネシャワー<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
 <div id="comm"><div id="commTitle">📡 SIGNAL RECEIVED</div><div id="commText"></div><div id="commWave">▂▄▆█▆▄▂</div></div>
 <div id="critical">⚠️ CRITICAL! あと1回でGAME OVER</div><div id="gameOver"><div id="gameOverTitle">GAME OVER</div><div id="gameOverSub">宇宙はそんなにやさしくない…<br>⭐ 20 LOST<br><br>RETRYING…</div></div>
 
@@ -1417,6 +1417,184 @@ function doJump(){if(paused||jumps>=4)return;const s=S(),boost=big?1.12:1;
  jumps++;p.on=false;if(systems[system]?.dream)dogWorldBounceUntil=performance.now()+420}
 jumpBtn.addEventListener('pointerdown',e=>{e.preventDefault();jumpBtn.classList.add('pressed');doJump()},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>jumpBtn.addEventListener(ev,()=>jumpBtn.classList.remove('pressed')));debugHomeBtn.addEventListener('click',debugJumpToHome);
 convertStarsBtn.addEventListener('click',feedDoghouse);
+
+/* ===== v48 doghouse / combat polish ===== */
+let fallingBones=[];
+(function(){
+  const rewardGiant=document.querySelector('.rewardBtn[data-special="giant"]');
+  const rewardBoneRain=document.querySelector('.rewardBtn[data-special="boneRain"]');
+  if(rewardGiant)rewardGiant.innerHTML='🐕 巨大化<br>35⭐';
+  if(rewardBoneRain)rewardBoneRain.innerHTML='🦴 ホネホネシャワー<br>45⭐';
+  const scene=doghouseInterior?.querySelector('.doghouseScene');
+  if(scene && !scene.querySelector('.dhToy')){
+    const toy=document.createElement('div');
+    toy.className='dhToy';
+    toy.textContent='🧶';
+    scene.appendChild(toy);
+  }
+})();
+function spillBones(n=1){
+  const lost=Math.min(n,food);
+  food=Math.max(0,food-lost);
+  for(let i=0;i<lost;i++)fallingBones.push({x:p.x+18+(Math.random()-.5)*26,y:p.y+12,vx:-2.8+Math.random()*5.6,vy:-5.4-Math.random()*3.2,life:76+Math.random()*18,spin:Math.random()*6.28});
+  syncHUD();
+}
+const __oldUpdateFallingStars=updateFallingStars;
+updateFallingStars=function(dt){
+  __oldUpdateFallingStars(dt);
+  for(const b of fallingBones){b.x+=b.vx*dt;b.vy+=.32*dt;b.y+=b.vy*dt;b.life-=dt;b.spin+=.12*dt;if(b.y>groundY()-8){b.y=groundY()-8;b.vy*=-.42;b.vx*=.84;}}
+  fallingBones=fallingBones.filter(b=>b.life>0);
+}
+const __oldDrawFallingStars=drawFallingStars;
+drawFallingStars=function(){
+  __oldDrawFallingStars();
+  ctx.save();ctx.font='22px system-ui';ctx.shadowColor='#fff6c0';ctx.shadowBlur=12;
+  for(const b of fallingBones){ctx.save();ctx.translate(b.x-camera,b.y);ctx.rotate(b.spin);ctx.fillText('🦴',-11,11);ctx.restore()}
+  ctx.restore();
+}
+hitHazard=function(h){
+  const now=performance.now();
+  if(h.got||now<invincibleUntil||big)return;
+  h.got=true;
+  invincibleUntil=now+1000;
+  spillStars(5);
+  if(food>0)spillBones(1);
+  p.vy=-7;
+  shake=16;
+  wrap.style.boxShadow='inset 0 0 100px rgba(255,88,132,.72)';
+  setTimeout(()=>wrap.style.boxShadow='',520);
+  showToast(`💥 ダメージ！ ⭐-5 / 🦴-${food<10?1:0}`,1100);
+  syncHUD();
+}
+updateDoghouseButtons=function(){
+  syncDoghouseHUD();
+  const feedBtn=doghouseInterior.querySelector('#feedDogBtn');
+  const playBtn=doghouseInterior.querySelector('#playDogBtn');
+  const sleepBtn=doghouseInterior.querySelector('#sleepDogBtn');
+  const legacyBtn=doghouseInterior.querySelector('#convertStarsBtn');
+  const spend=Math.max(1,Math.min(points||0,4));
+  if(feedBtn)feedBtn.innerHTML=`🦴 餌を食べる<small>${points>0?`⭐${spend}でごはん`:'ごはんタイム'}</small>`;
+  if(playBtn)playBtn.innerHTML='🐾 遊ぶ<small>おもちゃで遊ぶ</small>';
+  if(sleepBtn)sleepBtn.innerHTML='💤 寝る<small>ベッドへ</small>';
+  if(legacyBtn)legacyBtn.style.display='none';
+}
+resetDoghouseScene=function(){
+  doghouseFed=false;
+  doghouseInterior.className='on';
+  const dog=doghouseInterior.querySelector('.dhDogMover');
+  const pile=doghouseInterior.querySelector('.dhEatPile');
+  const rain=doghouseInterior.querySelector('.dhBoneRain');
+  const toy=doghouseInterior.querySelector('.dhToy');
+  if(dog)dog.className='dhDogMover ready';
+  if(pile)pile.className='dhEatPile';
+  if(rain)rain.innerHTML='';
+  if(toy)toy.className='dhToy';
+  setDoghouseActionState('show');
+  updateDoghouseButtons();
+}
+doghouseGoToBed=function(startAt=0){
+  const dog=doghouseInterior.querySelector('.dhDogMover');
+  setTimeout(()=>{if(dog)dog.className='dhDogMover runToBed'},startAt);
+  setTimeout(()=>{if(dog)dog.className='dhDogMover jumpBed'},startAt+1200);
+  setTimeout(()=>{doghouseInterior.classList.add('softDim')},startAt+2450);
+  setTimeout(()=>{doghouseInterior.classList.add('lightsOff')},startAt+3200);
+  setTimeout(()=>{doghouseInterior.classList.add('blackout')},startAt+3950);
+  setTimeout(()=>{
+    doghouseInterior.classList.remove('blackout');
+    doghouseInterior.classList.add('faceClose');
+  },startAt+4700);
+  setTimeout(()=>{
+    doghouseInterior.className='';
+    trans.style.display='grid';
+    dreamRestart();
+  },startAt+6500);
+}
+feedDoghouse=function(){
+  if(!doghouseInterior.classList.contains('on')||doghouseFed)return;
+  doghouseFed=true;
+  setDoghouseActionState('hide');
+  const dog=doghouseInterior.querySelector('.dhDogMover');
+  const pile=doghouseInterior.querySelector('.dhEatPile');
+  const spend=points>0?Math.min(points,4):0;
+  if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food=Math.min(99,food+spend);syncHUD();}
+  updateDoghouseButtons();
+  spawnDoghouseBoneRain(spend||4);
+  setTimeout(()=>{if(dog)dog.className='dhDogMover runToBones'},420);
+  setTimeout(()=>{if(dog)dog.className='dhDogMover eatBones'; if(pile)pile.classList.add('show','eating');},1500);
+  setTimeout(()=>{if(pile)pile.classList.add('gone')},3050);
+  doghouseGoToBed(3350);
+}
+playDoghouse=function(){
+  if(!doghouseInterior.classList.contains('on')||doghouseFed)return;
+  doghouseFed=true;
+  setDoghouseActionState('hide');
+  const dog=doghouseInterior.querySelector('.dhDogMover');
+  const toy=doghouseInterior.querySelector('.dhToy');
+  doghouseInterior.classList.add('playMode');
+  if(toy)toy.className='dhToy show toss1';
+  setTimeout(()=>{if(dog)dog.className='dhDogMover playHop'},180);
+  setTimeout(()=>{if(toy)toy.className='dhToy show toss2'; if(dog)dog.className='dhDogMover playHop2'},1300);
+  setTimeout(()=>{doghouseInterior.classList.remove('playMode'); if(toy)toy.className='dhToy';},2450);
+  doghouseGoToBed(2550);
+}
+sleepDoghouse=function(){
+  if(!doghouseInterior.classList.contains('on')||doghouseFed)return;
+  doghouseFed=true;
+  setDoghouseActionState('hide');
+  doghouseGoToBed(200);
+}
+fireBoneBoomerang=function(){
+  if(paused||system===0&&stage===0)return;
+  if(food<3){showToast('🦴 骨が3必要！ 骨を集めよう',1000);return}
+  food-=3;
+  boneShots.push({x:p.x+55,y:p.y+25,v:11,life:152,phase:0,baseY:p.y+25,returning:false,fetched:null});
+  showToast('🦴💫 骨ブーメラン！',700);
+  syncHUD();
+}
+function awardFetchedItem(b){
+  if(!b.fetched)return;
+  if(b.fetched==='🦴'){
+    if(food<10){food++;showToast('🦴 とってきた！ 骨 +1',900)}
+    else{points+=1;starTotal+=1;showToast('🦴 とってきた！ 元気満タンで⭐+1',950)}
+  }else if(b.fetched==='⭐'){
+    points+=2;starTotal+=2;showToast('⭐ とってきた！ 星 +2',900)
+  }
+  syncHUD();
+}
+updateBoneShots=function(dt){
+  for(const b of boneShots){
+    b.phase+=dt;
+    b.x+=b.v*dt;
+    b.y=b.baseY+Math.sin(b.phase*.12)*125;
+    b.life-=dt;
+    if(b.life<78&&!b.returning){b.returning=true;b.v=-11}
+    const hitBox=(obj,dx=88,dy=150)=>Math.abs(b.x-(obj.x+(obj.w||0)/2))<dx&&Math.abs(b.y-(obj.y+(obj.h||0)/2))<dy;
+    for(const h of hazards){if(h.got)continue;if(hitBox(h,78,130)){h.got=true;points+=2;if(!b.fetched)b.fetched='🦴';b.returning=true;b.v=-11;break}}
+    for(const a of aliens){if(a.got)continue;if(hitBox(a,95,155)){if(performance.now()-a.lastHit>420){a.lastHit=performance.now();a.hitFlash=14;a.chargeHits++;registerAlienHit(1);if(a.chargeHits>=3){a.got=true;points+=3;showToast('👽✨ SIGNAL BURST！',700)}}if(!b.fetched)b.fetched='⭐';b.returning=true;b.v=-11;break}}
+    for(const o of swarm){if(o.got)continue;if(hitBox(o,88,150)){o.got=true;points+=3;if(!b.fetched)b.fetched='🦴';b.returning=true;b.v=-11;break}}
+    for(const boss of bosses){if(boss.dead)continue;if(hitBox(boss,100,170)){boss.hp=Math.max(0,boss.hp-2);boss.hitFlash=8;if(!b.fetched)b.fetched='⭐';b.returning=true;b.v=-11;if(boss.hp<=0){boss.dead=true;points+=30}break}}
+    if(b.returning&&Math.abs(b.x-(p.x+26))<34){awardFetchedItem(b);b.life=0}
+  }
+  boneShots=boneShots.filter(b=>b.life>0&&Math.abs(b.x-p.x)<W+450);
+  syncHUD();
+}
+drawBoneShots=function(){
+  ctx.save();
+  ctx.font='34px system-ui';
+  for(const b of boneShots){
+    const sx=b.x-camera;
+    ctx.save();
+    ctx.translate(sx,b.y);
+    ctx.rotate(b.phase*.3);
+    ctx.shadowColor='#ffe26d';
+    ctx.shadowBlur=18;
+    ctx.fillText('🦴',-17,12);
+    if(b.fetched){ctx.font='18px system-ui';ctx.fillText(b.fetched,12,-10);ctx.font='34px system-ui';}
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
 const feedDogBtn=$('feedDogBtn'),playDogBtn=$('playDogBtn'),sleepDogBtn=$('sleepDogBtn'),rewardCloseBtn=$('rewardClose');
 if(feedDogBtn)feedDogBtn.addEventListener('click',feedDoghouse);
 if(playDogBtn)playDogBtn.addEventListener('click',playDoghouse);
@@ -3046,5 +3224,72 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
   #jump small{font-size:12px!important}
   #reward{bottom:114px!important;width:min(470px,94vw)!important}
   .rewardBtn{font-size:10px!important;min-height:54px!important}
+}
+</style>
+
+
+<style id="v48-doghouse-combat-patch">
+/* ===== v48 visual patch ===== */
+#special{background:linear-gradient(180deg,#fffdf2,#f4ddff 55%,#9be8ff)!important}
+#big{background:linear-gradient(180deg,#fff7fb,#ffdff0 50%,#a8f2ff)!important}
+#laser{background:linear-gradient(180deg,#eef8ff,#d8f0ff 44%,#8bdcff 100%)!important}
+#cosmicPower{background:linear-gradient(180deg,#fff6ff,#ead6ff 55%,#b6f8f1)!important}
+#jump{background:linear-gradient(180deg,#fffaff,#efe3ff 46%,#9fe8ff 100%)!important}
+.rewardBtn[data-special="giant"]{background:linear-gradient(180deg,#fff8ff,#ffdff2 52%,#b9efff)!important}
+.rewardBtn[data-special="boneRain"]{background:linear-gradient(180deg,#fffdf6,#fff0ca 48%,#c7f2ff)!important}
+#doghouseInterior .dhWindow{width:27%!important;height:28%!important;left:5.2%!important;top:24%!important}
+#doghouseInterior .dhBedCss{right:7%!important;bottom:10.6%!important;width:25%!important;height:18%!important;min-width:138px!important;max-width:190px!important}
+#doghouseInterior .dhDogMover,
+#doghouseInterior .dhDogMover.ready,
+#doghouseInterior .dhDogMover.runToBones,
+#doghouseInterior .dhDogMover.eatBones,
+#doghouseInterior .dhDogMover.playHop,
+#doghouseInterior .dhDogMover.playHop2,
+#doghouseInterior .dhDogMover.runToBed,
+#doghouseInterior .dhDogMover.jumpBed{font-size:48px!important}
+#doghouseInterior .dhDogMover{left:12%!important;bottom:10.5%!important}
+#doghouseInterior .dhDogMover.ready{animation:v48Idle 1.7s ease-in-out infinite alternate!important}
+@keyframes v48Idle{from{transform:scaleX(-1) translateX(0) translateY(0)}to{transform:scaleX(-1) translateX(8px) translateY(-2px)}}
+@keyframes v48RunBones{0%{left:12%;bottom:10.5%;transform:scaleX(-1)}35%{left:18%;bottom:11.8%;transform:scaleX(-1) translateY(-5px)}70%{left:24%;bottom:10.7%;transform:scaleX(-1)}100%{left:30%;bottom:10.7%;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.runToBones{animation:v48RunBones 1s ease-in-out forwards!important}
+#doghouseInterior .dhDogMover.eatBones{left:30%!important;bottom:10.6%!important;transform:scaleX(-1) rotate(-5deg)!important;animation:v48Eat .35s 5 alternate!important}
+@keyframes v48Eat{from{transform:scaleX(-1) rotate(-5deg) translateY(0)}to{transform:scaleX(-1) rotate(3deg) translateY(3px)}}
+@keyframes v48Play1{0%{left:12%;bottom:10.5%;transform:scaleX(-1)}25%{left:16%;bottom:15%;transform:scaleX(-1) rotate(-8deg)}55%{left:23%;bottom:10.6%;transform:scaleX(-1)}100%{left:29%;bottom:13.5%;transform:scaleX(-1) rotate(8deg)}}
+@keyframes v48Play2{0%{left:29%;bottom:13.5%;transform:scaleX(-1)}35%{left:22%;bottom:10.8%;transform:scaleX(-1)}68%{left:18%;bottom:16.2%;transform:scaleX(-1) rotate(8deg)}100%{left:12%;bottom:10.6%;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.playHop{animation:v48Play1 1.1s ease-in-out forwards!important}
+#doghouseInterior .dhDogMover.playHop2{animation:v48Play2 1.05s ease-in-out forwards!important}
+@keyframes v48RunBed{0%{left:12%;bottom:10.6%;transform:scaleX(-1)}38%{left:28%;bottom:11.5%;transform:scaleX(-1) translateY(-5px)}70%{left:48%;bottom:12.5%;transform:scaleX(-1)}100%{left:60%;bottom:12.2%;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.runToBed{animation:v48RunBed 1.15s ease-in-out forwards!important}
+@keyframes v48JumpBed{0%{left:60%;bottom:12.2%;font-size:48px;transform:scaleX(-1)}42%{left:65%;bottom:23.2%;font-size:51px;transform:scaleX(-1) rotate(-8deg)}100%{left:68%;bottom:14.8%;font-size:45px;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.jumpBed{z-index:14!important;animation:v48JumpBed 1.05s cubic-bezier(.24,.82,.25,1) forwards!important}
+#doghouseInterior .dhToy{position:absolute;left:24%;bottom:11.8%;font-size:26px;opacity:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25));z-index:13;pointer-events:none}
+#doghouseInterior .dhToy.show{opacity:1}
+#doghouseInterior .dhToy.toss1{animation:v48Toy1 1.1s ease-in-out forwards}
+#doghouseInterior .dhToy.toss2{animation:v48Toy2 1s ease-in-out forwards}
+@keyframes v48Toy1{0%{left:24%;bottom:12%;transform:rotate(0)}50%{left:34%;bottom:21%;transform:rotate(140deg)}100%{left:42%;bottom:13%;transform:rotate(260deg)}}
+@keyframes v48Toy2{0%{left:42%;bottom:13%;transform:rotate(0)}44%{left:28%;bottom:22%;transform:rotate(-160deg)}100%{left:18%;bottom:12.5%;transform:rotate(-280deg)}}
+#doghouseInterior .dhActionBar{gap:8px!important}
+#doghouseInterior .dhActionBtn{box-shadow:0 0 14px rgba(86,231,255,.24),0 6px 0 rgba(37,16,71,.82)!important}
+#doghouseInterior #feedDogBtn{background:linear-gradient(180deg,#fffaf2,#ffe5bc 50%,#9fe8ff)!important}
+#doghouseInterior #playDogBtn{background:linear-gradient(180deg,#fff7ff,#f7ddff 50%,#a9ebff)!important}
+#doghouseInterior #sleepDogBtn{background:linear-gradient(180deg,#f7fbff,#dfe7ff 50%,#a7d7ff)!important}
+#doghouseInterior .dhBoneRain{z-index:18!important}
+#doghouseInterior .dhBoneRain span{left:30%!important}
+#doghouseInterior .dhEatPile{left:30.2%!important;bottom:12.4%!important;min-width:118px!important;font-size:24px!important;z-index:19!important}
+#doghouseInterior .dhActionBtn small{font-size:8px!important}
+#doghouseInterior .dhSleepFace{left:52%!important;bottom:-11%!important;font-size:min(84vw,460px)!important}
+#doghouseInterior .dhGoodnight{bottom:14%!important}
+@media(max-width:520px){
+  #doghouseInterior .dhWindow{width:31%!important;height:27%!important;left:4.5%!important;top:24.5%!important}
+  #doghouseInterior .dhBedCss{width:27%!important;min-width:130px!important;height:17%!important;right:7%!important}
+  #doghouseInterior .dhDogMover,
+  #doghouseInterior .dhDogMover.ready,
+  #doghouseInterior .dhDogMover.runToBones,
+  #doghouseInterior .dhDogMover.eatBones,
+  #doghouseInterior .dhDogMover.playHop,
+  #doghouseInterior .dhDogMover.playHop2,
+  #doghouseInterior .dhDogMover.runToBed,
+  #doghouseInterior .dhDogMover.jumpBed{font-size:42px!important}
+  #doghouseInterior .dhSleepFace{font-size:min(90vw,410px)!important;left:54%!important}
 }
 </style>
