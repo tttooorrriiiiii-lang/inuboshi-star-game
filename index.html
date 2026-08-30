@@ -74,17 +74,14 @@ canvas{display:block;width:100%;height:100%}
 <div id="critical">⚠️ CRITICAL! あと1回でGAME OVER</div><div id="gameOver"><div id="gameOverTitle">GAME OVER</div><div id="gameOverSub">宇宙はそんなにやさしくない…<br>⭐ 20 LOST<br><br>RETRYING…</div></div>
 
 <div id="doghouseInterior">
-  <div class="doghouseRoom">
-    <div class="dhWindow">🌙<span>✦　✦</span></div>
-    <div class="dhLamp">💡</div>
-    <div class="dhFriends">🐕　🐩　🦮　🐕‍🦺</div>
-    <button id="convertStarsBtn" class="ctrl">⭐ 星を骨に変える<small>残り⭐ 0</small></button>
-    <div class="dhBonePile">🦴　🦴　🦴　🦴　🦴<br>🦴　🦴　🦴　🦴</div>
-    <div class="dhFloor"></div>
+  <div class="doghouseScene">
+    <div class="doghouseBg"></div>
+    <div class="dhDim"></div>
     <div class="dhDogMover">🐕</div>
-    <div class="dhBed">🛏️</div>
-    <div class="dhBigFace">🐶</div>
+    <div class="dhBoneTarget">🦴🦴🦴</div>
+    <button id="convertStarsBtn" class="ctrl">⭐ 星を骨に変える<small>残り⭐ 0</small></button>
     <div class="dhCaption">やっと帰って来れた。</div>
+    <div class="dhSleepClose"></div>
   </div>
 </div>
 <button id="debugHomeBtn" aria-label="ending test">🐾</button>
@@ -383,17 +380,13 @@ function doghouseChoice(){
  if(paused)return;
  paused=true;
  doghouseFed=false;
- doghouseInterior.classList.remove('blackout','lightsOff','faceClose','softDim');
- doghouseInterior.classList.add('on');
-
+ doghouseInterior.className='on';
  const cap=doghouseInterior.querySelector('.dhCaption');
  const dog=doghouseInterior.querySelector('.dhDogMover');
- const pile=doghouseInterior.querySelector('.dhBonePile');
  const btn=doghouseInterior.querySelector('#convertStarsBtn');
-
  if(cap)cap.textContent='やっと帰って来れた。仲間のわんちゃんも待っていた。';
- if(dog){dog.className='dhDogMover';void dog.offsetWidth;dog.classList.add('walkIn')}
- if(pile)pile.classList.remove('full','eating');
+ if(dog){dog.className='dhDogMover ready';}
+ if(btn){btn.style.display='block'}
  updateConvertStarsButton();
 }
 
@@ -402,69 +395,31 @@ function feedDoghouse(){
  doghouseFed=true;
  const cap=doghouseInterior.querySelector('.dhCaption');
  const dog=doghouseInterior.querySelector('.dhDogMover');
- const pile=doghouseInterior.querySelector('.dhBonePile');
  const btn=doghouseInterior.querySelector('#convertStarsBtn');
-
  const spend=points>0?Math.min(points,6):0;
- if(spend>0){
-   points-=spend;
-   starTotal=Math.max(0,starTotal-spend);
-   food=Math.min(10,food+spend);
-   syncHUD();
- }
- if(btn){btn.disabled=true}
- if(pile)pile.classList.add('full');
+ if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food=Math.min(10,food+spend);syncHUD()}
  updateConvertStarsButton();
- if(cap)cap.textContent=spend>0?`⭐ ${spend}個を骨に変えた。仲間といっしょにごはんタイム。`:'今日はサービスの骨でごはんタイム。';
+ if(btn)btn.style.display='none';
+ if(cap)cap.textContent=spend?`⭐ ${spend}個を骨に変えた！`:'骨が出てきた！';
 
- // 犬が骨のところへ行って食べる
- setTimeout(()=>{
-   if(dog)dog.className='dhDogMover eatFood';
-   if(pile)pile.classList.add('eating');
-   if(cap)cap.textContent='もぐもぐ……';
- },520);
+ // 骨へ走る → 食べる
+ setTimeout(()=>{if(dog)dog.className='dhDogMover runToBones';if(cap)cap.textContent='もぐもぐ…'},450);
+ setTimeout(()=>{if(dog)dog.className='dhDogMover eatBones'},1450);
 
- // ベッドへ向かう
- setTimeout(()=>{
-   if(dog)dog.className='dhDogMover jumpBed';
-   if(cap)cap.textContent='お腹いっぱい。ベッドへ。';
- },1750);
+ // ベッドへ向かう → ピョン
+ setTimeout(()=>{if(dog)dog.className='dhDogMover runToBed';if(cap)cap.textContent='お腹いっぱい。ベッドへ。'},2450);
+ setTimeout(()=>{if(dog)dog.className='dhDogMover jumpBed'},3350);
 
- // 落ち着く
- setTimeout(()=>{
-   if(cap)cap.textContent='ふぅ……';
- },2800);
+ // ふっと暗くなる → 消灯
+ setTimeout(()=>{doghouseInterior.classList.add('softDim');if(cap)cap.textContent='ふぅ……'},4300);
+ setTimeout(()=>{doghouseInterior.classList.add('lightsOff');if(cap)cap.textContent='おやすみなさい。'},5050);
 
- // 電気を消す直前、部屋がふっと暗くなる
- setTimeout(()=>{
-   doghouseInterior.classList.add('softDim');
-   if(cap)cap.textContent='ふっと部屋が暗くなる……';
- },3350);
+ // 暗転して、すでに大きい犬のアップへ切り替える
+ setTimeout(()=>{doghouseInterior.classList.add('blackout')},5700);
+ setTimeout(()=>{doghouseInterior.classList.remove('blackout');doghouseInterior.classList.add('faceClose')},6550);
 
- // 電気オフ
- setTimeout(()=>{
-   doghouseInterior.classList.add('lightsOff');
-   if(cap)cap.textContent='電気を消す。';
- },3900);
-
- // 暗転
- setTimeout(()=>{
-   doghouseInterior.classList.add('blackout');
- },4550);
-
- // 画面いっぱいの犬アップに切り替え
- setTimeout(()=>{
-   doghouseInterior.classList.remove('blackout');
-   doghouseInterior.classList.add('faceClose');
-   if(cap)cap.textContent='おやすみなさい。';
- },5450);
-
- // ぐるぐるへ
- setTimeout(()=>{
-   doghouseInterior.classList.remove('on','blackout','lightsOff','faceClose');
-   trans.style.display='grid';
-   dreamRestart();
- },6400);
+ // 少し見せて、夢のぐるぐるへ
+ setTimeout(()=>{doghouseInterior.className='';trans.style.display='grid';dreamRestart()},8250);
 }
 
 function dreamRestart(){
@@ -1358,3 +1313,14 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
   }
 }
 </style>
+
+<style>
+/* v41: concept-art-matched doghouse scene */
+#doghouseInterior{
+  display:none;position:absolute;z-index:80;inset:0;overflow:hidden;background:#09070d;color:#fff;
+}
+#doghouseInterior.on{display:block}
+.doghouseScene{position:absolute;inset:0;overflow:hidden;background:#0a0a10}
+.doghouseBg{
+  position:absolute;inset:0;
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABogAAAOtCAIAAAA95HBeAABVVGNhQlgAAFVUanVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAAVS5qdW1iAAAAR2p1bWRjMm1hABEAEIAAAKoAOJtxA3VybjpjMnBhOmZmODUxZjQyLWMzOTEtNDExYS1hMmRhLTc5YThhNDdhMmViMAAAAAxXanVtYgAAAClqdW1kYzJhcwARABCAAACqADibcQNjMnBhLmFzc2VydGlvbnMAAAAJ0Wp1bWIAAAA7anVtZEDLDDK7ikidpwsq1vR/Q2kTYzJwYS5pY29uAAAAABhjMnNo5PPmlYDIAmMV/1QiI5uazQAAABdiZmRiAGltYWdlL3N2Zyt4bWwAAAAJd2JpZGI8c3ZnIHdpZHRoPSI3MTYiIGhlaWdodD0iNzE2IiB2aWV3Qm94PSIwIDAgNzE2IDcxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTUwOC43NDkgMzE3LjM5OUM1MTYuNzc3IDI4Ny4zMTQgNTA4Ljk5MSAyNTMuODg0IDQ4NS4zODkgMjMwLjI4MkM0NjEuNzg4IDIwNi42ODEgNDI4LjM2IDE5OC44OTUgMzk4LjI3MyAyMDYuOTIzQzM3Ni4yMzEgMTg0LjkyOCAzNDMuMzkgMTc0Ljk1NiAzMTEuMTQ4IDE4My41OTZDMjc4LjkwNiAxOTIuMjM0IDI1NS40NSAyMTcuMjkyIDI0Ny4zNiAyNDcuMzYxQzIxNy4yOTEgMjU1LjQ1MSAxOTIuMjMzIDI3OC45MSAxODMuNTk1IDMxMS4xNDlDMTc0Ljk1NyAzNDMuMzkxIDE4NC45MjcgMzc2LjIzMiAyMDYuOTI0IDM5OC4yNzRDMTk4Ljg5NiA0MjguMzU5IDIwNi42ODMgNDYxLjc4OSAyMzAuMjg0IDQ4NS4zOTFDMjUzLjg4NSA1MDguOTkyIDI4Ny4zMTMgNTE2Ljc3OSAzMTcuNDAxIDUwOC43NUMzMzkuNDQyIDUzMC43NDUgMzcyLjI4NiA1NDAuNzE3IDQwNC41MjUgNTMyLjA3OUM0MzYuNzY3IDUyMy40NDEgNDYwLjIyMyA0OTguMzg0IDQ2OC4zMTMgNDY4LjMxNUM0OTguMzgzIDQ2MC4yMjQgNTIzLjQ0IDQzNi43NjYgNTMyLjA3OCA0MDQuNTI2QzU0MC43MTYgMzcyLjI4NSA1MzAuNzQ3IDMzOS40NDMgNTA4Ljc0OSAzMTcuNDAyVjMxNy4zOTlaTTQ3MC44OTkgMjQ0Ljc3NkM0ODYuODkyIDI2MC43NyA0OTMuNDg4IDI4Mi42MDEgNDkwLjY4NyAzMDMuNDEyTDQxNS41NzcgMjYwLjA0NkM0MTIuNDExIDI1OC4yMTggNDA4LjUwOSAyNTguMjE4IDQwNS4zNDUgMjYwLjA0NkwzMTcuNDAxIDMxMC44MlYyNzcuNTI2QzMxNy40MDEgMjc1LjE5MSAzMTguNjUyIDI3My4wMDUgMzIwLjY3NiAyNzEuODM3TDM4Ny42NDQgMjMzLjE3NEM0MTQuMTc4IDIxOC4zNTMgNDQ4LjM0NiAyMjIuMjIzIDQ3MC45MDEgMjQ0Ljc3Nkg0NzAuODk5Wk0zNTcuODM3IDMxMS4xNDRMMzk4LjI3NSAzMzQuNDkxVjM4MS4xODVMMzU3LjgzNyA0MDQuNTMyTDMxNy4zOTggMzgxLjE4NVYzMzQuNDkxTDM1Ny44MzcgMzExLjE0NFpNMjY0Ljc3NiAyNjkuNjkzQzI2NS4yMDcgMjM5LjMwNSAyODUuNjQ0IDIxMS42NDkgMzE2LjQ1MyAyMDMuMzkzQzMzOC4zIDE5Ny41NCAzNjAuNTA1IDIwMi43
