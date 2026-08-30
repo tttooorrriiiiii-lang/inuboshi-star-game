@@ -626,115 +626,7 @@ canvas{display:block;width:100%;height:100%}
 (()=>{
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),wrap=$('wrap'),locationEl=$('location'),levelEl=$('level'),pointsEl=$('points'),hpEl=$('hp'),foodEl=$('food'),alienHitEl=$('alienHitCount'),powerText=$('powerText'),meterFill=$('meterFill'),missionEl=$('mission'),eventEl=$('event'),astroInfo=$('astroInfo'),toast=$('toast'),bigBtn=$('big'),specialBtn=$('special'),chipText=$('chipText'),jumpBtn=$('jump'),laserBtn=$('laser'),laserAmmoText=$('laserAmmoText'),cosmicBtn=$('cosmicPower'),cosmicPowerText=$('cosmicPowerText'),bigBanner=$('bigBanner'),reward=$('reward'),sparkBadge=$('sparkBadge'),guardFlash=$('guardFlash'),comm=$('comm'),commText=$('commText'),trans=$('transition'),transTitle=$('transitionTitle'),nextEl=$('next'),subEl=$('sub'),warpDog=$('warpDog'),secretBadge=$('secretBadge'),gameOverEl=$('gameOver'),criticalEl=$('critical'),doghouseInterior=$('doghouseInterior'),debugHomeBtn=$('debugHomeBtn'),convertStarsBtn=$('convertStarsBtn');
 let W=0,H=0,DPR=1;function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;canvas.width=W*DPR;canvas.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
-const systems=[
-{name:'🌌 天の川銀河',distance:'地球はこの銀河の中',desc:'太陽系がある銀河',theme:'milky',stages:[
-{name:'🌍 地球',distance:'0光年',desc:'ここが出発点。背景には月',goodColor:'#59d0ff',sky:['#03101d','#144065'],ground:'#5fae7c',ground2:'#34664a',planet:'#d9dde6',event:'SATELLITE RUSH',eventText:'🛰️ 衛星がたくさん飛ぶ！',gravity:.56,jump:15.6},
-{name:'🌙 月',distance:'約38万km',desc:'地球の衛星・最初の遠征',goodColor:'#ffe66b',sky:['#050615','#131536'],ground:'#b7b7c2',ground2:'#777682',planet:'#5c8fff',event:'LOW GRAVITY',eventText:'低重力でジャンプが高い！',gravity:.38,jump:15.8},
-{name:'🔴 火星',distance:'約0.000006光年',desc:'地球からさらに遠い赤い惑星',goodColor:'#ff6b4b',sky:['#120504','#4c1710'],ground:'#bd684e',ground2:'#73392d',planet:'#d55a43',event:'METEOR SHOWER',eventText:'危険な隕石が上から降る！',gravity:.50,jump:16.2},
-{name:'🟠 木星',distance:'約0.000066光年',desc:'巨大なガス惑星',goodColor:'#f1c18a',sky:['#100806','#3b2116'],ground:'#b78967',ground2:'#6d4a36',planet:'#cf9b72',event:'GIANT STORM',eventText:'巨大嵐で画面が揺れる！',gravity:.62,jump:16.4},
-{name:'🪐 土星',distance:'約0.00015光年',desc:'巨大なリングを持つ惑星',goodColor:'#f1db96',sky:['#09080d','#29243a'],ground:'#c2b283',ground2:'#776a4f',planet:'#dfc785',event:'RING RUSH',eventText:'星アイテムが大量出現！',gravity:.50,jump:16.3},
-{name:'🩵 天王星',distance:'約0.00030光年',desc:'横倒しに回る氷惑星',goodColor:'#9fe9e7',sky:['#020d12','#12343a'],ground:'#8bb7b5',ground2:'#4f7372',planet:'#8ad6d5',event:'ICE WIND',eventText:'ジャンプ中に風で流される',gravity:.46,jump:16.7},
-{name:'🔵 海王星',distance:'約0.00048光年',desc:'超高速の風が吹く惑星',goodColor:'#6d8fff',sky:['#020516','#12255c'],ground:'#586fa7',ground2:'#344572',planet:'#4168d6',event:'SUPER WIND',eventText:'強風で走る速度がUP！',gravity:.54,jump:16.9},
-{name:'☀️ 太陽',distance:'約0.000016光年',desc:'灼熱の恒星・特別ルート',goodColor:'#fff08a',sky:['#2b0500','#ff4a00'],ground:'#ff9f1c',ground2:'#8f1d00',planet:'#ffdf33',event:'SOLAR INFERNO',eventText:'🔥 灼熱フレアが降り注ぐ！',gravity:.50,jump:17.0},
-{name:'☿ 水星',distance:'約0.000010光年',desc:'太陽に最も近い惑星・特別ルート',goodColor:'#c8b69a',sky:['#0b0605','#2b1711'],ground:'#9d907f',ground2:'#5b544c',planet:'#b08d6f',event:'SOLAR FLARE',eventText:'太陽フレアが飛んでくる！',gravity:.55,jump:15.2},
-{name:'♀ 金星',distance:'約0.000004光年',desc:'厚い雲の灼熱惑星・特別ルート',goodColor:'#ffb45f',sky:['#150706','#4d2114'],ground:'#c28352',ground2:'#74442f',planet:'#d9904f',event:'COSMIC GAS',eventText:'宇宙ガスがモワ〜っと流れる',gravity:.58,jump:15.4},
-{name:'⭐ シリウス',distance:'約8.6光年',desc:'恒星・おおいぬ座',goodColor:'#dff6ff',sky:['#020714','#173958'],ground:'#7899b1',ground2:'#38546b',planet:'#eefbff',event:'STAR SHOWER',eventText:'シリウスの光の流星群！',gravity:.48,jump:17.3},
-{name:'🔴 ベテルギウス',distance:'約640光年',desc:'赤色超巨星・オリオン座',goodColor:'#ff8b64',sky:['#190603','#5f190d'],ground:'#9d513e',ground2:'#572b22',planet:'#ff6b47',event:'SOLAR INFERNO',eventText:'巨大恒星の熱波がくる！',gravity:.50,jump:17.4},
-{name:'💠 ベガ',distance:'約25光年',desc:'恒星・こと座',goodColor:'#bfe8ff',sky:['#020716','#153d70'],ground:'#597fa5',ground2:'#304966',planet:'#d8f4ff',event:'AURORA WAVE',eventText:'青白い恒星光が波になる！',gravity:.46,jump:17.6},
-{name:'❤️ アンタレス',distance:'約550光年',desc:'赤色超巨星・さそり座',goodColor:'#ff705a',sky:['#170302','#5b120d'],ground:'#9e4437',ground2:'#56251f',planet:'#ff523d',event:'METEOR SHOWER',eventText:'赤い恒星風と隕石！',gravity:.52,jump:17.4},
-{name:'🌟 ポラリス',distance:'約430光年',desc:'恒星・現在の北極星',goodColor:'#fff5c4',sky:['#050817','#26365b'],ground:'#8e93a7',ground2:'#4d5266',planet:'#fff4b5',event:'STAR SHOWER',eventText:'北極星の光が降り注ぐ！',gravity:.47,jump:17.5}
-]},
-{name:'☁️ 大マゼラン雲',distance:'地球から約16万光年',desc:'天の川の伴銀河',theme:'cloud',stages:[
-{name:'💙 R136a1',desc:'超大質量星・大マゼラン雲',goodColor:'#9de9ff',sky:['#04101a','#124a69'],ground:'#3c7180',ground2:'#1d3745',planet:'#a7efff',event:'COSMIC GAS',eventText:'青白い宇宙ガスが接近！',gravity:.46,jump:17.2},
-{name:'✨ S Doradus',desc:'高光度青色変光星・大マゼラン雲',goodColor:'#d7b6ff',sky:['#09061a','#38265d'],ground:'#675583',ground2:'#332741',planet:'#c6a2ff',event:'STAR SHOWER',eventText:'流星群が連続で通過！',gravity:.44,jump:17.4}
-]},
-{name:'✨ アンドロメダ銀河',distance:'地球から約250万光年',desc:'天の川に近い大型銀河',theme:'andromeda',stages:[
-{name:'⭐ M31-V1',desc:'ケフェイド変光星・アンドロメダ銀河',goodColor:'#d397ff',sky:['#090315','#3b1f5c'],ground:'#9a7fad',ground2:'#5f4b72',planet:'#9b67d2',event:'CRYSTAL RAIN',eventText:'結晶の雨が降る！',gravity:.48,jump:17.1},
-{name:'💫 AF Andromedae',desc:'高光度青色変光星・アンドロメダ銀河',goodColor:'#ff92bd',sky:['#10040b','#4a1830'],ground:'#c7839c',ground2:'#79465b',planet:'#e777a4',event:'ALIEN PARADE',eventText:'宇宙人の大群がやってくる！',gravity:.52,jump:17.1}
-]},
-{name:'🔺 三角座銀河',distance:'地球から約273万光年',desc:'局所銀河群の渦巻銀河',theme:'triangulum',stages:[
-{name:'🟢 ロマーノ星 GR 290',desc:'ウォルフ・ライエ星・三角座銀河',goodColor:'#79ffc0',sky:['#010d08','#17462f'],ground:'#7fb497',ground2:'#426c56',planet:'#6be1a2',event:'AURORA WAVE',eventText:'オーロラ波でPOWER獲得UP！',gravity:.45,jump:17.5},
-{name:'🌠 M33 Var C',desc:'高光度青色変光星・三角座銀河',goodColor:'#a7fff0',sky:['#03121a','#12615a'],ground:'#3f8274',ground2:'#204a42',planet:'#5de1c5',event:'STAR SHOWER',eventText:'超密度の流星群！',gravity:.47,jump:17.3}
-]},
-{name:'🌀 子持ち銀河 M51',distance:'地球から約3100万光年',desc:'伴銀河を持つ渦巻銀河',theme:'whirlpool',stages:[
-{name:'⭐ M51-DS1',desc:'子持ち銀河で観測された高光度星',goodColor:'#ff8bd8',sky:['#16051a','#5c164e'],ground:'#9a507e',ground2:'#52283e',planet:'#ff77c8',event:'ALIEN PARADE',eventText:'👽 宇宙人エリア！',gravity:.50,jump:17.4}
-]},
-{name:'👒 ソンブレロ銀河',distance:'地球から約2900万光年',desc:'暗い塵の帯が目立つ銀河',theme:'sombrero',stages:[
-{name:'👒 M104 中心核',desc:'ソンブレロ銀河の中心領域',goodColor:'#ffc47b',sky:['#120905','#4e2e16'],ground:'#a47145',ground2:'#58391f',planet:'#e29b50',event:'COSMIC GAS',eventText:'濃い宇宙ガスが通過！',gravity:.56,jump:17.0}
-]},
-{name:'🌻 ひまわり銀河',distance:'地球から約2700万光年',desc:'黄金色に輝く渦巻銀河',theme:'sunflower',stages:[
-{name:'🌻 M63 渦巻腕',desc:'ひまわり銀河の渦巻構造',goodColor:'#ffe45d',sky:['#130d01','#5b4007'],ground:'#b59a42',ground2:'#6b5620',planet:'#ffd84c',event:'STAR SHOWER',eventText:'金色の流星群が降り注ぐ！',gravity:.49,jump:17.2}
-]},
-{name:'🌌 1億光年圏',distance:'地球から約1億光年',desc:'銀河団を越えて巨大構造へ',theme:'cloud',stages:[
-{name:'🌌 遠方銀河の海',distance:'約1億光年',desc:'銀河が点のように散る領域',goodColor:'#b9d6ff',sky:['#020510','#101b38'],ground:'#66748f',ground2:'#2b3448',planet:'#b6c9ee',event:'STAR SHOWER',eventText:'遠方銀河の光が流れる！',gravity:.48,jump:17.4}
-]},
-{name:'🕸️ 5億光年圏',distance:'地球から約5億光年',desc:'宇宙の大規模構造が見えてくる',theme:'triangulum',stages:[
-{name:'🕸️ コズミック・ウェブ',distance:'約5億光年',desc:'銀河が糸のようにつながる領域',goodColor:'#a9fff1',sky:['#010812','#0a3440'],ground:'#4b7777',ground2:'#24424a',planet:'#9cefe8',event:'AURORA WAVE',eventText:'宇宙の網目が脈動する！',gravity:.47,jump:17.5}
-]},
-{name:'🌠 10億光年圏',distance:'地球から約10億光年',desc:'地球はもう見えないほど遠い',theme:'andromeda',stages:[
-{name:'🌠 ディープ・フィールド',distance:'約10億光年',desc:'視界いっぱいに遠方銀河',goodColor:'#d4b7ff',sky:['#050313','#241442'],ground:'#75658f',ground2:'#302942',planet:'#c1a4ec',event:'STAR SHOWER',eventText:'深宇宙の光が降り注ぐ！',gravity:.46,jump:17.6}
-]},
-{name:'🔮 20億光年圏',distance:'地球から約20億光年',desc:'銀河団の密度が変わっていく',theme:'sombrero',stages:[
-{name:'🔮 クエーサーの彼方',distance:'約20億光年',desc:'巨大な光源が点滅する遠方宇宙',goodColor:'#ffb6ed',sky:['#0b020e','#351041'],ground:'#80587e',ground2:'#3d2946',planet:'#f0a4dd',event:'COSMIC GAS',eventText:'強烈な光とガスが流れる！',gravity:.47,jump:17.6}
-]},
-{name:'🫧 40億光年圏',distance:'地球から約40億光年',desc:'巨大な空洞と銀河の壁を越える',theme:'whirlpool',stages:[
-{name:'🫧 グレート・ボイド',distance:'約40億光年',desc:'銀河が少ない巨大な空洞域',goodColor:'#95cfff',sky:['#01030a','#081b32'],ground:'#4e6078',ground2:'#1e2938',planet:'#8db8e8',event:'GRAVITY WELL',eventText:'空っぽの宇宙で重力が揺らぐ！',gravity:.45,jump:17.7}
-]},
-{name:'💜 60億光年圏',distance:'地球から約60億光年',desc:'宇宙の歴史を半分以上さかのぼる',theme:'andromeda',stages:[
-{name:'💜 タイム・スロープ',distance:'約60億光年',desc:'過去の宇宙の光が濃くなる',goodColor:'#d9a8ff',sky:['#05020c','#251044'],ground:'#67527f',ground2:'#2b2340',planet:'#c69cec',event:'AURORA WAVE',eventText:'時間の層が波のように揺れる！',gravity:.45,jump:17.7}
-]},
-{name:'🔵 80億光年圏',distance:'地球から約80億光年',desc:'初期宇宙に近づいていく',theme:'cloud',stages:[
-{name:'🔵 プロトギャラクシー海',distance:'約80億光年',desc:'若い銀河が次々生まれる領域',goodColor:'#b9e8ff',sky:['#01030a','#071d35'],ground:'#55718b',ground2:'#223348',planet:'#b2def8',event:'STAR SHOWER',eventText:'若い銀河の光が飛び交う！',gravity:.44,jump:17.8}
-]},
-{name:'🔭 イカロス星域',distance:'地球から約94億光年',desc:'重力レンズで見つかった超遠方の星域',theme:'andromeda',stages:[
-{name:'💙 イカロス',distance:'約94億光年',desc:'重力レンズで観測された超遠方の青い星',goodColor:'#c9efff',sky:['#01030d','#071d43'],ground:'#667b9e',ground2:'#26344f',planet:'#d7f3ff',event:'STAR SHOWER',eventText:'青白い光が時空を横切る！',gravity:.46,jump:17.6}
-]},
-{name:'🦋 モスラ星域',distance:'地球から約105億光年',desc:'さらに遠い重力レンズ星域',theme:'whirlpool',stages:[
-{name:'🦋 モスラ',distance:'約105億光年',desc:'遠い宇宙で観測された重力レンズ星',goodColor:'#ffe2a6',sky:['#08020e','#261040'],ground:'#837198',ground2:'#302642',planet:'#ffd9a1',event:'AURORA WAVE',eventText:'時空の光が羽のように揺れる！',gravity:.45,jump:17.7}
-]},
-{name:'❤️ クイユル星域',distance:'地球から約108億光年',desc:'宇宙初期に近い赤い星の領域',theme:'sombrero',stages:[
-{name:'❤️ クイユル',distance:'約108億光年',desc:'遠方宇宙で観測された赤い巨大星',goodColor:'#ff9b8d',sky:['#100204','#3d0b1d'],ground:'#875762',ground2:'#3d232d',planet:'#ff8878',event:'SOLAR INFERNO',eventText:'赤い恒星光が降り注ぐ！',gravity:.47,jump:17.7}
-]},
-{name:'🦖 ゴジラ星域',distance:'地球から約109億光年',desc:'極端に明るい遠方星の領域',theme:'triangulum',stages:[
-{name:'🦖 ゴジラ',distance:'約109億光年',desc:'遠方宇宙で非常に明るく見える星',goodColor:'#fff08a',sky:['#050205','#33120a'],ground:'#8e6f4f',ground2:'#3e2b20',planet:'#ffe86d',event:'METEOR SHOWER',eventText:'激しい光と隕石が飛び交う！',gravity:.48,jump:17.8}
-]},
-{name:'💠 MACS J0647 LS1',distance:'地球から約125億光年',desc:'エアレンデル直前の超遠方星域',theme:'cloud',stages:[
-{name:'💠 MACS J0647 LS1',distance:'約125億光年',desc:'宇宙初期に近い重力レンズ星',goodColor:'#d6f0ff',sky:['#010208','#07182e'],ground:'#66768a',ground2:'#25313e',planet:'#dcefff',event:'STAR SHOWER',eventText:'古い宇宙の光が降り注ぐ！',gravity:.44,jump:17.9}
-]},
-{name:'✨ エアレンデル星域',distance:'地球から約129億光年',desc:'ここから先は宇宙そのものの歴史へ',theme:'andromeda',stages:[
-{name:'✨ エアレンデル',distance:'約129億光年',desc:'最遠級の星。ここから先は宇宙膨張域',goodColor:'#fff8df',sky:['#01030b','#0b1438'],ground:'#8ea5c7',ground2:'#364763',planet:'#fff6dd',event:'STAR SHOWER',eventText:'宇宙の果ての光が降り注ぐ！',gravity:.45,jump:17.9}
-]},
-{name:'🌅 宇宙の夜明け',distance:'地球から約132億光年相当',desc:'最初期の星と銀河が生まれた時代へ',theme:'cloud',postEarendel:true,stages:[
-{name:'🌅 COSMIC DAWN',distance:'約132億光年相当',desc:'星が灯り始めた初期宇宙',goodColor:'#ffd9a1',sky:['#080303','#2d120d'],ground:'#755642',ground2:'#30241f',planet:'#ffd59b',event:'STAR SHOWER',eventText:'最初期の光が次々点灯する！',gravity:.44,jump:18.0}
-]},
-{name:'🔥 再電離の海',distance:'地球から約134億光年相当',desc:'宇宙を満たす水素が再び電離していく時代',theme:'andromeda',postEarendel:true,stages:[
-{name:'🔥 REIONIZATION',distance:'約134億光年相当',desc:'宇宙が再び透明になっていく',goodColor:'#ffb587',sky:['#0b0202','#3b100c'],ground:'#81503f',ground2:'#351f1a',planet:'#ffaf7a',event:'COSMIC GAS',eventText:'宇宙全体が発光していく！',gravity:.43,jump:18.1}
-]},
-{name:'📡 宇宙背景放射の壁',distance:'現在距離 約456億光年',desc:'最古の光が届く“最後の散乱面”',theme:'cloud',postEarendel:true,stages:[
-{name:'📡 CMB WALL',distance:'現在距離 約456億光年',desc:'約138億年前の宇宙の光',goodColor:'#ffe6c7',sky:['#120806','#4d2c1e'],ground:'#8b6c5d',ground2:'#3d302a',planet:'#ffd8b8',event:'AURORA WAVE',eventText:'宇宙最古の光がノイズのように揺れる！',gravity:.42,jump:18.2}
-]},
-{name:'🧭 観測可能宇宙の地平線',distance:'現在距離 約465億光年',desc:'今の宇宙で観測できる範囲の端',theme:'whirlpool',postEarendel:true,stages:[
-{name:'🧭 PARTICLE HORIZON',distance:'現在距離 約465億光年',desc:'ここより先は直接観測できない',goodColor:'#e8f3ff',sky:['#010208','#10182b'],ground:'#626d82',ground2:'#272e3c',planet:'#e2edff',event:'GRAVITY WELL',eventText:'光の地平線が空間をゆがめる！',gravity:.41,jump:18.3}
-]},
-{name:'🫥 観測不能宇宙',distance:'距離不明',desc:'ここから先は観測できない理論領域',theme:'blackhole',postEarendel:true,theoretical:true,stages:[
-{name:'🫥 BEYOND OBSERVABLE',distance:'距離不明',desc:'地球からは永遠に直接見えない領域',goodColor:'#b8a9ff',sky:['#000006','#10001e'],ground:'#3a3152',ground2:'#0d0a14',planet:'#6d5c96',event:'GRAVITY WELL',eventText:'距離そのものが意味を失い始める！',gravity:.40,jump:18.4}
-]},
-{name:'♾️ 膨張フロンティア',distance:'観測不能・距離定義不能',desc:'宇宙膨張のさらに先を進むゲーム内理論ステージ',theme:'expansion',postEarendel:true,theoretical:true,endless:true,stages:[
-{name:'♾️ EXPANSION FRONTIER',distance:'観測不能',desc:'空間そのものが伸び続ける先',goodColor:'#ff9df2',sky:['#000000','#050505'],ground:'#2a2334',ground2:'#07070a',planet:'#111',event:'EXPANSION WAVE',eventText:'空間そのものが引き伸ばされる！',gravity:.38,jump:18.6}
-]},
-{name:'🐾 犬の星',distance:'観測不能のさらに先',desc:'宇宙の最終地点。夢みたいに犬だらけの世界',theme:'dreamdog',postEarendel:true,theoretical:true,dream:true,final:true,stages:[
-{name:'🌈 犬だらけの夢世界',distance:'観測不能のさらに先',desc:'犬たちが空にも地上にもあふれる最終地点',goodColor:'#ffd8ff',sky:['#f6efff','#bfeeff'],ground:'#ffe8f8',ground2:'#b9a8ff',planet:'#fff7ff',event:'DOG PARADE',eventText:'🐕🐩🦮 犬がどこまでも続いている！',gravity:.30,jump:18.8}
-]},
-{name:'🌸 秘密の花銀河',distance:'???',desc:'宇宙人だけが知る秘密領域',theme:'andromeda',secret:true,secretKey:'flower',stages:[
-{name:'🌸 花吹雪星',desc:'花びらが宇宙を漂う秘密ステージ',goodColor:'#ff9ddb',sky:['#18051b','#5d174d'],ground:'#bd78a7',ground2:'#673552',planet:'#ff8ed1',event:'SECRET BLOOM',eventText:'🌸 宇宙いっぱいに花が降る！',gravity:.42,jump:18.0}
-]},
-{name:'🌝 笑う月の裏側',distance:'???',desc:'月の向こうの秘密領域',theme:'cloud',secret:true,secretKey:'moon',stages:[
-{name:'🌝 ムーンフェイス',desc:'笑う月が飛び交う秘密ステージ',goodColor:'#fff2a4',sky:['#070715','#30305b'],ground:'#c8c5ab',ground2:'#66647d',planet:'#fff2a4',event:'MOON PARTY',eventText:'🌝 月たちが踊り出す！',gravity:.30,jump:19.0}
-]},
-{name:'⚫ ブラックホール',distance:'地球からの距離は測定不能',desc:'光も逃げられない重力領域',theme:'blackhole',stages:[
-{name:'🕳️ 事象の地平面',desc:'光さえ戻れない境界',goodColor:'#d9b6ff',sky:['#000','#15051e'],ground:'#27212f',ground2:'#09070c',planet:'#000',event:'GRAVITY WELL',eventText:'重力でジャンプ軌道がゆがむ！',gravity:.72,jump:18.3}
-]}
-];
+const systems=[{"name":"☀️ 太陽系","distance":"太陽系内","desc":"地球と太陽を含む惑星系","theme":"milky","chapter":"SOLAR SYSTEM","stages":[{"name":"🌍 地球","desc":"ここが出発点。いつもの街とロケット","goodColor":"#59d0ff","sky":["#03101d","#144065"],"ground":"#5fae7c","ground2":"#34664a","planet":"#d9dde6","event":"SATELLITE RUSH","eventText":"🛰️ 衛星がたくさん飛ぶ！","gravity":0.56,"jump":15.6,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 1.00 AU","gravityActual":1.0,"gravityLabel":"1.00G","sizeText":"半径 地球=1.00","sizeLevel":3,"visualSize":0.55,"feature":"earth","bodyKind":"planet","fact":"太陽系の3番目の惑星"},{"name":"🌙 月","desc":"地球の衛星・最初の遠征","goodColor":"#ffe66b","sky":["#050615","#131536"],"ground":"#b7b7c2","ground2":"#777682","planet":"#cfd1dc","event":"LOW GRAVITY","eventText":"🪽 月面は低重力。大ジャンプ！","gravity":0.32,"jump":17.7,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"🌍 地球から 約38.4万 km","gravityActual":0.165,"gravityLabel":"0.17G","sizeText":"半径 地球の0.27倍","sizeLevel":2,"visualSize":0.42,"feature":"moon","bodyKind":"moon","fact":"地球の約1/6の重力"},{"name":"☿ 水星","desc":"太陽に最も近い岩石惑星","goodColor":"#d1c0a6","sky":["#0a0605","#2d1811"],"ground":"#9d907f","ground2":"#5b544c","planet":"#b08d6f","event":"SOLAR FLARE","eventText":"☀️ 太陽フレアが近い！","gravity":0.42,"jump":16.8,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 0.39 AU","gravityActual":0.378,"gravityLabel":"0.38G","sizeText":"半径 地球の0.38倍","sizeLevel":2,"visualSize":0.48,"feature":"mercury","bodyKind":"planet","fact":"昼夜の温度差が極端"},{"name":"♀ 金星","desc":"厚い雲に覆われた灼熱惑星","goodColor":"#ffb45f","sky":["#160807","#552515"],"ground":"#c28352","ground2":"#74442f","planet":"#d9904f","event":"COSMIC GAS","eventText":"☁️ 厚い雲で視界がモワ〜！","gravity":0.54,"jump":15.7,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 0.72 AU","gravityActual":0.905,"gravityLabel":"0.90G","sizeText":"半径 地球の0.95倍","sizeLevel":3,"visualSize":0.58,"feature":"venus","bodyKind":"planet","fact":"大きさと重力は地球にかなり近い"},{"name":"🔴 火星","desc":"赤い砂と低重力の惑星","goodColor":"#ff6b4b","sky":["#120504","#4c1710"],"ground":"#bd684e","ground2":"#73392d","planet":"#d55a43","event":"METEOR SHOWER","eventText":"☄️ 低重力＋隕石雨！","gravity":0.42,"jump":17.0,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 1.52 AU","gravityActual":0.379,"gravityLabel":"0.38G","sizeText":"半径 地球の0.53倍","sizeLevel":2,"visualSize":0.52,"feature":"mars","bodyKind":"planet","fact":"表面重力は地球の約38%"},{"name":"🟠 木星","desc":"太陽系最大の巨大ガス惑星","goodColor":"#f1c18a","sky":["#100806","#3b2116"],"ground":"#b78967","ground2":"#6d4a36","planet":"#cf9b72","event":"GIANT STORM","eventText":"🌪️ 強重力＋巨大嵐に押される！","gravity":0.69,"jump":14.8,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 5.20 AU","gravityActual":2.53,"gravityLabel":"2.53G","sizeText":"半径 地球の約11倍","sizeLevel":6,"visualSize":1.08,"feature":"jupiter","bodyKind":"gas","fact":"固い地面はなく、1気圧面相当の重力"},{"name":"🪐 土星","desc":"巨大なリングを持つガス惑星","goodColor":"#f1db96","sky":["#09080d","#29243a"],"ground":"#c2b283","ground2":"#776a4f","planet":"#dfc785","event":"RING RUSH","eventText":"💫 リングに沿って星が大量出現！","gravity":0.57,"jump":16.0,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 9.58 AU","gravityActual":1.065,"gravityLabel":"1.07G","sizeText":"半径 地球の約9.1倍","sizeLevel":6,"visualSize":1.02,"feature":"saturn","bodyKind":"gas","fact":"巨大リングがステージを横断"},{"name":"🩵 天王星","desc":"横倒しに回転する氷巨大惑星","goodColor":"#9fe9e7","sky":["#020d12","#12343a"],"ground":"#8bb7b5","ground2":"#4f7372","planet":"#8ad6d5","event":"ICE WIND","eventText":"🧊 横向きの氷風でジャンプが流される","gravity":0.54,"jump":16.4,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 19.2 AU","gravityActual":0.905,"gravityLabel":"0.90G","sizeText":"半径 地球の約4.0倍","sizeLevel":5,"visualSize":0.82,"feature":"uranus","bodyKind":"ice","fact":"自転軸がほぼ横倒し"},{"name":"🔵 海王星","desc":"猛烈な風が吹く青い氷巨大惑星","goodColor":"#6d8fff","sky":["#020516","#12255c"],"ground":"#586fa7","ground2":"#344572","planet":"#4168d6","event":"SUPER WIND","eventText":"💨 超高速の風で犬星くんも加速！","gravity":0.58,"jump":16.1,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 30.1 AU","gravityActual":1.14,"gravityLabel":"1.14G","sizeText":"半径 地球の約3.9倍","sizeLevel":5,"visualSize":0.8,"feature":"neptune","bodyKind":"ice","fact":"太陽系でも特に強い風"},{"name":"☀️ 太陽","desc":"太陽系の中心にある恒星","goodColor":"#fff08a","sky":["#2b0500","#ff4a00"],"ground":"#ff9f1c","ground2":"#8f1d00","planet":"#ffdf33","event":"SOLAR FLARE","eventText":"🔥 強重力＋灼熱フレア地帯！","gravity":0.74,"jump":14.2,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"🌍 地球から 約1.50億 km / 1 AU","gravityActual":28.0,"gravityLabel":"約28G","sizeText":"半径 地球の約109倍","sizeLevel":7,"visualSize":1.55,"feature":"sun","bodyKind":"star","fact":"実重力は強烈なのでゲームでは上限圧縮"}]},{"name":"🌌 天の川銀河","distance":"地球から数〜約700光年","desc":"太陽系の外、同じ銀河の恒星へ","theme":"milky","chapter":"MILKY WAY","stages":[{"name":"⭐ シリウス","desc":"おおいぬ座の青白い恒星","goodColor":"#dff6ff","sky":["#020714","#173958"],"ground":"#7899b1","ground2":"#38546b","planet":"#eefbff","event":"STAR SHOWER","eventText":"✨ 強い光のスターシャワー！","gravity":0.71,"jump":14.6,"address":["🌌 天の川銀河","♈ おおいぬ座"],"distanceDisplay":"🌍 地球から 約8.6光年","gravityActual":19.7,"gravityLabel":"表面 約20G","sizeText":"半径 太陽の1.71倍","sizeLevel":7,"visualSize":1.62,"feature":"sirius","bodyKind":"star","fact":"質量約2太陽・小さく密度が高い"},{"name":"💠 ベガ","desc":"こと座の青白い高速回転星","goodColor":"#bfe8ff","sky":["#020716","#153d70"],"ground":"#597fa5","ground2":"#304966","planet":"#d8f4ff","event":"AURORA WAVE","eventText":"💠 青白いオーロラが空を走る！","gravity":0.68,"jump":14.9,"address":["🌌 天の川銀河","🎼 こと座"],"distanceDisplay":"🌍 地球から 約25光年","gravityActual":8.0,"gravityLabel":"表面 約6〜10G","sizeText":"半径 太陽の約2.7倍","sizeLevel":7,"visualSize":1.72,"feature":"vega","bodyKind":"star","fact":"高速回転で極と赤道の重力が違う"},{"name":"🌟 ポラリス","desc":"こぐま座のケフェイド変光星・現在の北極星","goodColor":"#fff5c4","sky":["#050817","#26365b"],"ground":"#8e93a7","ground2":"#4d5266","planet":"#fff4b5","event":"STAR SHOWER","eventText":"🌟 明るさがゆっくり脈動する低重力星","gravity":0.3,"jump":18.2,"address":["🌌 天の川銀河","🧭 こぐま座"],"distanceDisplay":"🌍 地球から 約430光年","gravityActual":0.11,"gravityLabel":"表面 約0.11G","sizeText":"半径 太陽の約37.5倍","sizeLevel":9,"visualSize":2.15,"feature":"polaris","bodyKind":"star","fact":"巨大だが膨らんでいるので表面重力は弱い"},{"name":"🔴 ベテルギウス","desc":"オリオン座の赤色超巨星","goodColor":"#ff8b64","sky":["#190603","#5f190d"],"ground":"#9d513e","ground2":"#572b22","planet":"#ff6b47","event":"SOLAR FLARE","eventText":"🔥 超巨大なのにフワッ！ 赤い熱波とフレア","gravity":0.24,"jump":19.0,"address":["🌌 天の川銀河","🏹 オリオン座"],"distanceDisplay":"🌍 地球から 約700光年","gravityActual":0.001,"gravityLabel":"表面 ≈0.001G","sizeText":"半径 太陽の約700倍","sizeLevel":10,"visualSize":3.35,"feature":"betelgeuse","bodyKind":"star","fact":"NASA: 太陽の約700倍・質量約15倍"}]},{"name":"🫧 局所銀河群","distance":"約16万〜250万光年","desc":"天の川を出て近隣銀河へ","theme":"andromeda","chapter":"LOCAL GROUP","stages":[{"name":"💙 R136a1","desc":"大マゼラン雲・タランチュラ星雲の超大質量星","goodColor":"#9de9ff","sky":["#03101a","#124a69"],"ground":"#3c7180","ground2":"#1d3745","planet":"#a7efff","event":"SOLAR FLARE","eventText":"💙 超高温の恒星風が吹き荒れる！","gravity":0.66,"jump":15.0,"address":["🫧 局所銀河群","☁️ 大マゼラン雲"],"distanceDisplay":"🌍 地球から 約16.3万光年","gravityActual":3.9,"gravityLabel":"表面 推定約4G","sizeText":"半径 太陽の約39倍（推定）","sizeLevel":9,"visualSize":2.25,"feature":"r136","bodyKind":"star","fact":"非常に大質量。観測値にはモデル依存あり"},{"name":"✨ アンドロメダ銀河","desc":"天の川に近い巨大渦巻銀河","goodColor":"#d397ff","sky":["#090315","#3b1f5c"],"ground":"#9a7fad","ground2":"#5f4b72","planet":"#9b67d2","event":"CRYSTAL RAIN","eventText":"✨ 銀河全体が背景いっぱいに広がる！","gravity":0.48,"jump":17.0,"address":["🫧 局所銀河群","✨ M31"],"distanceDisplay":"🌍 地球から 約250万光年","gravityActual":null,"gravityLabel":"表面重力なし","sizeText":"銀河スケール","sizeLevel":10,"visualSize":2.3,"feature":"andromeda","bodyKind":"galaxy","fact":"ここで「天の川を出た」感を強調"}]},{"name":"🌌 銀河間宇宙","distance":"約2900万〜3100万光年","desc":"局所銀河群の外へ","theme":"whirlpool","chapter":"INTERGALACTIC","stages":[{"name":"🌀 子持ち銀河 M51","desc":"伴銀河を持つ美しい渦巻銀河","goodColor":"#ff8bd8","sky":["#16051a","#5c164e"],"ground":"#9a507e","ground2":"#52283e","planet":"#ff77c8","event":"GRAVITY WELL","eventText":"🌀 背景そのものが渦巻いて空間が曲がる！","gravity":0.49,"jump":17.2,"address":["🌌 銀河間宇宙","🌀 M51"],"distanceDisplay":"🌍 地球から 約3100万光年","gravityActual":null,"gravityLabel":"表面重力なし","sizeText":"銀河スケール","sizeLevel":10,"visualSize":2.5,"feature":"m51","bodyKind":"galaxy","fact":"渦巻構造をステージ全体で表現"},{"name":"👒 ソンブレロ銀河","desc":"暗い塵の帯が目立つ銀河","goodColor":"#ffc47b","sky":["#120905","#4e2e16"],"ground":"#a47145","ground2":"#58391f","planet":"#e29b50","event":"COSMIC GAS","eventText":"👒 暗黒塵で視界が欠ける！","gravity":0.5,"jump":17.0,"address":["🌌 銀河間宇宙","👒 M104"],"distanceDisplay":"🌍 地球から 約2900万光年","gravityActual":null,"gravityLabel":"表面重力なし","sizeText":"銀河スケール","sizeLevel":10,"visualSize":2.4,"feature":"sombrero","bodyKind":"galaxy","fact":"中央の明るいバルジと暗い塵の帯"}]},{"name":"🔭 超遠方宇宙","distance":"約94億〜129億光年","desc":"重力レンズでしか届かない星の領域","theme":"andromeda","chapter":"DEEP UNIVERSE","stages":[{"name":"💙 イカロス","desc":"重力レンズで観測された超遠方の星","goodColor":"#c9efff","sky":["#01030d","#071d43"],"ground":"#667b9e","ground2":"#26344f","planet":"#d7f3ff","event":"GRAVITY WELL","eventText":"🔭 重力レンズで画面がぐにゃっと歪む！","gravity":0.46,"jump":17.8,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🌍 地球から 約94億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ サイズ推定困難","sizeLevel":5,"visualSize":0.62,"feature":"icarus","bodyKind":"lensedStar","fact":"Hubbleが重力レンズで観測"},{"name":"🦋 モスラ","desc":"遠方宇宙の重力レンズ星候補","goodColor":"#ffe2a6","sky":["#08020e","#261040"],"ground":"#837198","ground2":"#302642","planet":"#ffd9a1","event":"AURORA WAVE","eventText":"🦋 光が羽のように二重・多重に分裂！","gravity":0.46,"jump":17.9,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🌍 地球から 約105億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ サイズ推定困難","sizeLevel":5,"visualSize":0.64,"feature":"mothra","bodyKind":"lensedStar","fact":"レンズ増光をゲーム演出に利用"},{"name":"🦖 ゴジラ","desc":"極端に明るく見える遠方星候補","goodColor":"#fff08a","sky":["#050205","#33120a"],"ground":"#8e6f4f","ground2":"#3e2b20","planet":"#ffe86d","event":"SOLAR FLARE","eventText":"🦖 光量が暴走！ フラッシュと熱波！","gravity":0.48,"jump":17.7,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🌍 地球から 約109億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ レンズモデル依存","sizeLevel":7,"visualSize":0.78,"feature":"godzilla","bodyKind":"lensedStar","fact":"見かけの明るさは重力レンズで極端に増幅"},{"name":"✨ エアレンデル","desc":"JWSTでも追観測された超遠方の大質量B型星","goodColor":"#fff8df","sky":["#01030b","#0b1438"],"ground":"#8ea5c7","ground2":"#364763","planet":"#fff6dd","event":"STAR SHOWER","eventText":"✨ 129億年前の光。到達演出MAX！","gravity":0.45,"jump":18.0,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙","🌅 Sunrise Arc"],"distanceDisplay":"🌍 地球から 約129億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ 空間分解できず未確定","sizeLevel":6,"visualSize":0.7,"feature":"earendel","bodyKind":"lensedStar","fact":"NASA/JWST: 大質量B型星・重力レンズで検出"}]},{"name":"🌅 初期宇宙","distance":"宇宙誕生後の初期時代〜観測限界","desc":"星ではなく宇宙の歴史そのものを進む","theme":"cloud","chapter":"COSMIC HISTORY","postEarendel":true,"stages":[{"name":"🌅 COSMIC DAWN","desc":"最初期の星と銀河が灯り始める時代","goodColor":"#ffd9a1","sky":["#050204","#25100c"],"ground":"#755642","ground2":"#30241f","planet":"#ffd59b","event":"STAR SHOWER","eventText":"🌅 暗闇に最初の星が1つずつ点灯！","gravity":0.43,"jump":18.1,"address":["🌅 初期宇宙","🌌 観測可能宇宙"],"distanceDisplay":"⏳ 約132億光年前相当","gravityActual":null,"gravityLabel":"天体表面なし","sizeText":"時代スケール","sizeLevel":8,"visualSize":1.0,"feature":"cosmicDawn","bodyKind":"era","fact":"普通の「星ステージ」ではなく宇宙史"},{"name":"📡 CMB WALL","desc":"宇宙背景放射・最古の光の壁","goodColor":"#ffe6c7","sky":["#120806","#4d2c1e"],"ground":"#8b6c5d","ground2":"#3d302a","planet":"#ffd8b8","event":"AURORA WAVE","eventText":"📺 古いテレビみたいな宇宙ノイズ！","gravity":0.42,"jump":18.2,"address":["🌅 初期宇宙","🌌 観測可能宇宙"],"distanceDisplay":"📡 最後の散乱面 / 現在距離 約456億光年","gravityActual":null,"gravityLabel":"天体表面なし","sizeText":"宇宙全体の背景放射","sizeLevel":9,"visualSize":1.0,"feature":"cmb","bodyKind":"era","fact":"約138億年前の宇宙から届く最古級の光"},{"name":"🧭 PARTICLE HORIZON","desc":"現在観測できる宇宙の境界","goodColor":"#e8f3ff","sky":["#010208","#10182b"],"ground":"#626d82","ground2":"#272e3c","planet":"#e2edff","event":"GRAVITY WELL","eventText":"🧭 光の届く限界が巨大な壁になる！","gravity":0.4,"jump":18.4,"address":["🌅 初期宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🧭 現在距離 約465億光年","gravityActual":null,"gravityLabel":"天体表面なし","sizeText":"観測可能宇宙の境界","sizeLevel":10,"visualSize":1.0,"feature":"horizon","bodyKind":"era","fact":"ここより先は直接観測できない"}]},{"name":"🫥 未知領域","distance":"距離不明","desc":"観測可能宇宙の外側を想像したゲーム内理論領域","theme":"expansion","chapter":"BEYOND OBSERVABLE","postEarendel":true,"theoretical":true,"endless":true,"stages":[{"name":"🫥 BEYOND OBSERVABLE","desc":"直接観測できない領域","goodColor":"#b8a9ff","sky":["#000006","#08000f"],"ground":"#302942","ground2":"#08070b","planet":"#5b4a86","event":"GRAVITY WELL","eventText":"🫥 星が消え、距離そのものが意味を失う","gravity":0.38,"jump":18.7,"address":["🫥 観測不能領域"],"distanceDisplay":"🌍 地球から 測定不能","gravityActual":null,"gravityLabel":"❓ 定義不能","sizeText":"❓ 観測不能","sizeLevel":1,"visualSize":0.2,"feature":"beyond","bodyKind":"theory","fact":"ここから先はゲーム内の想像・理論表現"}]},{"name":"🐾 犬の星","distance":"観測不能のさらに先","desc":"宇宙旅行の最終ご褒美世界","theme":"dreamdog","chapter":"DOG STAR","postEarendel":true,"theoretical":true,"dream":true,"final":true,"stages":[{"name":"🌈 犬だらけの夢世界","desc":"犬たちが空にも地上にもあふれる最終地点","goodColor":"#ffd8ff","sky":["#f6efff","#bfeeff"],"ground":"#ffe8f8","ground2":"#b9a8ff","planet":"#fff7ff","event":"DOG PARADE","eventText":"🐕🐩🦮 犬がどこまでも続いている！","gravity":0.3,"jump":18.8,"address":["🐾 犬の星"],"distanceDisplay":"🌍 地球から ???","gravityActual":null,"gravityLabel":"夢重力","sizeText":"犬スケール ∞","sizeLevel":10,"visualSize":1.0,"feature":"dogstar","bodyKind":"dream","fact":"敵なし・ご褒美ステージ"}]},{"name":"🌸 秘密の花銀河","distance":"???","desc":"宇宙人だけが知る秘密領域","theme":"andromeda","secret":true,"secretKey":"flower","chapter":"SECRET","stages":[{"name":"🌸 花吹雪星","desc":"花びらが宇宙を漂う秘密ステージ","goodColor":"#ff9ddb","sky":["#18051b","#5d174d"],"ground":"#bd78a7","ground2":"#673552","planet":"#ff8ed1","event":"SECRET BLOOM","eventText":"🌸 宇宙いっぱいに花が降る！","gravity":0.42,"jump":18.0,"address":["🌸 SECRET"],"distanceDisplay":"???","gravityActual":null,"gravityLabel":"秘密","sizeText":"???","sizeLevel":7,"visualSize":1.0,"feature":"flower","bodyKind":"secret"}]},{"name":"🌝 笑う月の裏側","distance":"???","desc":"月の向こうの秘密領域","theme":"cloud","secret":true,"secretKey":"moon","chapter":"SECRET","stages":[{"name":"🌝 ムーンフェイス","desc":"笑う月が飛び交う秘密ステージ","goodColor":"#fff2a4","sky":["#070715","#30305b"],"ground":"#c8c5ab","ground2":"#66647d","planet":"#fff2a4","event":"MOON PARTY","eventText":"🌝 月たちが踊り出す！","gravity":0.3,"jump":19.0,"address":["🌝 SECRET MOON"],"distanceDisplay":"???","gravityActual":null,"gravityLabel":"夢の低重力","sizeText":"月がいっぱい","sizeLevel":8,"visualSize":1.4,"feature":"moonface","bodyKind":"secret"}]},{"name":"⚫ ブラックホール","distance":"地球からの距離は測定不能","desc":"光も逃げられない重力領域","theme":"blackhole","chapter":"BLACK HOLE","stages":[{"name":"🕳️ 事象の地平面","desc":"光さえ戻れない境界","goodColor":"#d9b6ff","sky":["#000","#15051e"],"ground":"#27212f","ground2":"#09070c","planet":"#000","event":"GRAVITY WELL","eventText":"⚫ 強烈な重力で軌道がゆがむ！","gravity":0.76,"jump":18.3,"address":["⚫ BLACK HOLE"],"distanceDisplay":"距離 測定不能","gravityActual":null,"gravityLabel":"極端な時空曲率","sizeText":"事象の地平面","sizeLevel":10,"visualSize":2.2,"feature":"blackhole","bodyKind":"blackhole"}]}];
 const BLACK_HOLE_SYSTEM=systems.length-1;
 const SECRET_FLOWER_SYSTEM=systems.findIndex(s=>s.secretKey==='flower');
 const SECRET_MOON_SYSTEM=systems.findIndex(s=>s.secretKey==='moon');
@@ -746,10 +638,14 @@ const p={x:115,y:100,vy:0,w:54,h:55,on:false};let items=[],hazards=[],aliens=[],
 const wormholeEnabled=()=>wormholeActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const rankByName={
-'🌌 天の川銀河':0,'☁️ 大マゼラン雲':1,'✨ アンドロメダ銀河':2,'🔺 三角座銀河':3,'🌻 ひまわり銀河':4,'👒 ソンブレロ銀河':5,'🌀 子持ち銀河 M51':6,
-'🌌 1億光年圏':7,'🕸️ 5億光年圏':8,'🌠 10億光年圏':9,'🔮 20億光年圏':10,'🫧 40億光年圏':11,'💜 60億光年圏':12,'🔵 80億光年圏':13,
-'🔭 イカロス星域':14,'🦋 モスラ星域':15,'❤️ クイユル星域':16,'🦖 ゴジラ星域':17,'💠 MACS J0647 LS1':18,'✨ エアレンデル星域':19,
-'🌅 宇宙の夜明け':20,'🔥 再電離の海':21,'📡 宇宙背景放射の壁':22,'🧭 観測可能宇宙の地平線':23,'🫥 観測不能宇宙':24,'♾️ 膨張フロンティア':25,'🐾 犬の星':26
+'☀️ 太陽系':0,
+'🌌 天の川銀河':1,
+'🫧 局所銀河群':2,
+'🌌 銀河間宇宙':3,
+'🔭 超遠方宇宙':4,
+'🌅 初期宇宙':5,
+'🫥 未知領域':6,
+'🐾 犬の星':7
 };
 const systemDistanceRank=systems.map(s=>s.secret?99:s.name==='⚫ ブラックホール'?98:(rankByName[s.name]??0));
 const S=()=>systems[system].stages[stage],groundY=()=>H-120,playerRect=()=>({x:p.x,y:p.y,w:p.w,h:p.h}),itemRect=i=>({x:i.x-i.r,y:i.y-i.r,w:i.r*2,h:i.r*2}),rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
@@ -765,8 +661,8 @@ function syncHUD(){
  missionEl.innerHTML=earth?(returnFromDogStar?'🏠 やっと地球に帰ってきた。いつもの道を歩こう':'🐕 いつもの散歩道。先にロケットが見える…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ご褒美ステージ ✨ ⭐星アイテムから地球へ帰れる':`🌀 ワームホール通過 ${deepWarpCount}<br>${areaNames[difficultyTier]}`;
  eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌳 WALK EVENT — 犬や人とすれ違う普通の散歩'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`⚡ ${s.event} — ${s.eventText}`;
  const dist=(s.distance||systems[system].distance.replace('地球から','')),endless=systems[system].endless;
- const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
- const distanceLabel=endless?'観測不能域 / 膨張フロンティア':dist;
+ const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🫥 観測不能宇宙・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
+ const distanceLabel=endless?'観測不能域 / 距離定義不能':dist;
  const gravLabel=s.gravity<=.40?'🪽 低重力｜ジャンプ力UP':s.gravity>=.56?'⬇️ 高重力｜ジャンプ力DOWN':'⚖️ 標準重力｜ジャンプ力NORMAL';
  astroInfo.innerHTML=earth?`<b>🌍 地球・散歩道</b><br>${returnFromDogStar?'宇宙一周のあと、帰ってきた街':'ビルと木のあるいつもの街'}<br><span class="distanceBig">${returnFromDogStar?'🏠 地球帰還':'🚶 まだ地球'}</span><span class="distanceHint">${returnFromDogStar?'やっと帰ってきた地球':'いつもの街。まだ宇宙の旅は始まっていない'}</span>`:`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig">🌍 地球から ${distanceLabel}</span><span class="distanceHint">${gravLabel}<br>${farHint}</span>`;
  bigBtn.classList.toggle('ready',food>=3);
@@ -815,7 +711,7 @@ function stageStart(){
  blackHoleY=Math.max(145,Math.min(groundY()-145,H*(.34+Math.random()*.20)));
  nextCosmic=430+Math.floor(Math.random()*220);nextSwarm=430+Math.floor(Math.random()*220);
  nextSatellite=240+Math.floor(Math.random()*260);
- makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast('🐕 今日はいつもの散歩。街の先にロケットが…？',1900);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 地球の光は129億年ぶん遠い…',2300);if(systems[system].endless)showToast('🌑 膨張フロンティア。星のない暗闇を進む…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
+ makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast('🐕 今日はいつもの散歩。街の先にロケットが…？',1900);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 地球の光は129億年ぶん遠い…',2300);if(systems[system].endless)showToast('🫥 観測不能宇宙。星のない暗闇を進む…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
 }
 function maybeLore(){if(paused||p.x<nextLoreAt)return;const rank=systemDistanceRank[system]??0;const s=systems[system];let msg='';if(s.dream)msg=['🐾 ここでは星も犬の夢を見ている。','🌈 ふわふわした犬たちが宇宙を漂っている。','🦴 骨の形の光がゆっくり流れていく。'][Math.floor(Math.random()*3)];else if(s.endless)msg=['🌑 光が消えた。地球の気配も、もうない。','🐾 暗闇の中に、光る足跡がまぎれている。','… ワン …　遠くから何か聞こえた。'][Math.floor(Math.random()*3)];else if(s.postEarendel)msg=['🫥 星より古い光の中を進んでいる。','📡 ここまで来ると、通信も記憶みたいにかすれる。','🌌 宇宙の歴史そのものを横切っている。'][Math.floor(Math.random()*3)];else if(rank>=10)msg=['✨ 地球の光はもう見えない。','🌌 遠すぎて、帰り道の感覚まで薄れていく。','💫 ワープするたび宇宙の色が変わる。'][Math.floor(Math.random()*3)];else if(rank>=6)msg=['🪐 もう太陽系は点のように遠い。','🌠 銀河がただの光の粒になっていく。','🔭 ここからは宇宙が歴史に見える。'][Math.floor(Math.random()*3)];else if(rank>=1)msg=['🌍 地球はまだ遠くない。でも確実に離れている。','🌙 もう気軽には帰れない距離だ。','🛰️ 通信ノイズに地球の気配がまざる。'][Math.floor(Math.random()*3)];if(msg)showToast(msg,1700);nextLoreAt+=780+Math.random()*360}
 
@@ -1101,22 +997,22 @@ function homeEnding(){returnFromDogStar=true;system=0;stage=0;stageStart()}
 
 function wormholeMilestoneEffect(count){
  if(count===1){
-   showToast('🌀 最初のワームホール。地球圏を離れる。',1900)
+   showToast('🌀 太陽系を離れて、天の川の恒星へ。',1900)
  }else if(count===3){
-   transTitle.innerHTML='🌌 GALAXY SCALE';
-   nextEl.textContent='銀河が、ただの光の島に見えてくる。';
+   transTitle.innerHTML='🌌 INTERGALACTIC';
+   nextEl.textContent='局所銀河群の外へ。銀河が光の島になる。';
    subEl.textContent='WORMHOLE 3';
-   showToast('🌌 ここから先は銀河間空間。',2100)
+   showToast('🌌 ここから先は銀河間宇宙。',2100)
  }else if(count===5){
-   transTitle.innerHTML='✨ EARENDEL';
-   nextEl.textContent='129億年前の光へ。';
+   transTitle.innerHTML='🌅 COSMIC HISTORY';
+   nextEl.textContent='星を越えて、宇宙の歴史そのものへ。';
    subEl.textContent='WORMHOLE 5';
-   showToast('✨ 地球はるか彼方。エアレンデル級の遠方へ。',2200)
+   showToast('🌅 初期宇宙へ。',2200)
  }else if(count===6){
-   transTitle.innerHTML='🧭 OBSERVABLE EDGE';
-   nextEl.textContent='星が減り、宇宙の歴史そのものへ。';
+   transTitle.innerHTML='🫥 BEYOND OBSERVABLE';
+   nextEl.textContent='観測できる宇宙の、その外側へ。';
    subEl.textContent='WORMHOLE 6';
-   showToast('🧭 観測の限界が近い。',2200)
+   showToast('🫥 ここから先は観測不能。',2200)
  }else if(count===7){
    transTitle.innerHTML='🌑 FRONTIER';
    nextEl.textContent='光の届かない場所へ。';
@@ -1134,18 +1030,12 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
   } else {
     deepWarpCount++;
     wormholeMilestoneEffect(deepWarpCount);
-    const milestones=[
-      '☁️ 大マゼラン雲',
-      '🌌 1億光年圏',
-      '🫧 40億光年圏',
-      '🔭 イカロス星域',
-      '✨ エアレンデル星域',
-      '🧭 観測可能宇宙の地平線',
-      '♾️ 膨張フロンティア'
-    ];
-    const targetName=milestones[Math.min(deepWarpCount-1,milestones.length-1)];
+    const milestones=['☀️ 太陽系','🌌 天の川銀河','🫧 局所銀河群','🌌 銀河間宇宙','🔭 超遠方宇宙','🌅 初期宇宙','🫥 未知領域'];
+    const currentRank=systems[system].secret?Math.max(0,Math.min(6,furthestRank)):(systemDistanceRank[system]??0);
+    const targetRank=Math.min(6,Math.max(currentRank+1,Math.min(6,deepWarpCount)));
+    const targetName=milestones[targetRank];
     const nextSystem=systems.findIndex(s=>s.name===targetName);
-    if(nextSystem>=0){system=nextSystem;stage=Math.floor(Math.random()*systems[system].stages.length);furthestRank=Math.max(furthestRank,systemDistanceRank[system]??0)}
+    if(nextSystem>=0){system=nextSystem;stage=0;furthestRank=Math.max(furthestRank,systemDistanceRank[system]??0)}
   }
   stageStart();trans.style.display='none';warpDog.className='';paused=false
  },1550)
@@ -1408,7 +1298,18 @@ for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/22
 for(const sat of satellites){if(sat.got)continue;sat.x-=sat.v*dt;sat.y+=Math.sin(now/210+sat.phase)*.20*dt;if(rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){sat.got=true;satelliteUntil=Math.max(satelliteUntil,now+3000);invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100);syncHUD()}}satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
 for(const b of bosses){if(b.dead)continue;b.x-=b.v*dt;if(b.hitFlash>0)b.hitFlash-=dt;if(rectHit(playerRect(),{x:b.x+8,y:b.y+6,w:b.w-16,h:b.h-6}))hitHazard({x:b.x,y:b.y,w:b.w,h:b.h,got:false,evil:true})}bosses=bosses.filter(b=>!b.dead&&b.x>p.x-W-240);
 for(const st of shootingStars){st.x-=st.vx*dt;st.y+=st.vy*dt}shootingStars=shootingStars.filter(st=>st.x>-160&&st.y<H+100);for(const g of gasClouds)g.x-=g.vx*dt;gasClouds=gasClouds.filter(g=>g.x>-g.r*2);
-if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){if(systems[system].dream){showToast('🐾 ここが宇宙旅行の最終地点。⭐交換所から地球へ帰れる！',1800);stageStart();return}if(systems[system].secret){showToast('🌀 秘密銀河の出口！ 通常宇宙へ戻る',1200);warpTo(false);return}if(system===0&&stage===0){if(returnFromDogStar){doghouseChoice();return}else{rocketToMoon();return}}stage=(stage+1)%systems[system].stages.length;showToast(`🚀 NEXT ✦ ${systems[system].stages[stage].name}`,1400);stageStart();return}camera+=(Math.max(0,p.x-W*.34)-camera)*.13}
+if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){if(systems[system].dream){showToast('🐾 ここが宇宙旅行の最終地点。⭐交換所から地球へ帰れる！',1800);stageStart();return}if(systems[system].secret){showToast('🌀 秘密銀河の出口！ 通常宇宙へ戻る',1200);warpTo(false);return}if(system===0&&stage===0){if(returnFromDogStar){doghouseChoice();return}else{rocketToMoon();return}}if(stage+1<systems[system].stages.length){
+ stage++;
+ showToast(`🚀 NEXT ✦ ${systems[system].stages[stage].name}`,1400);
+}else{
+ const fromChapter=systems[system].name;
+ const nextSystemIndex=system+1;
+ if(nextSystemIndex<=systems.findIndex(s=>s.dream)){
+   system=nextSystemIndex;stage=0;
+   showToast(`✨ ${fromChapter} COMPLETE → ${systems[system].name}`,1900);
+ }else stage=0;
+}
+stageStart();return}camera+=(Math.max(0,p.x-W*.34)-camera)*.13}
 function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawCosmicWarpFX();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
 function doJump(){if(paused||jumps>=4)return;const s=S(),boost=big?1.12:1;
  const gravityJump=Math.max(.78,Math.min(1.38,Math.sqrt(.50/Math.max(.24,s.gravity))));
@@ -5462,5 +5363,370 @@ v51RenderRewardTexts();
   if(overlayTitle)overlayTitle.textContent='⚠ EMERGENCY DOG RESCUE';
   if(overlaySub)overlaySub.innerHTML='🐕 犬星くんを救助中…<br><span class="insurance">宇宙保険が適用されました</span>';
   if(criticalEl)criticalEl.textContent='⚠️ DOG RESCUE SIGNAL';
+})();
+</script>
+
+<!-- v59 visible space insurance + easier rescue trigger -->
+<style>
+#spaceInsuranceBadge{
+  position:absolute;
+  z-index:58;
+  right:10px;
+  top:132px;
+  min-width:132px;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.72);
+  background:linear-gradient(180deg,rgba(42,28,82,.88),rgba(15,18,46,.90));
+  color:#e9fbff;
+  font:900 10px/1.1 system-ui,-apple-system,sans-serif;
+  text-align:center;
+  letter-spacing:.03em;
+  box-shadow:0 0 12px rgba(86,231,255,.32),0 0 16px rgba(255,108,218,.18);
+  text-shadow:0 0 7px rgba(123,235,255,.75);
+  pointer-events:none;
+  backdrop-filter:blur(7px);
+}
+#spaceInsuranceBadge.warn{
+  color:#fff3a8;
+  border-color:rgba(255,228,91,.9);
+  animation:v59InsuranceWarn .5s ease-in-out infinite alternate;
+}
+#spaceInsuranceBadge.rescuing{
+  color:#fff;
+  background:linear-gradient(180deg,rgba(120,48,150,.96),rgba(23,45,92,.96));
+  animation:v59InsuranceRescue .3s ease-in-out infinite alternate;
+}
+@keyframes v59InsuranceWarn{to{transform:scale(1.045);box-shadow:0 0 20px rgba(255,228,91,.55),0 0 24px rgba(255,101,211,.25)}}
+@keyframes v59InsuranceRescue{to{transform:scale(1.06);filter:brightness(1.18)}}
+#gameOver{
+  position:fixed!important;
+  z-index:999!important;
+  inset:0!important;
+}
+#gameOver.on{display:grid!important}
+#gameOver .insurance{
+  font-size:14px!important;
+  padding:7px 14px!important;
+  box-shadow:0 0 16px rgba(255,241,122,.30)!important;
+}
+@media(max-width:520px){
+  #spaceInsuranceBadge{right:7px;top:120px;min-width:118px;font-size:9px;padding:6px 8px}
+}
+</style>
+<script>
+(function(){
+  const wrapEl=document.getElementById('wrap');
+  const eventBox=document.getElementById('event');
+  const toastEl=document.getElementById('toast');
+  let badge=document.getElementById('spaceInsuranceBadge');
+  if(!badge){
+    badge=document.createElement('div');
+    badge.id='spaceInsuranceBadge';
+    badge.textContent='🛸 宇宙保険 ON';
+    wrapEl?.appendChild(badge);
+  }
+
+  let insuranceHits=0;
+  let lastInsuranceHitAt=0;
+  let insuranceTriggering=false;
+
+  function currentLimit(){
+    return (typeof BLACK_HOLE_SYSTEM!=='undefined' && system===BLACK_HOLE_SYSTEM) ? 2 : 3;
+  }
+  function renderInsuranceBadge(){
+    if(!badge)return;
+    const limit=currentLimit();
+    badge.classList.toggle('warn',insuranceHits>0 && insuranceHits<limit);
+    badge.classList.toggle('rescuing',insuranceTriggering);
+    badge.textContent=insuranceTriggering
+      ? '🛸 宇宙保険 救助中！'
+      : insuranceHits>0
+        ? `🛸 宇宙保険 ${insuranceHits}/${limit}`
+        : '🛸 宇宙保険 ON';
+  }
+  function resetInsurance(delay=0){
+    setTimeout(()=>{
+      insuranceHits=0;
+      lastInsuranceHitAt=0;
+      insuranceTriggering=false;
+      renderInsuranceBadge();
+    },delay);
+  }
+  function triggerInsurance(reason){
+    if(insuranceTriggering)return;
+    insuranceTriggering=true;
+    renderInsuranceBadge();
+    if(eventBox)eventBox.textContent='🛸 EMERGENCY DOG RESCUE — 宇宙保険発動！';
+    if(typeof showToast==='function')showToast('🛸 宇宙保険発動！ 救助UFOが来る！',1500);
+    if(typeof window.emergencyDogRescue==='function')window.emergencyDogRescue(reason||'insurance');
+    resetInsurance(3200);
+  }
+
+  const previousHit=hitHazard;
+  hitHazard=function(h){
+    const beforeFood=food;
+    const beforePoints=points;
+    previousHit(h);
+    const damaged=food<beforeFood || points<beforePoints;
+    if(!damaged)return;
+
+    const now=performance.now();
+    if(now-lastInsuranceHitAt>20000)insuranceHits=0;
+    insuranceHits++;
+    lastInsuranceHitAt=now;
+    renderInsuranceBadge();
+
+    const limit=currentLimit();
+    if((food<=0 && points<=0) || insuranceHits>=limit){
+      setTimeout(()=>triggerInsurance(food<=0&&points<=0?'resources':'damage'),120);
+    }else{
+      const left=limit-insuranceHits;
+      if(typeof showToast==='function')showToast(`🛸 宇宙保険：あと${left}回の大ダメージで救助`,1050);
+    }
+  };
+  window.hitHazard=hitHazard;
+
+  const prevStageStart=stageStart;
+  stageStart=function(){
+    prevStageStart();
+    if(performance.now()-lastInsuranceHitAt>20000){
+      insuranceHits=0;
+      renderInsuranceBadge();
+    }
+  };
+  window.stageStart=stageStart;
+
+  renderInsuranceBadge();
+  setTimeout(()=>{
+    if(typeof showToast==='function')showToast('🛸 宇宙保険 ON｜大ダメージが続くと救助UFOが来る',2300);
+  },5200);
+})();
+</script>
+
+<!-- v60 cosmic hierarchy + researched size/gravity + 30 destination consolidation -->
+<style>
+#astroInfo{
+  width:min(222px,52vw)!important;
+  padding:11px 12px!important;
+  border-radius:18px!important;
+  line-height:1.28!important;
+  background:linear-gradient(180deg,rgba(10,16,42,.86),rgba(15,9,38,.88))!important;
+  border:1px solid rgba(190,235,255,.62)!important;
+  box-shadow:0 0 16px rgba(83,221,255,.24),0 0 22px rgba(255,91,213,.12)!important;
+  backdrop-filter:blur(8px)!important;
+}
+#astroInfo .v60Name{font-size:15px;font-weight:1000;color:#fff;text-shadow:0 0 9px rgba(255,255,255,.35)}
+#astroInfo .v60Address{margin-top:4px;font-size:9px;font-weight:900;color:#aeefff;letter-spacing:.02em}
+#astroInfo .v60Distance{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.16);font-size:11px;font-weight:1000;color:#fff5b5}
+#astroInfo .v60Physics{display:grid;grid-template-columns:1fr;gap:3px;margin-top:6px;font-size:9px;color:#e8ebff}
+#astroInfo .v60Physics b{color:#fff}
+#astroInfo .v60SizeBar{letter-spacing:.03em;color:#7ee8ff;text-shadow:0 0 7px rgba(126,232,255,.45)}
+#astroInfo .v60Fact{margin-top:6px;font-size:8px;line-height:1.35;color:#cdd4f4;opacity:.88}
+#astroInfo .v60Theory{color:#ffcfef!important}
+#chapterFlashV60{
+  position:absolute;z-index:72;left:50%;top:19%;transform:translate(-50%,-14px) scale(.96);
+  width:min(390px,88vw);padding:14px 18px;border-radius:22px;text-align:center;
+  border:1px solid rgba(255,255,255,.78);background:linear-gradient(180deg,rgba(28,33,75,.95),rgba(22,10,51,.94));
+  box-shadow:0 0 24px rgba(82,230,255,.42),0 0 35px rgba(255,90,212,.24);
+  color:#fff;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;
+}
+#chapterFlashV60.on{opacity:1;transform:translate(-50%,0) scale(1)}
+#chapterFlashV60 .v60ChapterTop{font-size:9px;letter-spacing:.18em;color:#9defff;font-weight:1000}
+#chapterFlashV60 .v60ChapterName{margin-top:4px;font-size:22px;font-weight:1000;text-shadow:0 0 12px rgba(255,255,255,.4)}
+#chapterFlashV60 .v60ChapterSub{margin-top:3px;font-size:10px;color:#e4dfff}
+#location{max-width:min(280px,65vw)!important}
+@media(max-width:520px){
+  #astroInfo{width:min(185px,49vw)!important;padding:9px 9px!important}
+  #astroInfo .v60Name{font-size:12px}
+  #astroInfo .v60Address{font-size:8px}
+  #astroInfo .v60Distance{font-size:9px}
+  #astroInfo .v60Physics{font-size:8px}
+  #astroInfo .v60Fact{font-size:7px}
+  #chapterFlashV60{top:17%;width:min(340px,88vw);padding:11px 14px}
+  #chapterFlashV60 .v60ChapterName{font-size:18px}
+}
+</style>
+<script>
+(function(){
+  const astroV60=document.getElementById('astroInfo');
+  const wrapV60=document.getElementById('wrap');
+  let chapterV60=document.getElementById('chapterFlashV60');
+  if(!chapterV60){
+    chapterV60=document.createElement('div');
+    chapterV60.id='chapterFlashV60';
+    wrapV60?.appendChild(chapterV60);
+  }
+  let chapterTimerV60=0;
+  let lastSystemV60=system;
+
+  function sizeBarV60(level){
+    const n=Math.max(1,Math.min(10,Math.round(level||5)));
+    return '█'.repeat(n)+'░'.repeat(10-n);
+  }
+  function gameGravityLabelV60(s){
+    if(s.gravity<=.34)return '🪽 GAME：かなり低重力';
+    if(s.gravity<=.45)return '🪽 GAME：低重力';
+    if(s.gravity>=.67)return '⬇️ GAME：強重力';
+    if(s.gravity>=.58)return '↘️ GAME：やや強重力';
+    return '⚖️ GAME：標準寄り';
+  }
+  function renderAstroV60(){
+    if(!astroV60)return;
+    const s=S();
+    const address=(s.address||[systems[system].name]).map(x=>`<span>${x}</span>`).join('<br>');
+    const grav=s.gravityLabel||'❓ 未設定';
+    const theory=(systems[system].theoretical||s.gravityActual==null)&&!['planet','moon','star','gas','ice'].includes(s.bodyKind);
+    astroV60.innerHTML=`
+      <div class="v60Name">${s.name}</div>
+      <div class="v60Address">${address}</div>
+      <div class="v60Distance">${s.distanceDisplay||s.distance||systems[system].distance}</div>
+      <div class="v60Physics${theory?' v60Theory':''}">
+        <div><b>⚖️ 実在/推定重力</b>　${grav}</div>
+        <div>${gameGravityLabelV60(s)}</div>
+        <div><b>📐 SIZE</b>　${s.sizeText||'❓'}</div>
+        <div class="v60SizeBar">${sizeBarV60(s.sizeLevel)}</div>
+      </div>
+      ${s.fact?`<div class="v60Fact">${s.fact}</div>`:''}`;
+  }
+  function showChapterV60(force=false){
+    if(!chapterV60)return;
+    const sys=systems[system],s=S();
+    if(!force && lastSystemV60===system)return;
+    clearTimeout(chapterTimerV60);
+    chapterV60.innerHTML=`<div class="v60ChapterTop">NOW ENTERING</div><div class="v60ChapterName">${sys.name}</div><div class="v60ChapterSub">${sys.chapter||'COSMIC TRAVEL'} · ${s.name}</div>`;
+    chapterV60.classList.add('on');
+    chapterTimerV60=setTimeout(()=>chapterV60.classList.remove('on'),1850);
+  }
+
+  const prevSyncV60=syncHUD;
+  syncHUD=function(){
+    if(typeof prevSyncV60==='function')prevSyncV60();
+    renderAstroV60();
+    if(locationEl)locationEl.textContent=`${systems[system].name}  ·  ${S().name}`;
+  };
+  window.syncHUD=syncHUD;
+
+  function radialBodyV60(cx,cy,r,s,hot=false){
+    ctx.save();
+    const rg=ctx.createRadialGradient(cx-r*.28,cy-r*.3,Math.max(2,r*.05),cx,cy,r);
+    rg.addColorStop(0,hot?'#fffde1':'#ffffff');
+    rg.addColorStop(.28,s.planet||s.goodColor||'#fff');
+    rg.addColorStop(.74,s.goodColor||s.planet||'#89c8ff');
+    rg.addColorStop(1,'rgba(10,4,25,.22)');
+    ctx.globalAlpha=.64;ctx.fillStyle=rg;ctx.shadowColor=s.goodColor||'#fff';ctx.shadowBlur=hot?45:24;
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+  function drawLensV60(cx,cy,s,variant){
+    const t=performance.now()/1000;ctx.save();ctx.translate(cx,cy);ctx.globalCompositeOperation='screen';
+    for(let i=0;i<6;i++){
+      ctx.globalAlpha=.16+i*.045;ctx.strokeStyle=i%2?s.goodColor:'#fff';ctx.lineWidth=1.2+i*.35;
+      ctx.beginPath();ctx.ellipse(Math.sin(t+i)*5,Math.cos(t*.7+i)*4,42+i*20,(16+i*7)*(variant==='mothra'?1.35:1),Math.sin(t*.35+i)*.45,0,Math.PI*2);ctx.stroke();
+    }
+    ctx.globalAlpha=.95;ctx.shadowColor=s.goodColor;ctx.shadowBlur=32;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,variant==='godzilla'?8:5,0,Math.PI*2);ctx.fill();
+    if(variant==='mothra'){
+      ctx.globalAlpha=.28;ctx.strokeStyle='#ffd9fb';ctx.lineWidth=4;
+      for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(side*35,-55,side*95,-38,side*110,8);ctx.bezierCurveTo(side*75,16,side*38,43,0,0);ctx.stroke()}
+    }
+    ctx.restore();
+  }
+  function drawStageIdentityV60(){
+    const s=S(),t=performance.now()/1000,f=s.feature||'';
+    if(system===0&&stage===0)return;
+    const minWH=Math.min(W,H);
+    let r=Math.max(38,minWH*.105*(s.visualSize||1));
+    r=Math.min(r,minWH*.46);
+    let cx=W*.83,cy=H*.23;
+
+    if(['planet','moon','gas','ice','star'].includes(s.bodyKind)){
+      if(f==='betelgeuse'){cx=W*1.01;cy=H*.28;r=Math.min(minWH*.46,r)}
+      if(f==='saturn'){
+        ctx.save();ctx.translate(cx,cy);ctx.rotate(-.18);ctx.globalAlpha=.5;ctx.strokeStyle='#fff1b3';ctx.lineWidth=Math.max(8,r*.16);ctx.beginPath();ctx.ellipse(0,0,r*1.75,r*.46,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.35;ctx.strokeStyle='#c6b4ff';ctx.lineWidth=Math.max(3,r*.07);ctx.beginPath();ctx.ellipse(0,0,r*1.95,r*.54,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+      }
+      radialBodyV60(cx,cy,r,s,s.bodyKind==='star');
+      if(f==='jupiter'){
+        ctx.save();ctx.globalAlpha=.28;ctx.strokeStyle='#7c4b3b';ctx.lineWidth=Math.max(3,r*.055);for(let i=-3;i<=3;i++){ctx.beginPath();ctx.arc(cx,cy+i*r*.16,r*.92,Math.PI*.08,Math.PI*.92);ctx.stroke()}ctx.fillStyle='#c55e45';ctx.beginPath();ctx.ellipse(cx+r*.28,cy+r*.16,r*.2,r*.10,-.1,0,Math.PI*2);ctx.fill();ctx.restore();
+      }else if(f==='saturn'){
+        ctx.save();ctx.translate(cx,cy);ctx.rotate(-.18);ctx.globalAlpha=.62;ctx.strokeStyle='#d7c9ff';ctx.lineWidth=Math.max(3,r*.07);ctx.beginPath();ctx.ellipse(0,0,r*1.88,r*.50,0,Math.PI,Math.PI*2);ctx.stroke();ctx.restore();
+      }else if(f==='uranus'){
+        ctx.save();ctx.translate(cx,cy);ctx.rotate(1.15);ctx.globalAlpha=.45;ctx.strokeStyle='#caffff';ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(0,0,r*1.5,r*.25,0,0,Math.PI*2);ctx.stroke();ctx.restore();
+      }else if(f==='neptune'){
+        ctx.save();ctx.globalAlpha=.18;ctx.strokeStyle='#b8f3ff';for(let i=0;i<12;i++){const yy=40+i*24+(t*65+i*17)%(H*.55);ctx.beginPath();ctx.moveTo(W*.45,yy%(H*.6));ctx.lineTo(W,yy%(H*.6)-18);ctx.stroke()}ctx.restore();
+      }else if(f==='venus'){
+        ctx.save();ctx.globalAlpha=.10;ctx.fillStyle='#ffd9a6';for(let i=0;i<7;i++){ctx.beginPath();ctx.ellipse((i*97+t*18)%(W+150)-75,80+(i%4)*45,90,25,0,0,Math.PI*2);ctx.fill()}ctx.restore();
+      }else if(f==='sirius'){
+        ctx.save();ctx.translate(cx,cy);ctx.globalAlpha=.32;ctx.strokeStyle='#eaffff';ctx.lineWidth=2;for(let a=0;a<4;a++){ctx.rotate(Math.PI/4);ctx.beginPath();ctx.moveTo(-r*1.9,0);ctx.lineTo(r*1.9,0);ctx.stroke()}ctx.restore();
+      }else if(f==='vega'){
+        ctx.save();ctx.globalAlpha=.18;ctx.strokeStyle='#72eaff';ctx.lineWidth=3;for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(W*.5,H*.2+i*18,W*.42+i*14,.1,Math.PI-.1);ctx.stroke()}ctx.restore();
+      }else if(f==='polaris'){
+        ctx.save();ctx.globalAlpha=.22+.10*Math.sin(t*2.5);ctx.strokeStyle='#fff5b8';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,r*(1.18+.05*Math.sin(t*2.5)),0,Math.PI*2);ctx.stroke();ctx.restore();
+      }else if(f==='betelgeuse'){
+        ctx.save();ctx.globalAlpha=.13;ctx.fillStyle='#ffcf7b';for(let i=0;i<9;i++){const a=i*.72+t*.03;ctx.beginPath();ctx.arc(cx+Math.cos(a)*r*.52,cy+Math.sin(a*1.2)*r*.45,r*(.08+(i%3)*.025),0,Math.PI*2);ctx.fill()}ctx.restore();
+      }else if(f==='r136'){
+        ctx.save();ctx.globalAlpha=.20;ctx.strokeStyle='#bffaff';for(let i=0;i<20;i++){const a=i/20*Math.PI*2+t*.08;ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);ctx.lineTo(cx+Math.cos(a)*r*1.8,cy+Math.sin(a)*r*1.8);ctx.stroke()}ctx.restore();
+      }
+    }
+
+    if(f==='andromeda'||f==='m51'||f==='sombrero'){
+      ctx.save();ctx.translate(W*.73,H*.25);ctx.globalCompositeOperation='screen';
+      if(f==='andromeda'){
+        for(let i=0;i<9;i++){ctx.globalAlpha=.10+i*.018;ctx.strokeStyle=i%2?'#cda9ff':'#eaf8ff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,90+i*17,24+i*7,-.18+i*.025,0,Math.PI*2);ctx.stroke()}
+      }else if(f==='m51'){
+        ctx.globalAlpha=.26;for(let arm=0;arm<2;arm++){ctx.strokeStyle=arm?'#ff8bd8':'#9eeaff';ctx.lineWidth=3;ctx.beginPath();for(let a=.3;a<Math.PI*4.8;a+=.12){const rr=8+a*8.2,x=Math.cos(a+arm*Math.PI+t*.08)*rr,y=Math.sin(a+arm*Math.PI+t*.08)*rr*.58;a<.42?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke()}
+      }else{
+        ctx.globalAlpha=.36;ctx.fillStyle='#fff0c8';ctx.beginPath();ctx.ellipse(0,0,155,58,-.08,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.72;ctx.fillStyle='#24131d';ctx.fillRect(-170,-9,340,18);ctx.globalAlpha=.62;ctx.fillStyle='#ffe9bd';ctx.beginPath();ctx.arc(0,0,40,0,Math.PI*2);ctx.fill();
+      }ctx.restore();
+    }
+
+    if(['icarus','mothra','godzilla','earendel'].includes(f)){
+      drawLensV60(W*.76,H*.24,s,f);
+      if(f==='godzilla'){
+        ctx.save();ctx.globalAlpha=.09+.07*Math.abs(Math.sin(t*3));ctx.fillStyle='#fff6a8';ctx.fillRect(0,0,W,H);ctx.restore();
+      }
+    }
+    if(f==='cosmicDawn'){
+      ctx.save();for(let i=0;i<38;i++){const phase=(t*.35+i*.071)%1;ctx.globalAlpha=Math.max(.04,phase*.7);ctx.fillStyle=i%3?'#fff2c8':'#b9e8ff';ctx.beginPath();ctx.arc((i*83)%W,35+(i*47)%Math.max(70,H*.55),1+phase*2.2,0,Math.PI*2);ctx.fill()}ctx.restore();
+    }else if(f==='cmb'){
+      ctx.save();ctx.globalAlpha=.12;for(let i=0;i<260;i++){ctx.fillStyle=i%3===0?'#ffbd8b':i%3===1?'#86b8ff':'#fff0d2';ctx.fillRect((i*71+Math.floor(t*12)*13)%W,(i*43+Math.floor(t*8)*17)%Math.max(1,H-120),1+(i%2),1+(i%2))}ctx.restore();
+    }else if(f==='horizon'){
+      ctx.save();const x=W*.68;const grd=ctx.createLinearGradient(x-120,0,x+80,0);grd.addColorStop(0,'transparent');grd.addColorStop(.48,'rgba(174,225,255,.12)');grd.addColorStop(.5,'rgba(255,255,255,.78)');grd.addColorStop(.53,'rgba(211,138,255,.16)');grd.addColorStop(1,'transparent');ctx.fillStyle=grd;ctx.fillRect(x-120,0,200,H);ctx.restore();
+    }else if(f==='beyond'){
+      ctx.save();ctx.globalAlpha=.52;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.globalAlpha=.15;ctx.fillStyle='#d4c8ff';ctx.font='18px system-ui';for(let i=0;i<7;i++)ctx.fillText('🐾',(i*137+t*9)%W,70+(i%4)*78);ctx.restore();
+    }
+  }
+
+  const prevBgV60=drawBackground;
+  drawBackground=function(){
+    prevBgV60();
+    drawStageIdentityV60();
+  };
+  window.drawBackground=drawBackground;
+
+  const prevUpdateV60=update;
+  update=function(now,dt){
+    const s=S();
+    if(s.feature==='r136' && !p.on)p.x+=Math.sin(now/150)*.45*dt;
+    if(s.feature==='m51' && !p.on)p.vy+=Math.sin(now/210)*.022*dt;
+    prevUpdateV60(now,dt);
+  };
+  window.update=update;
+
+  const prevStageV60=stageStart;
+  stageStart=function(){
+    const before=lastSystemV60;
+    prevStageV60();
+    if(system!==before)showChapterV60(true);
+    lastSystemV60=system;
+    renderAstroV60();
+    const s=S();
+    setTimeout(()=>{
+      if(typeof showToast==='function'&&!paused)showToast(`📐 ${s.sizeText||'SIZE ?'}　⚖️ ${s.gravityLabel||'重力 ?'}`,1500);
+    },900);
+  };
+  window.stageStart=stageStart;
+
+  renderAstroV60();
+  setTimeout(()=>showChapterV60(true),700);
 })();
 </script>
