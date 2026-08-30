@@ -4357,3 +4357,69 @@ v51RenderRewardTexts();
   window.syncHUD?.();
 })();
 </script>
+
+<!-- v53 button polish patch -->
+<style>
+.controls{gap:10px!important}
+#special,#laser,#jump{
+  border-radius:999px!important;
+}
+#special{
+  background:linear-gradient(180deg,#fffef8 0%,#f7e9ff 48%,#c7f1ff 100%)!important;
+  border-color:#fffaf7!important;
+}
+#laser{
+  background:linear-gradient(180deg,#fff8fd 0%,#ffdff2 44%,#a5ecff 100%)!important;
+  border-color:#ffe2f5!important;
+}
+#jump{
+  background:linear-gradient(180deg,#fffefc 0%,#efe8ff 44%,#b9ebff 100%)!important;
+  border-color:#f8f6ff!important;
+}
+#special .btnMain,#laser .btnMain,#jump .btnMain{
+  font-size:15px!important;
+  color:#6f6a7f!important;
+  text-shadow:none!important;
+  letter-spacing:0!important;
+}
+#astroInfo{
+  width:180px!important;
+  max-width:180px!important;
+  padding:10px 11px!important;
+}
+#astroInfo .distanceBig{line-height:1.12!important}
+#astroInfo .distLead{display:block;font-size:15px;line-height:1.05;margin-bottom:2px;color:#fff1a6;text-shadow:0 0 10px #fff,0 0 18px #ffd84a,0 0 24px #56e7ff}
+#astroInfo .distValue{display:block;font-size:17px;line-height:1.12;color:#fff1a6;text-shadow:0 0 10px #fff,0 0 18px #ffd84a,0 0 24px #56e7ff}
+@media (max-width:520px){
+  #special .btnMain,#laser .btnMain,#jump .btnMain{font-size:14px!important}
+  #astroInfo{width:156px!important;max-width:156px!important;padding:8px 9px!important}
+  #astroInfo .distLead{font-size:13px!important}
+  #astroInfo .distValue{font-size:15px!important}
+}
+</style>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const specialBtn=$('special'), laserBtn=$('laser'), jumpBtn=$('jump'), astroInfo=$('astroInfo');
+
+  function renderBottomButtonsV53(){
+    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
+    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
+    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
+  }
+  function tweakAstroInfo(){
+    if(!astroInfo) return;
+    astroInfo.innerHTML=astroInfo.innerHTML.replace(/<span class="distanceBig">🌍 地球から\s*([^<]+)<\/span>/,'<span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">$1</span></span>');
+  }
+  const prevSync=window.syncHUD;
+  window.syncHUD=function(){
+    if(typeof prevSync==='function') prevSync();
+    renderBottomButtonsV53();
+    tweakAstroInfo();
+  };
+  if(typeof syncHUD!=='undefined') syncHUD=window.syncHUD;
+  renderBottomButtonsV53();
+  tweakAstroInfo();
+  window.syncHUD?.();
+})();
+</script>
