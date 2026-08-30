@@ -109,7 +109,7 @@ const systems=[
 {name:'🌠 M33 Var C',desc:'高光度青色変光星・三角座銀河',goodColor:'#a7fff0',sky:['#03121a','#12615a'],ground:'#3f8274',ground2:'#204a42',planet:'#5de1c5',event:'STAR SHOWER',eventText:'超密度の流星群！',gravity:.47,jump:17.3}
 ]},
 {name:'🌀 子持ち銀河 M51',distance:'地球から約3100万光年',desc:'伴銀河を持つ渦巻銀河',theme:'whirlpool',stages:[
-{name:'⭐ M51-DS1',desc:'子持ち銀河で観測された高光度星',goodColor:'#ff8bd8',sky:['#16051a','#5c164e'],ground:'#9a507e',ground2:'#52283e',planet:'#ff77c8',event:'ALIEN PARADE',eventText:'👾 宇宙人通信ラッシュ！',gravity:.50,jump:17.4}
+{name:'⭐ M51-DS1',desc:'子持ち銀河で観測された高光度星',goodColor:'#ff8bd8',sky:['#16051a','#5c164e'],ground:'#9a507e',ground2:'#52283e',planet:'#ff77c8',event:'ALIEN PARADE',eventText:'👽 宇宙人エリア！',gravity:.50,jump:17.4}
 ]},
 {name:'👒 ソンブレロ銀河',distance:'地球から約2900万光年',desc:'暗い塵の帯が目立つ銀河',theme:'sombrero',stages:[
 {name:'👒 M104 中心核',desc:'ソンブレロ銀河の中心領域',goodColor:'#ffc47b',sky:['#120905','#4e2e16'],ground:'#a47145',ground2:'#58391f',planet:'#e29b50',event:'COSMIC GAS',eventText:'濃い宇宙ガスが通過！',gravity:.56,jump:17.0}
@@ -193,7 +193,7 @@ const SECRET_MOON_SYSTEM=systems.findIndex(s=>s.secretKey==='moon');
 let system=0,stage=0,camera=0,points=0,power=0,bigFoodProgress=0,level=1,xp=0,hp=3,food=5,big=false,bigUntil=0,paused=false,last=performance.now(),eventPhase=0,nextCosmic=320,nextSwarm=520,shake=0,jumps=0,invincibleUntil=0,playerDog='🐕',morphUntil=0;
 let chips=0,starTotal=0,sparkUntil=0,satelliteUntil=0,magnetUntil=0,laserUnlocked=true,laserAmmo=8,laserAmmoMax=30,companionCount=0,shopUnlocked=false;
 let alienContacts=0,alienRideUntil=0,secretUnlocked=false,nextSecretEvent=900,secretPickups=[];let satellites=[],nextSatellite=240,lasers=[],lastLaserAt=0,bosses=[],nextBossAt=980;let homeRouteReady=false,homeRouteAnnounced=false,blackHoleVisited=false,whiteHoleEscaped=false;let furthestRank=0,nextTargetAlien=110;
-let wormholeActive=false,blackHoleActive=false,blackHoleY=0,difficultyTier=0,lastDifficultyTier=-1,whiteHoleTriggered=false,expansionWarpCount=0,dreamReached=false,nextLoreAt=760,deepWarpCount=0,rocketLaunched=false,alienHitTotal=0,cosmicPowerReady=false,cosmicPowerUntil=0,cosmicBonus=0,returnFromDogStar=false;
+let wormholeActive=false,blackHoleActive=false,blackHoleY=0,difficultyTier=0,lastDifficultyTier=-1,whiteHoleTriggered=false,expansionWarpCount=0,dreamReached=false,nextLoreAt=760,deepWarpCount=0,rocketLaunched=false,alienHitTotal=0,cosmicPowerReady=false,cosmicPowerUntil=0,cosmicBonus=0,returnFromDogStar=false,lastAlienTouchAt=0;
 const p={x:115,y:100,vy:0,w:54,h:55,on:false};let items=[],hazards=[],aliens=[],morphs=[],swarm=[],shootingStars=[],gasClouds=[],fallingStars=[],boneShots=[],earthWalkers=[];let portalX=3050;const rocketX=2860,blackHoleX=3220,worldLength=3500,blackHoleWormholes=[1450,2750],whiteHoleX=3320;
 const wormholeEnabled=()=>wormholeActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
@@ -208,18 +208,19 @@ const S=()=>systems[system].stages[stage],groundY=()=>H-120,playerRect=()=>({x:p
 const maxHp=()=>Math.min(8,3+Math.floor(companionCount/2));
 function showToast(t,ms=1000){toast.textContent=t;toast.style.display='block';clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.style.display='none',ms)}
 function syncHUD(){
- const s=S(),diffNames=['やさしい','ふつう','むずかしい','かなり危険','激ムズ'];
+ const s=S(),areaNames=['🟢 安全地帯','🟡 注意地域','🟠 危険地域','🔴 高危険地域','🟣 極危険地域'];
  locationEl.textContent=`${systems[system].name}  ·  ${s.name}`;
  pointsEl.textContent=`⭐ ${points}`;
  foodEl.textContent=`🦴 元気 ${food}/10`;
  if(alienHitEl)alienHitEl.textContent=`👽 HIT ${alienHitTotal}`;
  const earth=system===0&&stage===0,dream=!!systems[system].dream;
- missionEl.innerHTML=earth?(returnFromDogStar?'🏠 地球に帰還！ 道の先の犬小屋へ行こう':'🐕 いつもの散歩道。先にロケットが見える…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ⭐交換所から地球へ帰れる':`🌌 遠くへ進む WARP ${deepWarpCount}/7　⚫通過 ${blackHoleVisited?'✓':'—'}　⚪脱出 ${whiteHoleEscaped?'✓':'—'}　👾交信 ${Math.min(10,alienContacts)}/10<br>⚠️ ${diffNames[difficultyTier]}・DANGER ${difficultyTier+1}`;
- eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — 犬小屋が待っている':'🌳 WALK EVENT — 犬や人とすれ違う普通の散歩'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`⚡ ${s.event} — ${s.eventText}`;
+ missionEl.innerHTML=earth?(returnFromDogStar?'🏠 やっと地球に帰ってきた。いつもの道を歩こう':'🐕 いつもの散歩道。先にロケットが見える…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ⭐交換所から地球へ帰れる':`🌀 ワームホールで遠くへ進む ${deepWarpCount}/7<br>${areaNames[difficultyTier]}`;
+ eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌳 WALK EVENT — 犬や人とすれ違う普通の散歩'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`⚡ ${s.event} — ${s.eventText}`;
  const dist=(s.distance||systems[system].distance.replace('地球から','')),endless=systems[system].endless;
  const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'超遠方！ ワープのたび地球が遠ざかる':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
  const distanceLabel=endless?'観測不能域 / 膨張フロンティア':dist;
- astroInfo.innerHTML=earth?`<b>🌍 地球・散歩道</b><br>${returnFromDogStar?'宇宙一周のあと、帰ってきた街':'ビルと木のあるいつもの街'}<br><span class="distanceBig">${returnFromDogStar?'🏠 地球帰還':'🚶 まだ地球'}</span><span class="distanceHint">${returnFromDogStar?'犬小屋まであと少し':'いつもの街。まだ宇宙の旅は始まっていない'}</span>`:`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig">🌍 地球から ${distanceLabel}</span><span class="distanceHint">${farHint}</span>`;
+ const gravLabel=s.gravity<=.38?'🪶 超低重力':s.gravity<=.44?'🪽 低重力':s.gravity<=.52?'⚖️ 標準重力':s.gravity<=.62?'⬇️ 高重力':'🕳️ 超高重力';
+ astroInfo.innerHTML=earth?`<b>🌍 地球・散歩道</b><br>${returnFromDogStar?'宇宙一周のあと、帰ってきた街':'ビルと木のあるいつもの街'}<br><span class="distanceBig">${returnFromDogStar?'🏠 地球帰還':'🚶 まだ地球'}</span><span class="distanceHint">${returnFromDogStar?'やっと帰ってきた地球':'いつもの街。まだ宇宙の旅は始まっていない'}</span>`:`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig">🌍 地球から ${distanceLabel}</span><span class="distanceHint">${gravLabel}・ジャンプ高度が変化<br>${farHint}</span>`;
  bigBtn.classList.toggle('ready',food>=3);
  chipText.textContent=shopUnlocked?'星で能力を選ぶ':'30⭐で解禁';
  specialBtn.classList.toggle('ready',shopUnlocked||points>=30);
@@ -227,7 +228,7 @@ function syncHUD(){
  laserBtn.style.display=earth?'none':'';
  if(laserAmmoText)laserAmmoText.textContent=`${laserAmmo} / ${laserAmmoMax}`;
  if(cosmicBtn){cosmicBtn.style.display=earth?'none':'';cosmicBtn.classList.toggle('ready',cosmicPowerReady||performance.now()<cosmicPowerUntil)}
- if(cosmicPowerText)cosmicPowerText.textContent=performance.now()<cosmicPowerUntil?'🕳️ 時空歪曲中':cosmicPowerReady?'READY! 🕳️':`👽 ${alienHitTotal%5}/5 HIT`;
+ if(cosmicPowerText)cosmicPowerText.textContent=performance.now()<cosmicPowerUntil?'🕳️ 時空歪曲中':cosmicPowerReady?'READY! 🕳️/📡':`👽 ${alienHitTotal%5}/5`;
  bigBtn.style.display=earth?'none':'';
  const homeBtn=document.getElementById('homeWarpBtn');
  if(homeBtn){homeBtn.disabled=!dream;homeBtn.innerHTML=dream?'🏠 地球へ帰る<br>🐕 犬小屋へ！':'🏠 地球へ帰る<br>🔒 犬の星で解禁'}
@@ -248,7 +249,7 @@ function makeWorld(){
  const hazardBands=[{a:700,b:1250,n:1},{a:1250,b:1900,n:2},{a:1900,b:2500,n:3},{a:2500,b:3050,n:4},{a:3050,b:3450,n:5}];
  if(system!==BLACK_HOLE_SYSTEM&&!isDream)for(const band of hazardBands)for(let i=0;i<Math.max(0,Math.round(band.n*bandScale));i++){const hy=20+Math.random()*Math.max(140,H*.42);hazards.push({x:band.a+Math.random()*(band.b-band.a),y:hy,w:46,h:46,got:false,symbol:'☄️',diagonal:true,vx:-1.25-Math.random()*.7,vy:1.0+Math.random()*.65})}
  if(isSun&&system!==BLACK_HOLE_SYSTEM){for(let i=0;i<42;i++){const hx=620+Math.random()*2750;const hy=10+Math.random()*Math.max(160,H*.48);hazards.push({x:hx,y:hy,w:48,h:52,got:false,symbol:'🔥',diagonal:true,vx:-.75-Math.random()*.9,vy:1.1+Math.random()*1.35})}}
- if(system!==BLACK_HOLE_SYSTEM&&!isDream)for(let i=0;i<4;i++)aliens.push({x:850+i*600,y:groundY()-95-Math.random()*120,w:46,h:46,got:false});
+ if(system!==BLACK_HOLE_SYSTEM&&!isDream)for(let i=0;i<7;i++)aliens.push({x:850+i*600,y:groundY()-95-Math.random()*120,w:46,h:46,got:false});
  const forms=system===BLACK_HOLE_SYSTEM?['🪨','💿','📡','⚙️','🧊','🪞','💎','🔩','🧿','🛰️']:isDream?['🐕','🐩','🦮','🐕‍🦺']:['🐩','🐕‍🦺','🦮'];
  const morphCount=system===BLACK_HOLE_SYSTEM?9:isDream?90:4;
  for(let i=0;i<morphCount;i++)morphs.push({x:250+i*(isDream?105:650)+Math.random()*55,y:isDream?groundY()-55-Math.random()*150:groundY()-110-Math.random()*145,r:isDream?24:26,got:false,dog:forms[i%forms.length]})
@@ -269,25 +270,22 @@ function stageStart(){
 }
 function maybeLore(){if(paused||p.x<nextLoreAt)return;const rank=systemDistanceRank[system]??0;const s=systems[system];let msg='';if(s.dream)msg=['🐾 ここでは星も犬の夢を見ている。','🌈 ふわふわした犬たちが宇宙を漂っている。','🦴 骨の形の光がゆっくり流れていく。'][Math.floor(Math.random()*3)];else if(s.endless)msg=['🌑 光が消えた。地球の気配も、もうない。','🐾 暗闇の中に、光る足跡がまぎれている。','… ワン …　遠くから何か聞こえた。'][Math.floor(Math.random()*3)];else if(s.postEarendel)msg=['🫥 星より古い光の中を進んでいる。','📡 ここまで来ると、通信も記憶みたいにかすれる。','🌌 宇宙の歴史そのものを横切っている。'][Math.floor(Math.random()*3)];else if(rank>=10)msg=['✨ 地球の光はもう見えない。','🌌 遠すぎて、帰り道の感覚まで薄れていく。','💫 ワープするたび宇宙の色が変わる。'][Math.floor(Math.random()*3)];else if(rank>=6)msg=['🪐 もう太陽系は点のように遠い。','🌠 銀河がただの光の粒になっていく。','🔭 ここからは宇宙が歴史に見える。'][Math.floor(Math.random()*3)];else if(rank>=1)msg=['🌍 地球はまだ遠くない。でも確実に離れている。','🌙 もう気軽には帰れない距離だ。','🛰️ 通信ノイズに地球の気配がまざる。'][Math.floor(Math.random()*3)];if(msg)showToast(msg,1700);nextLoreAt+=780+Math.random()*360}
 
-function checkHomeRoute(){
- const ready=blackHoleVisited&&whiteHoleEscaped&&alienContacts>=10;
- if(ready&&!homeRouteReady){homeRouteReady=true;if(!homeRouteAnnounced){homeRouteAnnounced=true;showToast('📡 地球帰還信号を復元した！ でも帰るタイミングは自分で選べる。',2300)}}
-}
+function checkHomeRoute(){homeRouteReady=dreamReached}
 function openShop(auto=false){if(points<30&&!shopUnlocked){showToast('⭐ 30個集めると星の選択画面が開く！',1200);return}shopUnlocked=true;reward.classList.add('on');if(auto)showToast('🌟 星の選択画面 解禁！',1400);syncHUD()}
 function buySpecial(kind){
  if(kind==='home'){
    if(!systems[system].dream){showToast('🏠 地球ワープは最終地点「犬の星」で解禁！',1400);return}
    reward.classList.remove('on');
    returnFromDogStar=true;paused=true;trans.style.display='grid';warpDog.textContent='🐕🌍';warpDog.className='spin';
-   transTitle.innerHTML='🌍 EARTH RETURN!';nextEl.textContent='犬の星から、地球へ帰る！';subEl.textContent='DOG STAR → EARTH';
-   setTimeout(()=>{system=0;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌳 地球に戻ってきた！ あれ？ 道の先に犬小屋が…',2200)},1800);
+   transTitle.innerHTML='🌍 EARTH RETURN!';nextEl.textContent='犬の星から、ついに地球へ！';subEl.textContent='DOG STAR → EARTH';
+   setTimeout(()=>{system=0;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌳 やっと地球に戻ってきた！',2200)},1800);
    return;
  }
  const prices={giant:35,laser:60,wormhole:80,satellite:40,magnet:50,friend:120};const cost=prices[kind]??999;
  if(kind==='laser'&&laserAmmo>=laserAmmoMax){showToast('🔫 レーザー弾は満タン！',900);return}
  if(points<cost){showToast(`⭐ あと ${cost-points}個 必要！`,1000);return}
  points-=cost;starTotal=Math.max(0,starTotal-cost);const now=performance.now();
- if(kind==='giant'){activateBig();showToast('🐕💥 巨大化・無敵モード！ ⭐50',1500)}
+ if(kind==='giant'){activateBig();showToast('🐕💥 巨大化・無敵モード！ ⭐35',1500)}
  else if(kind==='laser'){laserAmmo=Math.min(laserAmmoMax,laserAmmo+20);showToast(`🔫 レーザー弾 補充！ ${laserAmmo}/${laserAmmoMax}`,1400)}
  else if(kind==='wormhole'){wormholeActive=true;portalX=Math.min(worldLength-260,p.x+820);showToast('🌀 ワームホールを前方に呼び出した！',1500)}
  else if(kind==='satellite'){satelliteUntil=now+3000;invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100)}
@@ -313,19 +311,43 @@ const secretTips=[
 '👾「秘密攻略：飛んでくる🛰️に触れると無料で衛星ライドできる。」'
 ];
 function spawnSecretEvent(){if(!secretUnlocked)return;eventEl.textContent='🔐 SECRET SIGNAL ✦ なにか飛んできた！';showToast('🔐 秘密のアイテム接近！ 🌸 🌝',1300);const kinds=['flower','moon'];for(let i=0;i<2;i++)secretPickups.push({kind:kinds[i],icon:i?'🌝':'🌸',x:p.x+W+180+i*240,y:80+Math.random()*(H*.48),v:2.2+Math.random()*1.1,phase:Math.random()*6.2,r:28,got:false});setTimeout(syncHUD,2100)}
-function unlockAlienRide(){secretUnlocked=true;alienRideUntil=performance.now()+15000;invincibleUntil=Math.max(invincibleUntil,alienRideUntil);comm.classList.remove('on');comm.classList.add('milestone');comm.querySelector('#commTitle').textContent='📡 交信タイム！ 10 / 10';commText.textContent=secretTips[Math.floor(Math.random()*secretTips.length)];showToast('👾 UFO RIDE 解禁！ + SECRET攻略通信',1600);spawnSecretEvent();syncHUD();setTimeout(()=>{comm.classList.remove('milestone');comm.querySelector('#commTitle').textContent='📡 SIGNAL RECEIVED'},2600)}
-function startCommunication(obj){if(obj)obj.got=true;points+=2;xp++;levelCheck();if(!secretUnlocked)alienContacts=Math.min(10,alienContacts+1);if(alienContacts>=10&&!secretUnlocked){unlockAlienRide();checkHomeRoute();return}checkHomeRoute();syncHUD()}
+function unlockAlienRide(){secretUnlocked=true;alienRideUntil=performance.now()+15000;invincibleUntil=Math.max(invincibleUntil,alienRideUntil);comm.classList.remove('on');comm.classList.add('milestone');comm.querySelector('#commTitle').textContent='📡 交信タイム！ 10 / 10';commText.textContent=secretTips[Math.floor(Math.random()*secretTips.length)];showToast('👽 宇宙パワー通信！',1600);spawnSecretEvent();syncHUD();setTimeout(()=>{comm.classList.remove('milestone');comm.querySelector('#commTitle').textContent='📡 SIGNAL RECEIVED'},2600)}
+function startCommunication(obj){
+ if(!cosmicPowerReady){if(performance.now()-lastAlienTouchAt>1600){lastAlienTouchAt=performance.now();showToast('👽 宇宙パワーが満ちると交信できそう…',900)}return}
+ cosmicPowerReady=false;
+ if(obj)obj.got=true;
+ alienContacts++;
+ points+=2;
+ comm.classList.add('on');
+ comm.querySelector('#commTitle').textContent='📡 👽 COSMIC SIGNAL';
+ commText.textContent=['「時空は曲げられる」','「遠くへ行くほど、帰る場所が大切になる」','「ブラックホールの向こうにも道はある」','「犬の星は、夢と宇宙の境目にある」'][alienContacts%4];
+ showToast('📡 👽と交信成功！ 宇宙パワーを1回消費',1300);
+ setTimeout(()=>comm.classList.remove('on'),2200);
+ syncHUD()
+}
 function secretWarp(kind){if(paused)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spin';transTitle.innerHTML=`${kind==='flower'?'🌸':'🌝'} SECRET FOUND!`;nextEl.textContent=kind==='flower'?'🌸 秘密の花銀河':'🌝 笑う月の裏側';subEl.textContent='SECRET STAGE UNLOCKED';setTimeout(()=>{system=kind==='flower'?SECRET_FLOWER_SYSTEM:SECRET_MOON_SYSTEM;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false},1250)}
 function activateBig(){if(big)return;big=true;bigUntil=performance.now()+8000;invincibleUntil=Math.max(invincibleUntil,bigUntil);bigBanner.style.display='block';setTimeout(()=>bigBanner.style.display='none',1100);syncHUD()}
 function endBig(){big=false;syncHUD()}
 function triggerCosmic(kind){const s=S();if(kind==='stars'){eventEl.textContent='🌠 COSMIC EVENT ✦ 星の流星群！';showToast('🌠 星の流星群！！');for(let i=0;i<35;i++)shootingStars.push({x:W+Math.random()*W*.9,y:40+Math.random()*H*.62,vx:7+Math.random()*7,vy:1.8+Math.random()*3,len:25+Math.random()*55,a:.45+Math.random()*.55})}else{eventEl.textContent='🫧 COSMIC EVENT ✦ 宇宙ガス接近！';showToast('🫧 宇宙ガスが流れてきた！');for(let i=0;i<8;i++)gasClouds.push({x:W+80+i*105,y:70+Math.random()*H*.5,vx:.45+Math.random()*.8,r:70+Math.random()*100,a:.10+Math.random()*.10,color:i%2?s.goodColor:'#d693ff'})}setTimeout(syncHUD,2200)}
-function triggerSwarm(kind){const crow=kind==='crow',dino=kind==='dino',evil=kind==='evil';eventEl.textContent=crow?'⚠ DANGER ✦ カラスの大群！ 🔫で撃破':dino?'⚠ DANGER ✦ 恐竜の大群！ 🔫で撃破':evil?'🚨 DANGER ✦ 侵略宇宙人！ 🔫で撃破':'⚠ DANGER ✦ 宇宙人の大群！ 🔫で撃破';showToast(crow?'🐦‍⬛🐦‍⬛🐦‍⬛ 危険！ レーザーで撃破！':dino?'🦖🦖🦖 危険！ レーザーで撃破！':evil?'🚨👾 侵略宇宙人！ レーザーで撃破！':'👾👾👾 危険な宇宙人の大群！ 🔫で撃破！');const count=dino?18:evil?16:30;for(let i=0;i<count;i++)swarm.push({kind,x:p.x+W+100+(i%7)*(dino?92:72)+Math.random()*80,y:(dino?groundY()-70:55+Math.floor(i/7)*72+Math.random()*45),w:dino?62:evil?46:38,h:dino?62:evil?46:38,got:false,v:(dino?3.7:evil?5.8:4.8)+Math.random()*2.2});setTimeout(syncHUD,1800)}
-function doghouseChoice(){if(paused)return;paused=true;trans.style.display='grid';warpDog.textContent='🐕🏠';warpDog.className='';transTitle.innerHTML='🏠 犬小屋';nextEl.textContent='どうする？';subEl.innerHTML='<button id="sleepBtn" style="font:900 18px system-ui;padding:13px 24px;border-radius:999px;border:2px solid #fff;background:#24143d;color:#fff;box-shadow:0 0 22px #b785ff;cursor:pointer">💤 寝る</button>';
- setTimeout(()=>{const b=document.getElementById('sleepBtn');if(b)b.onclick=()=>dreamRestart()},80)}
-function dreamRestart(){transTitle.innerHTML='💤 DREAM…';nextEl.textContent='犬小屋で眠りについた。';subEl.textContent='夢の中で、月がどんどん近づいてくる…';warpDog.textContent='🐕💤';setTimeout(()=>{transTitle.innerHTML='🌙 WOOSH!';nextEl.textContent='夢の中から月へ飛ばされた！';subEl.textContent='EARTH DREAM → MOON';warpDog.textContent='🐕🌙';setTimeout(()=>{returnFromDogStar=false;deepWarpCount=0;expansionWarpCount=0;dreamReached=false;system=0;stage=1;stageStart();trans.style.display='none';paused=false;showToast('🌙 また月から宇宙旅行が始まった！',2200)},1700)},1600)}
+function triggerSwarm(kind){const crow=kind==='crow',dino=kind==='dino',evil=kind==='evil';eventEl.textContent=crow?'⚠ 危険イベント ✦ カラスの大群！ 🔫で撃破':dino?'⚠ 危険イベント ✦ 恐竜の大群！ 🔫で撃破':evil?'🚨 危険イベント ✦ 侵略宇宙人！ 🔫で撃破':'⚠ 危険イベント ✦ 宇宙人の大群！ 🔫で撃破';showToast(crow?'🐦‍⬛🐦‍⬛🐦‍⬛ 危険！ レーザーで撃破！':dino?'🦖🦖🦖 危険！ レーザーで撃破！':evil?'🚨👾 侵略宇宙人！ レーザーで撃破！':'👾👾👾 危険な宇宙人の大群！ 🔫で撃破！');const count=dino?18:evil?16:30;for(let i=0;i<count;i++)swarm.push({kind,x:p.x+W+100+(i%7)*(dino?92:72)+Math.random()*80,y:(dino?groundY()-70:55+Math.floor(i/7)*72+Math.random()*45),w:dino?62:evil?46:38,h:dino?62:evil?46:38,got:false,v:(dino?3.7:evil?5.8:4.8)+Math.random()*2.2});setTimeout(syncHUD,1800)}
+function doghouseChoice(){if(paused)return;paused=true;trans.style.display='grid';warpDog.textContent='🐕';warpDog.className='';transTitle.innerHTML='🏠 HOME';nextEl.textContent='やっと帰って来れた。疲れたから寝よう。';subEl.textContent='長い宇宙旅行のあと、犬星くんは眠りにつく…';setTimeout(()=>dreamRestart(),2200)}
+function dreamRestart(){
+ transTitle.innerHTML='💤 DREAM WORMHOLE';
+ nextEl.textContent='眠りがぐにゃ〜っと時空につながっていく…';
+ subEl.textContent='夢のワームホールが開いた';
+ warpDog.textContent='🐕💤';
+ warpDog.className='spaghetti';
+ setTimeout(()=>{
+   transTitle.innerHTML='🌀🌙 DREAM WORMHOLE!';
+   nextEl.textContent='夢の中で月へ吸い込まれていく！';
+   subEl.textContent='SLEEP → DREAM → MOON';
+   warpDog.textContent='🐕🌙';
+   setTimeout(()=>{returnFromDogStar=false;deepWarpCount=0;expansionWarpCount=0;dreamReached=false;system=0;stage=1;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌙 夢から月へ！ また宇宙旅行が始まった。',2200)},1900)
+ },1700)
+}
 function rocketToMoon(){if(paused||rocketLaunched)return;rocketLaunched=true;paused=true;trans.style.display='grid';warpDog.textContent='🐕🚀';warpDog.className='spin';transTitle.innerHTML='🚀 LIFTOFF!';nextEl.textContent='いつもの散歩道から、月へ！';subEl.textContent='EARTH → MOON';setTimeout(()=>{system=0;stage=1;deepWarpCount=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;rocketLaunched=false;showToast('🌙 月に到着！ ここから本当の宇宙旅行が始まる。',2200)},1900)}
 function homeEnding(){returnFromDogStar=true;system=0;stage=0;stageStart()}
-function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 DEEP SPACE WARP!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 地球からもっと遠くへ！';subEl.textContent=black?'SPAGHETTIFICATION':`MAJOR WARP ${Math.min(7,deepWarpCount+1)} / 7`;
+function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 WORMHOLE!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 地球からもっと遠くへ！';subEl.textContent=black?'SPAGHETTIFICATION':`WORMHOLE ${Math.min(7,deepWarpCount+1)} / 7`;
  setTimeout(()=>{
   if(black){blackHoleVisited=true;system=BLACK_HOLE_SYSTEM;stage=0}
   else if(systems[system].endless){
@@ -383,6 +405,49 @@ if(system===0&&stage===0){
  for(let i=0;i<9;i++){const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;ctx.fillStyle='#6f4a2d';ctx.fillRect(x,gy-64,10,64);ctx.fillStyle=i%2?'#58a765':'#6cb56b';ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill()}
  ctx.restore()
 }else if(systems[system].theme==='expansion'){ctx.save();ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);for(let i=0;i<3;i++){const x=((i*311+eventPhase*.12)%(W+100))-50,y=80+i*92;ctx.globalAlpha=.06;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,.8,0,Math.PI*2);ctx.fill()}for(let i=0;i<7;i++){const x=((i*173+eventPhase*.38)%(W+140))-70,y=55+(i%5)*67;ctx.globalAlpha=.12;ctx.fillStyle='#dcecff';ctx.font=`${17+(i%3)*4}px system-ui`;ctx.fillText('🐾',x,y)}ctx.globalAlpha=.14;ctx.fillStyle='#fff';ctx.font='900 12px system-ui';ctx.fillText('… ワン …',W*.72,H*.34);ctx.restore()}else{drawStarfield();drawGalaxySignature()}if(rank>=3&&system!==BLACK_HOLE_SYSTEM&&!systems[system].dream&&!systems[system].endless){ctx.save();ctx.globalAlpha=Math.min(.20,.04+rank*.014);ctx.fillStyle=rank>=7?'#b58cff':'#8ad8ff';ctx.fillRect(0,0,W,H);if(rank>=7){ctx.globalAlpha=.22;ctx.strokeStyle='#ff8de8';ctx.lineWidth=1;for(let i=0;i<18;i++){const yy=((i*43+eventPhase*1.7)%(H+80))-40;ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(W,yy-18-rank*1.5);ctx.stroke()}}ctx.restore()}if(systems[system].dream){ctx.save();ctx.globalAlpha=.18;for(let i=0;i<7;i++){ctx.fillStyle=i%2?'#fff0fb':'#e8f7ff';ctx.beginPath();ctx.arc((i*170+eventPhase*.35)%(W+140)-70,80+(i%3)*60,46+(i%2)*20,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=.65;const dogs=['🐕','🐩','🦮','🐕‍🦺'];for(let i=0;i<84;i++){const x=((i*34+eventPhase*0.8)%(W+180))-90;const y=36+(i%10)*34+Math.sin(eventPhase/40+i)*10;ctx.font=`${24+(i%3)*8}px system-ui`;ctx.fillText(dogs[i%dogs.length],x,y);ctx.font='18px system-ui';ctx.fillText(i%2?'🐾':'🦴',x+18,y-18)}ctx.restore()}if(s.name==='☀️ 太陽'){const sun=ctx.createRadialGradient(W*.78,H*.23,20,W*.78,H*.23,125);sun.addColorStop(0,'#fffbd0');sun.addColorStop(.35,'#ffd22a');sun.addColorStop(.68,'#ff6b00');sun.addColorStop(1,'transparent');ctx.fillStyle=sun;ctx.beginPath();ctx.arc(W*.78,H*.23,128,0,Math.PI*2);ctx.fill()}else if(s.name.includes('地球')){}else if(s.name.includes('月')){drawTinyEarth(W*.82,H*.27,58)}else if(s.name.includes('エアレンデル')){const gl=ctx.createRadialGradient(W*.80,H*.22,8,W*.80,H*.22,95);gl.addColorStop(0,'#fff');gl.addColorStop(.35,'#fff6d8');gl.addColorStop(.62,'#b7daff');gl.addColorStop(1,'transparent');ctx.fillStyle=gl;ctx.beginPath();ctx.arc(W*.80,H*.22,98,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.6;for(let i=0;i<18;i++){ctx.fillStyle=i%2?'#fff':'#bdeaff';ctx.beginPath();ctx.arc(W*.62+i*22,H*.16+(i%3)*13,1.1+(i%4)*.45,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}else if(!systems[system].dream&&!systems[system].endless){ctx.globalAlpha=.88;ctx.fillStyle=s.planet;ctx.shadowColor='#fff';ctx.shadowBlur=18;ctx.beginPath();ctx.arc(W*.82,H*.28,55,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;ctx.shadowBlur=0}if(eventPhase%360>190&&eventPhase%360<280&&!systems[system].endless){ctx.fillStyle=S().goodColor+'20';ctx.fillRect(0,0,W,H)}}
+
+function drawCosmicWarpFX(){
+ if(performance.now()>=cosmicPowerUntil)return;
+ const now=performance.now(),cx=(p.x-camera)+28,cy=p.y+28;
+ ctx.save();
+ // bent space-time grid
+ ctx.globalCompositeOperation='screen';
+ ctx.globalAlpha=.34;
+ for(let ring=0;ring<9;ring++){
+   const r=45+ring*34+Math.sin(now/150+ring)*9;
+   ctx.strokeStyle=ring%2?'rgba(111,231,255,.55)':'rgba(211,127,255,.52)';
+   ctx.lineWidth=1.6;
+   ctx.beginPath();
+   for(let a=0;a<=Math.PI*2+.12;a+=.12){
+     const warp=1+.13*Math.sin(a*3+now/260+ring);
+     const x=cx+Math.cos(a)*r*warp;
+     const y=cy+Math.sin(a)*r*.48/warp;
+     if(a===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+   }
+   ctx.stroke();
+ }
+ // background streaks curve toward the mini black hole
+ for(let i=0;i<22;i++){
+   const yy=(i*31+now*.03)%H;
+   const bend=(yy-cy)*.18;
+   ctx.strokeStyle=i%3===0?'rgba(255,255,255,.28)':'rgba(111,214,255,.19)';
+   ctx.beginPath();
+   ctx.moveTo(0,yy);
+   ctx.quadraticCurveTo(cx-120,yy-bend,cx,cy);
+   ctx.quadraticCurveTo(cx+150,yy+bend,W,yy+Math.sin(i)*40);
+   ctx.stroke();
+ }
+ ctx.globalCompositeOperation='source-over';
+ ctx.globalAlpha=.16;
+ const lens=ctx.createRadialGradient(cx,cy,25,cx,cy,240);
+ lens.addColorStop(0,'rgba(0,0,0,.9)');
+ lens.addColorStop(.22,'rgba(124,64,255,.55)');
+ lens.addColorStop(.48,'rgba(67,220,255,.18)');
+ lens.addColorStop(1,'rgba(0,0,0,0)');
+ ctx.fillStyle=lens;ctx.fillRect(0,0,W,H);
+ ctx.restore();
+}
+
 function drawGround(){const s=S(),gy=groundY(),g=ctx.createLinearGradient(0,gy,0,H);if(system===0&&stage===0){ctx.fillStyle='#777f88';ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='#c8ccd1';ctx.fillRect(0,gy,W,42);ctx.fillStyle='#fff';ctx.fillRect(0,gy+40,W,3);return}g.addColorStop(0,s.ground);g.addColorStop(1,s.ground2);ctx.fillStyle=g;ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(0,gy,W,3);for(let i=0;i<16;i++){const sx=((i*173-camera*.7)%(W+200)+W+200)%(W+200)-100;ctx.globalAlpha=.16;ctx.fillStyle=s.ground2;ctx.beginPath();ctx.ellipse(sx,gy+30+(i%4)*22,25+(i%3)*9,8+(i%2)*4,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
 function drawGood(it){const sx=it.x-camera;if(sx<-60||sx>W+60||it.got)return;if(system===BLACK_HOLE_SYSTEM&&!it.food){const glyphs=['✦','◉','⌁','⟡','∞','◌'];const g=glyphs[Math.abs(Math.floor(it.x))%glyphs.length];ctx.save();ctx.translate(sx,it.y);ctx.rotate(performance.now()/900+(it.x%7));ctx.shadowColor=it.color;ctx.shadowBlur=24;ctx.fillStyle=it.color;ctx.font='900 28px system-ui';ctx.fillText(g,-12,10);ctx.restore();return}if(it.food){ctx.save();ctx.font='34px system-ui';ctx.shadowColor=it.inert?'#7cf7ff':'#ffd65a';ctx.shadowBlur=18;ctx.fillText(it.inert?'🔋':'🦴',sx-17,it.y+12);ctx.restore();return}ctx.save();ctx.translate(sx,it.y);ctx.shadowColor=it.color;ctx.shadowBlur=18;ctx.fillStyle=it.color;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?18:8,px=Math.cos(a)*rr,py=Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.restore()}
 function drawHazard(h){const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;ctx.save();ctx.translate(sx+23,h.y+23);ctx.shadowColor=h.symbol==='🔥'?'#ff9b24':'#ff542e';ctx.shadowBlur=h.symbol==='🔥'?24:18;ctx.font=`${h.symbol==='🔥'?46:42}px system-ui`;ctx.fillText(h.symbol,-22,17);ctx.restore()}
@@ -441,9 +506,12 @@ sx=blackHoleX-camera;if(blackHoleEnabled()&&sx>-190&&sx<W+190){const t=performan
 
 function registerAlienHit(amount=1){
  alienHitTotal+=amount;
- if(alienHitTotal>0&&alienHitTotal%5===0){
+ const progress=alienHitTotal%5;
+ if(progress===0){
    cosmicPowerReady=true;
-   showToast(`🌌 宇宙パワー充填！ 👽 HIT ${alienHitTotal}　時空を歪められる！`,1700)
+   showToast(`🌌 宇宙パワー満タン！ 👽 HIT ${alienHitTotal}　🕳️時空歪曲 or 📡交信ができる`,1900)
+ }else{
+   showToast(`👽 宇宙パワー +1　${progress}/5`,650)
  }
  syncHUD()
 }
@@ -509,7 +577,7 @@ function spawnEvents(){
  if(system!==BLACK_HOLE_SYSTEM&&!systems[system].secret&&!isDream&&difficultyTier>=2&&eventPhase>=nextBossAt){spawnBoss();nextBossAt=eventPhase+1100+Math.floor(Math.random()*520)}
  if(system!==BLACK_HOLE_SYSTEM&&secretUnlocked&&eventPhase>=nextSecretEvent){spawnSecretEvent();nextSecretEvent=eventPhase+950+Math.floor(Math.random()*500)}
 }
-function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier=Math.min(4,Math.floor(p.x/700));if(system===BLACK_HOLE_SYSTEM&&eventPhase%18===0)syncHUD();if(difficultyTier!==lastDifficultyTier){lastDifficultyTier=difficultyTier;syncHUD();if(difficultyTier>0){const dn=['','ふつう','むずかしい','かなり危険','激ムズ'][difficultyTier];showToast(`⚠️ ${dn}！ DANGER ${difficultyTier+1}`,1200)}}spawnEvents();updateLasers(dt);updateBoneShots(dt);updateFallingStars(dt);
+function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier=Math.min(4,Math.floor(p.x/700));if(system===BLACK_HOLE_SYSTEM&&eventPhase%18===0)syncHUD();if(difficultyTier!==lastDifficultyTier){lastDifficultyTier=difficultyTier;syncHUD();if(difficultyTier>0){const an=['','🟡 注意地域','🟠 危険地域','🔴 高危険地域','🟣 極危険地域'][difficultyTier];showToast(`${an} に入った`,1200)}}spawnEvents();updateLasers(dt);updateBoneShots(dt);updateFallingStars(dt);
  if(performance.now()<cosmicPowerUntil){
    // 時空歪曲ボーナス: 星と骨を引き寄せ、近くの敵をゆっくり吸い込む
    for(const it of items){if(it.got)continue;const dx=p.x-it.x,dy=(p.y+25)-it.y;const d=Math.hypot(dx,dy);if(d<520){it.x+=dx*.055*dt;it.y+=dy*.055*dt}}
@@ -527,8 +595,12 @@ for(const sat of satellites){if(sat.got)continue;sat.x-=sat.v*dt;sat.y+=Math.sin
 for(const b of bosses){if(b.dead)continue;b.x-=b.v*dt;if(b.hitFlash>0)b.hitFlash-=dt;if(rectHit(playerRect(),{x:b.x+8,y:b.y+6,w:b.w-16,h:b.h-6}))hitHazard({x:b.x,y:b.y,w:b.w,h:b.h,got:false,evil:true})}bosses=bosses.filter(b=>!b.dead&&b.x>p.x-W-240);
 for(const st of shootingStars){st.x-=st.vx*dt;st.y+=st.vy*dt}shootingStars=shootingStars.filter(st=>st.x>-160&&st.y<H+100);for(const g of gasClouds)g.x-=g.vx*dt;gasClouds=gasClouds.filter(g=>g.x>-g.r*2);
 if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){if(systems[system].dream){showToast('🐾 ここが宇宙旅行の最終地点。⭐交換所から地球へ帰れる！',1800);stageStart();return}if(systems[system].secret){showToast('🌀 秘密銀河の出口！ 通常宇宙へ戻る',1200);warpTo(false);return}if(system===0&&stage===0){if(returnFromDogStar){doghouseChoice();return}else{rocketToMoon();return}}stage=(stage+1)%systems[system].stages.length;showToast(`🚀 NEXT ✦ ${systems[system].stages[stage].name}`,1400);stageStart();return}camera+=(Math.max(0,p.x-W*.34)-camera)*.13}
-function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
-function doJump(){if(paused||jumps>=4)return;const s=S(),boost=big?1.12:1;if(p.on){p.vy=-(s.jump*.72+Math.min(.45,companionCount*.025))*(food===0?.88:1)*boost}else{const tapBoost=jumps===1?7.8:jumps===2?8.8:9.6;p.vy=(Math.min(p.vy,-3.5)-tapBoost)*boost}jumps++;p.on=false}
+function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawCosmicWarpFX();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
+function doJump(){if(paused||jumps>=4)return;const s=S(),boost=big?1.12:1;
+ const gravityJump=Math.max(.78,Math.min(1.38,Math.sqrt(.50/Math.max(.24,s.gravity))));
+ if(p.on){p.vy=-(s.jump*.72+Math.min(.45,companionCount*.025))*gravityJump*(food===0?.88:1)*boost}
+ else{const tapBoost=(jumps===1?7.8:jumps===2?8.8:9.6)*gravityJump;p.vy=(Math.min(p.vy,-3.5)-tapBoost)*boost}
+ jumps++;p.on=false}
 jumpBtn.addEventListener('pointerdown',e=>{e.preventDefault();doJump()},{passive:false});laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{passive:false});cosmicBtn.addEventListener('pointerdown',e=>{e.preventDefault();useCosmicPower()},{passive:false});bigBtn.addEventListener('click',fireBoneBoomerang);specialBtn.addEventListener('click',()=>{if(shopUnlocked)reward.classList.toggle('on');else openShop()});document.querySelectorAll('.rewardBtn').forEach(b=>b.addEventListener('click',()=>buySpecial(b.dataset.special)));wrap.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key===' '){e.preventDefault();doJump()}});stageStart();setTimeout(()=>showToast('🐕 まずは普通の散歩。ビルと木のある街を歩こう。',2300),600);setTimeout(()=>showToast('🚀 道の先のロケットに乗ると月へ！',2200),3200);requestAnimationFrame(frame);
 })();
 </script>
