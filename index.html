@@ -5078,3 +5078,228 @@ v51RenderRewardTexts();
   syncHUD();
 })();
 </script>
+
+<!-- v57 item cleanup + world events + dedicated return -->
+<style>
+/* Six-item console only */
+#reward{width:min(414px,92vw)!important;max-height:64vh!important}
+.rewardBtns{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+.rewardBtn{min-height:70px!important}
+/* Story return is no longer an item */
+#earthReturnEventBtn{
+  display:none;position:absolute;z-index:34;right:12px;top:132px;
+  width:154px;min-height:46px;padding:7px 10px;border:1.5px solid rgba(255,255,255,.95);border-radius:999px;
+  background:linear-gradient(180deg,#fff 0%,#d8fff0 24%,#79efd0 54%,#5e9cff 100%);
+  color:#24314e;font:1000 11px/1.18 system-ui,sans-serif;text-align:center;
+  box-shadow:inset 0 2px 0 #fff,inset 0 8px 12px rgba(255,255,255,.64),0 0 0 2px rgba(113,255,220,.18),0 0 18px rgba(94,229,255,.45),0 5px 0 #173054;
+  pointer-events:auto;animation:v57ReturnPulse .8s ease-in-out infinite alternate;
+}
+#earthReturnEventBtn.on{display:block}
+#earthReturnEventBtn:active{transform:translateY(4px);box-shadow:inset 0 3px 8px rgba(20,62,82,.2),0 1px 0 #173054}
+#earthReturnEventBtn small{display:block;font-size:8px;margin-top:2px;opacity:.78}
+@keyframes v57ReturnPulse{from{filter:brightness(1);box-shadow:inset 0 2px 0 #fff,inset 0 8px 12px rgba(255,255,255,.64),0 0 0 2px rgba(113,255,220,.18),0 0 12px rgba(94,229,255,.36),0 5px 0 #173054}to{filter:brightness(1.08);box-shadow:inset 0 2px 0 #fff,inset 0 8px 12px rgba(255,255,255,.64),0 0 0 2px rgba(113,255,220,.28),0 0 25px rgba(94,229,255,.68),0 5px 0 #173054}}
+@media(max-width:520px){
+  #earthReturnEventBtn{right:8px;top:113px;width:138px;min-height:42px;font-size:10px}
+  #reward{width:min(402px,94vw)!important}
+}
+</style>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const reward=$('reward'),rewardTitle=$('rewardTitle'),rewardSub=$('rewardSub');
+  const comm=$('comm'),commTitle=$('commTitle'),commText=$('commText');
+
+  /* 1) Keep only six deliberate items. */
+  const REMOVED=new Set(['wormhole','magnet','secret','home']);
+  document.querySelectorAll('.rewardBtn').forEach(btn=>{
+    if(REMOVED.has(btn.dataset.special)) btn.remove();
+  });
+  function renderSixItems(){
+    if(rewardTitle)rewardTitle.textContent='⭐ アイテム';
+    if(rewardSub)rewardSub.textContent='選んで使うアイテムは6種類';
+    const labels={
+      giant:'🐕 巨大化<br>35⭐',
+      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
+      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
+      boneRain:'🦴 ホネホネシャワー<br>45⭐',
+      satellite:'🛰️ 衛星ライド<br>40⭐',
+      friend:'🐕 仲間を増やす<br>100⭐'
+    };
+    document.querySelectorAll('.rewardBtn').forEach(btn=>{if(labels[btn.dataset.special])btn.innerHTML=labels[btn.dataset.special]});
+  }
+
+  /* 2) Dedicated Earth-return story button. */
+  const earthReturnBtn=document.createElement('button');
+  earthReturnBtn.id='earthReturnEventBtn';
+  earthReturnBtn.innerHTML='🌍 地球帰還ルート OPEN<small>タップして地球へ帰る</small>';
+  wrap.appendChild(earthReturnBtn);
+  function refreshEarthReturnBtn(){
+    checkHomeRoute();
+    const earth=system===0&&stage===0;
+    earthReturnBtn.classList.toggle('on',!!homeRouteReady&&!earth&&!doghouseInterior?.classList.contains('on'));
+  }
+  earthReturnBtn.addEventListener('click',()=>{
+    if(!homeRouteReady)return;
+    reward?.classList.remove('on');
+    buySpecial('home');
+    earthReturnBtn.classList.remove('on');
+  });
+
+  collectEarthToken=function(obj){
+    if(!obj||obj.got)return;
+    obj.got=true;
+    earthTokenCount=Math.min(3,earthTokenCount+1);
+    checkHomeRoute();
+    showToast(`🌏 帰還サイン GET！ ${earthTokenCount}/3`,1200);
+    if(homeRouteReady){
+      eventEl.textContent='🌍 EARTH RETURN ROUTE OPEN!';
+      setTimeout(()=>showToast('🌍 地球帰還ルート OPEN！',1700),260);
+    }
+    refreshEarthReturnBtn();syncHUD();
+  };
+  window.collectEarthToken=collectEarthToken;
+
+  /* 3) Alien communication is an automatic milestone event, not a purchasable item. */
+  let lastAutoCommMilestone=Math.floor((alienHitTotal||0)/5);
+  const endingHints=[
+    '🌏 帰還サインを3つ集めると、地球へ帰る道が見える。',
+    '🐾 犬の星の最後では「ここに残る」という選択肢があるらしい。',
+    '⚫ ブラックホールでは、光とは反対の奥を選ぶ道もある。',
+    '👽 何度も宇宙人と接触すると、いつか向こうから誘いが来る。',
+    '🌙 地球へ帰って眠ったあとも、旅は夢の中で続くかもしれない。'
+  ];
+  function showAutoCommunication(milestone){
+    if(!comm||!commText)return;
+    const hint=endingHints[(milestone-1)%endingHints.length];
+    if(commTitle)commTitle.textContent='📡 SIGNAL RECEIVED — ENDING HINT';
+    commText.textContent=hint;
+    comm.classList.remove('on','milestone');void comm.offsetWidth;comm.classList.add('milestone');
+    showToast('👽📡 宇宙人からエンディングのヒント！',1500);
+    setTimeout(()=>{comm.classList.remove('milestone');if(commTitle)commTitle.textContent='📡 SIGNAL RECEIVED'},2800);
+  }
+  const prevRegisterAlienHit=registerAlienHit;
+  registerAlienHit=function(amount=1){
+    prevRegisterAlienHit(amount);
+    const milestone=Math.floor((alienHitTotal||0)/5);
+    if(milestone>lastAutoCommMilestone){
+      lastAutoCommMilestone=milestone;
+      setTimeout(()=>showAutoCommunication(milestone),240);
+    }
+  };
+  window.registerAlienHit=registerAlienHit;
+
+  /* 4) Rare pickups belong in the world: magnet, rainbow star, UFO ticket. */
+  let rarePickupSerial=0;
+  const rareIcons={magnet:'🧲',rainbow:'🌈',ufo:'🛸'};
+  function applyRarePickup(kind){
+    const now=performance.now();
+    if(kind==='magnet'){
+      magnetUntil=now+12000;showToast('🧲 星磁石！ ⭐が12秒吸い寄せられる',1400);
+    }else if(kind==='rainbow'){
+      points+=10;starTotal+=10;if(points>=30&&!shopUnlocked)shopUnlocked=true;showToast('🌈 レインボースター！ ⭐+10',1400);
+    }else if(kind==='ufo'){
+      satelliteUntil=Math.max(satelliteUntil,now+5000);invincibleUntil=Math.max(invincibleUntil,now+5000);showToast('🛸 UFOチケット！ 5秒高速ライド',1400);
+    }
+    syncHUD();
+  }
+  const prevCollectGood=collectGood;
+  collectGood=function(it){
+    if(it?.rareKind&&!it.got){it.got=true;applyRarePickup(it.rareKind);return}
+    prevCollectGood(it);
+  };
+  window.collectGood=collectGood;
+  const prevDrawGood=drawGood;
+  drawGood=function(it){
+    if(it?.rareKind){
+      const sx=it.x-camera;if(sx<-70||sx>W+70||it.got)return;
+      ctx.save();ctx.translate(sx,it.y);ctx.rotate(Math.sin(performance.now()/300+it.phase)*.08);ctx.shadowColor=it.rareKind==='magnet'?'#87ffe0':it.rareKind==='rainbow'?'#fff18a':'#91ddff';ctx.shadowBlur=24;ctx.font='900 34px system-ui';ctx.fillText(rareIcons[it.rareKind]||'✨',-17,12);ctx.restore();return;
+    }
+    prevDrawGood(it);
+  };
+  window.drawGood=drawGood;
+  const prevSpawnEvents=spawnEvents;
+  spawnEvents=function(){
+    prevSpawnEvents();
+    if(paused||system===0&&stage===0||systems[system]?.dream)return;
+    if(eventPhase%340===0&&Math.random()<.32){
+      const roll=Math.random();const kind=roll<.5?'magnet':roll<.78?'rainbow':'ufo';
+      items.push({x:p.x+W+160,y:70+Math.random()*Math.max(100,H*.34),r:22,got:false,rareKind:kind,phase:rarePickupSerial++*.7});
+      eventEl.textContent=`${rareIcons[kind]} RARE ITEM SIGNAL — なにか流れてきた！`;
+    }
+  };
+  window.spawnEvents=spawnEvents;
+
+  /* Bone boomerang can retrieve rare pickups too, and bones remain unlimited. */
+  nearestBoomerangTarget=function(){
+    const candidates=[];
+    for(const o of secretPickups){if(!o.got&&!o._boomerangReserved&&o.x>p.x-40&&o.x<p.x+1150)candidates.push({type:o.kind==='earth'?'earth':'secret',obj:o,icon:o.icon||'✨',d:Math.abs(o.x-p.x)})}
+    for(const it of items){
+      if(it.got||it._boomerangReserved||it.x<=p.x-40||it.x>=p.x+1150)continue;
+      if(it.rareKind)candidates.push({type:'rare',obj:it,icon:rareIcons[it.rareKind]||'✨',rareKind:it.rareKind,d:Math.abs(it.x-p.x)});
+      else candidates.push({type:it.food?'bone':'star',obj:it,icon:it.food?'🦴':'⭐',d:Math.abs(it.x-p.x)});
+    }
+    const priority={earth:0,rare:1,secret:2,star:3,bone:4};
+    candidates.sort((a,b)=>(priority[a.type]??9)-(priority[b.type]??9)||a.d-b.d);
+    return candidates[0]||null;
+  };
+  window.nearestBoomerangTarget=nearestBoomerangTarget;
+  finishBoomerangFetch=function(b){
+    const t=b.target;if(!t?.obj)return;
+    t.obj._boomerangReserved=false;t.obj.got=true;b.fetched=t.icon;
+    b.fetchType=t.type;b.rareKind=t.rareKind||t.obj.rareKind||null;
+  };
+  window.finishBoomerangFetch=finishBoomerangFetch;
+  awardBoomerangFetch=function(b){
+    if(!b?.fetched)return;
+    if(b.fetchType==='earth'){
+      earthTokenCount=Math.min(3,earthTokenCount+1);checkHomeRoute();showToast(`🌏 とってきた！ ${earthTokenCount}/3`,1100);if(homeRouteReady)showToast('🌍 地球帰還ルート OPEN！',1500);
+    }else if(b.fetchType==='rare'){
+      applyRarePickup(b.rareKind);
+    }else if(b.fetchType==='secret'){
+      points+=3;starTotal+=3;showToast(`${b.fetched} とってきた！ ⭐+3`,950);
+    }else if(b.fetchType==='bone'){
+      food+=3;showToast('🦴 とってきた！ 骨 +3',900);
+    }else if(b.fetchType==='star'){
+      points+=2;starTotal+=2;showToast('⭐ とってきた！ 星 +2',900);
+    }
+    refreshEarthReturnBtn();syncHUD();
+  };
+  window.awardBoomerangFetch=awardBoomerangFetch;
+
+  /* Refresh after legacy HUD functions have run. */
+  const prevSyncHUD=syncHUD;
+  syncHUD=function(){
+    prevSyncHUD();
+    renderSixItems();
+    refreshEarthReturnBtn();
+  };
+  window.syncHUD=syncHUD;
+
+  renderSixItems();refreshEarthReturnBtn();syncHUD();
+})();
+</script>
+<script>
+/* v57.1 reliable dedicated Earth return */
+(function(){
+  const reward=document.getElementById('reward');
+  const earthReturnBtn=document.getElementById('earthReturnEventBtn');
+  function returnToEarthV57(){
+    checkHomeRoute();
+    if(!homeRouteReady){showToast(`🌏 帰還サインをあと ${Math.max(0,3-earthTokenCount)} 個集めよう！`,1300);return}
+    reward?.classList.remove('on');
+    returnFromDogStar=true;earthTokenCount=0;homeRouteReady=false;paused=true;
+    if(earthReturnBtn)earthReturnBtn.classList.remove('on');
+    trans.style.display='grid';warpDog.textContent='🐕🌍';warpDog.className='spin';
+    transTitle.innerHTML='🌍 EARTH RETURN!';nextEl.textContent='地球への帰還ルートが開いた！';subEl.textContent='HOME EVENT';
+    setTimeout(()=>{system=0;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌳 地球に帰ってきた！',2200)},1800);
+  }
+  if(earthReturnBtn){
+    const clone=earthReturnBtn.cloneNode(true);
+    earthReturnBtn.replaceWith(clone);
+    clone.addEventListener('click',returnToEarthV57);
+  }
+  const prevBuySpecial=buySpecial;
+  buySpecial=function(kind){if(kind==='home'){returnToEarthV57();return}return prevBuySpecial(kind)};
+  window.buySpecial=buySpecial;
+})();
+</script>
