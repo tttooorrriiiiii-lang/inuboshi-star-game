@@ -4423,3 +4423,258 @@ v51RenderRewardTexts();
   window.syncHUD?.();
 })();
 </script>
+
+<!-- v54 y2k ship controls + magnet + bone cap patch -->
+<style>
+:root{
+  --y2k-item1:#fffdf8;--y2k-item2:#f3ddff;--y2k-item3:#9ff0ff;
+  --y2k-laser1:#fff7fd;--y2k-laser2:#ffd2ee;--y2k-laser3:#8eddff;
+  --y2k-jump1:#fffefa;--y2k-jump2:#e4e9ff;--y2k-jump3:#91eeff;
+}
+.controls{
+  width:min(390px,96vw)!important;
+  gap:10px!important;
+  align-items:end!important;
+}
+#special,#laser,#jump{
+  position:relative!important;
+  overflow:hidden!important;
+  height:78px!important;
+  max-height:78px!important;
+  border-radius:999px!important;
+  border:2px solid rgba(255,255,255,.92)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.98),
+    inset 0 10px 18px rgba(255,255,255,.82),
+    inset 0 -9px 12px rgba(110,81,186,.22),
+    0 0 0 2px rgba(255,119,215,.22),
+    0 0 18px rgba(86,231,255,.34),
+    0 8px 0 rgba(40,17,82,.86)!important;
+  transform:translateY(0) scale(1)!important;
+  transition:transform .08s ease, box-shadow .08s ease, filter .12s ease!important;
+}
+#special::before,#laser::before,#jump::before{
+  content:''!important;
+  position:absolute!important;
+  left:10%!important; right:10%!important; top:6px!important; height:24%!important;
+  border-radius:999px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(255,255,255,.22))!important;
+  filter:blur(.2px)!important;
+  pointer-events:none!important;
+}
+#special::after,#laser::after,#jump::after{
+  content:''!important;
+  position:absolute!important;
+  inset:auto 14px 11px 14px!important;
+  height:7px!important;
+  border-radius:999px!important;
+  background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.02),rgba(255,255,255,.14))!important;
+  pointer-events:none!important;
+}
+#special{background:linear-gradient(180deg,var(--y2k-item1) 0%,var(--y2k-item2) 45%,var(--y2k-item3) 100%)!important}
+#laser{background:linear-gradient(180deg,var(--y2k-laser1) 0%,var(--y2k-laser2) 45%,var(--y2k-laser3) 100%)!important}
+#jump{background:linear-gradient(180deg,var(--y2k-jump1) 0%,var(--y2k-jump2) 45%,var(--y2k-jump3) 100%)!important}
+#special .btnMain,#laser .btnMain,#jump .btnMain{
+  position:relative!important;
+  z-index:1!important;
+  font-size:15px!important;
+  font-weight:1000!important;
+  color:#6b6f84!important;
+  letter-spacing:.02em!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.62)!important;
+}
+#special.pressed,#laser.pressed,#jump.pressed{
+  transform:translateY(6px) scale(.965)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.82),
+    inset 0 10px 18px rgba(255,255,255,.65),
+    inset 0 -3px 12px rgba(63,38,130,.22),
+    0 0 12px rgba(86,231,255,.22),
+    0 2px 0 rgba(40,17,82,.92)!important;
+  filter:saturate(1.08) brightness(.98)!important;
+}
+#reward{
+  top:50%!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(430px,92vw)!important;
+  padding:16px 14px 14px!important;
+  border-radius:26px!important;
+  border:2px solid rgba(255,255,255,.95)!important;
+  background:
+    radial-gradient(circle at 18% 12%,rgba(255,255,255,.34),transparent 22%),
+    linear-gradient(180deg,rgba(39,18,71,.98) 0%,rgba(11,11,32,.98) 52%,rgba(18,36,78,.97) 100%)!important;
+  box-shadow:0 0 0 2px rgba(255,88,219,.2),0 0 24px rgba(86,231,255,.28),0 18px 50px rgba(0,0,0,.45)!important;
+  backdrop-filter:blur(6px)!important;
+}
+#reward::before{
+  content:'COSMIC ITEM CONSOLE'!important;
+  display:block!important;
+  margin:0 auto 10px!important;
+  width:max-content!important;
+  padding:3px 12px!important;
+  border-radius:999px!important;
+  font-size:10px!important;
+  letter-spacing:.16em!important;
+  color:#d3f7ff!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.06))!important;
+  box-shadow:0 0 12px rgba(86,231,255,.18)!important;
+}
+#rewardTitle{font-size:19px!important;letter-spacing:.02em!important}
+#rewardSub{font-size:11px!important;color:#dfe8ff!important}
+.rewardBtns{gap:9px!important}
+.rewardBtn{
+  position:relative!important;
+  min-height:66px!important;
+  border-radius:18px!important;
+  border:1.5px solid rgba(255,255,255,.88)!important;
+  background:linear-gradient(180deg,#fff 0%,#efe0ff 50%,#b1ecff 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98), inset 0 8px 14px rgba(255,255,255,.62), 0 0 0 1px rgba(255,76,203,.18), 0 7px 0 rgba(39,17,80,.8)!important;
+  color:#3d3751!important;
+  font-size:11px!important;
+  font-weight:1000!important;
+}
+.rewardBtn::before{
+  content:''!important;
+  position:absolute!important;left:10%;right:10%;top:5px;height:20%;border-radius:999px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.15))!important;
+}
+.rewardBtn:active{transform:translateY(4px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9), inset 0 8px 14px rgba(255,255,255,.45), 0 2px 0 rgba(39,17,80,.92)!important}
+.rewardBtn.utilityItem{background:linear-gradient(180deg,#fffef7,#fff0c8 52%,#b0ecff 100%)!important}
+.rewardBtn.cosmicItem{background:linear-gradient(180deg,#fff8ff,#ebdcff 52%,#abf0eb 100%)!important}
+.rewardBtn[data-special="magnet"]{background:linear-gradient(180deg,#fff8ff,#f0dcff 50%,#b1ffd9 100%)!important}
+.rewardBtn[data-special="friend"]{background:linear-gradient(180deg,#fffdf5,#ffe4ce 50%,#caecff 100%)!important}
+.rewardBtn[data-special="boneRain"]{background:linear-gradient(180deg,#fffef4,#fff2ba 50%,#b7efff 100%)!important}
+.rewardBtn.locked,.rewardBtn:disabled{opacity:.38!important;filter:grayscale(.55)!important;box-shadow:none!important}
+@media (max-width:520px){
+  .controls{gap:8px!important;width:min(386px,96vw)!important}
+  #special,#laser,#jump{height:74px!important;max-height:74px!important}
+  #special .btnMain,#laser .btnMain,#jump .btnMain{font-size:14px!important}
+  #reward{width:min(402px,94vw)!important;padding:14px 12px!important}
+  .rewardBtn{min-height:62px!important;font-size:10px!important}
+}
+</style>
+<script>
+(function(){
+  const FOOD_CAP=30;
+  const $=id=>document.getElementById(id);
+  const specialBtn=$('special'), laserBtn=$('laser'), jumpBtn=$('jump');
+  const reward=$('reward');
+  const rewardTitle=$('rewardTitle'), rewardSub=$('rewardSub');
+
+  function renderBottomButtonsV54(){
+    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
+    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
+    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
+  }
+
+  function renderRewardTextsV54(){
+    if(rewardTitle) rewardTitle.textContent='⭐ アイテム';
+    if(rewardSub) rewardSub.textContent='集めた⭐や🦴や👽で使える宇宙アイテム';
+    const map={
+      giant:'🐕 巨大化<br>35⭐',
+      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
+      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
+      boneRain:'🦴 ホネホネシャワー<br>45⭐',
+      wormhole:'🌀 ワームホール呼出<br>80⭐',
+      satellite:'🛰️ 衛星ライド<br>40⭐',
+      magnet:'🧲 星磁石<br>50⭐ / 拾うと即発動',
+      friend:'🐕 仲間を増やす<br>100⭐',
+      secret:'📡 宇宙人と交信<br>70⭐'
+    };
+    document.querySelectorAll('.rewardBtn').forEach(btn=>{
+      const kind=btn.dataset.special;
+      if(kind==='home') return;
+      if(map[kind]) btn.innerHTML=map[kind];
+    });
+  }
+
+  function strongPress(btn){
+    if(!btn || btn.dataset.v54press==='1') return;
+    btn.dataset.v54press='1';
+    const on=()=>btn.classList.add('pressed');
+    const off=()=>btn.classList.remove('pressed');
+    ['pointerdown','touchstart'].forEach(ev=>btn.addEventListener(ev,on,{passive:true}));
+    ['pointerup','pointercancel','pointerleave','touchend','touchcancel'].forEach(ev=>btn.addEventListener(ev,off,{passive:true}));
+    btn.addEventListener('click',()=>{on();setTimeout(off,120)});
+  }
+  [specialBtn,laserBtn,jumpBtn].forEach(strongPress);
+
+  const prevCollect=collectGood;
+  collectGood=function(it){
+    if(!it || it.got) return;
+    it.got=true;
+    if(it.magnet){
+      magnetUntil=performance.now()+12000;
+      showToast('🧲 星磁石 発動！ 12秒',1200);
+      syncHUD();
+      return;
+    }
+    if(it.food){
+      if(food<FOOD_CAP){
+        food++;
+        showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 元気 +1　${food}/${FOOD_CAP}`,850);
+      }else{
+        points+=1;starTotal+=1;
+        showToast('🦴 元気たっぷり！ ⭐+1',900);
+      }
+      syncHUD();
+      return;
+    }
+    const gain=big?2:1;
+    points+=gain;starTotal+=gain;
+    if(points>=30 && !shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}
+    syncHUD();
+  };
+  window.collectGood=collectGood;
+
+  const prevDraw=drawGood;
+  drawGood=function(it){
+    if(it && it.magnet){
+      const sx=it.x-camera;
+      if(sx<-70||sx>W+70||it.got) return;
+      ctx.save();
+      ctx.translate(sx,it.y);
+      ctx.rotate(Math.sin(performance.now()/260)*.08);
+      ctx.shadowColor='#8bffdf';
+      ctx.shadowBlur=22;
+      ctx.font='900 34px system-ui';
+      ctx.fillText('🧲',-17,12);
+      ctx.restore();
+      return;
+    }
+    prevDraw(it);
+  };
+  window.drawGood=drawGood;
+
+  const prevSpawn=spawnEvents;
+  spawnEvents=function(){
+    if(typeof prevSpawn==='function') prevSpawn();
+    if(paused||doghouseInterior) return;
+    if(system===0&&stage===0) return;
+    if(eventPhase%220===0 && Math.random()<0.35){
+      items.push({x:p.x+W*(.74+Math.random()*.18),y:46+Math.random()*Math.max(90,H*.22),r:20,got:false,magnet:true,color:'#8fffe8'});
+      if(eventEl) eventEl.textContent='🧲 MAGNET SIGNAL — 星磁石が流れてきた！';
+    }
+  };
+  window.spawnEvents=spawnEvents;
+
+  const prevSync=syncHUD;
+  syncHUD=function(){
+    if(typeof prevSync==='function') prevSync();
+    renderBottomButtonsV54();
+    renderRewardTextsV54();
+    if(foodEl) foodEl.textContent=`🦴 ${food}`;
+    if(reward && reward.classList.contains('on')){
+      reward.style.top='50%';
+      reward.style.bottom='auto';
+      reward.style.transform='translate(-50%,-50%)';
+    }
+  };
+  window.syncHUD=syncHUD;
+
+  renderBottomButtonsV54();
+  renderRewardTextsV54();
+  syncHUD();
+})();
+</script>
