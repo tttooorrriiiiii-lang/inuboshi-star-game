@@ -3822,3 +3822,538 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
  .rewardBtn{font-size:9px!important;min-height:58px!important;padding:8px 5px!important}
 }
 </style>
+
+
+<!-- v51 ui/item fixes -->
+<style>
+.controls{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  width:min(390px,95vw)!important;
+  left:50%!important;
+  right:auto!important;
+  transform:translateX(-50%)!important;
+  justify-content:stretch!important;
+  align-items:end!important;
+  gap:8px!important;
+  padding:0 10px calc(max(12px,env(safe-area-inset-bottom)))!important;
+}
+#special{order:1!important;opacity:1!important;display:flex!important}
+#laser{order:2!important;opacity:1!important;display:flex!important}
+#jump{order:3!important;display:flex!important}
+#special,#laser,#jump{
+  width:100%!important;min-width:0!important;height:78px!important;max-height:78px!important;
+  border-radius:24px!important;clip-path:none!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;
+  padding:8px 6px!important;filter:none!important;
+}
+#jump{border-radius:999px!important;background:linear-gradient(180deg,#fffdfd 0%,#efe4ff 45%,#9ee8ff 100%)!important}
+#laser{background:linear-gradient(180deg,#fff7fb 0%,#ffd8ef 45%,#8fdfff 100%)!important;border-color:#ffd3f3!important;box-shadow:inset 0 0 0 1px rgba(72,42,119,.48),inset 0 8px 12px rgba(255,255,255,.82),0 0 0 2px rgba(255,79,216,.24),0 0 17px rgba(86,231,255,.35),0 6px 0 rgba(32,13,66,.82)!important}
+#special{background:linear-gradient(180deg,#fffdf3 0%,#f4ddff 48%,#a3ebff 100%)!important;border-color:#fff!important;box-shadow:inset 0 0 0 1px rgba(72,42,119,.48),inset 0 8px 12px rgba(255,255,255,.85),0 0 0 2px rgba(255,79,216,.24),0 0 17px rgba(86,231,255,.35),0 6px 0 rgba(32,13,66,.82)!important}
+#special::before,#laser::before,#jump::before{top:6px!important;height:22%!important;left:11%!important;right:11%!important}
+.ctrl .btnMain{display:block!important;font-size:16px!important;line-height:1.04!important;font-weight:1000!important;letter-spacing:.02em!important;text-align:center!important}
+.ctrl small{display:block!important;font-size:11px!important;line-height:1.12!important;margin-top:4px!important;opacity:.95!important;text-align:center!important}
+#jump.pressed,#laser.pressed,#special.pressed{
+  transform:translateY(4px) scale(.975)!important;
+  box-shadow:0 0 14px rgba(86,231,255,.45),0 2px 0 rgba(40,16,82,.86)!important;
+  filter:saturate(1.12)!important;
+}
+#reward{top:51%!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:min(460px,92vw)!important;max-height:64vh!important;overflow:auto!important}
+#rewardTitle{font-size:19px!important}
+#rewardSub{font-size:12px!important}
+.rewardBtn{font-size:11px!important;min-height:64px!important;line-height:1.2!important}
+.rewardBtn small{font-size:10px!important}
+@media (max-width:520px){
+  .controls{width:min(382px,96vw)!important;gap:7px!important;padding:0 8px calc(max(10px,env(safe-area-inset-bottom)))!important}
+  #special,#laser,#jump{height:74px!important;max-height:74px!important}
+  .ctrl .btnMain{font-size:15px!important}
+  .ctrl small{font-size:10px!important}
+  #reward{top:50%!important;max-height:66vh!important}
+}
+</style>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const special=$('special'), laser=$('laser'), jump=$('jump');
+  const chipText=$('chipText'), laserAmmoText=$('laserAmmoText');
+  const reward=$('reward'), rewardTitle=$('rewardTitle'), rewardSub=$('rewardSub');
+  const comm=$('comm'), commTitle=$('commTitle'), commText=$('commText');
+  const homeBtn=$('homeWarpBtn');
+  function setMainButtons(){
+    if(special){special.innerHTML='<span class="btnMain">⭐ ボーナスアイテム</span><small id="chipText">ひらく</small>';}
+    if(laser){laser.innerHTML='<span class="btnMain">🔫 レーザービーム</span><small id="laserAmmoText">打ち放題 ∞</small>';}
+    if(jump){jump.innerHTML='<span class="btnMain">⬆️ ジャンプ</span><small>とぶ</small>';}
+  }
+  function setRewardTexts(){
+    if(rewardTitle) rewardTitle.textContent='⭐ ボーナスアイテム';
+    if(rewardSub) rewardSub.textContent='集めた⭐で使える特別アイテム';
+    const map={
+      giant:'🐕 巨大化<br>35⭐',
+      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
+      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
+      boneRain:'🦴 ホネホネシャワー<br>45⭐',
+      wormhole:'🌀 ワームホール呼出<br>80⭐',
+      satellite:'🛰️ 衛星ライド<br>40⭐',
+      magnet:'🧲 星マグネット<br>50⭐',
+      friend:'🐕 仲間を増やす<br>100⭐',
+      secret:'📡 宇宙人と交信<br>70⭐',
+      home:'🏠 地球へ帰る<br>🌏 0 / 3'
+    };
+    document.querySelectorAll('.rewardBtn').forEach(btn=>{
+      const k=btn.dataset.special;
+      if(map[k]) btn.innerHTML=map[k];
+    });
+  }
+  function setPressed(el){ if(el) el.classList.add('pressed'); }
+  function clearPressed(el){ if(el) el.classList.remove('pressed'); }
+  [['pointerdown',setPressed],['pointerup',clearPressed],['pointercancel',clearPressed],['pointerleave',clearPressed]].forEach(([ev,fn])=>{
+    [special,laser,jump].forEach(el=>el&&el.addEventListener(ev,()=>fn(el)));
+  });
+  const FINAL_PRICES={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
+  window.updateShopButtons=function(){
+    document.querySelectorAll('.rewardBtn').forEach(btn=>{
+      const kind=btn.dataset.special; const cost=FINAL_PRICES[kind]??0;
+      let disabled=false;
+      if(kind==='boneBoomerang') disabled=(window.system===0&&window.stage===0)||window.food<3;
+      else if(kind==='cosmic') disabled=(window.system===0&&window.stage===0)||window.cosmicCharge<5;
+      else if(kind==='home') disabled=!window.homeRouteReady||(window.system===0&&window.stage===0);
+      else if(!window.shopUnlocked) disabled=true;
+      else disabled=window.points<cost;
+      btn.disabled=!!disabled;
+      btn.classList.toggle('locked',!!disabled);
+      if(kind==='home' && btn===homeBtn){
+        btn.innerHTML=(window.system===0&&window.stage===0)?'🏠 地球へ帰る<br>🌍 いま地球':window.homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':`🏠 地球へ帰る<br>🌏 ${window.earthTokenCount} / 3`;
+      }
+    });
+  };
+  window.syncHUD=(function(prev){
+    return function(){
+      if(typeof prev==='function') prev();
+      const chip=$('chipText'), ammo=$('laserAmmoText');
+      if(chip) chip.textContent='ひらく';
+      if(ammo) ammo.textContent='打ち放題 ∞';
+      setRewardTexts();
+      if(typeof window.updateShopButtons==='function') window.updateShopButtons();
+    };
+  })(window.syncHUD);
+  window.buySpecial=function(kind){
+    const cost=FINAL_PRICES[kind]??0;
+    if(kind==='home'){
+      if(!(window.homeRouteReady||window.systems?.[window.system]?.dream)){window.showToast?.(`🌏 帰還サインをあと ${Math.max(0,3-window.earthTokenCount)} 個集めよう！`,1300);return}
+      reward?.classList.remove('on');
+      window.returnFromDogStar=true;window.earthTokenCount=0;window.homeRouteReady=false;window.paused=true;
+      window.trans.style.display='grid';window.warpDog.textContent='🐕🌍';window.warpDog.className='spin';
+      window.transTitle.innerHTML='🌍 EARTH RETURN!';window.nextEl.textContent='ついに地球へ帰る帰還ルートが開いた！';window.subEl.textContent='HOME EVENT';
+      setTimeout(()=>{window.system=0;window.stage=0;window.stageStart();window.trans.style.display='none';window.warpDog.className='';window.paused=false;window.showToast?.('🌳 やっと地球に戻ってきた！',2200)},1800);
+      return;
+    }
+    if(kind==='boneBoomerang'){
+      if(window.food<3){window.showToast?.('🦴 骨が3必要！',900);return}
+      reward?.classList.remove('on');
+      window.fireBoneBoomerang?.();
+      return;
+    }
+    if(kind==='cosmic'){
+      if(window.cosmicCharge<5){window.showToast?.('👽 5体ぶんで宇宙パワー！',1000);return}
+      reward?.classList.remove('on');
+      window.useCosmicPower?.();
+      return;
+    }
+    if(!window.shopUnlocked){window.showToast?.('⭐ 30個集めると解禁！',950);return}
+    if(window.points<cost){window.showToast?.(`⭐ あと ${cost-window.points}個 必要！`,1000);return}
+    window.points-=cost; window.starTotal=Math.max(0,window.starTotal-cost);
+    const now=performance.now();
+    if(kind==='giant'){window.activateBig?.();window.showToast?.('🐕💥 巨大化！ ⭐35',1500)}
+    else if(kind==='boneRain'){window.boneRainUntil=now+9500;window.showToast?.('🦴🦴🦴 ホネホネシャワー MAX！',1500)}
+    else if(kind==='wormhole'){window.wormholeActive=true;window.portalX=Math.min(window.worldLength-260,window.p.x+820);window.showToast?.('🌀 ワームホールを前方に呼び出した！',1500)}
+    else if(kind==='satellite'){window.satelliteUntil=now+3000;window.invincibleUntil=Math.max(window.invincibleUntil,now+3000);window.showToast?.('🛰️ 衛星ライド 3秒！',1100)}
+    else if(kind==='magnet'){window.magnetUntil=now+10000;window.showToast?.('🧲 星マグネット 10秒！',1100)}
+    else if(kind==='friend'){window.companionCount++;window.showToast?.(`🐕 仲間を増やした！ いま ${window.companionCount+1}匹`,1500)}
+    else if(kind==='secret'){
+      const hints=[
+        '📡 交信成功…「🌏を3つ集めると、地球帰還ルートが開くよ」',
+        '📡 交信成功…「犬の星では敵が出ない。帰る前に⭐を集めると有利だよ」',
+        '📡 交信成功…「ブラックホールは奥まで進むと、ホワイトホール脱出が待っている」'
+      ];
+      const msg=hints[Math.floor(Math.random()*hints.length)];
+      if(comm && commText){
+        if(commTitle) commTitle.textContent='📡 宇宙人と交信';
+        commText.textContent=msg.replace(/^📡 交信成功…「|」$/g,'');
+        comm.classList.remove('on'); void comm.offsetWidth; comm.classList.add('on');
+        setTimeout(()=>comm.classList.remove('on'),2500);
+      }
+      window.showToast?.(msg,2200);
+    }
+    reward?.classList.remove('on');
+    window.syncHUD?.();
+  };
+  const originalSpawnEvents=window.spawnEvents;
+  if(typeof originalSpawnEvents==='function'){
+    window.spawnEvents=function(){
+      originalSpawnEvents();
+      if(performance.now()<window.boneRainUntil && window.eventPhase%2===0){
+        for(let i=0;i<4;i++) window.items.push({x:window.p.x+window.W*(.06+Math.random()*.9),y:18+Math.random()*Math.max(90,window.H*.24),r:18+Math.random()*3,got:false,color:'#fff0aa',food:true,fall:true});
+        if(window.eventEl) window.eventEl.textContent='🦴 ホネホネシャワー ✦ 骨取り放題！';
+      }
+    }
+  }
+  setMainButtons();
+  setRewardTexts();
+  window.syncHUD?.();
+
+/* v51 local gameplay/ui patch */
+function v51RenderBottomButtons(){
+  specialBtn.innerHTML='<span class="btnMain">⭐ ボーナスアイテム</span><small id="chipText">ひらく</small>';
+  laserBtn.innerHTML='<span class="btnMain">🔫 レーザービーム</span><small id="laserAmmoText">打ち放題 ∞</small>';
+  jumpBtn.innerHTML='<span class="btnMain">⬆️ ジャンプ</span><small>とぶ</small>';
+}
+function v51RenderRewardTexts(){
+  const rt=$('rewardTitle'), rs=$('rewardSub');
+  if(rt) rt.textContent='⭐ ボーナスアイテム';
+  if(rs) rs.textContent='集めた⭐で使える特別アイテム';
+  const map={
+    giant:'🐕 巨大化<br>35⭐',
+    boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
+    cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
+    boneRain:'🦴 ホネホネシャワー<br>45⭐',
+    wormhole:'🌀 ワームホール呼出<br>80⭐',
+    satellite:'🛰️ 衛星ライド<br>40⭐',
+    magnet:'🧲 星マグネット<br>50⭐',
+    friend:'🐕 仲間を増やす<br>100⭐',
+    secret:'📡 宇宙人と交信<br>70⭐'
+  };
+  document.querySelectorAll('.rewardBtn').forEach(btn=>{const k=btn.dataset.special; if(map[k]) btn.innerHTML=map[k];});
+}
+[['pointerdown','add'],['pointerup','remove'],['pointercancel','remove'],['pointerleave','remove']].forEach(([ev,mode])=>{
+  [specialBtn,laserBtn,jumpBtn].forEach(btn=>btn&&btn.addEventListener(ev,()=>btn.classList[mode]('pressed')));
+});
+const __v51SyncHUD=syncHUD;
+syncHUD=function(){
+  __v51SyncHUD();
+  v51RenderBottomButtons();
+  v51RenderRewardTexts();
+  const liveChip=specialBtn.querySelector('small');
+  const liveAmmo=laserBtn.querySelector('small');
+  if(liveChip) liveChip.textContent='ひらく';
+  if(liveAmmo) liveAmmo.textContent='打ち放題 ∞';
+  updateShopButtons();
+};
+updateShopButtons=function(){
+  v51RenderRewardTexts();
+  const prices={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
+  document.querySelectorAll('.rewardBtn').forEach(btn=>{
+    const kind=btn.dataset.special; const cost=prices[kind]??0; let disabled=false;
+    if(kind==='boneBoomerang') disabled=(system===0&&stage===0)||food<3;
+    else if(kind==='cosmic') disabled=(system===0&&stage===0)||!cosmicPowerReady;
+    else if(kind==='home') disabled=!homeRouteReady||(system===0&&stage===0);
+    else if(!shopUnlocked) disabled=true;
+    else disabled=points<cost;
+    btn.disabled=!!disabled;
+    btn.classList.toggle('locked', !!disabled);
+    if(kind==='home') btn.innerHTML=(system===0&&stage===0)?'🏠 地球へ帰る<br>🌍 いま地球':homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':`🏠 地球へ帰る<br>🌏 ${earthTokenCount} / 3`;
+  });
+};
+buySpecial=function(kind){
+  const prices={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
+  const cost=prices[kind]??999;
+  if(kind==='home'){
+    if(!(homeRouteReady||systems[system].dream)){showToast(`🌏 帰還サインをあと ${Math.max(0,3-earthTokenCount)} 個集めよう！`,1300);return}
+    reward.classList.remove('on');
+    returnFromDogStar=true; earthTokenCount=0; homeRouteReady=false; paused=true; trans.style.display='grid'; warpDog.textContent='🐕🌍'; warpDog.className='spin';
+    transTitle.innerHTML='🌍 EARTH RETURN!'; nextEl.textContent='ついに地球へ帰る帰還ルートが開いた！'; subEl.textContent='HOME EVENT';
+    setTimeout(()=>{system=0;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌳 やっと地球に戻ってきた！',2200)},1800);
+    return;
+  }
+  if(kind==='boneBoomerang'){
+    if(food<3){showToast('🦴 骨が3必要！',900);return}
+    reward.classList.remove('on');
+    fireBoneBoomerang();
+    return;
+  }
+  if(kind==='cosmic'){
+    if(!cosmicPowerReady){showToast(`👽 あと ${Math.max(0,5-cosmicCharge)} で宇宙パワー！`,950);return}
+    reward.classList.remove('on');
+    useCosmicPower();
+    return;
+  }
+  if(!shopUnlocked){showToast('⭐ 30個集めると解禁！',950);return}
+  if(points<cost){showToast(`⭐ あと ${cost-points}個 必要！`,950);return}
+  points-=cost; starTotal=Math.max(0,starTotal-cost); const now=performance.now();
+  if(kind==='giant'){activateBig();showToast('🐕💥 巨大化！ ⭐35',1450)}
+  else if(kind==='boneRain'){boneRainUntil=now+9800;showToast('🦴🦴🦴 ホネホネシャワー MAX！',1500)}
+  else if(kind==='wormhole'){wormholeActive=true;portalX=Math.min(worldLength-260,p.x+820);showToast('🌀 ワームホールを前方に呼び出した！',1450)}
+  else if(kind==='satellite'){satelliteUntil=now+3000;invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100)}
+  else if(kind==='magnet'){magnetUntil=now+10000;showToast('🧲 星マグネット 10秒！',1100)}
+  else if(kind==='friend'){companionCount++;showToast(`🐕 仲間を増やした！ いま ${companionCount+1}匹`,1450)}
+  else if(kind==='secret'){
+    const hints=[
+      '🌏を3つ集めると、地球帰還ルートが開くみたい…',
+      '犬の星まで進むと、地球へ帰るチャンスが見えてくる…',
+      'ブラックホールは奥まで進めば、ホワイトホール脱出が待っている…'
+    ];
+    const msg=hints[Math.floor(Math.random()*hints.length)];
+    $('commTitle').textContent='📡 宇宙人と交信';
+    $('commText').textContent=msg;
+    comm.classList.remove('on'); void comm.offsetWidth; comm.classList.add('on');
+    setTimeout(()=>comm.classList.remove('on'),2600);
+    showToast('📡 宇宙人がヒントをくれた！',1500);
+  }
+  reward.classList.remove('on');
+  syncHUD();
+};
+const __v51SpawnEvents=spawnEvents;
+spawnEvents=function(){
+  __v51SpawnEvents();
+  if(performance.now()<boneRainUntil&&eventPhase%2===0){
+    for(let i=0;i<4;i++) items.push({x:p.x+W*(.06+Math.random()*.9),y:18+Math.random()*Math.max(90,H*.24),r:18+Math.random()*3,got:false,color:'#fff0aa',food:true,fall:true});
+    eventEl.textContent='🦴 ホネホネシャワー ✦ 骨取り放題！';
+  }
+};
+v51RenderBottomButtons();
+v51RenderRewardTexts();
+
+})();
+</script>
+
+<!-- v52 control/item polish patch -->
+<style>
+.controls{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+  width:min(390px,95vw)!important;
+  left:50%!important;
+  right:auto!important;
+  transform:translateX(-50%)!important;
+  align-items:end!important;
+  justify-content:stretch!important;
+  padding:0 10px calc(max(14px,env(safe-area-inset-bottom)))!important;
+}
+#special{order:1!important}
+#laser{order:2!important;opacity:1!important;filter:none!important}
+#jump{order:3!important}
+#special,#laser,#jump{
+  width:100%!important;
+  min-width:0!important;
+  height:82px!important;
+  max-height:82px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-direction:column!important;
+  border-radius:26px!important;
+  padding:8px 8px!important;
+  opacity:1!important;
+  clip-path:none!important;
+  transition:transform .08s ease, box-shadow .08s ease, filter .08s ease!important;
+}
+#special{
+  background:linear-gradient(180deg,#fffef6 0%,#f3e1ff 48%,#a8ecff 100%)!important;
+  border-color:#f8fbff!important;
+  box-shadow:inset 0 0 0 1px rgba(72,42,119,.52), inset 0 8px 12px rgba(255,255,255,.85), 0 0 0 2px rgba(255,79,216,.22), 0 0 18px rgba(86,231,255,.32), 0 6px 0 rgba(32,13,66,.82)!important;
+}
+#laser{
+  background:linear-gradient(180deg,#fff9ff 0%,#ffd7f2 46%,#84dfff 100%)!important;
+  border-color:#ffd5f0!important;
+  box-shadow:inset 0 0 0 1px rgba(72,42,119,.52), inset 0 8px 12px rgba(255,255,255,.84), 0 0 0 2px rgba(255,79,216,.22), 0 0 18px rgba(86,231,255,.34), 0 6px 0 rgba(32,13,66,.82)!important;
+}
+#jump{
+  background:linear-gradient(180deg,#ffffff 0%,#ede3ff 45%,#9be8ff 100%)!important;
+  border-color:#f6f5ff!important;
+  box-shadow:inset 0 0 0 1px rgba(72,42,119,.52), inset 0 8px 12px rgba(255,255,255,.86), 0 0 0 2px rgba(255,79,216,.20), 0 0 16px rgba(86,231,255,.30), 0 6px 0 rgba(32,13,66,.82)!important;
+}
+#special::before,#laser::before,#jump::before{
+  top:6px!important;
+  left:10%!important;
+  right:10%!important;
+  height:20%!important;
+}
+#special .btnMain,#laser .btnMain,#jump .btnMain{
+  display:block!important;
+  font-size:17px!important;
+  line-height:1.08!important;
+  font-weight:1000!important;
+  letter-spacing:.01em!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#special small,#laser small,#jump small{display:none!important}
+#special.pressed,#laser.pressed,#jump.pressed{
+  transform:translateY(4px) scale(.975)!important;
+  box-shadow:0 0 14px rgba(86,231,255,.42), 0 2px 0 rgba(40,16,82,.9)!important;
+  filter:saturate(1.12)!important;
+}
+#reward{
+  position:fixed!important;
+  left:50%!important;
+  top:50%!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(460px,92vw)!important;
+  max-height:66vh!important;
+  overflow:auto!important;
+}
+#rewardTitle{font-size:20px!important}
+#rewardSub{font-size:12px!important}
+.rewardBtns{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+.rewardBtn{font-size:11px!important;min-height:68px!important;line-height:1.18!important}
+.rewardBtn.locked{opacity:.45!important;filter:grayscale(.25)!important}
+@media (max-width:520px){
+  .controls{width:min(386px,96vw)!important;gap:8px!important;padding:0 8px calc(max(12px,env(safe-area-inset-bottom)))!important}
+  #special,#laser,#jump{height:76px!important;max-height:76px!important}
+  #special .btnMain,#laser .btnMain,#jump .btnMain{font-size:16px!important}
+  #reward{width:min(462px,93vw)!important;max-height:68vh!important}
+}
+</style>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const specialBtn=window.specialBtn||$('special');
+  const laserBtn=window.laserBtn||$('laser');
+  const jumpBtn=window.jumpBtn||$('jump');
+  const reward=window.reward||$('reward');
+  const rewardTitle=$('rewardTitle');
+  const rewardSub=$('rewardSub');
+  const comm=window.comm||$('comm');
+  const commTitle=$('commTitle');
+  const commText=$('commText');
+  const homeBtn=$('homeWarpBtn');
+  function renderBottomButtons(){
+    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ ボーナスアイテム</span>';
+    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 レーザービーム</span>';
+    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">⬆️ ジャンプ</span>';
+  }
+  function renderRewardTexts(){
+    if(rewardTitle) rewardTitle.textContent='⭐ ボーナスアイテム';
+    if(rewardSub) rewardSub.textContent='集めた⭐で使える特別アイテム';
+    const map={
+      giant:'🐕 巨大化<br>35⭐',
+      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
+      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
+      boneRain:'🦴 ホネホネシャワー<br>45⭐',
+      wormhole:'🌀 ワームホール呼出<br>80⭐',
+      satellite:'🛰️ 衛星ライド<br>40⭐',
+      magnet:'🧲 星マグネット<br>50⭐',
+      friend:'🐕 仲間を増やす<br>100⭐',
+      secret:'📡 宇宙人と交信<br>70⭐'
+    };
+    document.querySelectorAll('.rewardBtn').forEach(btn=>{
+      const kind=btn.dataset.special;
+      if(kind==='home') return;
+      if(map[kind]) btn.innerHTML=map[kind];
+    });
+  }
+  function wirePress(btn){
+    if(!btn || btn.dataset.v52wired==='1') return;
+    btn.dataset.v52wired='1';
+    const on=()=>btn.classList.add('pressed');
+    const off=()=>btn.classList.remove('pressed');
+    ['pointerdown','touchstart'].forEach(ev=>btn.addEventListener(ev,on,{passive:true}));
+    ['pointerup','pointercancel','pointerleave','touchend','touchcancel'].forEach(ev=>btn.addEventListener(ev,off,{passive:true}));
+    btn.addEventListener('click',()=>{btn.classList.add('pressed'); setTimeout(()=>btn.classList.remove('pressed'),110)});
+  }
+  [specialBtn,laserBtn,jumpBtn].forEach(wirePress);
+
+  const PRICES={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
+  window.updateShopButtons=function(){
+    renderRewardTexts();
+    document.querySelectorAll('.rewardBtn').forEach(btn=>{
+      const kind=btn.dataset.special; const cost=PRICES[kind]??0; let disabled=false;
+      if(kind==='boneBoomerang') disabled=((window.system===0&&window.stage===0)||window.food<3);
+      else if(kind==='cosmic') disabled=((window.system===0&&window.stage===0)||!(window.cosmicPowerReady||window.cosmicCharge>=5));
+      else if(kind==='home') disabled=(!window.homeRouteReady||(window.system===0&&window.stage===0));
+      else if(!window.shopUnlocked) disabled=true;
+      else disabled=(window.points<cost);
+      btn.disabled=!!disabled;
+      btn.classList.toggle('locked',!!disabled);
+      if(kind==='home'){
+        btn.innerHTML=(window.system===0&&window.stage===0)?'🏠 地球へ帰る<br>🌍 いま地球':window.homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':`🏠 地球へ帰る<br>🌏 ${window.earthTokenCount} / 3`;
+      }
+    });
+  };
+
+  const prevSync=window.syncHUD;
+  window.syncHUD=function(){
+    if(typeof prevSync==='function') prevSync();
+    renderBottomButtons();
+    renderRewardTexts();
+    if(typeof window.updateShopButtons==='function') window.updateShopButtons();
+  };
+  if(typeof syncHUD!=='undefined') syncHUD=window.syncHUD;
+
+  window.buySpecial=function(kind){
+    const cost=PRICES[kind]??999;
+    if(kind==='home'){
+      if(!(window.homeRouteReady||window.systems?.[window.system]?.dream)){window.showToast?.(`🌏 帰還サインをあと ${Math.max(0,3-window.earthTokenCount)} 個集めよう！`,1300);return}
+      reward?.classList.remove('on');
+      window.returnFromDogStar=true;window.earthTokenCount=0;window.homeRouteReady=false;window.paused=true;
+      window.trans.style.display='grid';window.warpDog.textContent='🐕🌍';window.warpDog.className='spin';
+      window.transTitle.innerHTML='🌍 EARTH RETURN!';window.nextEl.textContent='ついに地球へ帰る帰還ルートが開いた！';window.subEl.textContent='HOME EVENT';
+      setTimeout(()=>{window.system=0;window.stage=0;window.stageStart();window.trans.style.display='none';window.warpDog.className='';window.paused=false;window.showToast?.('🌳 やっと地球に戻ってきた！',2200)},1800);
+      return;
+    }
+    if(kind==='boneBoomerang'){
+      if(window.food<3){window.showToast?.('🦴 骨が3必要！',950);return}
+      reward?.classList.remove('on');
+      window.fireBoneBoomerang?.();
+      return;
+    }
+    if(kind==='cosmic'){
+      if(!(window.cosmicPowerReady||window.cosmicCharge>=5)){window.showToast?.(`👽 あと ${Math.max(0,5-window.cosmicCharge)} で宇宙パワー！`,1000);return}
+      reward?.classList.remove('on');
+      window.useCosmicPower?.();
+      return;
+    }
+    if(!window.shopUnlocked){window.showToast?.('⭐ 30個集めると解禁！',950);return}
+    if(window.points<cost){window.showToast?.(`⭐ あと ${cost-window.points}個 必要！`,1000);return}
+    window.points-=cost; window.starTotal=Math.max(0,(window.starTotal||0)-cost);
+    const now=performance.now();
+    if(kind==='giant'){window.activateBig?.();window.showToast?.('🐕💥 巨大化！',1400)}
+    else if(kind==='boneRain'){window.boneRainUntil=now+12000;window.showToast?.('🦴🦴🦴 ホネホネシャワー！',1500)}
+    else if(kind==='wormhole'){window.wormholeActive=true;window.portalX=Math.min(window.worldLength-260,window.p.x+820);window.showToast?.('🌀 ワームホールを前方に呼び出した！',1450)}
+    else if(kind==='satellite'){window.satelliteUntil=now+3000;window.invincibleUntil=Math.max(window.invincibleUntil,now+3000);window.showToast?.('🛰️ 衛星ライド 3秒！',1100)}
+    else if(kind==='magnet'){window.magnetUntil=now+10000;window.showToast?.('🧲 星マグネット 10秒！',1100)}
+    else if(kind==='friend'){window.companionCount=(window.companionCount||0)+1;window.showToast?.(`🐕 仲間を増やした！ いま ${(window.companionCount||0)+1}匹`,1500)}
+    else if(kind==='secret'){
+      const hints=[
+        '🌏を3つ集めると、地球帰還ルートが開くらしい…',
+        '犬の星まで進むと、地球へ帰るチャンスが見えてくる…',
+        'ブラックホールは奥まで進めば、ホワイトホール脱出が待っている…',
+        '夢の月へは、我が家で眠ったあとにもう一度つながるみたい…'
+      ];
+      const msg=hints[Math.floor(Math.random()*hints.length)];
+      if(comm && commText){
+        if(commTitle) commTitle.textContent='📡 宇宙人と交信';
+        commText.textContent=msg;
+        comm.classList.remove('on'); void comm.offsetWidth; comm.classList.add('on');
+        setTimeout(()=>comm.classList.remove('on'),2600);
+      }
+      window.showToast?.('📡 宇宙人がエンディングのヒントをくれた！',1700);
+    }
+    reward?.classList.remove('on');
+    window.syncHUD?.();
+  };
+  if(typeof buySpecial!=='undefined') buySpecial=window.buySpecial;
+
+  const prevSpawn=window.spawnEvents;
+  window.spawnEvents=function(){
+    if(typeof prevSpawn==='function') prevSpawn();
+    if(performance.now()<(window.boneRainUntil||0) && window.eventPhase%1===0){
+      for(let i=0;i<10;i++){
+        window.items.push({
+          x:window.p.x+window.W*(.05+Math.random()*.92),
+          y:18+Math.random()*Math.max(110,window.H*.28),
+          r:18+Math.random()*4,
+          got:false,color:'#fff0aa',food:true,fall:true
+        });
+      }
+      if(window.eventEl) window.eventEl.textContent='🦴 ホネホネシャワー ✦ 骨取り放題！';
+    }
+  };
+  if(typeof spawnEvents!=='undefined') spawnEvents=window.spawnEvents;
+
+  renderBottomButtons();
+  renderRewardTexts();
+  window.syncHUD?.();
+})();
+</script>
