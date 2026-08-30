@@ -863,7 +863,7 @@ function buySpecial(kind){
  }
  reward.classList.remove('on');updateShopButtons();syncHUD()
 }
-function collectGood(it){it.got=true;if(it.food){if(food<10){food++;showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 元気 +1　${food}/10`)}else{points+=1;starTotal+=1;showToast('🦴 元気満タン！ ⭐+1')}syncHUD();return}const gain=big?2:1;points+=gain;starTotal+=gain;if(points>=30&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}syncHUD()}
+function collectGood(it){it.got=true;if(it.food){if(food<30){food++;showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 元気 +1　${food}/30`)}else{points+=1;starTotal+=1;showToast('🦴 元気満タン！ ⭐+1')}syncHUD();return}const gain=big?2:1;points+=gain;starTotal+=gain;if(points>=30&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}syncHUD()}
 function showGuardZero(){guardFlash.classList.remove('on');void guardFlash.offsetWidth;guardFlash.classList.add('on');wrap.style.boxShadow='inset 0 0 90px #ffe95d,inset 0 0 150px #55eaff';setTimeout(()=>{guardFlash.classList.remove('on');wrap.style.boxShadow=''},720)}
 function gameOver(){ /* 星と骨の方式に変更したため通常衝突ではゲームオーバーにしない */ }
 function updateCritical(){criticalEl.classList.remove('on');wrap.classList.remove('criticalMode')}
@@ -872,7 +872,7 @@ function spillStars(n=5){
  for(let i=0;i<lost;i++)fallingStars.push({x:p.x+20+(Math.random()-.5)*24,y:p.y+20,vx:-3+Math.random()*6,vy:-6-Math.random()*4,life:70+Math.random()*25});
  showGuardZero();syncHUD()
 }
-function hitHazard(h){const now=performance.now();if(h.got||now<invincibleUntil||big)return;h.got=true;invincibleUntil=now+1000;spillStars(5);if(food>0)food--;p.vy=-7;shake=14;wrap.style.boxShadow='inset 0 0 95px #ffcf38';setTimeout(()=>wrap.style.boxShadow='',500);showToast(`⭐ -5！ 星がこぼれた　🦴元気 ${food}/10`,1200);syncHUD()}
+function hitHazard(h){const now=performance.now();if(h.got||now<invincibleUntil||big)return;h.got=true;invincibleUntil=now+1000;spillStars(5);if(food>0)food--;p.vy=-7;shake=14;wrap.style.boxShadow='inset 0 0 95px #ffcf38';setTimeout(()=>wrap.style.boxShadow='',500);showToast(`⭐ -5！ 星がこぼれた　🦴元気 ${food}/30`,1200);syncHUD()}
 const secretTips=[
 '👾「秘密攻略：10回通信した犬だけ、🌸と🌝の秘密信号が見える。」',
 '👾「秘密攻略：🌸か🌝が飛んできたら、ジャンプして触れ。隠しステージへ行ける。」',
@@ -4676,5 +4676,277 @@ v51RenderRewardTexts();
   renderBottomButtonsV54();
   renderRewardTextsV54();
   syncHUD();
+})();
+</script>
+
+<!-- v55 y2k spaceship console + reliable bone collection -->
+<style>
+/* --- bottom console: cute Y2K spaceship dashboard --- */
+.controls{
+  width:min(404px,97vw)!important;
+  gap:9px!important;
+  padding:12px 12px calc(max(16px,env(safe-area-inset-bottom)))!important;
+  border-radius:34px 34px 18px 18px!important;
+  background:
+    linear-gradient(180deg,rgba(240,246,255,.92) 0%,rgba(141,153,190,.85) 8%,rgba(29,30,58,.96) 18%,rgba(14,12,38,.98) 100%)!important;
+  border:1px solid rgba(255,255,255,.75)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,.95),
+    inset 0 0 0 2px rgba(108,217,255,.20),
+    0 -2px 0 rgba(255,86,220,.28),
+    0 0 22px rgba(86,231,255,.30),
+    0 -6px 28px rgba(255,87,210,.16)!important;
+}
+.controls::before{
+  content:'';
+  position:absolute;
+  left:18px;right:18px;top:6px;height:6px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#ff72de 0 10%,transparent 10% 18%,#66eaff 18% 34%,transparent 34% 42%,#ffe978 42% 55%,transparent 55% 64%,#a78cff 64% 80%,transparent 80% 88%,#5ff5e5 88% 100%);
+  box-shadow:0 0 10px rgba(92,232,255,.55);
+  opacity:.9;
+  pointer-events:none;
+}
+#special,#laser,#jump{
+  height:76px!important;
+  max-height:76px!important;
+  border-radius:999px!important;
+  border:2px solid rgba(255,255,255,.92)!important;
+  position:relative!important;
+  overflow:hidden!important;
+  transform:translateY(0) scale(1)!important;
+  transition:transform .075s ease,box-shadow .075s ease,filter .075s ease!important;
+}
+#special{
+  background:linear-gradient(180deg,#fdfdff 0%,#d6dcff 12%,#726dff 22%,#3075ff 56%,#36d7ff 100%)!important;
+  box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.6),inset 0 -10px 16px rgba(30,33,122,.36),0 0 0 2px rgba(76,183,255,.28),0 0 17px rgba(55,154,255,.58),0 7px 0 #171235!important;
+}
+#laser{
+  background:linear-gradient(180deg,#fffaff 0%,#ffd8f1 13%,#ff7bc7 24%,#f24ea8 58%,#c141e5 100%)!important;
+  box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.62),inset 0 -10px 16px rgba(111,22,111,.32),0 0 0 2px rgba(255,96,202,.28),0 0 17px rgba(255,75,194,.52),0 7px 0 #341331!important;
+}
+#jump{
+  background:linear-gradient(180deg,#faffff 0%,#d7fff8 13%,#60e7d4 25%,#29cab9 58%,#4ac8ff 100%)!important;
+  box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.62),inset 0 -10px 16px rgba(15,94,101,.28),0 0 0 2px rgba(76,255,220,.26),0 0 17px rgba(63,238,219,.50),0 7px 0 #11353c!important;
+}
+#special::before,#laser::before,#jump::before{
+  content:''!important;
+  position:absolute!important;
+  top:6px!important;left:12%!important;right:12%!important;height:22%!important;
+  border-radius:999px!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,255,255,.16))!important;
+  pointer-events:none!important;
+}
+#special::after,#laser::after,#jump::after{
+  content:''!important;
+  position:absolute!important;
+  bottom:7px!important;left:20%!important;right:20%!important;height:5px!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.30)!important;
+  box-shadow:0 0 8px rgba(255,255,255,.52)!important;
+  pointer-events:none!important;
+}
+#special .btnMain,#laser .btnMain,#jump .btnMain{
+  position:relative!important;z-index:1!important;
+  font-size:14px!important;
+  font-weight:1000!important;
+  color:#fff!important;
+  text-shadow:0 1px 1px rgba(38,22,78,.62),0 0 8px rgba(255,255,255,.22)!important;
+}
+#special.pressed,#laser.pressed,#jump.pressed{
+  transform:translateY(7px) scale(.955)!important;
+  filter:brightness(.91) saturate(1.1)!important;
+  box-shadow:inset 0 2px 4px rgba(31,18,64,.35),inset 0 12px 20px rgba(255,255,255,.28),0 0 9px rgba(86,231,255,.25),0 1px 0 rgba(15,11,38,.98)!important;
+}
+
+/* --- item window: compact chrome console --- */
+#reward{
+  top:50%!important;bottom:auto!important;transform:translate(-50%,-50%)!important;
+  width:min(438px,93vw)!important;
+  max-height:68vh!important;
+  border-radius:28px!important;
+  padding:18px 14px 16px!important;
+  border:2px solid rgba(228,244,255,.96)!important;
+  background:
+    radial-gradient(circle at 50% -12%,rgba(126,226,255,.20),transparent 36%),
+    linear-gradient(180deg,rgba(37,43,78,.98),rgba(11,11,31,.985) 46%,rgba(20,17,49,.985))!important;
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.82),inset 0 0 0 3px rgba(85,211,255,.10),0 0 0 2px rgba(255,68,205,.16),0 0 24px rgba(82,223,255,.34),0 22px 55px rgba(0,0,0,.50)!important;
+}
+#reward::before{
+  content:'✦  COSMIC ITEM CONSOLE  ✦'!important;
+  display:block!important;
+  width:max-content!important;
+  max-width:90%!important;
+  margin:0 auto 10px!important;
+  padding:4px 12px!important;
+  border-radius:999px!important;
+  font-size:9px!important;
+  letter-spacing:.14em!important;
+  color:#d6faff!important;
+  background:linear-gradient(180deg,rgba(151,229,255,.28),rgba(108,85,191,.12))!important;
+  border:1px solid rgba(165,235,255,.45)!important;
+  box-shadow:0 0 10px rgba(86,231,255,.24)!important;
+}
+#rewardTitle{font-size:20px!important;color:#fff!important;text-shadow:0 0 10px rgba(255,124,224,.55)!important}
+#rewardSub{font-size:11px!important;color:#cddbf9!important}
+.rewardBtns{gap:10px!important}
+.rewardBtn{
+  min-height:68px!important;
+  border-radius:18px!important;
+  border:1.5px solid rgba(244,250,255,.94)!important;
+  color:#403a57!important;
+  font-size:10.5px!important;
+  font-weight:1000!important;
+  background:linear-gradient(180deg,#fff 0%,#e9e2ff 45%,#acdfff 100%)!important;
+  box-shadow:inset 0 2px 0 #fff,inset 0 10px 14px rgba(255,255,255,.60),inset 0 -8px 12px rgba(100,77,168,.14),0 0 0 1px rgba(87,217,255,.18),0 6px 0 rgba(25,18,62,.86)!important;
+  transition:transform .07s ease,box-shadow .07s ease!important;
+}
+.rewardBtn:active{
+  transform:translateY(5px) scale(.975)!important;
+  box-shadow:inset 0 3px 8px rgba(67,43,108,.22),0 1px 0 rgba(25,18,62,.95)!important;
+}
+.rewardBtn.utilityItem{background:linear-gradient(180deg,#fffdf8,#ffe8ba 48%,#9fe8ff)!important}
+.rewardBtn.cosmicItem{background:linear-gradient(180deg,#fff8ff,#e6d7ff 48%,#9ff0e0)!important}
+.rewardBtn[data-special="boneRain"]{background:linear-gradient(180deg,#fffef5,#fff0b4 48%,#a8eaff)!important}
+.rewardBtn[data-special="magnet"]{background:linear-gradient(180deg,#fff9ff,#f0d8ff 48%,#9dffd3)!important}
+.rewardBtn[data-special="friend"]{background:linear-gradient(180deg,#fffaf4,#ffe0cb 48%,#b8e7ff)!important}
+.rewardBtn[data-special="secret"]{background:linear-gradient(180deg,#fffefa,#f9e1ff 48%,#ffe493)!important}
+.rewardBtn.locked,.rewardBtn:disabled{opacity:.36!important;filter:grayscale(.55)!important;box-shadow:none!important}
+
+@media(max-width:520px){
+  .controls{width:min(396px,97vw)!important;gap:7px!important;padding-left:9px!important;padding-right:9px!important}
+  #special,#laser,#jump{height:72px!important;max-height:72px!important}
+  #special .btnMain,#laser .btnMain,#jump .btnMain{font-size:13px!important}
+  #reward{width:min(408px,94vw)!important;padding:16px 11px 14px!important}
+  .rewardBtn{min-height:63px!important;font-size:10px!important}
+}
+</style>
+<script>
+(function(){
+  const FOOD_CAP=30;
+  const $=id=>document.getElementById(id);
+  const reward=$('reward');
+  const rewardTitle=$('rewardTitle'), rewardSub=$('rewardSub');
+  const specialBtn=$('special'), laserBtn=$('laser'), jumpBtn=$('jump');
+
+  function renderBottom(){
+    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
+    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
+    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
+  }
+  function renderItems(){
+    if(rewardTitle) rewardTitle.textContent='⭐ アイテム';
+    if(rewardSub) rewardSub.textContent='宇宙で集めたパワーを使う';
+  }
+  function pressWire(btn){
+    if(!btn || btn.dataset.v55press==='1') return;
+    btn.dataset.v55press='1';
+    const on=()=>btn.classList.add('pressed');
+    const off=()=>btn.classList.remove('pressed');
+    btn.addEventListener('pointerdown',on,{passive:true});
+    ['pointerup','pointercancel','pointerleave'].forEach(ev=>btn.addEventListener(ev,off,{passive:true}));
+    btn.addEventListener('click',()=>{on();setTimeout(off,135)});
+  }
+  [specialBtn,laserBtn,jumpBtn].forEach(pressWire);
+
+  // Hard-fix bone pickup: cap is 30 everywhere from this point forward.
+  collectGood=function(it){
+    if(!it || it.got) return;
+    it.got=true;
+    if(it.magnet){
+      magnetUntil=performance.now()+12000;
+      showToast('🧲 星磁石 発動！ 12秒',1200);
+      syncHUD();
+      return;
+    }
+    if(it.food){
+      if(food<FOOD_CAP){
+        food=Math.min(FOOD_CAP,food+1);
+        showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 +1　${food}/${FOOD_CAP}`,700);
+      }else{
+        points+=1;starTotal+=1;
+        showToast('🦴 30個たまった！ ⭐+1',700);
+      }
+      syncHUD();
+      return;
+    }
+    const gain=big?2:1;
+    points+=gain;starTotal+=gain;
+    if(points>=30&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}
+    syncHUD();
+  };
+  window.collectGood=collectGood;
+
+  // Make shower bones home toward the dog slightly, so actually touching the shower earns bones.
+  const prevUpdate=update;
+  update=function(dt){
+    const now=performance.now();
+    if(now<boneRainUntil){
+      for(const it of items){
+        if(it.got||!it.food||!it.fall) continue;
+        if(Math.abs(it.x-p.x)<520){
+          it.x+=(p.x-it.x)*0.045*dt;
+          if(it.y>p.y-20) it.y+=(p.y+22-it.y)*0.025*dt;
+        }
+      }
+    }
+    prevUpdate(dt);
+  };
+  window.update=update;
+
+  // Spawn a lot more bones during shower and keep them on screen longer.
+  const prevSpawn=spawnEvents;
+  spawnEvents=function(){
+    if(typeof prevSpawn==='function') prevSpawn();
+    const now=performance.now();
+    if(now<boneRainUntil && eventPhase%2===0){
+      for(let i=0;i<6;i++){
+        items.push({
+          x:p.x+W*(.04+Math.random()*.92),
+          y:12+Math.random()*Math.max(90,H*.22),
+          r:18+Math.random()*3,
+          got:false,color:'#fff0aa',food:true,fall:true,shower:true
+        });
+      }
+      eventEl.textContent='🦴 ホネホネシャワー ✦ 取り放題！';
+    }
+    // Occasional free magnet pickup in space (not on Earth).
+    if(!(system===0&&stage===0) && eventPhase%260===0 && Math.random()<0.5){
+      items.push({x:p.x+W*(.72+Math.random()*.20),y:55+Math.random()*Math.max(90,H*.20),r:20,got:false,magnet:true,color:'#82ffe4'});
+      eventEl.textContent='🧲 MAGNET SIGNAL — 星磁石が流れてきた！';
+    }
+  };
+  window.spawnEvents=spawnEvents;
+
+  const prevDraw=drawGood;
+  drawGood=function(it){
+    if(it?.magnet){
+      const sx=it.x-camera;
+      if(sx<-60||sx>W+60||it.got)return;
+      ctx.save();
+      ctx.translate(sx,it.y);
+      ctx.rotate(Math.sin(performance.now()/220)*.12);
+      ctx.shadowColor='#72ffe2';ctx.shadowBlur=24;
+      ctx.font='900 36px system-ui';
+      ctx.fillText('🧲',-18,13);
+      ctx.restore();
+      return;
+    }
+    prevDraw(it);
+  };
+  window.drawGood=drawGood;
+
+  const prevSync=syncHUD;
+  syncHUD=function(){
+    if(typeof prevSync==='function') prevSync();
+    renderBottom();renderItems();
+    if(foodEl)foodEl.textContent=`🦴 ${food}`;
+    if(reward?.classList.contains('on')){
+      reward.style.top='50%';reward.style.bottom='auto';reward.style.transform='translate(-50%,-50%)';
+    }
+  };
+  window.syncHUD=syncHUD;
+
+  renderBottom();renderItems();syncHUD();
 })();
 </script>
