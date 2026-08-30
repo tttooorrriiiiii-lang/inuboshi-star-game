@@ -540,7 +540,7 @@ canvas{display:block;width:100%;height:100%}
 <div id="hud"><div class="stack"><div class="pill" id="location"></div><div class="pill countBig" id="points"></div><div class="pill countBig" id="food"></div><div class="pill countBig" id="alienHitCount">👽 0</div></div><div id="powerBox"><div id="powerTop"><span>巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
 <div id="mission"></div><div id="event"></div><div id="astroInfo"></div><div id="toast"></div>
 <div id="bigBanner">✦ 巨大化！ ✦<small>犬星くん巨大化フィーバー！ ジャンプもできる！</small></div>
-<div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3で発射</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザービーム<small id="laserAmmoText">8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">👽<small id="cosmicPowerText">宇宙パワー発動</small></button><button class="ctrl jumpCtrl" id="jump">⬆️<small>ジャンプ</small></button></div>
+<div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3｜遠くを回収</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザー<small id="laserAmmoText">攻撃 8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">👽 宇宙パワー<small id="cosmicPowerText">時空を曲げる</small></button><button class="ctrl jumpCtrl" id="jump">⬆️<small>ジャンプ</small></button></div>
 <div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ 星アイテム</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 巨大化<br>35⭐</button><button class="rewardBtn attack" data-special="laser" data-cost="60">🔫 レーザー弾 +20<br>60⭐（最大30発）</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 ホネホネシャワー<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
 <div id="comm"><div id="commTitle">📡 SIGNAL RECEIVED</div><div id="commText"></div><div id="commWave">▂▄▆█▆▄▂</div></div>
 <div id="critical">⚠️ CRITICAL! あと1回でGAME OVER</div><div id="gameOver"><div id="gameOverTitle">GAME OVER</div><div id="gameOverSub">宇宙はそんなにやさしくない…<br>⭐ 20 LOST<br><br>RETRYING…</div></div>
@@ -847,9 +847,9 @@ function buySpecial(kind){
  }
  if(points<cost){showToast(`⭐ あと ${cost-points}個 必要！`,1000);return}
  points-=cost;starTotal=Math.max(0,starTotal-cost);const now=performance.now();
- if(kind==='giant'){activateBig();showToast('🐕💥 巨大化・無敵モード！ ⭐35',1500)}
+ if(kind==='giant'){activateBig();showToast('🐕💥 巨大化！ ⭐35',1500)}
  else if(kind==='laser'){laserAmmo=Math.min(laserAmmoMax,laserAmmo+20);showToast(`🔫 レーザー弾 補充！ ${laserAmmo}/${laserAmmoMax}`,1400)}
- else if(kind==='boneRain'){boneRainUntil=now+7000;showToast('🦴 骨の雨！ しばらく骨取り放題！',1500)}
+ else if(kind==='boneRain'){boneRainUntil=now+7000;showToast('🦴 ホネホネシャワー！ 骨取り放題！',1500)}
  else if(kind==='wormhole'){wormholeActive=true;portalX=Math.min(worldLength-260,p.x+820);showToast('🌀 ワームホールを前方に呼び出した！',1500)}
  else if(kind==='satellite'){satelliteUntil=now+3000;invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100)}
  else if(kind==='magnet'){magnetUntil=now+10000;showToast('🧲 星マグネット 10秒！',1100)}
@@ -863,7 +863,7 @@ function buySpecial(kind){
  }
  reward.classList.remove('on');updateShopButtons();syncHUD()
 }
-function collectGood(it){it.got=true;if(it.food){if(food<10){food++;showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 元気 +1　${food}/10`)}else{points+=1;starTotal+=1;showToast('🦴 元気満タン！ ⭐+1')}syncHUD();return}const gain=big?2:1;points+=gain;starTotal+=gain;if(points>=50&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}syncHUD()}
+function collectGood(it){it.got=true;if(it.food){if(food<10){food++;showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 元気 +1　${food}/10`)}else{points+=1;starTotal+=1;showToast('🦴 元気満タン！ ⭐+1')}syncHUD();return}const gain=big?2:1;points+=gain;starTotal+=gain;if(points>=30&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}syncHUD()}
 function showGuardZero(){guardFlash.classList.remove('on');void guardFlash.offsetWidth;guardFlash.classList.add('on');wrap.style.boxShadow='inset 0 0 90px #ffe95d,inset 0 0 150px #55eaff';setTimeout(()=>{guardFlash.classList.remove('on');wrap.style.boxShadow=''},720)}
 function gameOver(){ /* 星と骨の方式に変更したため通常衝突ではゲームオーバーにしない */ }
 function updateCritical(){criticalEl.classList.remove('on');wrap.classList.remove('criticalMode')}
@@ -1593,6 +1593,282 @@ drawBoneShots=function(){
     ctx.restore();
   }
   ctx.restore();
+}
+
+
+/* ===== v49 ALL RECENT FIXES ===== */
+let hurtUntil=0;
+let dogStarPrompted=false,blackHolePrompted=false,alienOfferPrompted=false;
+let pendingTrueEnding=false;
+let dreamLoopCount=0;
+const ENDING_KEYS=['earth','dogstar','blackhole','alien','dream'];
+let endingSeen={earth:false,dogstar:false,blackhole:false,alien:false,dream:false,true:false};
+try{
+  const saved=JSON.parse(localStorage.getItem('inuboshi_endings_v1')||'{}');
+  endingSeen={...endingSeen,...saved};
+  dreamLoopCount=Number(localStorage.getItem('inuboshi_dream_loops')||0)||0;
+}catch(e){}
+function saveEndings(){try{localStorage.setItem('inuboshi_endings_v1',JSON.stringify(endingSeen));localStorage.setItem('inuboshi_dream_loops',String(dreamLoopCount))}catch(e){}}
+function endingCount(){return ENDING_KEYS.filter(k=>endingSeen[k]).length}
+function registerEnding(key){
+  if(key==='true'){endingSeen.true=true;saveEndings();return}
+  const before=endingCount();
+  endingSeen[key]=true;
+  saveEndings();
+  if(before<5&&endingCount()===5&&!endingSeen.true)pendingTrueEnding=true;
+}
+
+// ending overlay
+const endingPanel=document.createElement('div');
+endingPanel.id='endingPanel';
+endingPanel.innerHTML=`<div class="endingCard"><div id="endingKicker">ENDING</div><div id="endingTitle"></div><div id="endingText"></div><div id="endingCount"></div><div id="endingActions"></div></div>`;
+wrap.appendChild(endingPanel);
+function hideEndingPanel(){endingPanel.classList.remove('on')}
+function showEndingChoice(kicker,title,html,actions=[]){
+  paused=true;
+  endingPanel.querySelector('#endingKicker').textContent=kicker;
+  endingPanel.querySelector('#endingTitle').innerHTML=title;
+  endingPanel.querySelector('#endingText').innerHTML=html;
+  endingPanel.querySelector('#endingCount').textContent=`ENDING ${endingCount()} / 5`;
+  const box=endingPanel.querySelector('#endingActions');
+  box.innerHTML='';
+  actions.forEach(a=>{const b=document.createElement('button');b.className='endingAction';b.innerHTML=a.label;b.onclick=()=>{hideEndingPanel();a.action()};box.appendChild(b)});
+  endingPanel.classList.add('on');
+}
+function showTrueEnding(next){
+  pendingTrueEnding=false;registerEnding('true');
+  showEndingChoice('⭐ TRUE END','犬星くんの大冒険',`🌏　👽　🌀　🌙　🦴　⭐　🐩<br><br>宇宙を一周して、いろんな場所を選んだ犬星くん。<br><b>「またどこか行こう。」</b>`,[
+    {label:'🌙 また月へ',action:()=>{next();}}
+  ]);
+}
+function showRegisteredEnding(key,kicker,title,html,next,label='つづける'){
+  registerEnding(key);
+  showEndingChoice(kicker,title,html,[{label,action:()=>{if(pendingTrueEnding)showTrueEnding(next);else next();}}]);
+}
+
+// center feedback for cosmic power + damage
+const cosmicPop=document.createElement('div');cosmicPop.id='cosmicPop';wrap.appendChild(cosmicPop);
+function popCosmic(amount=1){
+  cosmicPop.innerHTML=`👽 <b>COSMIC POWER +${amount}</b>`;
+  cosmicPop.classList.remove('on');void cosmicPop.offsetWidth;cosmicPop.classList.add('on');
+  alienHitEl?.classList.remove('countBump');void alienHitEl?.offsetWidth;alienHitEl?.classList.add('countBump');
+  setTimeout(()=>alienHitEl?.classList.remove('countBump'),520);
+}
+const damagePop=document.createElement('div');damagePop.id='damagePop';damagePop.innerHTML='💥 DAMAGE!';wrap.appendChild(damagePop);
+function popDamage(){damagePop.classList.remove('on');void damagePop.offsetWidth;damagePop.classList.add('on')}
+
+// Clearer cosmic-power feedback
+const __v49RegisterAlienHit=registerAlienHit;
+registerAlienHit=function(amount=1){
+  const before=cosmicCharge;
+  __v49RegisterAlienHit(amount);
+  if(cosmicCharge>before)popCosmic(cosmicCharge-before);
+}
+const __v49UseCosmicPower=useCosmicPower;
+useCosmicPower=function(){
+  const wasReady=cosmicPowerReady;
+  __v49UseCosmicPower();
+  if(wasReady){wrap.classList.add('cosmicWarping');setTimeout(()=>wrap.classList.remove('cosmicWarping'),9000)}
+}
+
+// 🌏 tokens are now the real return condition, even on the Dog Star.
+checkHomeRoute=function(){homeRouteReady=earthTokenCount>=3}
+updateShopButtons=function(){
+ const prices={giant:35,laser:60,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:120,secret:70,home:0};
+ document.querySelectorAll('.rewardBtn').forEach(btn=>{
+   const kind=btn.dataset.special;const cost=prices[kind]??0;
+   let disabled=false;
+   if(kind==='home')disabled=!homeRouteReady||(system===0&&stage===0);
+   else if(!shopUnlocked)disabled=true;
+   else if(kind==='laser')disabled=points<cost||laserAmmo>=laserAmmoMax;
+   else disabled=points<cost;
+   btn.disabled=!!disabled;btn.classList.toggle('locked',!!disabled);
+ });
+}
+const __v49SyncHUD=syncHUD;
+syncHUD=function(){
+  __v49SyncHUD();
+  const earth=system===0&&stage===0;
+  const homeBtn=document.getElementById('homeWarpBtn');
+  checkHomeRoute();
+  if(homeBtn){homeBtn.disabled=!homeRouteReady||earth;homeBtn.innerHTML=earth?'🏠 地球へ帰る<br>🌍 いま地球':homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':'🏠 地球へ帰る<br>🌏 '+earthTokenCount+' / 3';}
+  updateShopButtons();
+  const bsmall=bigBtn?.querySelector('small');if(bsmall)bsmall.textContent='骨3｜遠くを回収';
+  if(laserAmmoText)laserAmmoText.textContent=`攻撃 ${laserAmmo} / ${laserAmmoMax}`;
+  if(cosmicPowerText)cosmicPowerText.textContent=performance.now()<cosmicPowerUntil?'時空ぐにゃぐにゃ中':cosmicPowerReady?'READY! 時空を曲げる':'時空を曲げる';
+}
+const __v49BuySpecial=buySpecial;
+buySpecial=function(kind){
+  if(kind==='home'&&!homeRouteReady){showToast(`🌏 帰還サインをあと ${Math.max(0,3-earthTokenCount)}個集めよう！`,1300);return}
+  __v49BuySpecial(kind);
+}
+
+// Damage reads as an injury, with stars + bones scattering.
+const __v49HitHazard=hitHazard;
+hitHazard=function(h){
+  const beforeFood=food,beforePoints=points;
+  __v49HitHazard(h);
+  if(food<beforeFood||points<beforePoints){hurtUntil=performance.now()+720;popDamage();}
+}
+const __v49DrawPlayer=drawPlayer;
+drawPlayer=function(){
+  __v49DrawPlayer();
+  if(performance.now()<hurtUntil){
+    const sx=p.x-camera,t=(hurtUntil-performance.now())/720;
+    ctx.save();ctx.globalAlpha=.75*t;ctx.font='30px system-ui';ctx.shadowColor='#ff376e';ctx.shadowBlur=18;ctx.fillText('💥',sx+30,p.y+8);ctx.strokeStyle='rgba(255,80,110,.8)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(sx+9,p.y+10);ctx.lineTo(sx+45,p.y+48);ctx.moveTo(sx+45,p.y+10);ctx.lineTo(sx+9,p.y+48);ctx.stroke();ctx.restore();
+  }
+}
+
+// Bone boomerang = RETRIEVAL tool. It locks on to 🌏 / secret pickups / stars / bones and comes back carrying it.
+function nearestBoomerangTarget(){
+  const candidates=[];
+  for(const o of secretPickups){if(!o.got&&o.x>p.x-40&&o.x<p.x+1050)candidates.push({type:o.kind==='earth'?'earth':'secret',obj:o,icon:o.icon||'✨',d:Math.abs(o.x-p.x)})}
+  for(const it of items){if(!it.got&&it.x>p.x-40&&it.x<p.x+1050)candidates.push({type:it.food?'bone':'star',obj:it,icon:it.food?'🦴':'⭐',d:Math.abs(it.x-p.x)})}
+  candidates.sort((a,b)=>{
+    const pa=a.type==='earth'?0:a.type==='secret'?1:a.type==='star'?2:3;
+    const pb=b.type==='earth'?0:b.type==='secret'?1:b.type==='star'?2:3;
+    return pa-pb||a.d-b.d;
+  });
+  return candidates[0]||null;
+}
+fireBoneBoomerang=function(){
+  if(paused||system===0&&stage===0)return;
+  if(food<3){showToast('🦴 骨が3必要！',900);return}
+  food-=3;
+  const target=nearestBoomerangTarget();
+  boneShots.push({x:p.x+55,y:p.y+25,v:13,life:190,phase:0,baseY:p.y+25,returning:false,fetched:null,target});
+  if(target)showToast(`🦴 LOCK ON → ${target.icon}`,760);else showToast('🦴 近くに回収できるものがない！',900);
+  syncHUD();
+}
+function finishBoomerangFetch(b){
+  const t=b.target;if(!t||!t.obj)return;
+  const o=t.obj;o.got=true;b.fetched=t.icon;
+  if(t.type==='earth')b.fetchType='earth';
+  else if(t.type==='secret')b.fetchType='secret';
+  else if(t.type==='bone')b.fetchType='bone';
+  else b.fetchType='star';
+}
+function awardBoomerangFetch(b){
+  if(!b.fetched)return;
+  if(b.fetchType==='earth'){
+    earthTokenCount=Math.min(3,earthTokenCount+1);checkHomeRoute();showToast(`🌏 とってきた！ ${earthTokenCount}/3`,1100);
+    if(homeRouteReady)setTimeout(()=>showToast('🏠 地球帰還イベント解禁！',1200),500);
+  }else if(b.fetchType==='secret'){
+    points+=3;starTotal+=3;showToast(`${b.fetched} とってきた！ ⭐+3`,950);
+  }else if(b.fetchType==='bone'){
+    food=Math.min(99,food+3);showToast('🦴 とってきた！ 骨 +3',900);
+  }else if(b.fetchType==='star'){
+    points+=2;starTotal+=2;showToast('⭐ とってきた！ 星 +2',900);
+  }
+  syncHUD();
+}
+updateBoneShots=function(dt){
+  for(const b of boneShots){
+    b.phase+=dt;b.life-=dt;
+    if(!b.returning&&b.target&&b.target.obj&&!b.target.obj.got){
+      const tx=b.target.obj.x,ty=b.target.obj.y||b.baseY;
+      const dx=tx-b.x,dy=ty-b.y,d=Math.hypot(dx,dy)||1;
+      b.x+=dx/d*13*dt;b.y+=dy/d*13*dt;
+      if(d<42){finishBoomerangFetch(b);b.returning=true}
+    }else if(!b.returning){
+      b.x+=13*dt;b.y=b.baseY+Math.sin(b.phase*.13)*105;if(b.life<110)b.returning=true;
+    }else{
+      const tx=p.x+28,ty=p.y+25,dx=tx-b.x,dy=ty-b.y,d=Math.hypot(dx,dy)||1;
+      b.x+=dx/d*14*dt;b.y+=dy/d*14*dt;
+      if(d<34){awardBoomerangFetch(b);b.life=0}
+    }
+  }
+  boneShots=boneShots.filter(b=>b.life>0&&Math.abs(b.x-p.x)<W+1200);syncHUD();
+}
+drawBoneShots=function(){
+  ctx.save();
+  for(const b of boneShots){
+    if(!b.returning&&b.target&&b.target.obj&&!b.target.obj.got){
+      ctx.save();ctx.setLineDash([5,7]);ctx.strokeStyle='rgba(255,244,170,.65)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(b.x-camera,b.y);ctx.lineTo(b.target.obj.x-camera,b.target.obj.y);ctx.stroke();ctx.restore();
+    }
+    const sx=b.x-camera;ctx.save();ctx.translate(sx,b.y);ctx.rotate(b.phase*.34);ctx.shadowColor='#ffe26d';ctx.shadowBlur=18;ctx.font='34px system-ui';ctx.fillText('🦴',-17,12);if(b.fetched){ctx.font='19px system-ui';ctx.fillText(b.fetched,12,-10)}ctx.restore();
+  }
+  ctx.restore();
+}
+
+// Doghouse: same dog scale in every state, always moving while waiting, toy play, and every action eventually goes to bed.
+resetDoghouseScene=function(){
+ doghouseFed=false;doghouseInterior.className='on';
+ const dog=doghouseInterior.querySelector('.dhDogMover'),pile=doghouseInterior.querySelector('.dhEatPile'),rain=doghouseInterior.querySelector('.dhBoneRain'),toy=doghouseInterior.querySelector('.dhToy');
+ if(dog)dog.className='dhDogMover ready';if(pile)pile.className='dhEatPile';if(rain)rain.innerHTML='';if(toy)toy.className='dhToy';setDoghouseActionState('show');updateDoghouseButtons();
+}
+updateDoghouseButtons=function(){
+ syncDoghouseHUD();const feedBtn=doghouseInterior.querySelector('#feedDogBtn'),playBtn=doghouseInterior.querySelector('#playDogBtn'),sleepBtn=doghouseInterior.querySelector('#sleepDogBtn');
+ const spend=Math.max(1,Math.min(points||0,4));
+ if(feedBtn)feedBtn.innerHTML=`🦴 餌を食べる<small>${points>0?`⭐${spend}でごはん`:'ごはんタイム'}</small>`;
+ if(playBtn)playBtn.innerHTML='🧶 遊ぶ<small>おもちゃで遊ぶ</small>';
+ if(sleepBtn)sleepBtn.innerHTML='💤 寝る<small>ベッドへ</small>';
+}
+function finishDoghouseEnding(){
+  dreamLoopCount++;saveEndings();
+  const next=()=>{dreamRestart()};
+  if(endingSeen.earth&&dreamLoopCount>=2&&!endingSeen.dream){
+    showRegisteredEnding('dream','🌙 SECRET END','夢から出られない',`月へ行って、地球へ帰って、また月へ。<br><br><b>「これは夢だったのかな。」</b>`,next,'……月へ');
+  }else{
+    showRegisteredEnding('earth','🌍 EARTH END','おかえり、犬星くん',`長い宇宙旅行のあと、いつもの散歩道と犬小屋へ。<br><br>やっぱりここが、いちばん落ち着く。`,next,'💤 夢を見る');
+  }
+}
+doghouseGoToBed=function(startAt=0){
+ const dog=doghouseInterior.querySelector('.dhDogMover');
+ setTimeout(()=>{if(dog)dog.className='dhDogMover runToBed'},startAt);
+ setTimeout(()=>{if(dog)dog.className='dhDogMover jumpBed'},startAt+1200);
+ setTimeout(()=>{doghouseInterior.classList.add('softDim')},startAt+2450);
+ setTimeout(()=>{doghouseInterior.classList.add('lightsOff')},startAt+3200);
+ setTimeout(()=>{doghouseInterior.classList.add('blackout')},startAt+3950);
+ setTimeout(()=>{doghouseInterior.classList.remove('blackout');doghouseInterior.classList.add('faceClose')},startAt+4700);
+ setTimeout(()=>{doghouseInterior.className='';finishDoghouseEnding()},startAt+6500);
+}
+feedDoghouse=function(){
+ if(!doghouseInterior.classList.contains('on')||doghouseFed)return;doghouseFed=true;setDoghouseActionState('hide');
+ const dog=doghouseInterior.querySelector('.dhDogMover'),pile=doghouseInterior.querySelector('.dhEatPile');const spend=points>0?Math.min(points,4):0;
+ if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food=Math.min(99,food+spend);syncHUD()}
+ spawnDoghouseBoneRain(spend||4);setTimeout(()=>{if(dog)dog.className='dhDogMover runToBones'},350);setTimeout(()=>{if(dog)dog.className='dhDogMover eatBones';if(pile)pile.classList.add('show','eating')},1450);setTimeout(()=>{if(pile)pile.classList.add('gone')},2850);doghouseGoToBed(3200);
+}
+playDoghouse=function(){
+ if(!doghouseInterior.classList.contains('on')||doghouseFed)return;doghouseFed=true;setDoghouseActionState('hide');
+ const dog=doghouseInterior.querySelector('.dhDogMover'),toy=doghouseInterior.querySelector('.dhToy');doghouseInterior.classList.add('playMode');
+ if(toy)toy.className='dhToy show toss1';setTimeout(()=>{if(dog)dog.className='dhDogMover playHop'},120);setTimeout(()=>{if(toy)toy.className='dhToy show toss2';if(dog)dog.className='dhDogMover playHop2'},1250);setTimeout(()=>{doghouseInterior.classList.remove('playMode');if(toy)toy.className='dhToy'},2350);doghouseGoToBed(2500);
+}
+sleepDoghouse=function(){if(!doghouseInterior.classList.contains('on')||doghouseFed)return;doghouseFed=true;setDoghouseActionState('hide');doghouseGoToBed(150)}
+
+// Ending branches
+function showDogStarChoice(){
+  const actions=[
+    {label:'🐾 ここに残る',action:()=>showRegisteredEnding('dogstar','🐾 DOG STAR END','犬たちの宇宙',`敵もいない。骨も星もいっぱい。<br>犬たちに囲まれて、犬星くんは思った。<br><br><b>「ここも、わるくないかも。」</b>`,()=>{stageStart();paused=false},'🐕 もう少し遊ぶ')},
+    {label:'🚀 まだ旅する',action:()=>{stageStart();paused=false}}
+  ];
+  if(homeRouteReady)actions.splice(1,0,{label:'🌍 地球へ帰る',action:()=>{paused=false;buySpecial('home')}});
+  showEndingChoice('🐾 FINAL CHOICE','犬の星',`旅の最終地点。<br>ここに残る？　それともまだ進む？`,actions);
+}
+function showBlackHoleChoice(){
+  showEndingChoice('⚫ BLACK HOLE CHOICE','もっと奥へ行く？',`ホワイトホールの光が見える。<br>でも、その反対側にはまだ暗闇が続いている……`,[
+    {label:'⚫ もっと奥へ',action:()=>showRegisteredEnding('blackhole','⚫ BLACK HOLE END','宇宙の向こう側',`犬星くんは、光のない方を選んだ。<br>画面も時間もぐにゃぐにゃになって……<br><br><b>「……ここ、どこ？」</b>`,()=>{paused=false;whiteHoleTriggered=false;p.x=whiteHoleX-12;whiteHoleEscape()},'⚪ 光の方へ戻る')},
+    {label:'⚪ ホワイトホールへ',action:()=>{paused=false;whiteHoleTriggered=false;p.x=whiteHoleX-12;whiteHoleEscape()}}
+  ]);
+}
+function showAlienOffer(){
+  showEndingChoice('👽 COSMIC SIGNAL','一緒に来る？',`交信を重ねた宇宙人たちから、ついに誘いが来た。<br><br>🛸「ワレワレト　イク？」`,[
+    {label:'🛸 一緒に行く',action:()=>showRegisteredEnding('alien','👽 ALIEN END','宇宙犬になった。',`知らない星。知らない言葉。<br>でも犬星くんは、宇宙人たちの真ん中で普通に寝ている。<br><br><b>宇宙犬になった。</b>`,()=>{stageStart();paused=false},'🐕 また旅へ')},
+    {label:'🐕 まだ旅する',action:()=>{paused=false}}
+  ]);
+}
+const __v49StartCommunication=startCommunication;
+startCommunication=function(obj){
+  const before=alienContacts;__v49StartCommunication(obj);
+  if(alienContacts>=5&&alienContacts>before&&!alienOfferPrompted&&!endingSeen.alien){alienOfferPrompted=true;setTimeout(()=>{if(!paused)showAlienOffer()},520)}
+}
+const __v49StageStart=stageStart;
+stageStart=function(){dogStarPrompted=false;blackHolePrompted=false;__v49StageStart()}
+const __v49Update=update;
+update=function(now,dt){
+  if(!paused&&systems[system]?.dream&&p.x>worldLength-180&&!dogStarPrompted){dogStarPrompted=true;showDogStarChoice();return}
+  if(!paused&&system===BLACK_HOLE_SYSTEM&&p.x>whiteHoleX-250&&!blackHolePrompted){blackHolePrompted=true;showBlackHoleChoice();return}
+  __v49Update(now,dt);
 }
 
 const feedDogBtn=$('feedDogBtn'),playDogBtn=$('playDogBtn'),sleepDogBtn=$('sleepDogBtn'),rewardCloseBtn=$('rewardClose');
@@ -3291,5 +3567,97 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
   #doghouseInterior .dhDogMover.runToBed,
   #doghouseInterior .dhDogMover.jumpBed{font-size:42px!important}
   #doghouseInterior .dhSleepFace{font-size:min(90vw,410px)!important;left:54%!important}
+}
+</style>
+
+
+<style id="v49-all-recent-fixes-css">
+/* bottom controls: different roles should look different */
+.controls{grid-template-columns:.92fr 1.15fr 1fr 1.08fr .82fr!important;gap:7px!important;align-items:end!important}
+#special{border-radius:18px!important;background:linear-gradient(180deg,#fffdf4,#f0dcff 52%,#a9ebff)!important}
+#big{border-radius:28px 14px 28px 14px!important;background:linear-gradient(180deg,#fffaf2,#ffe9bc 48%,#b8efff)!important;border-color:#fff4b9!important}
+#big:after{content:'↩';position:absolute;right:7px;top:6px;font-size:12px;opacity:.65}
+#laser{border-radius:10px!important;clip-path:polygon(7% 0,100% 0,93% 100%,0 100%)!important;background:linear-gradient(180deg,#fff5f8,#ffd1e0 48%,#92dfff)!important;border-color:#ffd0e2!important}
+#cosmicPower{border-radius:18px 30px 18px 30px!important;background:linear-gradient(180deg,#f9f0ff,#d9c7ff 52%,#a9f0db)!important;border-color:#d8c7ff!important}
+#jump{border-radius:50%!important;background:linear-gradient(180deg,#fff,#e7e9ff 48%,#92e4ff)!important}
+#cosmicPower.ready{animation:v49CosmicReady .58s ease-in-out infinite alternate!important;box-shadow:0 0 25px #6dff9e,0 0 38px #ad74ff,0 6px 0 rgba(32,13,66,.82)!important}
+@keyframes v49CosmicReady{from{transform:scale(1)}to{transform:scale(1.055);filter:brightness(1.3)}}
+#alienHitCount.countBump{animation:v49CountBump .42s ease-out!important}
+@keyframes v49CountBump{0%{transform:scale(1)}40%{transform:scale(1.35);box-shadow:0 0 28px #66ff8a}100%{transform:scale(1)}}
+#cosmicPop,#damagePop{display:none;position:absolute;z-index:88;left:50%;top:44%;transform:translate(-50%,-50%);pointer-events:none;font-weight:1000;text-align:center}
+#cosmicPop{color:#eaffec;font-size:20px;text-shadow:0 0 8px #4cff78,0 0 20px #8f63ff}
+#cosmicPop.on{display:block;animation:v49Pop .9s ease-out both}
+#damagePop{color:#fff;font-size:24px;text-shadow:0 0 8px #ff315e,0 0 24px #ff315e}
+#damagePop.on{display:block;animation:v49Damage .7s ease-out both}
+@keyframes v49Pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.65)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.18)}100%{opacity:0;transform:translate(-50%,-78%) scale(1)}}
+@keyframes v49Damage{0%{opacity:0;transform:translate(-50%,-50%) scale(.7) rotate(-4deg)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.25) rotate(3deg)}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
+#wrap.cosmicWarping canvas{animation:v49WarpScreen 1.15s ease-in-out infinite alternate}
+@keyframes v49WarpScreen{from{filter:saturate(1) contrast(1);transform:skewX(0deg) scale(1)}to{filter:saturate(1.35) contrast(1.06);transform:skewX(.7deg) scale(1.006)}}
+
+/* repaired star-item panel */
+#reward{box-sizing:border-box!important;max-height:min(68vh,590px)!important;overflow-y:auto!important;overflow-x:hidden!important;padding:38px 14px 14px!important;border-radius:22px!important}
+#rewardTitle{position:relative!important;font-size:18px!important;line-height:1.2!important}
+#rewardClose{position:absolute!important;z-index:5!important;top:9px!important;right:10px!important;display:grid!important;place-items:center!important;padding:0!important}
+.rewardBtns{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;width:100%!important}
+.rewardBtn,.rewardBtn.attack{box-sizing:border-box!important;clip-path:none!important;border-radius:14px!important;width:100%!important;min-width:0!important;min-height:56px!important;height:auto!important;padding:9px 6px!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.22!important}
+.rewardBtn[data-special="giant"]{background:linear-gradient(180deg,#fff5fa,#ffdceb 54%,#baeaff)!important}
+.rewardBtn[data-special="laser"]{background:linear-gradient(180deg,#fff4f7,#ffcfdc 54%,#a9e5ff)!important}
+.rewardBtn[data-special="boneRain"]{background:linear-gradient(180deg,#fffbee,#ffe8b2 54%,#bff0ff)!important}
+.rewardBtn[data-special="wormhole"]{background:linear-gradient(180deg,#fff5ff,#e8d4ff 54%,#b8dfff)!important}
+.rewardBtn[data-special="satellite"]{background:linear-gradient(180deg,#f5ffff,#d7f5ff 54%,#b9cfff)!important}
+.rewardBtn[data-special="magnet"]{background:linear-gradient(180deg,#fff8ff,#f0dbff 54%,#b8f4dc)!important}
+.rewardBtn[data-special="friend"]{background:linear-gradient(180deg,#fffaf3,#ffe3cb 54%,#d4ecff)!important}
+.rewardBtn[data-special="secret"]{background:linear-gradient(180deg,#fffdf2,#f9e2ff 50%,#ffe89d)!important}
+.rewardBtn.homeBtn{grid-column:1/-1!important;background:linear-gradient(180deg,#f3fff7,#c9f8d7 48%,#b4e8ff)!important}
+.rewardBtn.locked,.rewardBtn:disabled{opacity:.32!important;filter:grayscale(.85)!important;box-shadow:none!important;cursor:not-allowed!important}
+
+/* Doghouse: about one-third of the oversized look, smaller bed/window, constant dog size */
+#doghouseInterior .dhWindow{width:25%!important;height:25%!important;left:5.5%!important;top:25%!important}
+#doghouseInterior .dhBedCss{right:8%!important;bottom:10.8%!important;width:23%!important;height:16%!important;min-width:122px!important;max-width:170px!important}
+#doghouseInterior .dhDogMover,#doghouseInterior .dhDogMover.ready,#doghouseInterior .dhDogMover.runToBones,#doghouseInterior .dhDogMover.eatBones,#doghouseInterior .dhDogMover.playHop,#doghouseInterior .dhDogMover.playHop2,#doghouseInterior .dhDogMover.runToBed,#doghouseInterior .dhDogMover.jumpBed{font-size:44px!important;line-height:1!important;transform-origin:center bottom!important}
+#doghouseInterior .dhDogMover{left:10%!important;bottom:10.6%!important}
+#doghouseInterior .dhDogMover.ready{animation:v49DogRoam 3.4s ease-in-out infinite alternate!important}
+@keyframes v49DogRoam{0%{left:10%;bottom:10.6%;transform:scaleX(-1) translateY(0)}22%{left:18%;bottom:12.8%;transform:scaleX(-1) translateY(-5px)}48%{left:26%;bottom:10.8%;transform:scaleX(-1)}72%{left:34%;bottom:14%;transform:scaleX(-1) translateY(-7px)}100%{left:41%;bottom:10.7%;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.runToBones{animation:v49RunBones 1s ease-in-out forwards!important}
+@keyframes v49RunBones{0%{left:10%;bottom:10.6%;transform:scaleX(-1)}35%{left:18%;bottom:13%;transform:scaleX(-1) translateY(-5px)}70%{left:25%;bottom:10.8%;transform:scaleX(-1)}100%{left:30%;bottom:10.8%;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.eatBones{left:30%!important;bottom:10.6%!important;transform:scaleX(-1) rotate(-5deg)!important;animation:v49Eat .33s 5 alternate!important}
+@keyframes v49Eat{from{transform:scaleX(-1) rotate(-5deg) translateY(0)}to{transform:scaleX(-1) rotate(3deg) translateY(3px)}}
+#doghouseInterior .dhDogMover.playHop{animation:v49PlayA 1.08s ease-in-out forwards!important}
+#doghouseInterior .dhDogMover.playHop2{animation:v49PlayB 1.05s ease-in-out forwards!important}
+@keyframes v49PlayA{0%{left:10%;bottom:10.6%;transform:scaleX(-1)}25%{left:17%;bottom:16%;transform:scaleX(-1) rotate(-8deg)}55%{left:24%;bottom:10.7%;transform:scaleX(-1)}100%{left:31%;bottom:14%;transform:scaleX(-1) rotate(8deg)}}
+@keyframes v49PlayB{0%{left:31%;bottom:14%;transform:scaleX(-1)}35%{left:25%;bottom:10.8%;transform:scaleX(-1)}68%{left:18%;bottom:16%;transform:scaleX(-1) rotate(8deg)}100%{left:11%;bottom:10.7%;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.runToBed{animation:v49RunBed 1.18s ease-in-out forwards!important}
+@keyframes v49RunBed{0%{left:11%;bottom:10.7%;transform:scaleX(-1)}32%{left:28%;bottom:13%;transform:scaleX(-1) translateY(-5px)}68%{left:49%;bottom:10.8%;transform:scaleX(-1)}100%{left:63%;bottom:12.2%;transform:scaleX(-1)}}
+#doghouseInterior .dhDogMover.jumpBed{animation:v49JumpBed 1.1s cubic-bezier(.2,.82,.22,1) forwards!important;z-index:15!important}
+@keyframes v49JumpBed{0%{left:63%;bottom:12.2%;transform:scaleX(-1)}43%{left:67%;bottom:24%;transform:scaleX(-1) rotate(-9deg)}100%{left:70%;bottom:14.7%;transform:scaleX(-1)}}
+#doghouseInterior .dhToy{font-size:25px!important;z-index:17!important}
+#doghouseInterior .dhEatPile{left:29.7%!important;bottom:12.2%!important;font-size:22px!important;min-width:105px!important}
+#doghouseInterior #feedDogBtn{background:linear-gradient(180deg,#fffaf1,#ffe5b9 50%,#aeeaff)!important}
+#doghouseInterior #playDogBtn{background:linear-gradient(180deg,#fff5ff,#f0d5ff 50%,#b4edff)!important}
+#doghouseInterior #sleepDogBtn{background:linear-gradient(180deg,#f7f9ff,#dfe5ff 50%,#a5d7ff)!important}
+
+/* Endings */
+#endingPanel{display:none;position:absolute;z-index:120;inset:0;background:radial-gradient(circle at 50% 42%,rgba(63,37,100,.78),rgba(5,4,13,.96) 70%);place-items:center;padding:18px;box-sizing:border-box}
+#endingPanel.on{display:grid;animation:v49EndIn .3s ease-out both}
+@keyframes v49EndIn{from{opacity:0}to{opacity:1}}
+.endingCard{width:min(480px,92vw);max-height:82vh;overflow:auto;box-sizing:border-box;padding:24px 20px 18px;border:2px solid rgba(255,255,255,.86);border-radius:24px;background:linear-gradient(180deg,rgba(31,16,51,.98),rgba(6,7,19,.98));color:#fff;text-align:center;box-shadow:0 0 34px rgba(174,111,255,.45),0 0 26px rgba(86,231,255,.25)}
+#endingKicker{font-size:10px;letter-spacing:.22em;color:#b9efff;font-weight:1000}
+#endingTitle{font-size:25px;font-weight:1000;margin:8px 0 12px;text-shadow:0 0 18px rgba(255,255,255,.3)}
+#endingText{font-size:13px;line-height:1.7;opacity:.95}
+#endingCount{margin:14px 0 10px;font-size:11px;letter-spacing:.12em;color:#ffe69b;font-weight:1000}
+#endingActions{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.endingAction{border:1.5px solid #fff;border-radius:16px;min-height:48px;padding:8px;background:linear-gradient(180deg,#fff,#eadcff 54%,#9ee8ff);color:#20102f;font-weight:1000;font-size:11px;box-shadow:0 5px 0 rgba(35,14,65,.8)}
+.endingAction:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(35,14,65,.8)}
+
+@media(max-width:520px){
+ .controls{gap:4px!important;grid-template-columns:.88fr 1.16fr 1fr 1.05fr .82fr!important}
+ #special,#big,#laser,#cosmicPower,#jump{height:67px!important;min-width:0!important;padding-left:3px!important;padding-right:3px!important;font-size:9px!important}
+ #big small,#laser small,#cosmicPower small,#special small,#jump small{font-size:7px!important}
+ #reward{bottom:105px!important;max-height:66vh!important;width:94vw!important;padding-left:10px!important;padding-right:10px!important}
+ .rewardBtns{gap:6px!important}.rewardBtn,.rewardBtn.attack{font-size:9px!important;min-height:52px!important;padding:8px 4px!important}
+ #doghouseInterior .dhWindow{width:27%!important;height:23%!important;left:5%!important;top:26%!important}
+ #doghouseInterior .dhBedCss{width:25%!important;min-width:116px!important;height:15%!important;right:7%!important}
+ #doghouseInterior .dhDogMover,#doghouseInterior .dhDogMover.ready,#doghouseInterior .dhDogMover.runToBones,#doghouseInterior .dhDogMover.eatBones,#doghouseInterior .dhDogMover.playHop,#doghouseInterior .dhDogMover.playHop2,#doghouseInterior .dhDogMover.runToBed,#doghouseInterior .dhDogMover.jumpBed{font-size:39px!important}
+ .endingCard{padding:20px 14px 15px}.endingAction{min-height:45px;font-size:10px}
 }
 </style>
