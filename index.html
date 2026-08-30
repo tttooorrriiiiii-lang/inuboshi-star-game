@@ -541,7 +541,7 @@ canvas{display:block;width:100%;height:100%}
 <div id="mission"></div><div id="event"></div><div id="astroInfo"></div><div id="toast"></div>
 <div id="bigBanner">✦ 巨大化！ ✦<small>犬星くん巨大化フィーバー！ ジャンプもできる！</small></div>
 <div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3｜遠くを回収</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザー<small id="laserAmmoText">攻撃 8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">👽 宇宙パワー<small id="cosmicPowerText">時空を曲げる</small></button><button class="ctrl jumpCtrl" id="jump">⬆️<small>ジャンプ</small></button></div>
-<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ 星アイテム</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 巨大化<br>35⭐</button><button class="rewardBtn attack" data-special="laser" data-cost="60">🔫 レーザー弾 +20<br>60⭐（最大30発）</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 ホネホネシャワー<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
+<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ 星アイテム</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 巨大化<br>35⭐</button><button class="rewardBtn utilityItem" data-special="boneBoomerang" data-cost="0">🦴 骨ブーメラン連射<br>骨3で5連射・回収</button><button class="rewardBtn cosmicItem" data-special="cosmic" data-cost="0">👽 宇宙パワー<br>時空を曲げる</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 ホネホネシャワー<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
 <div id="comm"><div id="commTitle">📡 SIGNAL RECEIVED</div><div id="commText"></div><div id="commWave">▂▄▆█▆▄▂</div></div>
 <div id="critical">⚠️ CRITICAL! あと1回でGAME OVER</div><div id="gameOver"><div id="gameOverTitle">GAME OVER</div><div id="gameOverSub">宇宙はそんなにやさしくない…<br>⭐ 20 LOST<br><br>RETRYING…</div></div>
 
@@ -1869,6 +1869,124 @@ update=function(now,dt){
   if(!paused&&systems[system]?.dream&&p.x>worldLength-180&&!dogStarPrompted){dogStarPrompted=true;showDogStarChoice();return}
   if(!paused&&system===BLACK_HOLE_SYSTEM&&p.x>whiteHoleX-250&&!blackHolePrompted){blackHolePrompted=true;showBlackHoleChoice();return}
   __v49Update(now,dt);
+}
+
+
+
+/* ===== v50 menu simplification / unlimited laser / item actions ===== */
+// Core actions live in the item panel, so the panel itself is always openable.
+openShop=function(auto=false){
+  if(points>=30)shopUnlocked=true;
+  reward.classList.add('on');
+  updateShopButtons();
+  if(auto&&shopUnlocked)showToast('🌟 アイテム解禁！',1200);
+  syncHUD();
+}
+
+const __v50UpdateShopButtons=updateShopButtons;
+updateShopButtons=function(){
+  const prices={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:120,secret:70,home:0,boneBoomerang:0,cosmic:0};
+  document.querySelectorAll('.rewardBtn').forEach(btn=>{
+    const kind=btn.dataset.special;const cost=prices[kind]??0;
+    let disabled=false;
+    if(kind==='boneBoomerang') disabled=(system===0&&stage===0)||food<3;
+    else if(kind==='cosmic') disabled=(system===0&&stage===0)||!cosmicPowerReady;
+    else if(kind==='home') disabled=!homeRouteReady||(system===0&&stage===0);
+    else if(!shopUnlocked) disabled=true;
+    else disabled=points<cost;
+    btn.disabled=!!disabled;
+    btn.classList.toggle('locked',!!disabled);
+  });
+}
+
+const __v50SyncHUD=syncHUD;
+syncHUD=function(){
+  if(points>=30)shopUnlocked=true;
+  __v50SyncHUD();
+  if(chipText)chipText.textContent='ひらく';
+  specialBtn?.classList.add('ready');
+  if(laserAmmoText)laserAmmoText.textContent='打ち放題 ∞';
+  updateShopButtons();
+}
+
+// Unlimited laser: only rate-limited, never consumes ammo.
+fireLaser=function(){
+  if(paused)return;
+  const now=performance.now();
+  if(now-lastLaserAt<245)return;
+  lastLaserAt=now;
+  lasers.push({x:p.x+62,y:p.y+27,v:15,life:98,startX:p.x+62,spread:performance.now()<cosmicPowerUntil?185:115});
+  if(laserAmmoText)laserAmmoText.textContent='打ち放題 ∞';
+}
+
+// Bone boomerang becomes a 5-shot retrieval volley. It costs 3 bones once per volley.
+function launchBoomerangVolleyShot(delay=0){
+  setTimeout(()=>{
+    if(paused)return;
+    const target=nearestBoomerangTarget();
+    if(target?.obj)target.obj._boomerangReserved=true;
+    boneShots.push({x:p.x+55,y:p.y+25,v:13,life:195,phase:0,baseY:p.y+25,returning:false,fetched:null,target});
+  },delay);
+}
+const __v50NearestBoomerangTarget=nearestBoomerangTarget;
+nearestBoomerangTarget=function(){
+  const candidates=[];
+  for(const o of secretPickups){if(!o.got&&!o._boomerangReserved&&o.x>p.x-40&&o.x<p.x+1150)candidates.push({type:o.kind==='earth'?'earth':'secret',obj:o,icon:o.icon||'✨',d:Math.abs(o.x-p.x)})}
+  for(const it of items){if(!it.got&&!it._boomerangReserved&&it.x>p.x-40&&it.x<p.x+1150)candidates.push({type:it.food?'bone':'star',obj:it,icon:it.food?'🦴':'⭐',d:Math.abs(it.x-p.x)})}
+  candidates.sort((a,b)=>{const pa=a.type==='earth'?0:a.type==='secret'?1:a.type==='star'?2:3;const pb=b.type==='earth'?0:b.type==='secret'?1:b.type==='star'?2:3;return pa-pb||a.d-b.d});
+  return candidates[0]||null;
+}
+const __v50FinishBoomerangFetch=finishBoomerangFetch;
+finishBoomerangFetch=function(b){
+  if(b.target?.obj)b.target.obj._boomerangReserved=false;
+  __v50FinishBoomerangFetch(b);
+}
+fireBoneBoomerang=function(){
+  if(paused||system===0&&stage===0)return;
+  if(food<3){showToast('🦴 骨が3必要！',900);return}
+  food-=3;
+  for(let i=0;i<5;i++)launchBoomerangVolleyShot(i*220);
+  showToast('🦴💫 骨ブーメラン 5連射！',1050);
+  syncHUD();
+}
+
+// Make the bone shower substantially denser and slightly longer.
+const __v50SpawnEvents=spawnEvents;
+spawnEvents=function(){
+  __v50SpawnEvents();
+  if(performance.now()<boneRainUntil&&eventPhase%4===0){
+    for(let i=0;i<2;i++)items.push({x:p.x+W*(.08+Math.random()*.9),y:22+Math.random()*Math.max(90,H*.24),r:18+Math.random()*3,got:false,color:'#fff0aa',food:true,fall:true});
+    eventEl.textContent='🦴 ホネホネシャワー ✦ 骨取り放題！';
+  }
+}
+
+const __v50BuySpecial=buySpecial;
+buySpecial=function(kind){
+  if(kind==='boneBoomerang'){
+    fireBoneBoomerang();
+    reward.classList.remove('on');
+    updateShopButtons();
+    return;
+  }
+  if(kind==='cosmic'){
+    if(!cosmicPowerReady){showToast('👽 宇宙パワーがまだ足りない！',950);return}
+    useCosmicPower();
+    reward.classList.remove('on');
+    updateShopButtons();
+    return;
+  }
+  if(kind==='boneRain'){
+    const cost=45;
+    if(!shopUnlocked){showToast('⭐ 30個集めると解禁！',950);return}
+    if(points<cost){showToast(`⭐ あと ${cost-points}個 必要！`,900);return}
+    points-=cost;starTotal=Math.max(0,starTotal-cost);
+    boneRainUntil=performance.now()+9500;
+    reward.classList.remove('on');
+    showToast('🦴🦴🦴 ホネホネシャワー MAX！',1500);
+    syncHUD();
+    return;
+  }
+  __v50BuySpecial(kind);
 }
 
 const feedDogBtn=$('feedDogBtn'),playDogBtn=$('playDogBtn'),sleepDogBtn=$('sleepDogBtn'),rewardCloseBtn=$('rewardClose');
@@ -3659,5 +3777,48 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
  #doghouseInterior .dhBedCss{width:25%!important;min-width:116px!important;height:15%!important;right:7%!important}
  #doghouseInterior .dhDogMover,#doghouseInterior .dhDogMover.ready,#doghouseInterior .dhDogMover.runToBones,#doghouseInterior .dhDogMover.eatBones,#doghouseInterior .dhDogMover.playHop,#doghouseInterior .dhDogMover.playHop2,#doghouseInterior .dhDogMover.runToBed,#doghouseInterior .dhDogMover.jumpBed{font-size:39px!important}
  .endingCard{padding:20px 14px 15px}.endingAction{min-height:45px;font-size:10px}
+}
+</style>
+
+
+<style id="v50-menu-cleanup-css">
+/* Bottom controls: JUMP / LASER / ITEMS only */
+.controls{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;width:min(360px,94vw)!important}
+#big,#cosmicPower{display:none!important}
+#jump{order:1!important}
+#laser{order:2!important;display:flex!important}
+#special{order:3!important;opacity:1!important}
+#jump,#laser,#special{width:100%!important;min-width:0!important;height:72px!important;max-height:72px!important;border-radius:22px!important}
+#jump{border-radius:999px!important}
+#laser{clip-path:polygon(8% 0,100% 0,92% 100%,0 100%)!important;background:linear-gradient(180deg,#effbff,#cfeaff 48%,#79d8ff 100%)!important}
+#special{background:linear-gradient(180deg,#fffdf7,#f2dcff 50%,#a8ebff 100%)!important}
+
+/* Center the item window regardless of viewport height. */
+#reward{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%)!important;
+  width:min(500px,92vw)!important;
+  max-height:min(76vh,620px)!important;
+  overflow:auto!important;
+  box-sizing:border-box!important;
+  padding:42px 14px 16px!important;
+}
+#reward.on{display:block!important}
+.rewardBtns{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+.rewardBtn{min-height:62px!important;height:auto!important;clip-path:none!important;border-radius:15px!important;line-height:1.2!important;word-break:keep-all!important;overflow-wrap:anywhere!important;padding:10px 7px!important}
+.rewardBtn.utilityItem{background:linear-gradient(180deg,#fffdf4,#ffe9bd 52%,#a8ecff)!important;box-shadow:0 0 16px rgba(255,225,120,.3)!important}
+.rewardBtn.cosmicItem{background:linear-gradient(180deg,#fff8ff,#e9d8ff 52%,#a9f0e8)!important;box-shadow:0 0 18px rgba(173,116,255,.32)!important}
+.rewardBtn.cosmicItem:not(:disabled){animation:v50CosmicItemPulse .75s ease-in-out infinite alternate}
+@keyframes v50CosmicItemPulse{from{filter:brightness(1)}to{filter:brightness(1.15);box-shadow:0 0 24px rgba(132,255,190,.45),0 0 18px rgba(173,116,255,.45)}}
+
+@media(max-width:520px){
+ .controls{grid-template-columns:repeat(3,minmax(0,1fr))!important;width:min(350px,96vw)!important;gap:6px!important}
+ #jump,#laser,#special{height:66px!important;max-height:66px!important}
+ #reward{top:50%!important;bottom:auto!important;width:94vw!important;max-height:74vh!important;padding:40px 10px 12px!important}
+ .rewardBtns{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+ .rewardBtn{font-size:9px!important;min-height:58px!important;padding:8px 5px!important}
 }
 </style>
