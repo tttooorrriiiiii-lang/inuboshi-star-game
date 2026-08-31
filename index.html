@@ -882,7 +882,7 @@ const rankByName={
 '🌅 宇宙の夜明け':20,'🔥 再電離の海':21,'📡 宇宙背景放射の壁':22,'🧭 観測可能宇宙の地平線':23,'🫥 観測不能宇宙':24,'♾️ 膨張フロンティア':25,'🐾 犬の星':26
 };
 const systemDistanceRank=systems.map(s=>s.secret?99:s.name==='⚫ ブラックホール'?98:(rankByName[s.name]??0));
-const S=()=>systems[system].stages[stage],groundY=()=>H-(S()?.name?.includes('金星')?210:120),playerRect=()=>({x:p.x,y:p.y,w:p.w,h:p.h}),itemRect=i=>({x:i.x-i.r,y:i.y-i.r,w:i.r*2,h:i.r*2}),rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+const S=()=>systems[system].stages[stage],groundY=()=>H-120,playerRect=()=>({x:p.x,y:p.y,w:p.w,h:p.h}),itemRect=i=>({x:i.x-i.r,y:i.y-i.r,w:i.r*2,h:i.r*2}),rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 const maxHp=()=>Math.min(8,3+Math.floor(companionCount/2));
 function showToast(t,ms=1000){toast.textContent=t;toast.style.display='block';clearTimeout(showToast.t);showToast.t=setTimeout(()=>toast.style.display='none',ms)}
 function syncHUD(){
@@ -1488,7 +1488,7 @@ function drawPlayer(){const now=performance.now(),sx=p.x-camera;const alienGlow=
    ctx.beginPath();ctx.ellipse(0,0,96,25,0,0,Math.PI*2);ctx.stroke();
    ctx.rotate(-now/700);ctx.strokeStyle='rgba(207,124,255,.45)';ctx.beginPath();ctx.ellipse(0,0,72,18,.7,0,Math.PI*2);ctx.stroke();
    ctx.restore()
- }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v78BoneTimeActive&&window.__v78BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
+ }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v79BoneTimeActive&&window.__v79BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
 function spawnEvents(){
  const s=S(),name=s.name,isSun=name.includes('太陽'),isMars=name.includes('火星'),isEarth=system===0&&stage===0,isMoon=name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth)return;
@@ -3307,7 +3307,7 @@ let v67InsuranceGraceUntil=0;
   let v70BoneBanner=document.getElementById('v70BoneBanner');
   if(!v70BoneBanner){v70BoneBanner=document.createElement('div');v70BoneBanner.id='v70BoneBanner';v70BoneBanner.innerHTML='🦴 BONE TIME!! 🦴<small>骨が降ってくる！ レーザーが骨ブーメランに変化！</small>';wrap.appendChild(v70BoneBanner);}
   function v70BoneTimeActive(){return performance.now()<boneRainUntil;}
-  window.__v78BoneTimeActive=v70BoneTimeActive;
+  window.__v79BoneTimeActive=v70BoneTimeActive;
   function v70RenderBoneHud(){
     const active=v70BoneTimeActive();
     v70BoneHud.classList.toggle('active',active);v70BoneHud.classList.toggle('ready',v70BoneReady&&!active);v70BoneHud.style.opacity=(active||v70BoneMeter>=5)?'1':'0';
@@ -3642,24 +3642,24 @@ let v67InsuranceGraceUntil=0;
   }
 })();
 
-/* === v78: depth language / BONE TIME weapon / stronger solar identities === */
+/* === v79: depth language / BONE TIME weapon / stronger solar identities === */
 (function(){
   /* Laser button becomes the actual bone boomerang trigger during BONE TIME. */
-  const v78PrevFireLaser=fireLaser;
+  const v79PrevFireLaser=fireLaser;
   fireLaser=function(){
-    if(window.__v78BoneTimeActive&&window.__v78BoneTimeActive()){
+    if(window.__v79BoneTimeActive&&window.__v79BoneTimeActive()){
       fireBoneBoomerang();
       return;
     }
-    v78PrevFireLaser();
+    v79PrevFireLaser();
   };
 
-  const v78PrevSync=syncHUD;
+  const v79PrevSync=syncHUD;
   syncHUD=function(force){
-    v78PrevSync(force);
-    const bt=!!(window.__v78BoneTimeActive&&window.__v78BoneTimeActive());
+    v79PrevSync(force);
+    const bt=!!(window.__v79BoneTimeActive&&window.__v79BoneTimeActive());
     if(laserBtn){
-      laserBtn.classList.toggle('v78BoneWeapon',bt);
+      laserBtn.classList.toggle('v79BoneWeapon',bt);
       laserBtn.innerHTML=bt
         ? '🦴 骨ブーメラン<small> BONE TIME｜無料</small>'
         : `🔫 レーザー<small id="laserAmmoText">攻撃 ${laserAmmo} / ${laserAmmoMax}</small>`;
@@ -3667,9 +3667,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Give each solar-system body a stronger gameplay signature. */
-  const v78PrevSpawn=spawnEvents;
+  const v79PrevSpawn=spawnEvents;
   spawnEvents=function(){
-    v78PrevSpawn();
+    v79PrevSpawn();
     if(system!==0)return;
     const name=S().name;
     if(name.includes('水星')){
@@ -3700,9 +3700,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Add unmistakable planet-specific scenery over the existing background. */
-  const v78PrevBackground=drawBackground;
+  const v79PrevBackground=drawBackground;
   drawBackground=function(){
-    v78PrevBackground();
+    v79PrevBackground();
     if(system!==0)return;
     const name=S().name, now=performance.now();
     ctx.save();
@@ -3728,12 +3728,12 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v78: morning Earth / rays / Venus floor / meteor direction === */
+/* === v79: morning Earth / rays / Venus floor / meteor direction === */
 (function(){
-  let v78RayUntil=0, v78RayKind='', v78RayY=0, v78RayPhase=0;
+  let v79RayUntil=0, v79RayKind='', v79RayY=0, v79RayPhase=0;
 
   /* Meteor emoji orientation: rotate so the fire trail points downward. */
-  const v78PrevDrawHazard=drawHazard;
+  const v79PrevDrawHazard=drawHazard;
   drawHazard=function(h){
     if(h && h.symbol==='☄️'){
       const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;
@@ -3745,13 +3745,13 @@ let v67InsuranceGraceUntil=0;
       ctx.restore();
       return;
     }
-    v78PrevDrawHazard(h);
+    v79PrevDrawHazard(h);
   };
 
   /* Venus always has a visible solid floor. */
-  const v78PrevGround=drawGround;
+  const v79PrevGround=drawGround;
   drawGround=function(){
-    v78PrevGround();
+    v79PrevGround();
     if(system===0 && S().name.includes('金星')){
       const gy=groundY(), g=ctx.createLinearGradient(0,gy,0,H);
       g.addColorStop(0,'#d89a62');g.addColorStop(1,'#74402b');
@@ -3764,9 +3764,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Morning Earth: sunrise, pale blue sky, soft clouds. */
-  const v78PrevBg=drawBackground;
+  const v79PrevBg=drawBackground;
   drawBackground=function(){
-    v78PrevBg();
+    v79PrevBg();
     if(v63IsOpeningEarth()){
       ctx.save();
       const dawn=ctx.createLinearGradient(0,0,0,H*.72);
@@ -3786,46 +3786,46 @@ let v67InsuranceGraceUntil=0;
 
     /* Active solar/cosmic radiation beam. */
     const now=performance.now();
-    if(now<v78RayUntil){
-      const life=(v78RayUntil-now)/1150;
+    if(now<v79RayUntil){
+      const life=(v79RayUntil-now)/1150;
       ctx.save();ctx.globalCompositeOperation='screen';
-      const isSolar=v78RayKind==='solar';
+      const isSolar=v79RayKind==='solar';
       ctx.globalAlpha=.35+.38*Math.abs(Math.sin(now/80));
       ctx.strokeStyle=isSolar?'#fff19a':'#a8f7ff';
       ctx.shadowColor=isSolar?'#ffd43b':'#69eaff';
       ctx.shadowBlur=24;ctx.lineWidth=5;
-      ctx.beginPath();ctx.moveTo(-80,v78RayY-120);ctx.lineTo(W+80,v78RayY+80);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-80,v79RayY-120);ctx.lineTo(W+80,v79RayY+80);ctx.stroke();
       ctx.lineWidth=1.5;ctx.globalAlpha=.65;
-      for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-50,v78RayY-90+i*14);ctx.lineTo(W+50,v78RayY+65+i*14);ctx.stroke();}
+      for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-50,v79RayY-90+i*14);ctx.lineTo(W+50,v79RayY+65+i*14);ctx.stroke();}
       ctx.restore();
     }
   };
 
   /* More radiation action without turning every second into a popup. */
-  const v78PrevSpawn=spawnEvents;
+  const v79PrevSpawn=spawnEvents;
   spawnEvents=function(){
-    v78PrevSpawn();
+    v79PrevSpawn();
     if(paused||systems[system]?.dream)return;
     const name=S().name, rank=Math.max(0,systemDistanceRank[system]??0);
     const solar = system===0 && (name.includes('太陽')||name.includes('水星')||name.includes('金星'));
     const cosmic = rank>=4;
     const cadence = solar ? 155 : (cosmic ? 330 : 520);
     if(eventPhase%cadence===0){
-      v78RayKind=solar?'solar':'cosmic';
-      v78RayY=90+Math.random()*(H-270);
-      v78RayUntil=performance.now()+1150;
-      v78RayPhase++;
-      if(v78RayPhase%2===0){
-        hazards.push({x:p.x+W+80,y:Math.max(40,v78RayY-25),w:36,h:36,got:false,symbol:'⚡',diagonal:true,vx:-3.2,vy:.45});
+      v79RayKind=solar?'solar':'cosmic';
+      v79RayY=90+Math.random()*(H-270);
+      v79RayUntil=performance.now()+1150;
+      v79RayPhase++;
+      if(v79RayPhase%2===0){
+        hazards.push({x:p.x+W+80,y:Math.max(40,v79RayY-25),w:36,h:36,got:false,symbol:'⚡',diagonal:true,vx:-3.2,vy:.45});
       }
       eventEl.textContent=solar?'☀️ SOLAR RAY — 太陽線が走る！':'⚡ COSMIC RAY — 宇宙線が走る！';
     }
   };
 
   /* Keep the explicit gravity label even after later HUD wrappers run. */
-  const v78PrevSync=syncHUD;
+  const v79PrevSync=syncHUD;
   syncHUD=function(force){
-    v78PrevSync(force);
+    v79PrevSync(force);
     if(system===0&&stage===0)return;
     const s=S();
     const hint=astroInfo?.querySelector('.distanceHint');
@@ -3836,10 +3836,10 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v78: top HUD spacing / Earth foreground / Venus floor / meteor angle === */
+/* === v79: top HUD spacing / Earth foreground / Venus floor / meteor angle === */
 (function(){
   /* Meteor head should point upper-right. */
-  const v78PrevDrawHazard=drawHazard;
+  const v79PrevDrawHazard=drawHazard;
   drawHazard=function(h){
     if(h && h.symbol==='☄️'){
       const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;
@@ -3851,13 +3851,13 @@ let v67InsuranceGraceUntil=0;
       ctx.restore();
       return;
     }
-    v78PrevDrawHazard(h);
+    v79PrevDrawHazard(h);
   };
 
   /* Venus floor: stage can live in a reordered system, so key off the stage name only. */
-  const v78PrevGround=drawGround;
+  const v79PrevGround=drawGround;
   drawGround=function(){
-    v78PrevGround();
+    v79PrevGround();
     if(S().name.includes('金星')){
       const gy=groundY(), g=ctx.createLinearGradient(0,gy,0,H);
       g.addColorStop(0,'#dca06a');g.addColorStop(1,'#713b27');
@@ -3874,9 +3874,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Redraw Earth buildings/trees AFTER sunrise glow, so light stays behind them. */
-  const v78PrevBg=drawBackground;
+  const v79PrevBg=drawBackground;
   drawBackground=function(){
-    v78PrevBg();
+    v79PrevBg();
     if(v63IsOpeningEarth()){
       const gy=groundY();
       ctx.save();
@@ -3900,12 +3900,66 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v78: safe cleanup === */
+/* === v79: safe cleanup === */
 (function(){
   try{
     const boneHud=document.getElementById('v70BoneHud');
     if(boneHud) boneHud.remove();
   }catch(e){}
+})();
+
+
+/* === v79: Venus hard floor guarantee === */
+(function(){
+  const v79PrevUpdate=update;
+  update=function(now,dt){
+    v79PrevUpdate(now,dt);
+    if(S()?.name?.includes('金星')){
+      const floor=H-155;
+      if(p.y+p.h>=floor || !Number.isFinite(p.y)){
+        p.y=floor-p.h;
+        p.vy=0;
+        p.on=true;
+        jumps=0;
+      }
+    }
+  };
+
+  const v79PrevDrawPlayer=drawPlayer;
+  drawPlayer=function(){
+    if(S()?.name?.includes('金星')){
+      const floor=H-155;
+      ctx.save();
+
+      const g=ctx.createLinearGradient(0,floor,0,H);
+      g.addColorStop(0,'#e3aa72');
+      g.addColorStop(.25,'#b96f48');
+      g.addColorStop(1,'#693522');
+      ctx.fillStyle=g;
+      ctx.fillRect(0,floor,W,H-floor+2);
+
+      ctx.fillStyle='rgba(255,235,179,.9)';
+      ctx.fillRect(0,floor,W,5);
+
+      ctx.globalAlpha=.25;
+      ctx.fillStyle='#4f271b';
+      for(let i=0;i<12;i++){
+        const x=((i*103-camera*.42)%(W+130)+W+130)%(W+130)-65;
+        ctx.beginPath();
+        ctx.ellipse(x,floor+22+(i%3)*20,30+(i%3)*7,8+(i%2)*3,0,0,Math.PI*2);
+        ctx.fill();
+      }
+      ctx.globalAlpha=1;
+      ctx.restore();
+
+      if(!Number.isFinite(p.y) || p.y+p.h>floor){
+        p.y=floor-p.h;
+        p.vy=0;
+        p.on=true;
+      }
+    }
+    v79PrevDrawPlayer();
+  };
 })();
 
 /* Initialize the opening after all v63 wrappers are ready. */
@@ -3923,7 +3977,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 #v63RadioScene.reply .v63RadioIcon{animation:none;filter:drop-shadow(0 0 20px #b9fbff)}
 @media(max-width:520px){#v63RadioScene .v65RadioReply{min-width:160px;padding:10px 17px;font-size:11px}}
 </style>
-<style id="v78-final-ui">
+<style id="v79-final-ui">
 /* Controls: three separated buttons with breathing room on phones. */
 .controls{
   position:absolute!important;
@@ -3952,7 +4006,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 #special{order:1!important}
 #laser{order:2!important;display:flex!important;background:linear-gradient(180deg,#f8ffe7,#d9ffad 46%,#91e95d 100%)!important;border-color:#eaffb9!important;box-shadow:0 5px 0 rgba(46,90,24,.78),0 0 18px rgba(151,255,91,.25)!important}
 #jump{order:3!important;border-radius:999px!important}
-#laser.v78BoneWeapon{background:linear-gradient(180deg,#fffbdc,#eaff88 45%,#9bdb3e 100%)!important;color:#24330d!important;box-shadow:0 5px 0 #5e791b,0 0 28px rgba(206,255,91,.7)!important}
+#laser.v79BoneWeapon{background:linear-gradient(180deg,#fffbdc,#eaff88 45%,#9bdb3e 100%)!important;color:#24330d!important;box-shadow:0 5px 0 #5e791b,0 0 28px rgba(206,255,91,.7)!important}
 #v70BoneHud{bottom:104px!important;left:14px!important;z-index:8!important}
 @media(max-width:520px){
  .controls{width:90vw!important;gap:13px!important;bottom:max(18px,env(safe-area-inset-bottom))!important}
@@ -6504,7 +6558,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 
 
 
-<style id="v78-absolute-final-ui">
+<style id="v79-absolute-final-ui">
 /* Three controls: deliberately narrower with real gutters. */
 .controls{
   width:min(374px,88vw)!important;
@@ -6532,7 +6586,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
   box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.52),inset 0 -10px 16px rgba(39,105,24,.20),0 0 0 2px rgba(151,255,105,.28),0 0 19px rgba(117,240,74,.58),0 7px 0 #315b27!important;
 }
 #jump{order:3!important}
-#laser.v78BoneWeapon{
+#laser.v79BoneWeapon{
   background:linear-gradient(180deg,#fffbe5 0%,#efffa6 30%,#b8ef52 68%,#7fc635 100%)!important;
 }
 #v70BoneHud{bottom:108px!important}
@@ -6547,7 +6601,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 
 
 
-<style id="v78-top-hud-spacing">
+<style id="v79-top-hud-spacing">
 /* Top HUD: real gutters, no touching/overlap. */
 #hud{
   top:8px!important;left:8px!important;
@@ -6601,14 +6655,14 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 </style>
 
 
-<style id="v78-bone-radar-cleanup">
+<style id="v79-bone-radar-cleanup">
 #v70BoneHud,[id*="BoneHud"],.boneHud,.bone-radar,[data-bone-radar]{
   display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
 }
 </style>
 
 
-<style id="v78-final-stability-ui">
+<style id="v79-final-stability-ui">
 /* Bone radar is gone completely, including the old top-right route badge. */
 #v70BoneHud,#v63RadioBadge,[id*="BoneHud"],.boneHud,.bone-radar,[data-bone-radar]{
   display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
