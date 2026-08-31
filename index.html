@@ -1366,7 +1366,7 @@ function drawCosmicWarpFX(){
  ctx.restore();
 }
 
-function drawGround(){const s=S(),gy=groundY(),g=ctx.createLinearGradient(0,gy,0,H);if(system===0&&stage===0){ctx.fillStyle='#777f88';ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='#c8ccd1';ctx.fillRect(0,gy,W,42);ctx.fillStyle='#fff';ctx.fillRect(0,gy+40,W,3);return}g.addColorStop(0,s.ground);g.addColorStop(1,s.ground2);ctx.fillStyle=g;ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(0,gy,W,3);for(let i=0;i<16;i++){const sx=((i*173-camera*.7)%(W+200)+W+200)%(W+200)-100;ctx.globalAlpha=.16;ctx.fillStyle=s.ground2;ctx.beginPath();ctx.ellipse(sx,gy+30+(i%4)*22,25+(i%3)*9,8+(i%2)*4,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
+function drawGround(){const s=S(),gy=groundY(),g=ctx.createLinearGradient(0,gy,0,H);if(system===0&&stage===0){ctx.fillStyle='#777f88';ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='#c8ccd1';ctx.fillRect(0,gy,W,42);ctx.fillStyle='#fff';ctx.fillRect(0,gy+40,W,3);return}if(s.name.includes('金星')){const vg=ctx.createLinearGradient(0,gy,0,H);vg.addColorStop(0,'#dca06a');vg.addColorStop(.35,'#b8764e');vg.addColorStop(1,'#6b3928');ctx.fillStyle=vg;ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='rgba(255,226,166,.8)';ctx.fillRect(0,gy,W,5);ctx.save();ctx.globalAlpha=.28;ctx.fillStyle='#5d2f22';for(let i=0;i<14;i++){const sx=((i*101-camera*.55)%(W+140)+W+140)%(W+140)-70;ctx.beginPath();ctx.ellipse(sx,gy+20+(i%4)*18,26+(i%3)*8,8+(i%2)*3,0,0,Math.PI*2);ctx.fill()}ctx.restore();return}g.addColorStop(0,s.ground);g.addColorStop(1,s.ground2);ctx.fillStyle=g;ctx.fillRect(0,gy,W,H-gy);ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(0,gy,W,3);for(let i=0;i<16;i++){const sx=((i*173-camera*.7)%(W+200)+W+200)%(W+200)-100;ctx.globalAlpha=.16;ctx.fillStyle=s.ground2;ctx.beginPath();ctx.ellipse(sx,gy+30+(i%4)*22,25+(i%3)*9,8+(i%2)*4,0,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
 function drawGood(it){const sx=it.x-camera;if(sx<-60||sx>W+60||it.got)return;if(system===BLACK_HOLE_SYSTEM&&!it.food){const glyphs=['✦','◉','⌁','⟡','∞','◌'];const g=glyphs[Math.abs(Math.floor(it.x))%glyphs.length];ctx.save();ctx.translate(sx,it.y);ctx.rotate(performance.now()/900+(it.x%7));ctx.shadowColor=it.color;ctx.shadowBlur=24;ctx.fillStyle=it.color;ctx.font='900 28px system-ui';ctx.fillText(g,-12,10);ctx.restore();return}if(it.food){ctx.save();ctx.font='34px system-ui';ctx.shadowColor=it.inert?'#7cf7ff':'#ffd65a';ctx.shadowBlur=18;ctx.fillText(it.inert?'🔋':'🦴',sx-17,it.y+12);ctx.restore();return}ctx.save();ctx.translate(sx,it.y);ctx.shadowColor=it.color;ctx.shadowBlur=18;ctx.fillStyle=it.color;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?18:8,px=Math.cos(a)*rr,py=Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.restore()}
 function drawHazard(h){const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;ctx.save();ctx.translate(sx+23,h.y+23);ctx.shadowColor=h.symbol==='🔥'?'#ff9b24':'#ff542e';ctx.shadowBlur=h.symbol==='🔥'?24:18;ctx.font=`${h.symbol==='🔥'?46:42}px system-ui`;ctx.fillText(h.symbol,-22,17);ctx.restore()}
 function drawAlien(a){if(a.got)return;const sx=a.x-camera;if(sx<-70||sx>W+70)return;ctx.save();if(a.hitFlash>0){a.hitFlash--;const rr=34+(14-a.hitFlash)*5;ctx.globalAlpha=.65*(a.hitFlash/14);ctx.strokeStyle='#62ff72';ctx.lineWidth=4;ctx.shadowColor='#62ff72';ctx.shadowBlur=30;ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,rr,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.28*(a.hitFlash/14);ctx.fillStyle='#50ff6e';ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,28,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}ctx.shadowColor='#7dff70';ctx.shadowBlur=15;ctx.font='43px system-ui';ctx.fillText('👽',sx,a.y+40);ctx.restore()}
@@ -1488,7 +1488,7 @@ function drawPlayer(){const now=performance.now(),sx=p.x-camera;const alienGlow=
    ctx.beginPath();ctx.ellipse(0,0,96,25,0,0,Math.PI*2);ctx.stroke();
    ctx.rotate(-now/700);ctx.strokeStyle='rgba(207,124,255,.45)';ctx.beginPath();ctx.ellipse(0,0,72,18,.7,0,Math.PI*2);ctx.stroke();
    ctx.restore()
- }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v76BoneTimeActive&&window.__v76BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
+ }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v77BoneTimeActive&&window.__v77BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
 function spawnEvents(){
  const s=S(),name=s.name,isSun=name.includes('太陽'),isMars=name.includes('火星'),isEarth=system===0&&stage===0,isMoon=name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth)return;
@@ -3307,7 +3307,7 @@ let v67InsuranceGraceUntil=0;
   let v70BoneBanner=document.getElementById('v70BoneBanner');
   if(!v70BoneBanner){v70BoneBanner=document.createElement('div');v70BoneBanner.id='v70BoneBanner';v70BoneBanner.innerHTML='🦴 BONE TIME!! 🦴<small>骨が降ってくる！ レーザーが骨ブーメランに変化！</small>';wrap.appendChild(v70BoneBanner);}
   function v70BoneTimeActive(){return performance.now()<boneRainUntil;}
-  window.__v76BoneTimeActive=v70BoneTimeActive;
+  window.__v77BoneTimeActive=v70BoneTimeActive;
   function v70RenderBoneHud(){
     const active=v70BoneTimeActive();
     v70BoneHud.classList.toggle('active',active);v70BoneHud.classList.toggle('ready',v70BoneReady&&!active);v70BoneHud.style.opacity=(active||v70BoneMeter>=5)?'1':'0';
@@ -3642,24 +3642,24 @@ let v67InsuranceGraceUntil=0;
   }
 })();
 
-/* === v76: depth language / BONE TIME weapon / stronger solar identities === */
+/* === v77: depth language / BONE TIME weapon / stronger solar identities === */
 (function(){
   /* Laser button becomes the actual bone boomerang trigger during BONE TIME. */
-  const v76PrevFireLaser=fireLaser;
+  const v77PrevFireLaser=fireLaser;
   fireLaser=function(){
-    if(window.__v76BoneTimeActive&&window.__v76BoneTimeActive()){
+    if(window.__v77BoneTimeActive&&window.__v77BoneTimeActive()){
       fireBoneBoomerang();
       return;
     }
-    v76PrevFireLaser();
+    v77PrevFireLaser();
   };
 
-  const v76PrevSync=syncHUD;
+  const v77PrevSync=syncHUD;
   syncHUD=function(force){
-    v76PrevSync(force);
-    const bt=!!(window.__v76BoneTimeActive&&window.__v76BoneTimeActive());
+    v77PrevSync(force);
+    const bt=!!(window.__v77BoneTimeActive&&window.__v77BoneTimeActive());
     if(laserBtn){
-      laserBtn.classList.toggle('v76BoneWeapon',bt);
+      laserBtn.classList.toggle('v77BoneWeapon',bt);
       laserBtn.innerHTML=bt
         ? '🦴 骨ブーメラン<small> BONE TIME｜無料</small>'
         : `🔫 レーザー<small id="laserAmmoText">攻撃 ${laserAmmo} / ${laserAmmoMax}</small>`;
@@ -3667,9 +3667,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Give each solar-system body a stronger gameplay signature. */
-  const v76PrevSpawn=spawnEvents;
+  const v77PrevSpawn=spawnEvents;
   spawnEvents=function(){
-    v76PrevSpawn();
+    v77PrevSpawn();
     if(system!==0)return;
     const name=S().name;
     if(name.includes('水星')){
@@ -3700,9 +3700,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Add unmistakable planet-specific scenery over the existing background. */
-  const v76PrevBackground=drawBackground;
+  const v77PrevBackground=drawBackground;
   drawBackground=function(){
-    v76PrevBackground();
+    v77PrevBackground();
     if(system!==0)return;
     const name=S().name, now=performance.now();
     ctx.save();
@@ -3728,12 +3728,12 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v76: morning Earth / rays / Venus floor / meteor direction === */
+/* === v77: morning Earth / rays / Venus floor / meteor direction === */
 (function(){
-  let v76RayUntil=0, v76RayKind='', v76RayY=0, v76RayPhase=0;
+  let v77RayUntil=0, v77RayKind='', v77RayY=0, v77RayPhase=0;
 
   /* Meteor emoji orientation: rotate so the fire trail points downward. */
-  const v76PrevDrawHazard=drawHazard;
+  const v77PrevDrawHazard=drawHazard;
   drawHazard=function(h){
     if(h && h.symbol==='☄️'){
       const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;
@@ -3745,13 +3745,13 @@ let v67InsuranceGraceUntil=0;
       ctx.restore();
       return;
     }
-    v76PrevDrawHazard(h);
+    v77PrevDrawHazard(h);
   };
 
   /* Venus always has a visible solid floor. */
-  const v76PrevGround=drawGround;
+  const v77PrevGround=drawGround;
   drawGround=function(){
-    v76PrevGround();
+    v77PrevGround();
     if(system===0 && S().name.includes('金星')){
       const gy=groundY(), g=ctx.createLinearGradient(0,gy,0,H);
       g.addColorStop(0,'#d89a62');g.addColorStop(1,'#74402b');
@@ -3764,9 +3764,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Morning Earth: sunrise, pale blue sky, soft clouds. */
-  const v76PrevBg=drawBackground;
+  const v77PrevBg=drawBackground;
   drawBackground=function(){
-    v76PrevBg();
+    v77PrevBg();
     if(v63IsOpeningEarth()){
       ctx.save();
       const dawn=ctx.createLinearGradient(0,0,0,H*.72);
@@ -3786,46 +3786,46 @@ let v67InsuranceGraceUntil=0;
 
     /* Active solar/cosmic radiation beam. */
     const now=performance.now();
-    if(now<v76RayUntil){
-      const life=(v76RayUntil-now)/1150;
+    if(now<v77RayUntil){
+      const life=(v77RayUntil-now)/1150;
       ctx.save();ctx.globalCompositeOperation='screen';
-      const isSolar=v76RayKind==='solar';
+      const isSolar=v77RayKind==='solar';
       ctx.globalAlpha=.35+.38*Math.abs(Math.sin(now/80));
       ctx.strokeStyle=isSolar?'#fff19a':'#a8f7ff';
       ctx.shadowColor=isSolar?'#ffd43b':'#69eaff';
       ctx.shadowBlur=24;ctx.lineWidth=5;
-      ctx.beginPath();ctx.moveTo(-80,v76RayY-120);ctx.lineTo(W+80,v76RayY+80);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-80,v77RayY-120);ctx.lineTo(W+80,v77RayY+80);ctx.stroke();
       ctx.lineWidth=1.5;ctx.globalAlpha=.65;
-      for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-50,v76RayY-90+i*14);ctx.lineTo(W+50,v76RayY+65+i*14);ctx.stroke();}
+      for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-50,v77RayY-90+i*14);ctx.lineTo(W+50,v77RayY+65+i*14);ctx.stroke();}
       ctx.restore();
     }
   };
 
   /* More radiation action without turning every second into a popup. */
-  const v76PrevSpawn=spawnEvents;
+  const v77PrevSpawn=spawnEvents;
   spawnEvents=function(){
-    v76PrevSpawn();
+    v77PrevSpawn();
     if(paused||systems[system]?.dream)return;
     const name=S().name, rank=Math.max(0,systemDistanceRank[system]??0);
     const solar = system===0 && (name.includes('太陽')||name.includes('水星')||name.includes('金星'));
     const cosmic = rank>=4;
     const cadence = solar ? 155 : (cosmic ? 330 : 520);
     if(eventPhase%cadence===0){
-      v76RayKind=solar?'solar':'cosmic';
-      v76RayY=90+Math.random()*(H-270);
-      v76RayUntil=performance.now()+1150;
-      v76RayPhase++;
-      if(v76RayPhase%2===0){
-        hazards.push({x:p.x+W+80,y:Math.max(40,v76RayY-25),w:36,h:36,got:false,symbol:'⚡',diagonal:true,vx:-3.2,vy:.45});
+      v77RayKind=solar?'solar':'cosmic';
+      v77RayY=90+Math.random()*(H-270);
+      v77RayUntil=performance.now()+1150;
+      v77RayPhase++;
+      if(v77RayPhase%2===0){
+        hazards.push({x:p.x+W+80,y:Math.max(40,v77RayY-25),w:36,h:36,got:false,symbol:'⚡',diagonal:true,vx:-3.2,vy:.45});
       }
       eventEl.textContent=solar?'☀️ SOLAR RAY — 太陽線が走る！':'⚡ COSMIC RAY — 宇宙線が走る！';
     }
   };
 
   /* Keep the explicit gravity label even after later HUD wrappers run. */
-  const v76PrevSync=syncHUD;
+  const v77PrevSync=syncHUD;
   syncHUD=function(force){
-    v76PrevSync(force);
+    v77PrevSync(force);
     if(system===0&&stage===0)return;
     const s=S();
     const hint=astroInfo?.querySelector('.distanceHint');
@@ -3836,10 +3836,10 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v76: top HUD spacing / Earth foreground / Venus floor / meteor angle === */
+/* === v77: top HUD spacing / Earth foreground / Venus floor / meteor angle === */
 (function(){
   /* Meteor head should point upper-right. */
-  const v76PrevDrawHazard=drawHazard;
+  const v77PrevDrawHazard=drawHazard;
   drawHazard=function(h){
     if(h && h.symbol==='☄️'){
       const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;
@@ -3851,13 +3851,13 @@ let v67InsuranceGraceUntil=0;
       ctx.restore();
       return;
     }
-    v76PrevDrawHazard(h);
+    v77PrevDrawHazard(h);
   };
 
   /* Venus floor: stage can live in a reordered system, so key off the stage name only. */
-  const v76PrevGround=drawGround;
+  const v77PrevGround=drawGround;
   drawGround=function(){
-    v76PrevGround();
+    v77PrevGround();
     if(S().name.includes('金星')){
       const gy=groundY(), g=ctx.createLinearGradient(0,gy,0,H);
       g.addColorStop(0,'#dca06a');g.addColorStop(1,'#713b27');
@@ -3874,9 +3874,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Redraw Earth buildings/trees AFTER sunrise glow, so light stays behind them. */
-  const v76PrevBg=drawBackground;
+  const v77PrevBg=drawBackground;
   drawBackground=function(){
-    v76PrevBg();
+    v77PrevBg();
     if(v63IsOpeningEarth()){
       const gy=groundY();
       ctx.save();
@@ -3900,49 +3900,12 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v76: Venus final-ground pass / remove Bone Radar HUD === */
+/* === v77: safe cleanup === */
 (function(){
-  /* Remove Bone Radar HUD entirely. */
   try{
     const boneHud=document.getElementById('v70BoneHud');
     if(boneHud) boneHud.remove();
   }catch(e){}
-
-  /* Guarantee Venus ground in the final scene pass, after background/effects. */
-  const v76PrevDraw=draw;
-  draw=function(){
-    v76PrevDraw();
-    if(S().name.includes('金星')){
-      const gy=groundY();
-      ctx.save();
-
-      /* Final opaque terrain strip so no later space/gas layer can erase it. */
-      const g=ctx.createLinearGradient(0,gy,0,H);
-      g.addColorStop(0,'#d9a06c');
-      g.addColorStop(.3,'#b9784f');
-      g.addColorStop(1,'#6d3b29');
-      ctx.fillStyle=g;
-      ctx.fillRect(0,gy,W,H-gy);
-
-      /* Surface ridge */
-      ctx.fillStyle='#f2c08a';
-      ctx.fillRect(0,gy,W,5);
-
-      /* Rocky texture */
-      ctx.globalAlpha=.28;
-      ctx.fillStyle='#5d2e20';
-      for(let i=0;i<14;i++){
-        const x=((i*97-camera*.55)%(W+120)+W+120)%(W+120)-60;
-        ctx.beginPath();
-        ctx.ellipse(x,gy+18+(i%4)*17,24+(i%3)*8,7+(i%2)*3,0,0,Math.PI*2);
-        ctx.fill();
-      }
-      ctx.restore();
-
-      /* Redraw dog and active objects above the forced terrain if needed. */
-      if(typeof drawPlayer==='function') drawPlayer();
-    }
-  };
 })();
 
 /* Initialize the opening after all v63 wrappers are ready. */
@@ -3960,7 +3923,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 #v63RadioScene.reply .v63RadioIcon{animation:none;filter:drop-shadow(0 0 20px #b9fbff)}
 @media(max-width:520px){#v63RadioScene .v65RadioReply{min-width:160px;padding:10px 17px;font-size:11px}}
 </style>
-<style id="v76-final-ui">
+<style id="v77-final-ui">
 /* Controls: three separated buttons with breathing room on phones. */
 .controls{
   position:absolute!important;
@@ -3989,7 +3952,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 #special{order:1!important}
 #laser{order:2!important;display:flex!important;background:linear-gradient(180deg,#f8ffe7,#d9ffad 46%,#91e95d 100%)!important;border-color:#eaffb9!important;box-shadow:0 5px 0 rgba(46,90,24,.78),0 0 18px rgba(151,255,91,.25)!important}
 #jump{order:3!important;border-radius:999px!important}
-#laser.v76BoneWeapon{background:linear-gradient(180deg,#fffbdc,#eaff88 45%,#9bdb3e 100%)!important;color:#24330d!important;box-shadow:0 5px 0 #5e791b,0 0 28px rgba(206,255,91,.7)!important}
+#laser.v77BoneWeapon{background:linear-gradient(180deg,#fffbdc,#eaff88 45%,#9bdb3e 100%)!important;color:#24330d!important;box-shadow:0 5px 0 #5e791b,0 0 28px rgba(206,255,91,.7)!important}
 #v70BoneHud{bottom:104px!important;left:14px!important;z-index:8!important}
 @media(max-width:520px){
  .controls{width:90vw!important;gap:13px!important;bottom:max(18px,env(safe-area-inset-bottom))!important}
@@ -6541,7 +6504,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 
 
 
-<style id="v76-absolute-final-ui">
+<style id="v77-absolute-final-ui">
 /* Three controls: deliberately narrower with real gutters. */
 .controls{
   width:min(374px,88vw)!important;
@@ -6569,7 +6532,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
   box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.52),inset 0 -10px 16px rgba(39,105,24,.20),0 0 0 2px rgba(151,255,105,.28),0 0 19px rgba(117,240,74,.58),0 7px 0 #315b27!important;
 }
 #jump{order:3!important}
-#laser.v76BoneWeapon{
+#laser.v77BoneWeapon{
   background:linear-gradient(180deg,#fffbe5 0%,#efffa6 30%,#b8ef52 68%,#7fc635 100%)!important;
 }
 #v70BoneHud{bottom:108px!important}
@@ -6584,7 +6547,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 
 
 
-<style id="v76-top-hud-spacing">
+<style id="v77-top-hud-spacing">
 /* Top HUD: real gutters, no touching/overlap. */
 #hud{
   top:8px!important;left:8px!important;
@@ -6638,15 +6601,8 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 </style>
 
 
-<style id="v76-final-cleanup">
-#v70BoneHud,
-[id*="BoneHud"],
-.boneHud,
-.bone-radar,
-[data-bone-radar]{
-  display:none!important;
-  visibility:hidden!important;
-  opacity:0!important;
-  pointer-events:none!important;
+<style id="v77-bone-radar-cleanup">
+#v70BoneHud,[id*="BoneHud"],.boneHud,.bone-radar,[data-bone-radar]{
+  display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
 }
 </style>
