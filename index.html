@@ -533,6 +533,16 @@ canvas{display:block;width:100%;height:100%}
 }
 </style>
 
+
+<style id="v63-opening-story-style">
+#v63RadioBadge{display:none;position:absolute;z-index:52;right:10px;top:158px;min-width:142px;padding:7px 10px;border-radius:13px;background:linear-gradient(180deg,rgba(16,28,40,.90),rgba(6,12,24,.92));border:1px solid rgba(117,238,255,.35);box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.1);color:#c9fbff;font:900 10px/1.2 system-ui;letter-spacing:.04em;text-align:center;pointer-events:none}
+#v63RadioBadge.on{display:block}#v63RadioBadge small{display:block;margin-top:3px;font-size:8px;letter-spacing:.07em;color:#8eaeba}#v63RadioBadge.max{color:#fff;border-color:#fff;box-shadow:0 0 24px rgba(255,255,255,.42),0 8px 24px rgba(0,0,0,.3);animation:v63SignalPulse .8s ease-in-out infinite alternate}
+#v63RadioScene{display:none;position:absolute;z-index:1320;inset:0;place-items:center;background:radial-gradient(circle at 50% 50%,rgba(12,35,44,.70),rgba(2,5,12,.90));backdrop-filter:blur(5px);padding:18px}#v63RadioScene.on{display:grid;animation:v63SceneIn .24s ease-out both}
+.v63RadioCard{width:min(430px,88vw);text-align:center;padding:28px 22px 23px;border-radius:25px;background:linear-gradient(180deg,rgba(17,29,42,.96),rgba(5,9,20,.98));border:1px solid rgba(119,239,255,.32);box-shadow:0 24px 90px rgba(0,0,0,.58),0 0 42px rgba(69,218,255,.12);color:#e8fcff}.v63RadioIcon{font-size:72px;filter:drop-shadow(0 0 18px #61efff);animation:v63RadioShake .14s steps(2,end) infinite}.v63RadioKicker{margin-top:7px;font-size:11px;font-weight:1000;letter-spacing:.18em;color:#6eeeff}.v63RadioNoise{margin-top:14px;font:800 11px ui-monospace,monospace;letter-spacing:.13em;color:#7899a6}.v63RadioVoice{opacity:.18;margin-top:10px;font-size:18px;font-weight:900;line-height:1.8;transition:opacity .55s ease;text-shadow:0 0 14px rgba(255,255,255,.45)}#v63RadioScene.heard .v63RadioVoice{opacity:1}.v63RadioMeta{margin-top:13px;font:700 9px ui-monospace,monospace;letter-spacing:.08em;color:#75909b}
+@keyframes v63SceneIn{from{opacity:0}to{opacity:1}}@keyframes v63RadioShake{from{transform:translateX(-1px) rotate(-1deg)}to{transform:translateX(1px) rotate(1deg)}}@keyframes v63SignalPulse{to{transform:scale(1.025);filter:brightness(1.18)}}
+@media(max-width:520px){#v63RadioBadge{right:7px;top:154px;min-width:112px;font-size:8px;padding:6px 7px}#v63RadioBadge small{font-size:7px}.v63RadioCard{padding:22px 16px}.v63RadioIcon{font-size:62px}.v63RadioVoice{font-size:16px}}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -626,7 +636,115 @@ canvas{display:block;width:100%;height:100%}
 (()=>{
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),wrap=$('wrap'),locationEl=$('location'),levelEl=$('level'),pointsEl=$('points'),hpEl=$('hp'),foodEl=$('food'),alienHitEl=$('alienHitCount'),powerText=$('powerText'),meterFill=$('meterFill'),missionEl=$('mission'),eventEl=$('event'),astroInfo=$('astroInfo'),toast=$('toast'),bigBtn=$('big'),specialBtn=$('special'),chipText=$('chipText'),jumpBtn=$('jump'),laserBtn=$('laser'),laserAmmoText=$('laserAmmoText'),cosmicBtn=$('cosmicPower'),cosmicPowerText=$('cosmicPowerText'),bigBanner=$('bigBanner'),reward=$('reward'),sparkBadge=$('sparkBadge'),guardFlash=$('guardFlash'),comm=$('comm'),commText=$('commText'),trans=$('transition'),transTitle=$('transitionTitle'),nextEl=$('next'),subEl=$('sub'),warpDog=$('warpDog'),secretBadge=$('secretBadge'),gameOverEl=$('gameOver'),criticalEl=$('critical'),doghouseInterior=$('doghouseInterior'),debugHomeBtn=$('debugHomeBtn'),convertStarsBtn=$('convertStarsBtn');
 let W=0,H=0,DPR=1;function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;canvas.width=W*DPR;canvas.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
-const systems=[{"name":"☀️ 太陽系","distance":"太陽系内","desc":"地球と太陽を含む惑星系","theme":"milky","chapter":"SOLAR SYSTEM","stages":[{"name":"🌍 地球","desc":"ここが出発点。いつもの街とロケット","goodColor":"#59d0ff","sky":["#03101d","#144065"],"ground":"#5fae7c","ground2":"#34664a","planet":"#d9dde6","event":"SATELLITE RUSH","eventText":"🛰️ 衛星がたくさん飛ぶ！","gravity":0.56,"jump":15.6,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 1.00 AU","gravityActual":1.0,"gravityLabel":"1.00G","sizeText":"半径 地球=1.00","sizeLevel":3,"visualSize":0.55,"feature":"earth","bodyKind":"planet","fact":"太陽系の3番目の惑星"},{"name":"🌙 月","desc":"地球の衛星・最初の遠征","goodColor":"#ffe66b","sky":["#050615","#131536"],"ground":"#b7b7c2","ground2":"#777682","planet":"#cfd1dc","event":"LOW GRAVITY","eventText":"🪽 月面は低重力。大ジャンプ！","gravity":0.32,"jump":17.7,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"🌍 地球から 約38.4万 km","gravityActual":0.165,"gravityLabel":"0.17G","sizeText":"半径 地球の0.27倍","sizeLevel":2,"visualSize":0.42,"feature":"moon","bodyKind":"moon","fact":"地球の約1/6の重力"},{"name":"☿ 水星","desc":"太陽に最も近い岩石惑星","goodColor":"#d1c0a6","sky":["#0a0605","#2d1811"],"ground":"#9d907f","ground2":"#5b544c","planet":"#b08d6f","event":"SOLAR FLARE","eventText":"☀️ 太陽フレアが近い！","gravity":0.42,"jump":16.8,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 0.39 AU","gravityActual":0.378,"gravityLabel":"0.38G","sizeText":"半径 地球の0.38倍","sizeLevel":2,"visualSize":0.48,"feature":"mercury","bodyKind":"planet","fact":"昼夜の温度差が極端"},{"name":"♀ 金星","desc":"厚い雲に覆われた灼熱惑星","goodColor":"#ffb45f","sky":["#160807","#552515"],"ground":"#c28352","ground2":"#74442f","planet":"#d9904f","event":"COSMIC GAS","eventText":"☁️ 厚い雲で視界がモワ〜！","gravity":0.54,"jump":15.7,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 0.72 AU","gravityActual":0.905,"gravityLabel":"0.90G","sizeText":"半径 地球の0.95倍","sizeLevel":3,"visualSize":0.58,"feature":"venus","bodyKind":"planet","fact":"大きさと重力は地球にかなり近い"},{"name":"🔴 火星","desc":"赤い砂と低重力の惑星","goodColor":"#ff6b4b","sky":["#120504","#4c1710"],"ground":"#bd684e","ground2":"#73392d","planet":"#d55a43","event":"METEOR SHOWER","eventText":"☄️ 低重力＋隕石雨！","gravity":0.42,"jump":17.0,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 1.52 AU","gravityActual":0.379,"gravityLabel":"0.38G","sizeText":"半径 地球の0.53倍","sizeLevel":2,"visualSize":0.52,"feature":"mars","bodyKind":"planet","fact":"表面重力は地球の約38%"},{"name":"🟠 木星","desc":"太陽系最大の巨大ガス惑星","goodColor":"#f1c18a","sky":["#100806","#3b2116"],"ground":"#b78967","ground2":"#6d4a36","planet":"#cf9b72","event":"GIANT STORM","eventText":"🌪️ 強重力＋巨大嵐に押される！","gravity":0.69,"jump":14.8,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 5.20 AU","gravityActual":2.53,"gravityLabel":"2.53G","sizeText":"半径 地球の約11倍","sizeLevel":6,"visualSize":1.08,"feature":"jupiter","bodyKind":"gas","fact":"固い地面はなく、1気圧面相当の重力"},{"name":"🪐 土星","desc":"巨大なリングを持つガス惑星","goodColor":"#f1db96","sky":["#09080d","#29243a"],"ground":"#c2b283","ground2":"#776a4f","planet":"#dfc785","event":"RING RUSH","eventText":"💫 リングに沿って星が大量出現！","gravity":0.57,"jump":16.0,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 9.58 AU","gravityActual":1.065,"gravityLabel":"1.07G","sizeText":"半径 地球の約9.1倍","sizeLevel":6,"visualSize":1.02,"feature":"saturn","bodyKind":"gas","fact":"巨大リングがステージを横断"},{"name":"🩵 天王星","desc":"横倒しに回転する氷巨大惑星","goodColor":"#9fe9e7","sky":["#020d12","#12343a"],"ground":"#8bb7b5","ground2":"#4f7372","planet":"#8ad6d5","event":"ICE WIND","eventText":"🧊 横向きの氷風でジャンプが流される","gravity":0.54,"jump":16.4,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 19.2 AU","gravityActual":0.905,"gravityLabel":"0.90G","sizeText":"半径 地球の約4.0倍","sizeLevel":5,"visualSize":0.82,"feature":"uranus","bodyKind":"ice","fact":"自転軸がほぼ横倒し"},{"name":"🔵 海王星","desc":"猛烈な風が吹く青い氷巨大惑星","goodColor":"#6d8fff","sky":["#020516","#12255c"],"ground":"#586fa7","ground2":"#344572","planet":"#4168d6","event":"SUPER WIND","eventText":"💨 超高速の風で犬星くんも加速！","gravity":0.58,"jump":16.1,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"☀️ 太陽から 30.1 AU","gravityActual":1.14,"gravityLabel":"1.14G","sizeText":"半径 地球の約3.9倍","sizeLevel":5,"visualSize":0.8,"feature":"neptune","bodyKind":"ice","fact":"太陽系でも特に強い風"},{"name":"☀️ 太陽","desc":"太陽系の中心にある恒星","goodColor":"#fff08a","sky":["#2b0500","#ff4a00"],"ground":"#ff9f1c","ground2":"#8f1d00","planet":"#ffdf33","event":"SOLAR FLARE","eventText":"🔥 強重力＋灼熱フレア地帯！","gravity":0.74,"jump":14.2,"address":["☀️ 太陽系","🌌 天の川銀河"],"distanceDisplay":"🌍 地球から 約1.50億 km / 1 AU","gravityActual":28.0,"gravityLabel":"約28G","sizeText":"半径 地球の約109倍","sizeLevel":7,"visualSize":1.55,"feature":"sun","bodyKind":"star","fact":"実重力は強烈なのでゲームでは上限圧縮"}]},{"name":"🌌 天の川銀河","distance":"地球から数〜約700光年","desc":"太陽系の外、同じ銀河の恒星へ","theme":"milky","chapter":"MILKY WAY","stages":[{"name":"⭐ シリウス","desc":"おおいぬ座の青白い恒星","goodColor":"#dff6ff","sky":["#020714","#173958"],"ground":"#7899b1","ground2":"#38546b","planet":"#eefbff","event":"STAR SHOWER","eventText":"✨ 強い光のスターシャワー！","gravity":0.71,"jump":14.6,"address":["🌌 天の川銀河","♈ おおいぬ座"],"distanceDisplay":"🌍 地球から 約8.6光年","gravityActual":19.7,"gravityLabel":"表面 約20G","sizeText":"半径 太陽の1.71倍","sizeLevel":7,"visualSize":1.62,"feature":"sirius","bodyKind":"star","fact":"質量約2太陽・小さく密度が高い"},{"name":"💠 ベガ","desc":"こと座の青白い高速回転星","goodColor":"#bfe8ff","sky":["#020716","#153d70"],"ground":"#597fa5","ground2":"#304966","planet":"#d8f4ff","event":"AURORA WAVE","eventText":"💠 青白いオーロラが空を走る！","gravity":0.68,"jump":14.9,"address":["🌌 天の川銀河","🎼 こと座"],"distanceDisplay":"🌍 地球から 約25光年","gravityActual":8.0,"gravityLabel":"表面 約6〜10G","sizeText":"半径 太陽の約2.7倍","sizeLevel":7,"visualSize":1.72,"feature":"vega","bodyKind":"star","fact":"高速回転で極と赤道の重力が違う"},{"name":"🌟 ポラリス","desc":"こぐま座のケフェイド変光星・現在の北極星","goodColor":"#fff5c4","sky":["#050817","#26365b"],"ground":"#8e93a7","ground2":"#4d5266","planet":"#fff4b5","event":"STAR SHOWER","eventText":"🌟 明るさがゆっくり脈動する低重力星","gravity":0.3,"jump":18.2,"address":["🌌 天の川銀河","🧭 こぐま座"],"distanceDisplay":"🌍 地球から 約430光年","gravityActual":0.11,"gravityLabel":"表面 約0.11G","sizeText":"半径 太陽の約37.5倍","sizeLevel":9,"visualSize":2.15,"feature":"polaris","bodyKind":"star","fact":"巨大だが膨らんでいるので表面重力は弱い"},{"name":"🔴 ベテルギウス","desc":"オリオン座の赤色超巨星","goodColor":"#ff8b64","sky":["#190603","#5f190d"],"ground":"#9d513e","ground2":"#572b22","planet":"#ff6b47","event":"SOLAR FLARE","eventText":"🔥 超巨大なのにフワッ！ 赤い熱波とフレア","gravity":0.24,"jump":19.0,"address":["🌌 天の川銀河","🏹 オリオン座"],"distanceDisplay":"🌍 地球から 約700光年","gravityActual":0.001,"gravityLabel":"表面 ≈0.001G","sizeText":"半径 太陽の約700倍","sizeLevel":10,"visualSize":3.35,"feature":"betelgeuse","bodyKind":"star","fact":"NASA: 太陽の約700倍・質量約15倍"}]},{"name":"🫧 局所銀河群","distance":"約16万〜250万光年","desc":"天の川を出て近隣銀河へ","theme":"andromeda","chapter":"LOCAL GROUP","stages":[{"name":"💙 R136a1","desc":"大マゼラン雲・タランチュラ星雲の超大質量星","goodColor":"#9de9ff","sky":["#03101a","#124a69"],"ground":"#3c7180","ground2":"#1d3745","planet":"#a7efff","event":"SOLAR FLARE","eventText":"💙 超高温の恒星風が吹き荒れる！","gravity":0.66,"jump":15.0,"address":["🫧 局所銀河群","☁️ 大マゼラン雲"],"distanceDisplay":"🌍 地球から 約16.3万光年","gravityActual":3.9,"gravityLabel":"表面 推定約4G","sizeText":"半径 太陽の約39倍（推定）","sizeLevel":9,"visualSize":2.25,"feature":"r136","bodyKind":"star","fact":"非常に大質量。観測値にはモデル依存あり"},{"name":"✨ アンドロメダ銀河","desc":"天の川に近い巨大渦巻銀河","goodColor":"#d397ff","sky":["#090315","#3b1f5c"],"ground":"#9a7fad","ground2":"#5f4b72","planet":"#9b67d2","event":"CRYSTAL RAIN","eventText":"✨ 銀河全体が背景いっぱいに広がる！","gravity":0.48,"jump":17.0,"address":["🫧 局所銀河群","✨ M31"],"distanceDisplay":"🌍 地球から 約250万光年","gravityActual":null,"gravityLabel":"表面重力なし","sizeText":"銀河スケール","sizeLevel":10,"visualSize":2.3,"feature":"andromeda","bodyKind":"galaxy","fact":"ここで「天の川を出た」感を強調"}]},{"name":"🌌 銀河間宇宙","distance":"約2900万〜3100万光年","desc":"局所銀河群の外へ","theme":"whirlpool","chapter":"INTERGALACTIC","stages":[{"name":"🌀 子持ち銀河 M51","desc":"伴銀河を持つ美しい渦巻銀河","goodColor":"#ff8bd8","sky":["#16051a","#5c164e"],"ground":"#9a507e","ground2":"#52283e","planet":"#ff77c8","event":"GRAVITY WELL","eventText":"🌀 背景そのものが渦巻いて空間が曲がる！","gravity":0.49,"jump":17.2,"address":["🌌 銀河間宇宙","🌀 M51"],"distanceDisplay":"🌍 地球から 約3100万光年","gravityActual":null,"gravityLabel":"表面重力なし","sizeText":"銀河スケール","sizeLevel":10,"visualSize":2.5,"feature":"m51","bodyKind":"galaxy","fact":"渦巻構造をステージ全体で表現"},{"name":"👒 ソンブレロ銀河","desc":"暗い塵の帯が目立つ銀河","goodColor":"#ffc47b","sky":["#120905","#4e2e16"],"ground":"#a47145","ground2":"#58391f","planet":"#e29b50","event":"COSMIC GAS","eventText":"👒 暗黒塵で視界が欠ける！","gravity":0.5,"jump":17.0,"address":["🌌 銀河間宇宙","👒 M104"],"distanceDisplay":"🌍 地球から 約2900万光年","gravityActual":null,"gravityLabel":"表面重力なし","sizeText":"銀河スケール","sizeLevel":10,"visualSize":2.4,"feature":"sombrero","bodyKind":"galaxy","fact":"中央の明るいバルジと暗い塵の帯"}]},{"name":"🔭 超遠方宇宙","distance":"約94億〜129億光年","desc":"重力レンズでしか届かない星の領域","theme":"andromeda","chapter":"DEEP UNIVERSE","stages":[{"name":"💙 イカロス","desc":"重力レンズで観測された超遠方の星","goodColor":"#c9efff","sky":["#01030d","#071d43"],"ground":"#667b9e","ground2":"#26344f","planet":"#d7f3ff","event":"GRAVITY WELL","eventText":"🔭 重力レンズで画面がぐにゃっと歪む！","gravity":0.46,"jump":17.8,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🌍 地球から 約94億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ サイズ推定困難","sizeLevel":5,"visualSize":0.62,"feature":"icarus","bodyKind":"lensedStar","fact":"Hubbleが重力レンズで観測"},{"name":"🦋 モスラ","desc":"遠方宇宙の重力レンズ星候補","goodColor":"#ffe2a6","sky":["#08020e","#261040"],"ground":"#837198","ground2":"#302642","planet":"#ffd9a1","event":"AURORA WAVE","eventText":"🦋 光が羽のように二重・多重に分裂！","gravity":0.46,"jump":17.9,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🌍 地球から 約105億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ サイズ推定困難","sizeLevel":5,"visualSize":0.64,"feature":"mothra","bodyKind":"lensedStar","fact":"レンズ増光をゲーム演出に利用"},{"name":"🦖 ゴジラ","desc":"極端に明るく見える遠方星候補","goodColor":"#fff08a","sky":["#050205","#33120a"],"ground":"#8e6f4f","ground2":"#3e2b20","planet":"#ffe86d","event":"SOLAR FLARE","eventText":"🦖 光量が暴走！ フラッシュと熱波！","gravity":0.48,"jump":17.7,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🌍 地球から 約109億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ レンズモデル依存","sizeLevel":7,"visualSize":0.78,"feature":"godzilla","bodyKind":"lensedStar","fact":"見かけの明るさは重力レンズで極端に増幅"},{"name":"✨ エアレンデル","desc":"JWSTでも追観測された超遠方の大質量B型星","goodColor":"#fff8df","sky":["#01030b","#0b1438"],"ground":"#8ea5c7","ground2":"#364763","planet":"#fff6dd","event":"STAR SHOWER","eventText":"✨ 129億年前の光。到達演出MAX！","gravity":0.45,"jump":18.0,"address":["🔭 超遠方宇宙","🌌 観測可能宇宙","🌅 Sunrise Arc"],"distanceDisplay":"🌍 地球から 約129億光年","gravityActual":null,"gravityLabel":"❓ 推定困難","sizeText":"❓ 空間分解できず未確定","sizeLevel":6,"visualSize":0.7,"feature":"earendel","bodyKind":"lensedStar","fact":"NASA/JWST: 大質量B型星・重力レンズで検出"}]},{"name":"🌅 初期宇宙","distance":"宇宙誕生後の初期時代〜観測限界","desc":"星ではなく宇宙の歴史そのものを進む","theme":"cloud","chapter":"COSMIC HISTORY","postEarendel":true,"stages":[{"name":"🌅 COSMIC DAWN","desc":"最初期の星と銀河が灯り始める時代","goodColor":"#ffd9a1","sky":["#050204","#25100c"],"ground":"#755642","ground2":"#30241f","planet":"#ffd59b","event":"STAR SHOWER","eventText":"🌅 暗闇に最初の星が1つずつ点灯！","gravity":0.43,"jump":18.1,"address":["🌅 初期宇宙","🌌 観測可能宇宙"],"distanceDisplay":"⏳ 約132億光年前相当","gravityActual":null,"gravityLabel":"天体表面なし","sizeText":"時代スケール","sizeLevel":8,"visualSize":1.0,"feature":"cosmicDawn","bodyKind":"era","fact":"普通の「星ステージ」ではなく宇宙史"},{"name":"📡 CMB WALL","desc":"宇宙背景放射・最古の光の壁","goodColor":"#ffe6c7","sky":["#120806","#4d2c1e"],"ground":"#8b6c5d","ground2":"#3d302a","planet":"#ffd8b8","event":"AURORA WAVE","eventText":"📺 古いテレビみたいな宇宙ノイズ！","gravity":0.42,"jump":18.2,"address":["🌅 初期宇宙","🌌 観測可能宇宙"],"distanceDisplay":"📡 最後の散乱面 / 現在距離 約456億光年","gravityActual":null,"gravityLabel":"天体表面なし","sizeText":"宇宙全体の背景放射","sizeLevel":9,"visualSize":1.0,"feature":"cmb","bodyKind":"era","fact":"約138億年前の宇宙から届く最古級の光"},{"name":"🧭 PARTICLE HORIZON","desc":"現在観測できる宇宙の境界","goodColor":"#e8f3ff","sky":["#010208","#10182b"],"ground":"#626d82","ground2":"#272e3c","planet":"#e2edff","event":"GRAVITY WELL","eventText":"🧭 光の届く限界が巨大な壁になる！","gravity":0.4,"jump":18.4,"address":["🌅 初期宇宙","🌌 観測可能宇宙"],"distanceDisplay":"🧭 現在距離 約465億光年","gravityActual":null,"gravityLabel":"天体表面なし","sizeText":"観測可能宇宙の境界","sizeLevel":10,"visualSize":1.0,"feature":"horizon","bodyKind":"era","fact":"ここより先は直接観測できない"}]},{"name":"🫥 未知領域","distance":"距離不明","desc":"観測可能宇宙の外側を想像したゲーム内理論領域","theme":"expansion","chapter":"BEYOND OBSERVABLE","postEarendel":true,"theoretical":true,"endless":true,"stages":[{"name":"🫥 BEYOND OBSERVABLE","desc":"直接観測できない領域","goodColor":"#b8a9ff","sky":["#000006","#08000f"],"ground":"#302942","ground2":"#08070b","planet":"#5b4a86","event":"GRAVITY WELL","eventText":"🫥 星が消え、距離そのものが意味を失う","gravity":0.38,"jump":18.7,"address":["🫥 観測不能領域"],"distanceDisplay":"🌍 地球から 測定不能","gravityActual":null,"gravityLabel":"❓ 定義不能","sizeText":"❓ 観測不能","sizeLevel":1,"visualSize":0.2,"feature":"beyond","bodyKind":"theory","fact":"ここから先はゲーム内の想像・理論表現"}]},{"name":"🐾 犬の星","distance":"観測不能のさらに先","desc":"宇宙旅行の最終ご褒美世界","theme":"dreamdog","chapter":"DOG STAR","postEarendel":true,"theoretical":true,"dream":true,"final":true,"stages":[{"name":"🌈 犬だらけの夢世界","desc":"犬たちが空にも地上にもあふれる最終地点","goodColor":"#ffd8ff","sky":["#f6efff","#bfeeff"],"ground":"#ffe8f8","ground2":"#b9a8ff","planet":"#fff7ff","event":"DOG PARADE","eventText":"🐕🐩🦮 犬がどこまでも続いている！","gravity":0.3,"jump":18.8,"address":["🐾 犬の星"],"distanceDisplay":"🌍 地球から ???","gravityActual":null,"gravityLabel":"夢重力","sizeText":"犬スケール ∞","sizeLevel":10,"visualSize":1.0,"feature":"dogstar","bodyKind":"dream","fact":"敵なし・ご褒美ステージ"}]},{"name":"🌸 秘密の花銀河","distance":"???","desc":"宇宙人だけが知る秘密領域","theme":"andromeda","secret":true,"secretKey":"flower","chapter":"SECRET","stages":[{"name":"🌸 花吹雪星","desc":"花びらが宇宙を漂う秘密ステージ","goodColor":"#ff9ddb","sky":["#18051b","#5d174d"],"ground":"#bd78a7","ground2":"#673552","planet":"#ff8ed1","event":"SECRET BLOOM","eventText":"🌸 宇宙いっぱいに花が降る！","gravity":0.42,"jump":18.0,"address":["🌸 SECRET"],"distanceDisplay":"???","gravityActual":null,"gravityLabel":"秘密","sizeText":"???","sizeLevel":7,"visualSize":1.0,"feature":"flower","bodyKind":"secret"}]},{"name":"🌝 笑う月の裏側","distance":"???","desc":"月の向こうの秘密領域","theme":"cloud","secret":true,"secretKey":"moon","chapter":"SECRET","stages":[{"name":"🌝 ムーンフェイス","desc":"笑う月が飛び交う秘密ステージ","goodColor":"#fff2a4","sky":["#070715","#30305b"],"ground":"#c8c5ab","ground2":"#66647d","planet":"#fff2a4","event":"MOON PARTY","eventText":"🌝 月たちが踊り出す！","gravity":0.3,"jump":19.0,"address":["🌝 SECRET MOON"],"distanceDisplay":"???","gravityActual":null,"gravityLabel":"夢の低重力","sizeText":"月がいっぱい","sizeLevel":8,"visualSize":1.4,"feature":"moonface","bodyKind":"secret"}]},{"name":"⚫ ブラックホール","distance":"地球からの距離は測定不能","desc":"光も逃げられない重力領域","theme":"blackhole","chapter":"BLACK HOLE","stages":[{"name":"🕳️ 事象の地平面","desc":"光さえ戻れない境界","goodColor":"#d9b6ff","sky":["#000","#15051e"],"ground":"#27212f","ground2":"#09070c","planet":"#000","event":"GRAVITY WELL","eventText":"⚫ 強烈な重力で軌道がゆがむ！","gravity":0.76,"jump":18.3,"address":["⚫ BLACK HOLE"],"distanceDisplay":"距離 測定不能","gravityActual":null,"gravityLabel":"極端な時空曲率","sizeText":"事象の地平面","sizeLevel":10,"visualSize":2.2,"feature":"blackhole","bodyKind":"blackhole"}]}];
+const systems=[
+{name:'🌌 天の川銀河',distance:'地球はこの銀河の中',desc:'太陽系がある銀河',theme:'milky',stages:[
+{name:'🌍 地球',distance:'0光年',desc:'ここが出発点。背景には月',goodColor:'#59d0ff',sky:['#03101d','#144065'],ground:'#5fae7c',ground2:'#34664a',planet:'#d9dde6',event:'SATELLITE RUSH',eventText:'🛰️ 衛星がたくさん飛ぶ！',gravity:.56,jump:15.6},
+{name:'🌙 月',distance:'約38万km',desc:'地球の衛星・最初の遠征',goodColor:'#ffe66b',sky:['#050615','#131536'],ground:'#b7b7c2',ground2:'#777682',planet:'#5c8fff',event:'LOW GRAVITY',eventText:'低重力でジャンプが高い！',gravity:.38,jump:15.8},
+{name:'🔴 火星',distance:'約0.000006光年',desc:'地球からさらに遠い赤い惑星',goodColor:'#ff6b4b',sky:['#120504','#4c1710'],ground:'#bd684e',ground2:'#73392d',planet:'#d55a43',event:'METEOR SHOWER',eventText:'危険な隕石が上から降る！',gravity:.50,jump:16.2},
+{name:'🟠 木星',distance:'約0.000066光年',desc:'巨大なガス惑星',goodColor:'#f1c18a',sky:['#100806','#3b2116'],ground:'#b78967',ground2:'#6d4a36',planet:'#cf9b72',event:'GIANT STORM',eventText:'巨大嵐で画面が揺れる！',gravity:.62,jump:16.4},
+{name:'🪐 土星',distance:'約0.00015光年',desc:'巨大なリングを持つ惑星',goodColor:'#f1db96',sky:['#09080d','#29243a'],ground:'#c2b283',ground2:'#776a4f',planet:'#dfc785',event:'RING RUSH',eventText:'星アイテムが大量出現！',gravity:.50,jump:16.3},
+{name:'🩵 天王星',distance:'約0.00030光年',desc:'横倒しに回る氷惑星',goodColor:'#9fe9e7',sky:['#020d12','#12343a'],ground:'#8bb7b5',ground2:'#4f7372',planet:'#8ad6d5',event:'ICE WIND',eventText:'ジャンプ中に風で流される',gravity:.46,jump:16.7},
+{name:'🔵 海王星',distance:'約0.00048光年',desc:'超高速の風が吹く惑星',goodColor:'#6d8fff',sky:['#020516','#12255c'],ground:'#586fa7',ground2:'#344572',planet:'#4168d6',event:'SUPER WIND',eventText:'強風で走る速度がUP！',gravity:.54,jump:16.9},
+{name:'☀️ 太陽',distance:'約0.000016光年',desc:'灼熱の恒星・特別ルート',goodColor:'#fff08a',sky:['#2b0500','#ff4a00'],ground:'#ff9f1c',ground2:'#8f1d00',planet:'#ffdf33',event:'SOLAR INFERNO',eventText:'🔥 灼熱フレアが降り注ぐ！',gravity:.50,jump:17.0},
+{name:'☿ 水星',distance:'約0.000010光年',desc:'太陽に最も近い惑星・特別ルート',goodColor:'#c8b69a',sky:['#0b0605','#2b1711'],ground:'#9d907f',ground2:'#5b544c',planet:'#b08d6f',event:'SOLAR FLARE',eventText:'太陽フレアが飛んでくる！',gravity:.55,jump:15.2},
+{name:'♀ 金星',distance:'約0.000004光年',desc:'厚い雲の灼熱惑星・特別ルート',goodColor:'#ffb45f',sky:['#150706','#4d2114'],ground:'#c28352',ground2:'#74442f',planet:'#d9904f',event:'COSMIC GAS',eventText:'宇宙ガスがモワ〜っと流れる',gravity:.58,jump:15.4},
+{name:'⭐ シリウス',distance:'約8.6光年',desc:'恒星・おおいぬ座',goodColor:'#dff6ff',sky:['#020714','#173958'],ground:'#7899b1',ground2:'#38546b',planet:'#eefbff',event:'STAR SHOWER',eventText:'シリウスの光の流星群！',gravity:.48,jump:17.3},
+{name:'🔴 ベテルギウス',distance:'約640光年',desc:'赤色超巨星・オリオン座',goodColor:'#ff8b64',sky:['#190603','#5f190d'],ground:'#9d513e',ground2:'#572b22',planet:'#ff6b47',event:'SOLAR INFERNO',eventText:'巨大恒星の熱波がくる！',gravity:.50,jump:17.4},
+{name:'💠 ベガ',distance:'約25光年',desc:'恒星・こと座',goodColor:'#bfe8ff',sky:['#020716','#153d70'],ground:'#597fa5',ground2:'#304966',planet:'#d8f4ff',event:'AURORA WAVE',eventText:'青白い恒星光が波になる！',gravity:.46,jump:17.6},
+{name:'❤️ アンタレス',distance:'約550光年',desc:'赤色超巨星・さそり座',goodColor:'#ff705a',sky:['#170302','#5b120d'],ground:'#9e4437',ground2:'#56251f',planet:'#ff523d',event:'METEOR SHOWER',eventText:'赤い恒星風と隕石！',gravity:.52,jump:17.4},
+{name:'🌟 ポラリス',distance:'約430光年',desc:'恒星・現在の北極星',goodColor:'#fff5c4',sky:['#050817','#26365b'],ground:'#8e93a7',ground2:'#4d5266',planet:'#fff4b5',event:'STAR SHOWER',eventText:'北極星の光が降り注ぐ！',gravity:.47,jump:17.5}
+]},
+{name:'☁️ 大マゼラン雲',distance:'地球から約16万光年',desc:'天の川の伴銀河',theme:'cloud',stages:[
+{name:'💙 R136a1',desc:'超大質量星・大マゼラン雲',goodColor:'#9de9ff',sky:['#04101a','#124a69'],ground:'#3c7180',ground2:'#1d3745',planet:'#a7efff',event:'COSMIC GAS',eventText:'青白い宇宙ガスが接近！',gravity:.46,jump:17.2},
+{name:'✨ S Doradus',desc:'高光度青色変光星・大マゼラン雲',goodColor:'#d7b6ff',sky:['#09061a','#38265d'],ground:'#675583',ground2:'#332741',planet:'#c6a2ff',event:'STAR SHOWER',eventText:'流星群が連続で通過！',gravity:.44,jump:17.4}
+]},
+{name:'✨ アンドロメダ銀河',distance:'地球から約250万光年',desc:'天の川に近い大型銀河',theme:'andromeda',stages:[
+{name:'⭐ M31-V1',desc:'ケフェイド変光星・アンドロメダ銀河',goodColor:'#d397ff',sky:['#090315','#3b1f5c'],ground:'#9a7fad',ground2:'#5f4b72',planet:'#9b67d2',event:'CRYSTAL RAIN',eventText:'結晶の雨が降る！',gravity:.48,jump:17.1},
+{name:'💫 AF Andromedae',desc:'高光度青色変光星・アンドロメダ銀河',goodColor:'#ff92bd',sky:['#10040b','#4a1830'],ground:'#c7839c',ground2:'#79465b',planet:'#e777a4',event:'ALIEN PARADE',eventText:'宇宙人の大群がやってくる！',gravity:.52,jump:17.1}
+]},
+{name:'🔺 三角座銀河',distance:'地球から約273万光年',desc:'局所銀河群の渦巻銀河',theme:'triangulum',stages:[
+{name:'🟢 ロマーノ星 GR 290',desc:'ウォルフ・ライエ星・三角座銀河',goodColor:'#79ffc0',sky:['#010d08','#17462f'],ground:'#7fb497',ground2:'#426c56',planet:'#6be1a2',event:'AURORA WAVE',eventText:'オーロラ波でPOWER獲得UP！',gravity:.45,jump:17.5},
+{name:'🌠 M33 Var C',desc:'高光度青色変光星・三角座銀河',goodColor:'#a7fff0',sky:['#03121a','#12615a'],ground:'#3f8274',ground2:'#204a42',planet:'#5de1c5',event:'STAR SHOWER',eventText:'超密度の流星群！',gravity:.47,jump:17.3}
+]},
+{name:'🌀 子持ち銀河 M51',distance:'地球から約3100万光年',desc:'伴銀河を持つ渦巻銀河',theme:'whirlpool',stages:[
+{name:'⭐ M51-DS1',desc:'子持ち銀河で観測された高光度星',goodColor:'#ff8bd8',sky:['#16051a','#5c164e'],ground:'#9a507e',ground2:'#52283e',planet:'#ff77c8',event:'ALIEN PARADE',eventText:'👽 宇宙人エリア！',gravity:.50,jump:17.4}
+]},
+{name:'👒 ソンブレロ銀河',distance:'地球から約2900万光年',desc:'暗い塵の帯が目立つ銀河',theme:'sombrero',stages:[
+{name:'👒 M104 中心核',desc:'ソンブレロ銀河の中心領域',goodColor:'#ffc47b',sky:['#120905','#4e2e16'],ground:'#a47145',ground2:'#58391f',planet:'#e29b50',event:'COSMIC GAS',eventText:'濃い宇宙ガスが通過！',gravity:.56,jump:17.0}
+]},
+{name:'🌻 ひまわり銀河',distance:'地球から約2700万光年',desc:'黄金色に輝く渦巻銀河',theme:'sunflower',stages:[
+{name:'🌻 M63 渦巻腕',desc:'ひまわり銀河の渦巻構造',goodColor:'#ffe45d',sky:['#130d01','#5b4007'],ground:'#b59a42',ground2:'#6b5620',planet:'#ffd84c',event:'STAR SHOWER',eventText:'金色の流星群が降り注ぐ！',gravity:.49,jump:17.2}
+]},
+{name:'🌌 1億光年圏',distance:'地球から約1億光年',desc:'銀河団を越えて巨大構造へ',theme:'cloud',stages:[
+{name:'🌌 遠方銀河の海',distance:'約1億光年',desc:'銀河が点のように散る領域',goodColor:'#b9d6ff',sky:['#020510','#101b38'],ground:'#66748f',ground2:'#2b3448',planet:'#b6c9ee',event:'STAR SHOWER',eventText:'遠方銀河の光が流れる！',gravity:.48,jump:17.4}
+]},
+{name:'🕸️ 5億光年圏',distance:'地球から約5億光年',desc:'宇宙の大規模構造が見えてくる',theme:'triangulum',stages:[
+{name:'🕸️ コズミック・ウェブ',distance:'約5億光年',desc:'銀河が糸のようにつながる領域',goodColor:'#a9fff1',sky:['#010812','#0a3440'],ground:'#4b7777',ground2:'#24424a',planet:'#9cefe8',event:'AURORA WAVE',eventText:'宇宙の網目が脈動する！',gravity:.47,jump:17.5}
+]},
+{name:'🌠 10億光年圏',distance:'地球から約10億光年',desc:'地球はもう見えないほど遠い',theme:'andromeda',stages:[
+{name:'🌠 ディープ・フィールド',distance:'約10億光年',desc:'視界いっぱいに遠方銀河',goodColor:'#d4b7ff',sky:['#050313','#241442'],ground:'#75658f',ground2:'#302942',planet:'#c1a4ec',event:'STAR SHOWER',eventText:'深宇宙の光が降り注ぐ！',gravity:.46,jump:17.6}
+]},
+{name:'🔮 20億光年圏',distance:'地球から約20億光年',desc:'銀河団の密度が変わっていく',theme:'sombrero',stages:[
+{name:'🔮 クエーサーの彼方',distance:'約20億光年',desc:'巨大な光源が点滅する遠方宇宙',goodColor:'#ffb6ed',sky:['#0b020e','#351041'],ground:'#80587e',ground2:'#3d2946',planet:'#f0a4dd',event:'COSMIC GAS',eventText:'強烈な光とガスが流れる！',gravity:.47,jump:17.6}
+]},
+{name:'🫧 40億光年圏',distance:'地球から約40億光年',desc:'巨大な空洞と銀河の壁を越える',theme:'whirlpool',stages:[
+{name:'🫧 グレート・ボイド',distance:'約40億光年',desc:'銀河が少ない巨大な空洞域',goodColor:'#95cfff',sky:['#01030a','#081b32'],ground:'#4e6078',ground2:'#1e2938',planet:'#8db8e8',event:'GRAVITY WELL',eventText:'空っぽの宇宙で重力が揺らぐ！',gravity:.45,jump:17.7}
+]},
+{name:'💜 60億光年圏',distance:'地球から約60億光年',desc:'宇宙の歴史を半分以上さかのぼる',theme:'andromeda',stages:[
+{name:'💜 タイム・スロープ',distance:'約60億光年',desc:'過去の宇宙の光が濃くなる',goodColor:'#d9a8ff',sky:['#05020c','#251044'],ground:'#67527f',ground2:'#2b2340',planet:'#c69cec',event:'AURORA WAVE',eventText:'時間の層が波のように揺れる！',gravity:.45,jump:17.7}
+]},
+{name:'🔵 80億光年圏',distance:'地球から約80億光年',desc:'初期宇宙に近づいていく',theme:'cloud',stages:[
+{name:'🔵 プロトギャラクシー海',distance:'約80億光年',desc:'若い銀河が次々生まれる領域',goodColor:'#b9e8ff',sky:['#01030a','#071d35'],ground:'#55718b',ground2:'#223348',planet:'#b2def8',event:'STAR SHOWER',eventText:'若い銀河の光が飛び交う！',gravity:.44,jump:17.8}
+]},
+{name:'🔭 イカロス星域',distance:'地球から約94億光年',desc:'重力レンズで見つかった超遠方の星域',theme:'andromeda',stages:[
+{name:'💙 イカロス',distance:'約94億光年',desc:'重力レンズで観測された超遠方の青い星',goodColor:'#c9efff',sky:['#01030d','#071d43'],ground:'#667b9e',ground2:'#26344f',planet:'#d7f3ff',event:'STAR SHOWER',eventText:'青白い光が時空を横切る！',gravity:.46,jump:17.6}
+]},
+{name:'🦋 モスラ星域',distance:'地球から約105億光年',desc:'さらに遠い重力レンズ星域',theme:'whirlpool',stages:[
+{name:'🦋 モスラ',distance:'約105億光年',desc:'遠い宇宙で観測された重力レンズ星',goodColor:'#ffe2a6',sky:['#08020e','#261040'],ground:'#837198',ground2:'#302642',planet:'#ffd9a1',event:'AURORA WAVE',eventText:'時空の光が羽のように揺れる！',gravity:.45,jump:17.7}
+]},
+{name:'❤️ クイユル星域',distance:'地球から約108億光年',desc:'宇宙初期に近い赤い星の領域',theme:'sombrero',stages:[
+{name:'❤️ クイユル',distance:'約108億光年',desc:'遠方宇宙で観測された赤い巨大星',goodColor:'#ff9b8d',sky:['#100204','#3d0b1d'],ground:'#875762',ground2:'#3d232d',planet:'#ff8878',event:'SOLAR INFERNO',eventText:'赤い恒星光が降り注ぐ！',gravity:.47,jump:17.7}
+]},
+{name:'🦖 ゴジラ星域',distance:'地球から約109億光年',desc:'極端に明るい遠方星の領域',theme:'triangulum',stages:[
+{name:'🦖 ゴジラ',distance:'約109億光年',desc:'遠方宇宙で非常に明るく見える星',goodColor:'#fff08a',sky:['#050205','#33120a'],ground:'#8e6f4f',ground2:'#3e2b20',planet:'#ffe86d',event:'METEOR SHOWER',eventText:'激しい光と隕石が飛び交う！',gravity:.48,jump:17.8}
+]},
+{name:'💠 MACS J0647 LS1',distance:'地球から約125億光年',desc:'エアレンデル直前の超遠方星域',theme:'cloud',stages:[
+{name:'💠 MACS J0647 LS1',distance:'約125億光年',desc:'宇宙初期に近い重力レンズ星',goodColor:'#d6f0ff',sky:['#010208','#07182e'],ground:'#66768a',ground2:'#25313e',planet:'#dcefff',event:'STAR SHOWER',eventText:'古い宇宙の光が降り注ぐ！',gravity:.44,jump:17.9}
+]},
+{name:'✨ エアレンデル星域',distance:'地球から約129億光年',desc:'ここから先は宇宙そのものの歴史へ',theme:'andromeda',stages:[
+{name:'✨ エアレンデル',distance:'約129億光年',desc:'最遠級の星。ここから先は宇宙膨張域',goodColor:'#fff8df',sky:['#01030b','#0b1438'],ground:'#8ea5c7',ground2:'#364763',planet:'#fff6dd',event:'STAR SHOWER',eventText:'宇宙の果ての光が降り注ぐ！',gravity:.45,jump:17.9}
+]},
+{name:'🌅 宇宙の夜明け',distance:'地球から約132億光年相当',desc:'最初期の星と銀河が生まれた時代へ',theme:'cloud',postEarendel:true,stages:[
+{name:'🌅 COSMIC DAWN',distance:'約132億光年相当',desc:'星が灯り始めた初期宇宙',goodColor:'#ffd9a1',sky:['#080303','#2d120d'],ground:'#755642',ground2:'#30241f',planet:'#ffd59b',event:'STAR SHOWER',eventText:'最初期の光が次々点灯する！',gravity:.44,jump:18.0}
+]},
+{name:'🔥 再電離の海',distance:'地球から約134億光年相当',desc:'宇宙を満たす水素が再び電離していく時代',theme:'andromeda',postEarendel:true,stages:[
+{name:'🔥 REIONIZATION',distance:'約134億光年相当',desc:'宇宙が再び透明になっていく',goodColor:'#ffb587',sky:['#0b0202','#3b100c'],ground:'#81503f',ground2:'#351f1a',planet:'#ffaf7a',event:'COSMIC GAS',eventText:'宇宙全体が発光していく！',gravity:.43,jump:18.1}
+]},
+{name:'📡 宇宙背景放射の壁',distance:'現在距離 約456億光年',desc:'最古の光が届く“最後の散乱面”',theme:'cloud',postEarendel:true,stages:[
+{name:'📡 CMB WALL',distance:'現在距離 約456億光年',desc:'約138億年前の宇宙の光',goodColor:'#ffe6c7',sky:['#120806','#4d2c1e'],ground:'#8b6c5d',ground2:'#3d302a',planet:'#ffd8b8',event:'AURORA WAVE',eventText:'宇宙最古の光がノイズのように揺れる！',gravity:.42,jump:18.2}
+]},
+{name:'🧭 観測可能宇宙の地平線',distance:'現在距離 約465億光年',desc:'今の宇宙で観測できる範囲の端',theme:'whirlpool',postEarendel:true,stages:[
+{name:'🧭 PARTICLE HORIZON',distance:'現在距離 約465億光年',desc:'ここより先は直接観測できない',goodColor:'#e8f3ff',sky:['#010208','#10182b'],ground:'#626d82',ground2:'#272e3c',planet:'#e2edff',event:'GRAVITY WELL',eventText:'光の地平線が空間をゆがめる！',gravity:.41,jump:18.3}
+]},
+{name:'🫥 観測不能宇宙',distance:'距離不明',desc:'ここから先は観測できない理論領域',theme:'blackhole',postEarendel:true,theoretical:true,stages:[
+{name:'🫥 BEYOND OBSERVABLE',distance:'距離不明',desc:'地球からは永遠に直接見えない領域',goodColor:'#b8a9ff',sky:['#000006','#10001e'],ground:'#3a3152',ground2:'#0d0a14',planet:'#6d5c96',event:'GRAVITY WELL',eventText:'距離そのものが意味を失い始める！',gravity:.40,jump:18.4}
+]},
+{name:'♾️ 膨張フロンティア',distance:'観測不能・距離定義不能',desc:'宇宙膨張のさらに先を進むゲーム内理論ステージ',theme:'expansion',postEarendel:true,theoretical:true,endless:true,stages:[
+{name:'♾️ EXPANSION FRONTIER',distance:'観測不能',desc:'空間そのものが伸び続ける先',goodColor:'#ff9df2',sky:['#000000','#050505'],ground:'#2a2334',ground2:'#07070a',planet:'#111',event:'EXPANSION WAVE',eventText:'空間そのものが引き伸ばされる！',gravity:.38,jump:18.6}
+]},
+{name:'🐾 犬の星',distance:'観測不能のさらに先',desc:'宇宙の最終地点。夢みたいに犬だらけの世界',theme:'dreamdog',postEarendel:true,theoretical:true,dream:true,final:true,stages:[
+{name:'🌈 犬だらけの夢世界',distance:'観測不能のさらに先',desc:'犬たちが空にも地上にもあふれる最終地点',goodColor:'#ffd8ff',sky:['#f6efff','#bfeeff'],ground:'#ffe8f8',ground2:'#b9a8ff',planet:'#fff7ff',event:'DOG PARADE',eventText:'🐕🐩🦮 犬がどこまでも続いている！',gravity:.30,jump:18.8}
+]},
+{name:'🌸 秘密の花銀河',distance:'???',desc:'宇宙人だけが知る秘密領域',theme:'andromeda',secret:true,secretKey:'flower',stages:[
+{name:'🌸 花吹雪星',desc:'花びらが宇宙を漂う秘密ステージ',goodColor:'#ff9ddb',sky:['#18051b','#5d174d'],ground:'#bd78a7',ground2:'#673552',planet:'#ff8ed1',event:'SECRET BLOOM',eventText:'🌸 宇宙いっぱいに花が降る！',gravity:.42,jump:18.0}
+]},
+{name:'🌝 笑う月の裏側',distance:'???',desc:'月の向こうの秘密領域',theme:'cloud',secret:true,secretKey:'moon',stages:[
+{name:'🌝 ムーンフェイス',desc:'笑う月が飛び交う秘密ステージ',goodColor:'#fff2a4',sky:['#070715','#30305b'],ground:'#c8c5ab',ground2:'#66647d',planet:'#fff2a4',event:'MOON PARTY',eventText:'🌝 月たちが踊り出す！',gravity:.30,jump:19.0}
+]},
+{name:'⚫ ブラックホール',distance:'地球からの距離は測定不能',desc:'光も逃げられない重力領域',theme:'blackhole',stages:[
+{name:'🕳️ 事象の地平面',desc:'光さえ戻れない境界',goodColor:'#d9b6ff',sky:['#000','#15051e'],ground:'#27212f',ground2:'#09070c',planet:'#000',event:'GRAVITY WELL',eventText:'重力でジャンプ軌道がゆがむ！',gravity:.72,jump:18.3}
+]}
+];
 const BLACK_HOLE_SYSTEM=systems.length-1;
 const SECRET_FLOWER_SYSTEM=systems.findIndex(s=>s.secretKey==='flower');
 const SECRET_MOON_SYSTEM=systems.findIndex(s=>s.secretKey==='moon');
@@ -638,14 +756,10 @@ const p={x:115,y:100,vy:0,w:54,h:55,on:false};let items=[],hazards=[],aliens=[],
 const wormholeEnabled=()=>wormholeActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const rankByName={
-'☀️ 太陽系':0,
-'🌌 天の川銀河':1,
-'🫧 局所銀河群':2,
-'🌌 銀河間宇宙':3,
-'🔭 超遠方宇宙':4,
-'🌅 初期宇宙':5,
-'🫥 未知領域':6,
-'🐾 犬の星':7
+'🌌 天の川銀河':0,'☁️ 大マゼラン雲':1,'✨ アンドロメダ銀河':2,'🔺 三角座銀河':3,'🌻 ひまわり銀河':4,'👒 ソンブレロ銀河':5,'🌀 子持ち銀河 M51':6,
+'🌌 1億光年圏':7,'🕸️ 5億光年圏':8,'🌠 10億光年圏':9,'🔮 20億光年圏':10,'🫧 40億光年圏':11,'💜 60億光年圏':12,'🔵 80億光年圏':13,
+'🔭 イカロス星域':14,'🦋 モスラ星域':15,'❤️ クイユル星域':16,'🦖 ゴジラ星域':17,'💠 MACS J0647 LS1':18,'✨ エアレンデル星域':19,
+'🌅 宇宙の夜明け':20,'🔥 再電離の海':21,'📡 宇宙背景放射の壁':22,'🧭 観測可能宇宙の地平線':23,'🫥 観測不能宇宙':24,'♾️ 膨張フロンティア':25,'🐾 犬の星':26
 };
 const systemDistanceRank=systems.map(s=>s.secret?99:s.name==='⚫ ブラックホール'?98:(rankByName[s.name]??0));
 const S=()=>systems[system].stages[stage],groundY=()=>H-120,playerRect=()=>({x:p.x,y:p.y,w:p.w,h:p.h}),itemRect=i=>({x:i.x-i.r,y:i.y-i.r,w:i.r*2,h:i.r*2}),rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
@@ -661,8 +775,8 @@ function syncHUD(){
  missionEl.innerHTML=earth?(returnFromDogStar?'🏠 やっと地球に帰ってきた。いつもの道を歩こう':'🐕 いつもの散歩道。先にロケットが見える…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ご褒美ステージ ✨ ⭐星アイテムから地球へ帰れる':`🌀 ワームホール通過 ${deepWarpCount}<br>${areaNames[difficultyTier]}`;
  eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌳 WALK EVENT — 犬や人とすれ違う普通の散歩'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`⚡ ${s.event} — ${s.eventText}`;
  const dist=(s.distance||systems[system].distance.replace('地球から','')),endless=systems[system].endless;
- const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🫥 観測不能宇宙・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
- const distanceLabel=endless?'観測不能域 / 距離定義不能':dist;
+ const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
+ const distanceLabel=endless?'観測不能域 / 膨張フロンティア':dist;
  const gravLabel=s.gravity<=.40?'🪽 低重力｜ジャンプ力UP':s.gravity>=.56?'⬇️ 高重力｜ジャンプ力DOWN':'⚖️ 標準重力｜ジャンプ力NORMAL';
  astroInfo.innerHTML=earth?`<b>🌍 地球・散歩道</b><br>${returnFromDogStar?'宇宙一周のあと、帰ってきた街':'ビルと木のあるいつもの街'}<br><span class="distanceBig">${returnFromDogStar?'🏠 地球帰還':'🚶 まだ地球'}</span><span class="distanceHint">${returnFromDogStar?'やっと帰ってきた地球':'いつもの街。まだ宇宙の旅は始まっていない'}</span>`:`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig">🌍 地球から ${distanceLabel}</span><span class="distanceHint">${gravLabel}<br>${farHint}</span>`;
  bigBtn.classList.toggle('ready',food>=3);
@@ -711,7 +825,7 @@ function stageStart(){
  blackHoleY=Math.max(145,Math.min(groundY()-145,H*(.34+Math.random()*.20)));
  nextCosmic=430+Math.floor(Math.random()*220);nextSwarm=430+Math.floor(Math.random()*220);
  nextSatellite=240+Math.floor(Math.random()*260);
- makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast('🐕 今日はいつもの散歩。街の先にロケットが…？',1900);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 地球の光は129億年ぶん遠い…',2300);if(systems[system].endless)showToast('🫥 観測不能宇宙。星のない暗闇を進む…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
+ makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast(returnFromDogStar?'🌍 地球に帰ってきた。':'🐕 いつもの散歩道。',1600);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 地球の光は129億年ぶん遠い…',2300);if(systems[system].endless)showToast('🌑 膨張フロンティア。星のない暗闇を進む…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
 }
 function maybeLore(){if(paused||p.x<nextLoreAt)return;const rank=systemDistanceRank[system]??0;const s=systems[system];let msg='';if(s.dream)msg=['🐾 ここでは星も犬の夢を見ている。','🌈 ふわふわした犬たちが宇宙を漂っている。','🦴 骨の形の光がゆっくり流れていく。'][Math.floor(Math.random()*3)];else if(s.endless)msg=['🌑 光が消えた。地球の気配も、もうない。','🐾 暗闇の中に、光る足跡がまぎれている。','… ワン …　遠くから何か聞こえた。'][Math.floor(Math.random()*3)];else if(s.postEarendel)msg=['🫥 星より古い光の中を進んでいる。','📡 ここまで来ると、通信も記憶みたいにかすれる。','🌌 宇宙の歴史そのものを横切っている。'][Math.floor(Math.random()*3)];else if(rank>=10)msg=['✨ 地球の光はもう見えない。','🌌 遠すぎて、帰り道の感覚まで薄れていく。','💫 ワープするたび宇宙の色が変わる。'][Math.floor(Math.random()*3)];else if(rank>=6)msg=['🪐 もう太陽系は点のように遠い。','🌠 銀河がただの光の粒になっていく。','🔭 ここからは宇宙が歴史に見える。'][Math.floor(Math.random()*3)];else if(rank>=1)msg=['🌍 地球はまだ遠くない。でも確実に離れている。','🌙 もう気軽には帰れない距離だ。','🛰️ 通信ノイズに地球の気配がまざる。'][Math.floor(Math.random()*3)];if(msg)showToast(msg,1700);nextLoreAt+=780+Math.random()*360}
 
@@ -916,7 +1030,7 @@ function feedDoghouse(){
  if(spend>0){
    points-=spend;
    starTotal=Math.max(0,starTotal-spend);
-   food=Math.min(99,food+spend);
+   food+=spend;
    syncHUD();
  }
  updateDoghouseButtons();
@@ -997,22 +1111,22 @@ function homeEnding(){returnFromDogStar=true;system=0;stage=0;stageStart()}
 
 function wormholeMilestoneEffect(count){
  if(count===1){
-   showToast('🌀 太陽系を離れて、天の川の恒星へ。',1900)
+   showToast('🌀 最初のワームホール。地球圏を離れる。',1900)
  }else if(count===3){
-   transTitle.innerHTML='🌌 INTERGALACTIC';
-   nextEl.textContent='局所銀河群の外へ。銀河が光の島になる。';
+   transTitle.innerHTML='🌌 GALAXY SCALE';
+   nextEl.textContent='銀河が、ただの光の島に見えてくる。';
    subEl.textContent='WORMHOLE 3';
-   showToast('🌌 ここから先は銀河間宇宙。',2100)
+   showToast('🌌 ここから先は銀河間空間。',2100)
  }else if(count===5){
-   transTitle.innerHTML='🌅 COSMIC HISTORY';
-   nextEl.textContent='星を越えて、宇宙の歴史そのものへ。';
+   transTitle.innerHTML='✨ EARENDEL';
+   nextEl.textContent='129億年前の光へ。';
    subEl.textContent='WORMHOLE 5';
-   showToast('🌅 初期宇宙へ。',2200)
+   showToast('✨ 地球はるか彼方。エアレンデル級の遠方へ。',2200)
  }else if(count===6){
-   transTitle.innerHTML='🫥 BEYOND OBSERVABLE';
-   nextEl.textContent='観測できる宇宙の、その外側へ。';
+   transTitle.innerHTML='🧭 OBSERVABLE EDGE';
+   nextEl.textContent='星が減り、宇宙の歴史そのものへ。';
    subEl.textContent='WORMHOLE 6';
-   showToast('🫥 ここから先は観測不能。',2200)
+   showToast('🧭 観測の限界が近い。',2200)
  }else if(count===7){
    transTitle.innerHTML='🌑 FRONTIER';
    nextEl.textContent='光の届かない場所へ。';
@@ -1030,12 +1144,18 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
   } else {
     deepWarpCount++;
     wormholeMilestoneEffect(deepWarpCount);
-    const milestones=['☀️ 太陽系','🌌 天の川銀河','🫧 局所銀河群','🌌 銀河間宇宙','🔭 超遠方宇宙','🌅 初期宇宙','🫥 未知領域'];
-    const currentRank=systems[system].secret?Math.max(0,Math.min(6,furthestRank)):(systemDistanceRank[system]??0);
-    const targetRank=Math.min(6,Math.max(currentRank+1,Math.min(6,deepWarpCount)));
-    const targetName=milestones[targetRank];
+    const milestones=[
+      '☁️ 大マゼラン雲',
+      '🌌 1億光年圏',
+      '🫧 40億光年圏',
+      '🔭 イカロス星域',
+      '✨ エアレンデル星域',
+      '🧭 観測可能宇宙の地平線',
+      '♾️ 膨張フロンティア'
+    ];
+    const targetName=milestones[Math.min(deepWarpCount-1,milestones.length-1)];
     const nextSystem=systems.findIndex(s=>s.name===targetName);
-    if(nextSystem>=0){system=nextSystem;stage=0;furthestRank=Math.max(furthestRank,systemDistanceRank[system]??0)}
+    if(nextSystem>=0){system=nextSystem;stage=Math.floor(Math.random()*systems[system].stages.length);furthestRank=Math.max(furthestRank,systemDistanceRank[system]??0)}
   }
   stageStart();trans.style.display='none';warpDog.className='';paused=false
  },1550)
@@ -1298,18 +1418,7 @@ for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/22
 for(const sat of satellites){if(sat.got)continue;sat.x-=sat.v*dt;sat.y+=Math.sin(now/210+sat.phase)*.20*dt;if(rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){sat.got=true;satelliteUntil=Math.max(satelliteUntil,now+3000);invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100);syncHUD()}}satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
 for(const b of bosses){if(b.dead)continue;b.x-=b.v*dt;if(b.hitFlash>0)b.hitFlash-=dt;if(rectHit(playerRect(),{x:b.x+8,y:b.y+6,w:b.w-16,h:b.h-6}))hitHazard({x:b.x,y:b.y,w:b.w,h:b.h,got:false,evil:true})}bosses=bosses.filter(b=>!b.dead&&b.x>p.x-W-240);
 for(const st of shootingStars){st.x-=st.vx*dt;st.y+=st.vy*dt}shootingStars=shootingStars.filter(st=>st.x>-160&&st.y<H+100);for(const g of gasClouds)g.x-=g.vx*dt;gasClouds=gasClouds.filter(g=>g.x>-g.r*2);
-if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){if(systems[system].dream){showToast('🐾 ここが宇宙旅行の最終地点。⭐交換所から地球へ帰れる！',1800);stageStart();return}if(systems[system].secret){showToast('🌀 秘密銀河の出口！ 通常宇宙へ戻る',1200);warpTo(false);return}if(system===0&&stage===0){if(returnFromDogStar){doghouseChoice();return}else{rocketToMoon();return}}if(stage+1<systems[system].stages.length){
- stage++;
- showToast(`🚀 NEXT ✦ ${systems[system].stages[stage].name}`,1400);
-}else{
- const fromChapter=systems[system].name;
- const nextSystemIndex=system+1;
- if(nextSystemIndex<=systems.findIndex(s=>s.dream)){
-   system=nextSystemIndex;stage=0;
-   showToast(`✨ ${fromChapter} COMPLETE → ${systems[system].name}`,1900);
- }else stage=0;
-}
-stageStart();return}camera+=(Math.max(0,p.x-W*.34)-camera)*.13}
+if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){if(systems[system].dream){showToast('🐾 ここが宇宙旅行の最終地点。⭐交換所から地球へ帰れる！',1800);stageStart();return}if(systems[system].secret){showToast('🌀 秘密銀河の出口！ 通常宇宙へ戻る',1200);warpTo(false);return}if(system===0&&stage===0){if(returnFromDogStar){doghouseChoice();return}else{rocketToMoon();return}}stage=(stage+1)%systems[system].stages.length;showToast(`🚀 NEXT ✦ ${systems[system].stages[stage].name}`,1400);stageStart();return}camera+=(Math.max(0,p.x-W*.34)-camera)*.13}
 function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawCosmicWarpFX();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
 function doJump(){if(paused||jumps>=4)return;const s=S(),boost=big?1.12:1;
  const gravityJump=Math.max(.78,Math.min(1.38,Math.sqrt(.50/Math.max(.24,s.gravity))));
@@ -1417,7 +1526,7 @@ feedDoghouse=function(){
   const dog=doghouseInterior.querySelector('.dhDogMover');
   const pile=doghouseInterior.querySelector('.dhEatPile');
   const spend=points>0?Math.min(points,4):0;
-  if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food=Math.min(99,food+spend);syncHUD();}
+  if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food+=spend;syncHUD();}
   updateDoghouseButtons();
   spawnDoghouseBoneRain(spend||4);
   setTimeout(()=>{if(dog)dog.className='dhDogMover runToBones'},420);
@@ -1727,7 +1836,7 @@ doghouseGoToBed=function(startAt=0){
 feedDoghouse=function(){
  if(!doghouseInterior.classList.contains('on')||doghouseFed)return;doghouseFed=true;setDoghouseActionState('hide');
  const dog=doghouseInterior.querySelector('.dhDogMover'),pile=doghouseInterior.querySelector('.dhEatPile');const spend=points>0?Math.min(points,4):0;
- if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food=Math.min(99,food+spend);syncHUD()}
+ if(spend>0){points-=spend;starTotal=Math.max(0,starTotal-spend);food+=spend;syncHUD()}
  spawnDoghouseBoneRain(spend||4);setTimeout(()=>{if(dog)dog.className='dhDogMover runToBones'},350);setTimeout(()=>{if(dog)dog.className='dhDogMover eatBones';if(pile)pile.classList.add('show','eating')},1450);setTimeout(()=>{if(pile)pile.classList.add('gone')},2850);doghouseGoToBed(3200);
 }
 playDoghouse=function(){
@@ -1890,12 +1999,568 @@ buySpecial=function(kind){
   __v50BuySpecial(kind);
 }
 
+
+/* === v60 stable gameplay patch: distance / economy / shards / endings / rescue === */
+const V60_PRICES={giant:20,boneRain:25,satellite:20,friend:50,boneBoomerang:0,cosmic:0};
+const V60_SHOP_UNLOCK=15;
+let v60ReturnHintSeen=false,v60CosmicUses=0,v60ReturnOpenedAnnounced=false;
+let v60RareSerial=0,v60RescueHits=0,v60LastRescueHit=0,v60Rescuing=false,v60RescueCooldown=0;
+let v60BoneFx=[];
+
+/* Distance route: keep the trip moving outward instead of jumping back and forth. */
+const v60LocalOrder=['🌍 地球','🌙 月','♀ 金星','🔴 火星','☿ 水星','☀️ 太陽','🟠 木星','🪐 土星','🩵 天王星','🔵 海王星','⭐ シリウス','💠 ベガ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス'];
+const v60OrderMap=new Map(v60LocalOrder.map((n,i)=>[n,i]));
+systems[0].stages.sort((a,b)=>(v60OrderMap.get(a.name)??999)-(v60OrderMap.get(b.name)??999));
+const v60M51=systems.findIndex(s=>s.name==='🌀 子持ち銀河 M51');
+const v60Sun=systems.findIndex(s=>s.name==='🌻 ひまわり銀河');
+if(v60M51>=0&&v60Sun>=0&&v60M51<v60Sun){const t=systems[v60M51];systems[v60M51]=systems[v60Sun];systems[v60Sun]=t;}
+for(let i=0;i<systems.length;i++)systemDistanceRank[i]=systems[i].secret?99:systems[i].name==='⚫ ブラックホール'?98:(rankByName[systems[i].name]??0);
+
+const v60DistanceByStage={
+ '🌍 地球':'0 km','🌙 月':'約38.4万 km','♀ 金星':'約4,100万 km','🔴 火星':'約5,500万 km','☿ 水星':'約7,700万 km','☀️ 太陽':'約1.50億 km','🟠 木星':'約5.9億 km','🪐 土星':'約12億 km','🩵 天王星':'約26億 km','🔵 海王星':'約43億 km',
+ '⭐ シリウス':'約8.6 光年','💠 ベガ':'約25 光年','🌟 ポラリス':'約430 光年','❤️ アンタレス':'約550 光年','🔴 ベテルギウス':'約640 光年',
+ '🌸 花吹雪星':'ゲーム内 約129億 光年','🌝 ムーンフェイス':'約38.4万 km（秘密領域）'
+};
+function v60FormatDistance(raw){
+ raw=String(raw||'').replace(/^地球から\s*/,'').trim();
+ if(!raw)return '数値データなし';
+ if(raw==='???')return 'SECRET / 数値化不可';
+ if(raw.includes('地球からの距離は測定不能'))return '測定不能';
+ if(raw==='距離不明')return '観測不能 / 数値化不可';
+ if(raw.includes('観測不能'))return raw.replace('観測不能・距離定義不能','観測不能 / 数値化不可');
+ raw=raw.replace(/^現在距離\s*/,'').replace(/([0-9万億.]+)光年/g,'$1 光年').replace(/([0-9万億.]+)km/g,'$1 km');
+ if(String(raw).includes('456億 光年')||String(raw).includes('465億 光年'))raw+='（現在距離）';
+ return raw;
+}
+function v60Distance(){
+ const s=S();
+ if(v60DistanceByStage[s.name])return v60DistanceByStage[s.name];
+ return v60FormatDistance(s.distance||systems[system].distance);
+}
+
+/* Keep only six deliberate items and lower the star prices. */
+const v60Removed=new Set(['wormhole','magnet','secret','home','laser']);
+document.querySelectorAll('.rewardBtn').forEach(btn=>{if(v60Removed.has(btn.dataset.special))btn.remove();});
+function v60RenderItems(){
+ const labels={
+  giant:'🐕 巨大化<br>20⭐',boneBoomerang:'🦴 骨ブーメラン<br>3🦴',cosmic:'👽 時空が歪む宇宙パワー<br>5👽',boneRain:'🦴 ホネホネシャワー<br>25⭐',satellite:'🛰️ 衛星ライド<br>20⭐',friend:'🐕 仲間を増やす<br>50⭐'
+ };
+ const rt=$('rewardTitle'),rs=$('rewardSub');if(rt)rt.textContent='⭐ アイテム';if(rs)rs.textContent='星はたくさん拾える。気軽に使おう！';
+ document.querySelectorAll('.rewardBtn').forEach(btn=>{const k=btn.dataset.special;if(labels[k]){btn.innerHTML=labels[k];btn.dataset.cost=String(V60_PRICES[k]||0);}});
+}
+updateShopButtons=function(){
+ if(points>=V60_SHOP_UNLOCK)shopUnlocked=true;
+ document.querySelectorAll('.rewardBtn').forEach(btn=>{
+  const k=btn.dataset.special,c=V60_PRICES[k]??0;let disabled=false;
+  if(k==='boneBoomerang')disabled=(system===0&&stage===0)||food<3;
+  else if(k==='cosmic')disabled=(system===0&&stage===0)||cosmicCharge<5;
+  else disabled=!shopUnlocked||points<c;
+  btn.disabled=disabled;btn.classList.toggle('locked',disabled);
+ });
+};
+openShop=function(auto=false){
+ if(points<V60_SHOP_UNLOCK&&!shopUnlocked){showToast(`⭐ ${V60_SHOP_UNLOCK}個集めるとアイテム解禁！`,1200);return;}
+ shopUnlocked=true;reward.classList.add('on');v60RenderItems();updateShopButtons();if(auto)showToast('🌟 アイテム解禁！',1200);syncHUD();
+};
+
+/* Rare pickups: world bonuses, not shop clutter. */
+function v60ApplyRare(kind){
+ const now=performance.now();
+ if(kind==='magnet'){magnetUntil=now+12000;showToast('🧲 星磁石！ 12秒間⭐を引き寄せる',1300);}
+ else if(kind==='rainbow'){points+=15;starTotal+=15;showToast('🌈 レインボースター！ ⭐+15',1300);}
+ else if(kind==='ufo'){satelliteUntil=Math.max(satelliteUntil,now+5000);invincibleUntil=Math.max(invincibleUntil,now+5000);showToast('🛸 UFOチケット！ 5秒ライド',1300);}
+ if(points>=V60_SHOP_UNLOCK)shopUnlocked=true;syncHUD();
+}
+
+/* Unlimited bones + generous stars. */
+collectGood=function(it){
+ if(!it||it.got)return;it.got=true;
+ if(it.rareKind){v60ApplyRare(it.rareKind);return;}
+ if(it.magnet){magnetUntil=performance.now()+12000;showToast('🧲 星磁石！ 12秒',1100);syncHUD();return;}
+ if(it.food){
+  food+=1;
+  if(performance.now()<boneRainUntil){
+   for(let i=0;i<5;i++)v60BoneFx.push({born:performance.now(),dx:(Math.random()-.5)*70,dy:-20-Math.random()*48,icon:i%3===0?'💖':i%3===1?'✨':'🦴'});
+  }
+  showToast(it.inert?'🔋 無機エネルギー +1':`🦴 元気 +1　${food}`,560);syncHUD();return;
+ }
+ const gain=big?3:2;points+=gain;starTotal+=gain;
+ if(points>=V60_SHOP_UNLOCK&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),120);}
+ syncHUD();
+};
+awardFetchedItem=function(b){
+ if(!b?.fetched)return;
+ if(b.fetched==='🦴'){food+=1;showToast('🦴 とってきた！ 骨 +1',800);}
+ else if(b.fetched==='⭐'){points+=4;starTotal+=4;showToast('⭐ とってきた！ 星 +4',800);}
+ syncHUD();
+};
+
+/* Unlimited alien power: 5 is a cost, never a cap. */
+registerAlienHit=function(amount=1){
+ cosmicCharge+=amount;alienHitTotal+=amount;cosmicPowerReady=cosmicCharge>=5;popCosmic(amount);
+ showToast(cosmicCharge>=5?`👽 宇宙パワー ${cosmicCharge}｜発動OK`:`👽 宇宙パワー +${amount}`,700);syncHUD();
+};
+const v60CommHints=[
+ '帰りたいなら、宇宙に現れる「🌀 時空のかけら」を3つ集めて。3つ揃うと地球への時空が開く。',
+ '宇宙の果てでは、進むだけじゃなく「残る」という道もある。',
+ 'ブラックホールの出口で、光の方と暗闇の方。どちらも道になる。',
+ '何度も交信していると、いつか宇宙人の方から誘いが来るかもしれない。'
+];
+function v60SpawnStarRain(n=26){
+ const baseX=p.x+W*.35;
+ for(let i=0;i<n;i++)items.push({x:baseX+Math.random()*W*1.15+i*13,y:groundY()-75-Math.random()*190,r:13+Math.random()*5,got:false,color:'#fff0a8'});
+ eventEl.textContent='⭐ STAR BONUS RUSH — 星がたくさん流れてきた！';
+}
+function v60ShowCommunication(){
+ const ct=$('commTitle');if(!comm||!commText)return;
+ const idx=Math.min(v60CosmicUses-1,v60CommHints.length-1);if(ct)ct.textContent='📡 SIGNAL RECEIVED — COSMIC HINT';commText.textContent=v60CommHints[idx];
+ comm.classList.remove('on','milestone');void comm.offsetWidth;comm.classList.add('milestone');showToast('👽📡 宇宙パワーのあと、通信が入った！',1350);
+ setTimeout(()=>{comm.classList.remove('milestone');if(ct)ct.textContent='📡 SIGNAL RECEIVED';},3300);
+}
+useCosmicPower=function(){
+ if(paused||system===0&&stage===0)return;if(cosmicCharge<5){showToast(`👽 あと ${5-cosmicCharge} で宇宙パワー！`,950);return;}
+ cosmicCharge-=5;cosmicPowerReady=cosmicCharge>=5;cosmicPowerUntil=performance.now()+9000;cosmicBonus=1;invincibleUntil=Math.max(invincibleUntil,cosmicPowerUntil);wrap.classList.add('cosmicWarping');setTimeout(()=>wrap.classList.remove('cosmicWarping'),9000);v60SpawnStarRain(26);
+ v60CosmicUses++;if(!v60ReturnHintSeen){v60ReturnHintSeen=true;showToast('🌀 帰還座標を受信… 時空のかけらが現れ始めた！',1700);}setTimeout(v60ShowCommunication,850);syncHUD();
+};
+
+/* Return route = use cosmic power, then collect three space-time shards. */
+checkHomeRoute=function(){homeRouteReady=!!v60ReturnHintSeen&&earthTokenCount>=3;return homeRouteReady;};
+collectEarthToken=function(obj){
+ if(!obj||obj.got)return;obj.got=true;earthTokenCount=Math.min(3,earthTokenCount+1);checkHomeRoute();showToast(`🌀 時空のかけら ${earthTokenCount}/3`,1100);
+ if(homeRouteReady&&!v60ReturnOpenedAnnounced){v60ReturnOpenedAnnounced=true;eventEl.textContent='🌌 RETURN SPACE-TIME OPEN!';showToast('🌌 地球へ帰る時空が開いた！',1700);}syncHUD();
+};
+
+let v60EarthReturnBtn=$('earthReturnEventBtn');
+if(!v60EarthReturnBtn){v60EarthReturnBtn=document.createElement('button');v60EarthReturnBtn.id='earthReturnEventBtn';wrap.appendChild(v60EarthReturnBtn);}
+function v60RefreshReturnBtn(){
+ checkHomeRoute();const earth=system===0&&stage===0;v60EarthReturnBtn.innerHTML='🌌 帰還時空 OPEN<small>地球へ戻る</small>';v60EarthReturnBtn.classList.toggle('on',homeRouteReady&&!earth&&!doghouseInterior.classList.contains('on'));
+}
+function v60ReturnToEarth(){
+ if(!checkHomeRoute()){showToast(`🌀 時空のかけらをあと ${3-earthTokenCount}個`,1000);return;}reward.classList.remove('on');paused=true;v60EarthReturnBtn.classList.remove('on');
+ trans.style.display='grid';warpDog.textContent='🐕🌀🌍';warpDog.className='spin';transTitle.innerHTML='🌌 RETURN SPACE-TIME';nextEl.textContent='集めた3つのかけらが、地球への時空をつないだ。';subEl.textContent='HOME COORDINATES LOCKED';
+ setTimeout(()=>{returnFromDogStar=true;system=0;stage=0;earthTokenCount=0;homeRouteReady=false;v60ReturnHintSeen=false;v60ReturnOpenedAnnounced=false;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌍 地球に帰ってきた。',1900);},2100);
+}
+v60EarthReturnBtn.addEventListener('click',v60ReturnToEarth);
+
+/* The existing Earth-sign spawner becomes a shard spawner, but only after the cosmic hint. */
+const v60PrevSpawnEvents=spawnEvents;
+spawnEvents=function(){
+ const savedTokenCount=earthTokenCount;if(!v60ReturnHintSeen)earthTokenCount=3;
+ v60PrevSpawnEvents();
+ if(!v60ReturnHintSeen){earthTokenCount=savedTokenCount;secretPickups=secretPickups.filter(o=>o.kind!=='earth');}
+ else{for(const o of secretPickups){if(o.kind==='earth'&&!o.got){o.icon='🌀';o.r=28;}}}
+ if(performance.now()<boneRainUntil)eventEl.textContent='🦴 ホネホネシャワー ✦ 元気チャージ中！';
+ if(!paused&&!(system===0&&stage===0)&&!systems[system].dream&&eventPhase%340===0&&Math.random()<.34){
+  const r=Math.random(),kind=r<.48?'magnet':r<.78?'rainbow':'ufo';items.push({x:p.x+W+150,y:75+Math.random()*Math.max(90,H*.32),r:22,got:false,rareKind:kind,phase:v60RareSerial++});eventEl.textContent=`${kind==='magnet'?'🧲':kind==='rainbow'?'🌈':'🛸'} RARE ITEM SIGNAL`;
+ }
+};
+
+/* Boomerang rewards also ignore bone caps and understand shards/rare pickups. */
+awardBoomerangFetch=function(b){
+ if(!b?.fetched)return;
+ if(b.fetchType==='earth'){earthTokenCount=Math.min(3,earthTokenCount+1);checkHomeRoute();showToast(`🌀 時空のかけら ${earthTokenCount}/3`,1000);if(homeRouteReady&&!v60ReturnOpenedAnnounced){v60ReturnOpenedAnnounced=true;showToast('🌌 地球へ帰る時空が開いた！',1500);}}
+ else if(b.fetchType==='bone'){food+=3;showToast('🦴 とってきた！ 骨 +3',800);}
+ else if(b.fetchType==='star'){points+=4;starTotal+=4;showToast('⭐ とってきた！ 星 +4',800);}
+ else if(b.fetchType==='secret'){points+=5;starTotal+=5;showToast(`${b.fetched} とってきた！ ⭐+5`,850);}
+ else if(b.fetchType==='rare'){v60ApplyRare(b.rareKind);}
+ syncHUD();
+};
+
+/* Bone shower = visible healing/energy effect around the dog. */
+const v60PrevDrawPlayer=drawPlayer;
+drawPlayer=function(){
+ v60PrevDrawPlayer();const now=performance.now(),sx=p.x-camera;
+ if(now<boneRainUntil){ctx.save();ctx.globalAlpha=.42+.15*Math.sin(now/90);ctx.strokeStyle='#fff4a6';ctx.lineWidth=4;ctx.shadowColor='#ffdb62';ctx.shadowBlur=24;ctx.beginPath();ctx.arc(sx+p.w/2,p.y+p.h/2,44+5*Math.sin(now/130),0,Math.PI*2);ctx.stroke();ctx.font='20px system-ui';ctx.fillText('💖',sx-10,p.y-10);ctx.fillText('✨',sx+p.w+2,p.y+8);ctx.restore();}
+ v60BoneFx=v60BoneFx.filter(f=>now-f.born<900);for(const f of v60BoneFx){const a=(now-f.born)/900;ctx.save();ctx.globalAlpha=1-a;ctx.font='18px system-ui';ctx.fillText(f.icon,sx+p.w/2+f.dx*a,p.y+20+f.dy*a);ctx.restore();}
+};
+
+buySpecial=function(kind){
+ if(kind==='boneBoomerang'){fireBoneBoomerang();reward.classList.remove('on');updateShopButtons();return;}
+ if(kind==='cosmic'){if(cosmicCharge<5){useCosmicPower();updateShopButtons();return;}useCosmicPower();reward.classList.remove('on');updateShopButtons();return;}
+ const cost=V60_PRICES[kind]??999;if(!shopUnlocked){showToast(`⭐ ${V60_SHOP_UNLOCK}個でアイテム解禁！`,900);return;}if(points<cost){showToast(`⭐ あと ${cost-points}個必要！`,850);return;}
+ points-=cost;const now=performance.now();
+ if(kind==='giant'){activateBig();showToast('🐕💥 巨大化！ ⭐20',1200);}
+ else if(kind==='boneRain'){boneRainUntil=now+12000;for(let i=0;i<9;i++)v60BoneFx.push({born:now+i*30,dx:(Math.random()-.5)*90,dy:-30-Math.random()*60,icon:i%2?'✨':'💖'});showToast('🦴💖 ホネホネシャワー！ 元気チャージ！',1500);}
+ else if(kind==='satellite'){satelliteUntil=now+5000;invincibleUntil=Math.max(invincibleUntil,now+5000);showToast('🛰️ 衛星ライド 5秒！',1050);}
+ else if(kind==='friend'){companionCount++;showToast(`🐕 仲間が増えた！ ${companionCount+1}匹`,1200);}
+ reward.classList.remove('on');updateShopButtons();syncHUD();
+};
+
+/* Final HUD pass: consistent numeric distance and simpler Earth copy. */
+const v60PrevSyncHUD=syncHUD;
+syncHUD=function(){
+ v60PrevSyncHUD();if(points>=V60_SHOP_UNLOCK)shopUnlocked=true;v60RenderItems();updateShopButtons();
+ const earth=system===0&&stage===0,s=S(),dist=v60Distance();
+ if(earth){
+  locationEl.textContent='🌍 地球';missionEl.textContent=returnFromDogStar?'🐕 地球に帰ってきた。いつもの道を歩こう。':'🐕 地球を散歩中。道の先に何かある…';eventEl.textContent='🌳 地球';
+  astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'ここから宇宙の旅が始まる'}</span>`;
+ }else{
+  const grav=s.gravity<=.40?'🪽 低重力｜ジャンプ力UP':s.gravity>=.56?'⬇️ 高重力｜ジャンプ力DOWN':'⚖️ 標準重力｜ジャンプ力NORMAL';
+  astroInfo.innerHTML=`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span><span class="distanceHint">${grav}</span>`;
+ }
+ pointsEl.textContent=`⭐ ${points}`;foodEl.textContent=`🦴 ${food}`;if(alienHitEl)alienHitEl.textContent=`👽 ${cosmicCharge}`;specialBtn.classList.toggle('ready',shopUnlocked||points>=V60_SHOP_UNLOCK);v60RefreshReturnBtn();
+};
+
+/* Smoother ending lead-ins instead of sudden panels. */
+const v60Prelude=document.createElement('div');v60Prelude.id='v60StoryPrelude';v60Prelude.innerHTML='<div class="v60PreludeIcon"></div><div class="v60PreludeTitle"></div><div class="v60PreludeText"></div>';wrap.appendChild(v60Prelude);
+function v60StoryPrelude(icon,title,text,done,ms=1500){paused=true;v60Prelude.querySelector('.v60PreludeIcon').textContent=icon;v60Prelude.querySelector('.v60PreludeTitle').textContent=title;v60Prelude.querySelector('.v60PreludeText').textContent=text;v60Prelude.classList.add('on');setTimeout(()=>{v60Prelude.classList.remove('on');done();},ms);}
+const v60BaseDogStarChoice=showDogStarChoice;showDogStarChoice=function(){v60StoryPrelude('🐾','旅の果てに','遠い宇宙を越えた先に、犬たちの星が見えてきた。',v60BaseDogStarChoice,1650);};
+const v60BaseBHChoice=showBlackHoleChoice;showBlackHoleChoice=function(){v60StoryPrelude('⚫','光が二つに分かれる','出口の光。その反対側には、まだ誰も知らない暗闇が続いている。',v60BaseBHChoice,1550);};
+const v60BaseAlienOffer=showAlienOffer;showAlienOffer=function(){v60StoryPrelude('📡','通信がいつもと違う','ノイズの向こうから、今までとは違うメッセージが届いた。',v60BaseAlienOffer,1450);};
+const v60BaseRegisteredEnding=showRegisteredEnding;showRegisteredEnding=function(key,kicker,title,html,next,label='つづける'){
+ const better={earth:'宇宙を一周し、開いた時空を抜けて、犬星くんはいつもの地球へ戻った。犬小屋の匂いを確かめて、ようやく目を閉じる。<br><br><b>「やっぱり、ここが落ち着く。」</b>',dogstar:'敵もいない。骨も星もいっぱい。長い旅の果てで、犬星くんをたくさんの犬たちが迎えた。<br><br><b>「ここも、わるくないかも。」</b>',blackhole:'出口の光ではなく、さらに奥の暗闇を選んだ。星も時間も遠ざかり、最後に残ったのは犬星くんの足音だけ。<br><br><b>「……ここ、どこ？」</b>',alien:'交信を重ねた相手の船に、犬星くんはとうとう乗り込んだ。知らない星、知らない言葉。それでも、いつものように丸くなって眠った。<br><br><b>宇宙犬になった。</b>',dream:'月へ行って、地球へ帰って、眠って、また月へ。旅の始まりと終わりが少しずつ重なっていく。<br><br><b>「これは夢だったのかな。」</b>'};
+ v60StoryPrelude(key==='earth'?'🌍':key==='dogstar'?'🐾':key==='blackhole'?'⚫':key==='alien'?'👽':'🌙','ENDING SIGNAL','旅の選択が、ひとつの結末につながった。',()=>v60BaseRegisteredEnding(key,kicker,title,better[key]||html,next,label),1250);
+};
+
+/* Stable emergency dog rescue / space insurance. */
+let v60InsuranceBadge=$('spaceInsuranceBadge');if(!v60InsuranceBadge){v60InsuranceBadge=document.createElement('div');v60InsuranceBadge.id='spaceInsuranceBadge';wrap.appendChild(v60InsuranceBadge);}
+function v60RescueLimit(){return system===BLACK_HOLE_SYSTEM?2:3;}
+function v60RenderInsurance(){const lim=v60RescueLimit();v60InsuranceBadge.classList.toggle('warn',v60RescueHits>0&&!v60Rescuing);v60InsuranceBadge.classList.toggle('rescuing',v60Rescuing);v60InsuranceBadge.textContent=v60Rescuing?'🛸 宇宙保険 救助中！':v60RescueHits?`🛸 宇宙保険 ${v60RescueHits}/${lim}`:'🛸 宇宙保険 ON';}
+function v60EmergencyRescue(){
+ if(v60Rescuing||performance.now()<v60RescueCooldown)return;v60Rescuing=true;v60RenderInsurance();paused=true;reward.classList.remove('on');
+ gameOverEl.innerHTML='<div class="rescueUfo">🛸</div><div id="gameOverTitle">⚠ EMERGENCY DOG RESCUE</div><div id="gameOverSub">🐕 犬星くんを救助中…<br><span class="insurance">宇宙保険が適用されました</span></div>';gameOverEl.classList.add('on');eventEl.textContent='🛸 EMERGENCY DOG RESCUE — 宇宙保険発動！';
+ const ox=p.x,fromBH=system===BLACK_HOLE_SYSTEM;setTimeout(()=>{
+  if(fromBH){let best=0,bestRank=-1;for(let i=0;i<systems.length;i++){const r=systemDistanceRank[i]??-1;if(!systems[i].secret&&!systems[i].dream&&i!==BLACK_HOLE_SYSTEM&&r<=furthestRank&&r>bestRank){best=i;bestRank=r;}}system=best;stage=0;stageStart();}
+  else{stageStart();p.x=Math.max(115,ox-850);p.y=groundY()-p.h;p.vy=0;p.on=true;camera=Math.max(0,p.x-W*.34);}
+  food=Math.max(food,3);if(points<5){starTotal+=5-points;points=5;}gameOverEl.classList.remove('on');paused=false;invincibleUntil=performance.now()+2600;v60RescueHits=0;v60Rescuing=false;v60RescueCooldown=performance.now()+5000;v60RenderInsurance();showToast('🛸 救助完了！ 少し前から旅を再開',1600);syncHUD();
+ },1800);
+}
+hitHazard=function(h){
+ const now=performance.now();if(!h||h.got||now<invincibleUntil||big||v60Rescuing)return;
+ h.got=true;invincibleUntil=now+1000;const hadBone=food>0;spillStars(5);if(hadBone)spillBones(1);p.vy=-7;shake=16;hurtUntil=now+720;popDamage();
+ wrap.style.boxShadow='inset 0 0 100px rgba(255,88,132,.72)';setTimeout(()=>wrap.style.boxShadow='',520);showToast(`💥 ダメージ！ ⭐-5 / 🦴-${hadBone?1:0}`,1050);
+ if(now-v60LastRescueHit>20000)v60RescueHits=0;v60RescueHits++;v60LastRescueHit=now;v60RenderInsurance();if(v60RescueHits>=v60RescueLimit())setTimeout(v60EmergencyRescue,120);syncHUD();
+};
+gameOver=function(){v60EmergencyRescue();};
+v60RenderItems();v60RenderInsurance();
+/* === end v60 stable patch === */
+
 const feedDogBtn=$('feedDogBtn'),playDogBtn=$('playDogBtn'),sleepDogBtn=$('sleepDogBtn'),rewardCloseBtn=$('rewardClose');
 if(feedDogBtn)feedDogBtn.addEventListener('click',feedDoghouse);
 if(playDogBtn)playDogBtn.addEventListener('click',playDoghouse);
 if(sleepDogBtn)sleepDogBtn.addEventListener('click',sleepDoghouse);
 if(rewardCloseBtn)rewardCloseBtn.addEventListener('click',()=>reward.classList.remove('on'));
-laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{passive:false});cosmicBtn.addEventListener('pointerdown',e=>{e.preventDefault();useCosmicPower()},{passive:false});bigBtn.addEventListener('click',fireBoneBoomerang);specialBtn.addEventListener('click',()=>{if(shopUnlocked){reward.classList.toggle('on');updateShopButtons()}else openShop()});document.querySelectorAll('.rewardBtn').forEach(b=>b.addEventListener('click',()=>buySpecial(b.dataset.special)));wrap.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key===' '){e.preventDefault();doJump()}});stageStart();setTimeout(()=>showToast('🐕 まずは普通の散歩。ビルと木のある街を歩こう。',2300),600);setTimeout(()=>showToast('🚀 道の先のロケットに乗ると月へ！',2200),3200);requestAnimationFrame(frame);
+laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{passive:false});cosmicBtn.addEventListener('pointerdown',e=>{e.preventDefault();useCosmicPower()},{passive:false});bigBtn.addEventListener('click',fireBoneBoomerang);specialBtn.addEventListener('click',()=>{if(shopUnlocked){reward.classList.toggle('on');updateShopButtons()}else openShop()});document.querySelectorAll('.rewardBtn').forEach(b=>b.addEventListener('click',()=>buySpecial(b.dataset.special)));wrap.addEventListener('keydown',e=>{if(e.key==='ArrowUp'||e.key===' '){e.preventDefault();doJump()}});
+/* === integrated v61/v62 inside main game scope === */
+
+  const V61_ENDING_KEYS=['earth','dogstar','blackhole','alien','dream','cube'];
+  if(typeof endingSeen==='object' && !Object.prototype.hasOwnProperty.call(endingSeen,'cube')) endingSeen.cube=false;
+  saveEndings();
+
+  endingCount=function(){return V61_ENDING_KEYS.filter(k=>endingSeen[k]).length};
+  registerEnding=function(key){
+    if(key==='true'){endingSeen.true=true;saveEndings();return;}
+    const before=endingCount();
+    endingSeen[key]=true;saveEndings();
+    if(before<6&&endingCount()===6&&!endingSeen.true)pendingTrueEnding=true;
+  };
+
+  showEndingChoice=function(kicker,title,html,actions=[]){
+    paused=true;
+    endingPanel.querySelector('#endingKicker').textContent=kicker;
+    endingPanel.querySelector('#endingTitle').innerHTML=title;
+    endingPanel.querySelector('#endingText').innerHTML=html;
+    endingPanel.querySelector('#endingCount').textContent=`ENDING ${endingCount()} / 6`;
+    const box=endingPanel.querySelector('#endingActions');box.innerHTML='';
+    actions.forEach(a=>{const b=document.createElement('button');b.className='endingAction';b.innerHTML=a.label;b.onclick=()=>{hideEndingPanel();a.action()};box.appendChild(b)});
+    endingPanel.classList.add('on');
+  };
+
+  showTrueEnding=function(next){
+    pendingTrueEnding=false;registerEnding('true');
+    showEndingChoice('⭐ TRUE END','犬星くんの大冒険',`🌍　🐾　⚫　👽　🌙　🤍<br><br>帰ることも、残ることも、暗闇へ行くことも、知らない存在を見ることも選んだ。<br>それでも犬星くんは、また歩き出す。<br><br><b>「次は、どこ行こう。」</b>`,[
+      {label:'🌙 また月へ',action:()=>next()}
+    ]);
+  };
+
+  let scene=document.getElementById('v61EndingScene');
+  if(!scene){scene=document.createElement('div');scene.id='v61EndingScene';wrap.appendChild(scene);}
+  let revealTimer=0;
+  function boneRainHTML(){
+    let s='<div class="v61BoneRain">';
+    for(let i=0;i<20;i++)s+=`<span style="left:${3+i*4.8}%;animation-duration:${3.1+(i%7)*.42}s;animation-delay:${-(i%9)*.46}s">${i%5===0?'💖':'🦴'}</span>`;
+    return s+'</div>';
+  }
+  function sceneArt(key){
+    if(key==='blackhole')return '<div class="v61VoidDog">🐕</div>';
+    if(key==='alien')return '<div class="v61AlienMoon m1"></div><div class="v61AlienMoon m2"></div><div class="v61AlienGround"></div><div class="v61AlienHome">🛸</div><div class="v61AlienCrowd"><span>👽</span><span>👽</span><span>👽</span><span>👽</span><span>👽</span><span>👽</span></div><div class="v61AlienDog">🐕</div>';
+    if(key==='dogstar')return '<div class="v61Cloud c1">☁️</div><div class="v61Cloud c2">☁️</div><div class="v61Cushion">🛋️</div><div class="v61DogFriends"><span>🐩</span><span>🦮</span><span>🐕‍🦺</span><span>🐕</span><span>🐩</span><span>🦮</span></div><div class="v61DogStarDog">🐕</div>'+boneRainHTML();
+    if(key==='cube')return '<div class="v61CubeRoom"></div><div class="v61CubeDog">🐕</div><div class="v61StarChild" title="星の子"></div>';
+    return '';
+  }
+  const sceneCopy={
+    blackhole:{kicker:'⚫ BLACK HOLE END',title:'宇宙の向こう側',text:'光も、星も、地面もない。<br>進んでいるのか、止まっているのかも分からない。<br><br>📻 ……（信号も消えた）<br><br><b>「……ここ、どこ？」</b>',label:'⚪ 光の方へ戻る',delay:2350},
+    alien:{kicker:'👽 ALIEN END',title:'宇宙犬になった。',text:'知らない惑星。知らない言葉。<br>港には、地球で見つけたものと同じ型の小型船が並んでいた。<br>でも朝になると宇宙人たちが骨を持ってくる。<br>犬星くんは今日も、みんなの真ん中で普通に暮らしている。',label:'🐕 また旅へ',delay:1250},
+    dogstar:{kicker:'🐾 DOG STAR END',title:'なにもしなくていい星',text:'骨は尽きない。星は勝手に集まる。<br>敵も来ない。みんなが「GOOD DOG」と褒めてくれる。<br><br>📻 SIGNAL SOURCE : DOG STAR ?<br>でも、誰も助けを求めているようには見えない。<br><br>犬星くんは、もう旅をしなくなった。',label:'🐕 もう少しだけ旅する',delay:1200},
+    cube:{kicker:'🤍 WHITE CUBE SECRET END',title:'宇宙の生まれる前',text:'白い部屋の奥に、光でできた「星の子」がいた。<br>犬星くんと星の子は、しばらく何も言わずに見つめ合った。<br><br>📻「……やっと、きた。」<br><br><b>まだ旅のつづきがある気がした。</b>',label:'⚪ 白い光を抜ける',delay:1650}
+  };
+  function openSpecialEnding(key,next){
+    const c=sceneCopy[key];if(!c)return;
+    clearTimeout(revealTimer);paused=true;reward?.classList.remove('on');endingPanel?.classList.remove('on');v60Prelude?.classList.remove('on');
+    registerEnding(key);
+    scene.className=`on ${key}`;
+    scene.innerHTML=sceneArt(key)+`<div class="v61Final"><div class="v61Kicker">${c.kicker}</div><div class="v61Title">${c.title}</div><div class="v61Text">${c.text}</div><div class="v61Count">ENDING ${endingCount()} / 6</div><button class="v61Action">${c.label}</button></div>`;
+    const final=scene.querySelector('.v61Final'),btn=scene.querySelector('.v61Action');
+    revealTimer=setTimeout(()=>final?.classList.add('show'),c.delay);
+    btn.onclick=()=>{
+      clearTimeout(revealTimer);scene.className='';scene.innerHTML='';
+      if(pendingTrueEnding)showTrueEnding(next);else next();
+    };
+  }
+
+  const v61BaseRegisteredEnding=showRegisteredEnding;
+  showRegisteredEnding=function(key,kicker,title,html,next,label='つづける'){
+    if(['blackhole','alien','dogstar','cube'].includes(key)){openSpecialEnding(key,next);return;}
+    v61BaseRegisteredEnding(key,kicker,title,html,next,label);
+  };
+
+  function v61BlackHoleNext(){paused=false;whiteHoleTriggered=false;p.x=whiteHoleX-12;whiteHoleEscape();}
+  function cubeUnlocked(){return v60CosmicUses>=3&&alienContacts>=5;}
+
+  showBlackHoleChoice=function(){
+    v60StoryPrelude('⚫','光が二つに分かれる','出口の光。その反対側には、光さえない暗闇が続いている。',()=>{
+      const actions=[
+        {label:'⚫ 暗闇の向こうへ',action:()=>showRegisteredEnding('blackhole','⚫ BLACK HOLE END','宇宙の向こう側','',v61BlackHoleNext,'⚪ 光の方へ戻る')},
+        {label:'⚪ ホワイトホールへ',action:v61BlackHoleNext}
+      ];
+      if(cubeUnlocked())actions.push({label:'🤍 白い裂け目へ',action:()=>showRegisteredEnding('cube','🤍 WHITE CUBE SECRET END','宇宙の生まれる前','',v61BlackHoleNext,'⚪ 白い光を抜ける')});
+      showEndingChoice('⚫ BLACK HOLE CHOICE','どちらへ行く？',cubeUnlocked()?'暗闇と出口のあいだに、見覚えのない白い裂け目が開いている。':'ホワイトホールの光。その反対側には、何もない暗闇が続いている……',actions);
+    },1550);
+  };
+
+  showAlienOffer=function(){
+    v60StoryPrelude('📡','通信がいつもと違う','ノイズの向こうから、今までとは違うメッセージが届いた。',()=>{
+      showEndingChoice('👽 COSMIC SIGNAL','一緒に来る？','遠い惑星から迎えの船が来た。<br><br>🛸「ワレワレノ　ホシデ　クラサナイ？」',[
+        {label:'🛸 一緒に行く',action:()=>showRegisteredEnding('alien','👽 ALIEN END','宇宙犬になった。','',()=>{stageStart();paused=false},'🐕 また旅へ')},
+        {label:'🐕 まだ旅する',action:()=>{paused=false}}
+      ]);
+    },1450);
+  };
+
+  showDogStarChoice=function(){
+    v60StoryPrelude('🐾','旅の果てに','雲は骨の形。星は勝手に降ってくる。犬たちは全員、犬星くんを褒めている。',()=>{
+      const actions=[
+        {label:'🐾 ここに住む',action:()=>showRegisteredEnding('dogstar','🐾 DOG STAR END','なにもしなくていい星','',()=>{stageStart();paused=false},'🐕 もう少しだけ旅する')},
+        {label:'🚀 まだ旅する',action:()=>{stageStart();paused=false}}
+      ];
+      if(homeRouteReady)actions.splice(1,0,{label:'🌍 地球へ帰る',action:()=>{paused=false;v60ReturnToEarth()}});
+      showEndingChoice('🐾 FINAL CHOICE','なにもしなくていい星','骨は無限。敵はゼロ。ごはんも寝床も用意されている。<br><br><b>もう、どこにも行かなくていい。</b>',actions);
+    },1650);
+  };
+
+  /* Make the secret route discoverable without spelling it out too early. */
+  if(Array.isArray(v60CommHints)){
+    v60CommHints[2]='ブラックホールの出口で、ときどき「白すぎる場所」が見えるらしい。宇宙パワーを何度も使い、交信を重ねた犬だけが気づく。';
+    v60CommHints[3]='交信を重ねると、宇宙人は犬を「客」ではなく「仲間」として迎えに来る。';
+  }
+
+
+  startCommunication=function(obj){
+    const now=performance.now();
+    if(now-lastAlienTouchAt<900)return;
+    lastAlienTouchAt=now;
+    alienContactFlashUntil=now+650;
+    if(obj){obj.hitFlash=16;obj.chargeHits=(obj.chargeHits||0)+1;obj.y-=18;}
+    p.vy=-7.5;invincibleUntil=Math.max(invincibleUntil,now+500);
+    wrap.style.boxShadow='inset 0 0 110px rgba(74,255,112,.88)';
+    setTimeout(()=>{if(performance.now()>=alienContactFlashUntil)wrap.style.boxShadow=''},650);
+
+    const hadFive=cosmicCharge>=5;
+    registerAlienHit(1); // charge is never capped and is never wiped by communication
+
+    if(hadFive && obj && !obj.v61Communicated){
+      obj.v61Communicated=true;obj.got=true;alienContacts++;points+=4;starTotal+=4;
+      comm.classList.add('on');
+      const ct=comm.querySelector('#commTitle');if(ct)ct.textContent=`📡 👽 COSMIC SIGNAL ${alienContacts}`;
+      commText.textContent=['「遠くへ行くほど、帰る場所が大切になる」','「暗闇の向こうには、本当に何もない場所がある」','「白すぎる部屋を見た犬がいる」','「ワレワレノ星にも、犬の寝床はある」'][alienContacts%4];
+      showToast(`📡 👽と交信！ 宇宙パワーは ${cosmicCharge} のまま`,1150);
+      setTimeout(()=>comm.classList.remove('on'),2300);
+      if(alienContacts>=5&&!alienOfferPrompted&&!endingSeen.alien){
+        alienOfferPrompted=true;setTimeout(()=>{if(!paused)showAlienOffer()},650);
+      }
+    }else{
+      showToast(`👽💚 CONTACT！ 宇宙パワー ${cosmicCharge}`,800);
+    }
+    syncHUD();
+  };
+
+
+  if(typeof wrap==='undefined'||!wrap)return;
+  let dev=document.getElementById('v62EndingDev');
+  if(!dev){
+    dev=document.createElement('div');dev.id='v62EndingDev';
+    dev.innerHTML=`<div class="v62DevCard"><div class="v62DevHead"><b>🧪 ENDING TEST MENU</b><button class="v62DevClose">✕</button></div><div class="v62DevSub">確認用プレビュー。エンディング収集記録には残りません。</div><div class="v62DevGrid">
+      <button class="v62DevBtn" data-end="earth">🌍 EARTH END<small>地球へ帰って犬小屋へ</small></button>
+      <button class="v62DevBtn" data-end="dogstar">🐾 DOG STAR END<small>なにもしなくていい星</small></button>
+      <button class="v62DevBtn" data-end="blackhole">⚫ BLACK HOLE END<small>完全な真っ黒空間</small></button>
+      <button class="v62DevBtn" data-end="alien">👽 ALIEN END<small>別惑星で宇宙犬生活</small></button>
+      <button class="v62DevBtn" data-end="dream">🌙 SECRET DREAM END<small>夢から出られない</small></button>
+      <button class="v62DevBtn" data-end="cube">🤍 WHITE CUBE END<small>白い部屋と星の子</small></button>
+      <button class="v62DevBtn" data-end="true">⭐ TRUE END<small>全エンド後の最終エンド</small></button>
+      <button class="v62DevBtn" data-end="blackchoice">⚫ 分岐画面テスト<small>暗闇 / 白い裂け目 / ホワイトホール</small></button>
+    </div><div class="v62DevNote">隠しボタン：ゲーム画面の左下にうっすらある 🐾 を押す。<br>通常ルートの条件も下で確認できるようにしてあるで。</div></div>`;
+    wrap.appendChild(dev);
+  }
+  const close=()=>{dev.classList.remove('on');if(!document.getElementById('endingPanel')?.classList.contains('on')&&!document.getElementById('v61EndingScene')?.classList.contains('on'))paused=false;};
+  dev.querySelector('.v62DevClose')?.addEventListener('click',close);
+  dev.addEventListener('click',e=>{if(e.target===dev)close()});
+
+  function previewNoSave(run){
+    dev.classList.remove('on');
+    const realRegister=registerEnding;
+    const savedPending=pendingTrueEnding;
+    const savedSeen={...endingSeen};
+    registerEnding=function(){};
+    pendingTrueEnding=false;
+    let saw=false,ticks=0;
+    const restore=()=>{
+      registerEnding=realRegister;
+      pendingTrueEnding=savedPending;
+      Object.keys(endingSeen).forEach(k=>delete endingSeen[k]);Object.assign(endingSeen,savedSeen);
+      saveEndings();
+    };
+    const watch=setInterval(()=>{
+      ticks++;
+      const vis=!!(document.getElementById('v61EndingScene')?.classList.contains('on')||document.getElementById('endingPanel')?.classList.contains('on')||document.getElementById('v60StoryPrelude')?.classList.contains('on'));
+      if(vis)saw=true;
+      if((saw&&!vis)||ticks>240){clearInterval(watch);restore();}
+    },250);
+    try{run();}catch(err){clearInterval(watch);restore();paused=false;console.error(err);showToast('🧪 ENDING PREVIEW ERROR',1200);}
+  }
+  const back=()=>{paused=false;try{stageStart();}catch(e){}};
+  function preview(key){
+    if(key==='dogstar')return previewNoSave(()=>showRegisteredEnding('dogstar','🐾 DOG STAR END','なにもしなくていい星','',back,'🐕 戻る'));
+    if(key==='blackhole')return previewNoSave(()=>showRegisteredEnding('blackhole','⚫ BLACK HOLE END','宇宙の向こう側','',back,'⚪ 戻る'));
+    if(key==='alien')return previewNoSave(()=>showRegisteredEnding('alien','👽 ALIEN END','宇宙犬になった。','',back,'🐕 戻る'));
+    if(key==='cube')return previewNoSave(()=>showRegisteredEnding('cube','🤍 WHITE CUBE SECRET END','宇宙の生まれる前','',back,'⚪ 戻る'));
+    if(key==='earth')return previewNoSave(()=>showRegisteredEnding('earth','🌍 EARTH END','おかえり、犬星くん','宇宙を一周して、犬星くんは地球へ帰ってきた。',back,'🐕 戻る'));
+    if(key==='dream')return previewNoSave(()=>showRegisteredEnding('dream','🌙 SECRET END','夢から出られない','月へ行って、地球へ帰って、眠って、また月へ。',back,'🌙 戻る'));
+    if(key==='true')return previewNoSave(()=>showTrueEnding(back));
+    if(key==='blackchoice')return previewNoSave(()=>{
+      const oldUses=v60CosmicUses,oldContacts=alienContacts;v60CosmicUses=Math.max(3,v60CosmicUses);alienContacts=Math.max(5,alienContacts);showBlackHoleChoice();
+      setTimeout(()=>{v60CosmicUses=oldUses;alienContacts=oldContacts;},4000);
+    });
+  }
+  dev.querySelectorAll('[data-end]').forEach(b=>b.addEventListener('click',()=>preview(b.dataset.end)));
+  if(debugHomeBtn){
+    debugHomeBtn.textContent='🐾';debugHomeBtn.title='ENDING TEST';debugHomeBtn.setAttribute('aria-label','ending test menu');
+    debugHomeBtn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();paused=true;reward?.classList.remove('on');dev.classList.add('on');},true);
+  }
+
+
+
+/* === v63 opening story: mysterious transceiver -> abandoned alien craft === */
+let v63RadioFound=false,v63AlienRecognizedCraft=false,v63SignalStep=0;
+const V63_RADIO_X=640;
+const v63SignalSeen=new Set();
+let v63RadioScene=document.getElementById('v63RadioScene');
+if(!v63RadioScene){
+  v63RadioScene=document.createElement('div');v63RadioScene.id='v63RadioScene';
+  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN DISTRESS SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……たす……け……」<br>「……ワン……」</div><div class="v63RadioMeta">発信源：不明　／　距離：測定不能</div></div>';
+  wrap.appendChild(v63RadioScene);
+}
+let v63RadioBadge=document.getElementById('v63RadioBadge');
+if(!v63RadioBadge){v63RadioBadge=document.createElement('div');v63RadioBadge.id='v63RadioBadge';wrap.appendChild(v63RadioBadge);}
+
+function v63IsOpeningEarth(){return system===0&&stage===0&&!returnFromDogStar;}
+function v63SignalPercent(){
+  if(!v63RadioFound)return 0;
+  if(systems[system]?.dream)return 100;
+  if(system===0&&stage===0)return Math.max(8,Math.min(18,8+Math.round(Math.max(0,p.x-V63_RADIO_X)/(rocketX-V63_RADIO_X)*10)));
+  const rank=Math.max(0,systemDistanceRank[system]??0);
+  return Math.min(98,18+rank*3+Math.min(8,deepWarpCount));
+}
+function v63RenderRadio(){
+  if(!v63RadioFound||returnFromDogStar){v63RadioBadge.classList.remove('on','max');return;}
+  v63RadioBadge.classList.add('on');
+  if(systems[system]?.dream){v63RadioBadge.classList.add('max');v63RadioBadge.innerHTML='📻 SIGNAL MAX<small>発信源：ここ……？</small>';}
+  else{v63RadioBadge.classList.remove('max');v63RadioBadge.innerHTML=`📻 SIGNAL ${v63SignalPercent()}%<small>${system===0&&stage===0?'信号の方向を追跡中':'AUTO TRACE : ON'}</small>`;}
+}
+function v63PickupRadio(){
+  if(v63RadioFound)return;
+  v63RadioFound=true;paused=true;reward?.classList.remove('on');
+  missionEl.textContent='📻 救助信号の発信源を追う';eventEl.textContent='📡 UNKNOWN DISTRESS SIGNAL';
+  v63RadioScene.classList.add('on');v63RenderRadio();
+  setTimeout(()=>{if(v63RadioScene.classList.contains('on'))v63RadioScene.classList.add('heard')},650);
+  setTimeout(()=>{v63RadioScene.classList.remove('on','heard');paused=false;showToast('📻 信号が指す方向へ行ってみよう。',1700);},2850);
+}
+
+const v63BaseDrawPortal=drawPortal;
+drawPortal=function(){
+  if(!v63IsOpeningEarth()){v63BaseDrawPortal();return;}
+  const gy=groundY(),t=performance.now()/1000;
+  if(!v63RadioFound){
+    const rx=V63_RADIO_X-camera;if(rx>-90&&rx<W+90){
+      ctx.save();ctx.translate(rx,gy-25);ctx.shadowColor='#78f7ff';ctx.shadowBlur=14+Math.sin(t*5)*5;ctx.font='42px system-ui';ctx.fillText('📻',-22,0);ctx.font='900 9px system-ui';ctx.fillStyle='#244152';ctx.fillText('???',-8,-46);ctx.restore();
+    }
+  }
+  const sx=rocketX-camera;if(sx>-190&&sx<W+190){
+    ctx.save();ctx.translate(sx,gy-36);ctx.rotate(-.08);
+    ctx.font='34px system-ui';ctx.globalAlpha=.92;ctx.fillText('🌿',-82,14);ctx.fillText('🌿',44,17);ctx.fillText('🌱',-55,25);
+    ctx.globalAlpha=1;ctx.shadowColor=v63RadioFound?'#b782ff':'rgba(60,70,85,.45)';ctx.shadowBlur=v63RadioFound?24:7;ctx.font='102px system-ui';ctx.fillText('🛸',-53,0);
+    ctx.font='900 9px system-ui';ctx.fillStyle=v63RadioFound?'#7048a6':'#5d6873';ctx.fillText(v63RadioFound?'OWNER SIGNAL DETECTED':'ABANDONED CRAFT',-58,-76);
+    if(v63RadioFound){ctx.fillStyle='#58eaff';ctx.globalAlpha=.65+.3*Math.sin(t*6);ctx.fillRect(-5,-49,11,4);}
+    ctx.restore();
+  }
+};
+
+const v63BaseUpdate=update;
+update=function(now,dt){
+  if(!paused&&v63IsOpeningEarth()&&!v63RadioFound&&p.x>=V63_RADIO_X-24){v63PickupRadio();return;}
+  v63BaseUpdate(now,dt);
+  if(!paused&&v63RadioFound&&!returnFromDogStar){
+    v63RenderRadio();
+    if(v63IsOpeningEarth()){
+      if(p.x>1250&&!v63SignalSeen.has('weak')){v63SignalSeen.add('weak');eventEl.textContent='📻 SIGNAL : WEAK →';showToast('📻 ザザ… 信号はこの先から。',1350);}
+      if(p.x>2200&&!v63SignalSeen.has('craft')){v63SignalSeen.add('craft');missionEl.textContent='🛸 信号の先にあるものを確認する';showToast('📻 信号が急に強くなった。',1450);}
+    }
+  }
+};
+
+rocketToMoon=function(){
+  if(paused||rocketLaunched)return;
+  if(!v63RadioFound){p.x=Math.max(115,rocketX-120);showToast('🛸 ハッチが開かない。鍵になる信号が必要みたい。',1500);return;}
+  rocketLaunched=true;paused=true;reward?.classList.remove('on');
+  trans.style.display='grid';trans.style.background='radial-gradient(circle at 50% 45%,rgba(101,82,160,.48),rgba(3,5,15,.96) 64%)';
+  warpDog.textContent='🐕📻🛸';warpDog.className='spin';
+  transTitle.innerHTML='🛸 EMERGENCY CRAFT UNLOCKED';nextEl.textContent='トランシーバーと同じ記号が、船体で光った。';subEl.textContent='OWNER SIGNAL DETECTED';
+  setTimeout(()=>{transTitle.innerHTML='📡 DISTRESS SIGNAL LOCKED';nextEl.textContent='発信源を自動追跡します。';subEl.textContent='AUTO TRACE : ON';},1050);
+  setTimeout(()=>{
+    system=0;stage=1;deepWarpCount=0;stageStart();trans.style.display='none';trans.style.background='';warpDog.className='';paused=false;rocketLaunched=false;
+    showToast('🌙 月に到着。📻救助信号の追跡は続いている。',2200);v63RenderRadio();
+  },2650);
+};
+
+const v63BaseStageStart=stageStart;
+stageStart=function(){
+  v63BaseStageStart();
+  if(v63IsOpeningEarth()){
+    missionEl.textContent=v63RadioFound?'📻 救助信号の発信源を追う':'🐕 いつもの散歩';
+    eventEl.textContent=v63RadioFound?'📡 UNKNOWN DISTRESS SIGNAL':'🌍 EARTH / NORMAL DAY';
+  }else if(v63RadioFound&&!returnFromDogStar){
+    v63RenderRadio();
+    const rank=systemDistanceRank[system]??0;
+    if(rank>=8&&!v63SignalSeen.has('far')){v63SignalSeen.add('far');setTimeout(()=>showToast('📻 信号が少し強くなった。発信源は、まだ先。',1650),450);}
+    if(systems[system]?.dream&&!v63SignalSeen.has('dogstar')){v63SignalSeen.add('dogstar');setTimeout(()=>{eventEl.textContent='📻 SIGNAL SOURCE : DOG STAR ?';showToast('📻 SIGNAL MAX — 発信源はここ……？',1900);},600);}
+  }
+};
+
+const v63BaseSyncHUD=syncHUD;
+syncHUD=function(){v63BaseSyncHUD();v63RenderRadio();};
+
+const v63BaseStartCommunication=startCommunication;
+startCommunication=function(obj){
+  const first=v63RadioFound&&!v63AlienRecognizedCraft&&!!obj;
+  const out=v63BaseStartCommunication(obj);
+  if(first){v63AlienRecognizedCraft=true;setTimeout(()=>showToast('👽「……ソノ船、ドコデ？」',1700),720);}
+  return out;
+};
+
+/* Initialize the opening after all v63 wrappers are ready. */
+if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌍 EARTH / NORMAL DAY';}
+/* === end v63 opening story === */
+
+stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの道を歩いている。',1900),550);requestAnimationFrame(frame);
 })();
 </script>
 </body>
@@ -3772,249 +4437,7 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
   #reward{top:50%!important;max-height:66vh!important}
 }
 </style>
-<script>
-(function(){
-  const $=id=>document.getElementById(id);
-  const special=$('special'), laser=$('laser'), jump=$('jump');
-  const chipText=$('chipText'), laserAmmoText=$('laserAmmoText');
-  const reward=$('reward'), rewardTitle=$('rewardTitle'), rewardSub=$('rewardSub');
-  const comm=$('comm'), commTitle=$('commTitle'), commText=$('commText');
-  const homeBtn=$('homeWarpBtn');
-  function setMainButtons(){
-    if(special){special.innerHTML='<span class="btnMain">⭐ ボーナスアイテム</span><small id="chipText">ひらく</small>';}
-    if(laser){laser.innerHTML='<span class="btnMain">🔫 レーザービーム</span><small id="laserAmmoText">打ち放題 ∞</small>';}
-    if(jump){jump.innerHTML='<span class="btnMain">⬆️ ジャンプ</span><small>とぶ</small>';}
-  }
-  function setRewardTexts(){
-    if(rewardTitle) rewardTitle.textContent='⭐ ボーナスアイテム';
-    if(rewardSub) rewardSub.textContent='集めた⭐で使える特別アイテム';
-    const map={
-      giant:'🐕 巨大化<br>35⭐',
-      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
-      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
-      boneRain:'🦴 ホネホネシャワー<br>45⭐',
-      wormhole:'🌀 ワームホール呼出<br>80⭐',
-      satellite:'🛰️ 衛星ライド<br>40⭐',
-      magnet:'🧲 星マグネット<br>50⭐',
-      friend:'🐕 仲間を増やす<br>100⭐',
-      secret:'📡 宇宙人と交信<br>70⭐',
-      home:'🏠 地球へ帰る<br>🌏 0 / 3'
-    };
-    document.querySelectorAll('.rewardBtn').forEach(btn=>{
-      const k=btn.dataset.special;
-      if(map[k]) btn.innerHTML=map[k];
-    });
-  }
-  function setPressed(el){ if(el) el.classList.add('pressed'); }
-  function clearPressed(el){ if(el) el.classList.remove('pressed'); }
-  [['pointerdown',setPressed],['pointerup',clearPressed],['pointercancel',clearPressed],['pointerleave',clearPressed]].forEach(([ev,fn])=>{
-    [special,laser,jump].forEach(el=>el&&el.addEventListener(ev,()=>fn(el)));
-  });
-  const FINAL_PRICES={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
-  window.updateShopButtons=function(){
-    document.querySelectorAll('.rewardBtn').forEach(btn=>{
-      const kind=btn.dataset.special; const cost=FINAL_PRICES[kind]??0;
-      let disabled=false;
-      if(kind==='boneBoomerang') disabled=(window.system===0&&window.stage===0)||window.food<3;
-      else if(kind==='cosmic') disabled=(window.system===0&&window.stage===0)||window.cosmicCharge<5;
-      else if(kind==='home') disabled=!window.homeRouteReady||(window.system===0&&window.stage===0);
-      else if(!window.shopUnlocked) disabled=true;
-      else disabled=window.points<cost;
-      btn.disabled=!!disabled;
-      btn.classList.toggle('locked',!!disabled);
-      if(kind==='home' && btn===homeBtn){
-        btn.innerHTML=(window.system===0&&window.stage===0)?'🏠 地球へ帰る<br>🌍 いま地球':window.homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':`🏠 地球へ帰る<br>🌏 ${window.earthTokenCount} / 3`;
-      }
-    });
-  };
-  window.syncHUD=(function(prev){
-    return function(){
-      if(typeof prev==='function') prev();
-      const chip=$('chipText'), ammo=$('laserAmmoText');
-      if(chip) chip.textContent='ひらく';
-      if(ammo) ammo.textContent='打ち放題 ∞';
-      setRewardTexts();
-      if(typeof window.updateShopButtons==='function') window.updateShopButtons();
-    };
-  })(window.syncHUD);
-  window.buySpecial=function(kind){
-    const cost=FINAL_PRICES[kind]??0;
-    if(kind==='home'){
-      if(!(window.homeRouteReady||window.systems?.[window.system]?.dream)){window.showToast?.(`🌏 帰還サインをあと ${Math.max(0,3-window.earthTokenCount)} 個集めよう！`,1300);return}
-      reward?.classList.remove('on');
-      window.returnFromDogStar=true;window.earthTokenCount=0;window.homeRouteReady=false;window.paused=true;
-      window.trans.style.display='grid';window.warpDog.textContent='🐕🌍';window.warpDog.className='spin';
-      window.transTitle.innerHTML='🌍 EARTH RETURN!';window.nextEl.textContent='ついに地球へ帰る帰還ルートが開いた！';window.subEl.textContent='HOME EVENT';
-      setTimeout(()=>{window.system=0;window.stage=0;window.stageStart();window.trans.style.display='none';window.warpDog.className='';window.paused=false;window.showToast?.('🌳 やっと地球に戻ってきた！',2200)},1800);
-      return;
-    }
-    if(kind==='boneBoomerang'){
-      if(window.food<3){window.showToast?.('🦴 骨が3必要！',900);return}
-      reward?.classList.remove('on');
-      window.fireBoneBoomerang?.();
-      return;
-    }
-    if(kind==='cosmic'){
-      if(window.cosmicCharge<5){window.showToast?.('👽 5体ぶんで宇宙パワー！',1000);return}
-      reward?.classList.remove('on');
-      window.useCosmicPower?.();
-      return;
-    }
-    if(!window.shopUnlocked){window.showToast?.('⭐ 30個集めると解禁！',950);return}
-    if(window.points<cost){window.showToast?.(`⭐ あと ${cost-window.points}個 必要！`,1000);return}
-    window.points-=cost; window.starTotal=Math.max(0,window.starTotal-cost);
-    const now=performance.now();
-    if(kind==='giant'){window.activateBig?.();window.showToast?.('🐕💥 巨大化！ ⭐35',1500)}
-    else if(kind==='boneRain'){window.boneRainUntil=now+9500;window.showToast?.('🦴🦴🦴 ホネホネシャワー MAX！',1500)}
-    else if(kind==='wormhole'){window.wormholeActive=true;window.portalX=Math.min(window.worldLength-260,window.p.x+820);window.showToast?.('🌀 ワームホールを前方に呼び出した！',1500)}
-    else if(kind==='satellite'){window.satelliteUntil=now+3000;window.invincibleUntil=Math.max(window.invincibleUntil,now+3000);window.showToast?.('🛰️ 衛星ライド 3秒！',1100)}
-    else if(kind==='magnet'){window.magnetUntil=now+10000;window.showToast?.('🧲 星マグネット 10秒！',1100)}
-    else if(kind==='friend'){window.companionCount++;window.showToast?.(`🐕 仲間を増やした！ いま ${window.companionCount+1}匹`,1500)}
-    else if(kind==='secret'){
-      const hints=[
-        '📡 交信成功…「🌏を3つ集めると、地球帰還ルートが開くよ」',
-        '📡 交信成功…「犬の星では敵が出ない。帰る前に⭐を集めると有利だよ」',
-        '📡 交信成功…「ブラックホールは奥まで進むと、ホワイトホール脱出が待っている」'
-      ];
-      const msg=hints[Math.floor(Math.random()*hints.length)];
-      if(comm && commText){
-        if(commTitle) commTitle.textContent='📡 宇宙人と交信';
-        commText.textContent=msg.replace(/^📡 交信成功…「|」$/g,'');
-        comm.classList.remove('on'); void comm.offsetWidth; comm.classList.add('on');
-        setTimeout(()=>comm.classList.remove('on'),2500);
-      }
-      window.showToast?.(msg,2200);
-    }
-    reward?.classList.remove('on');
-    window.syncHUD?.();
-  };
-  const originalSpawnEvents=window.spawnEvents;
-  if(typeof originalSpawnEvents==='function'){
-    window.spawnEvents=function(){
-      originalSpawnEvents();
-      if(performance.now()<window.boneRainUntil && window.eventPhase%2===0){
-        for(let i=0;i<4;i++) window.items.push({x:window.p.x+window.W*(.06+Math.random()*.9),y:18+Math.random()*Math.max(90,window.H*.24),r:18+Math.random()*3,got:false,color:'#fff0aa',food:true,fall:true});
-        if(window.eventEl) window.eventEl.textContent='🦴 ホネホネシャワー ✦ 骨取り放題！';
-      }
-    }
-  }
-  setMainButtons();
-  setRewardTexts();
-  window.syncHUD?.();
 
-/* v51 local gameplay/ui patch */
-function v51RenderBottomButtons(){
-  specialBtn.innerHTML='<span class="btnMain">⭐ ボーナスアイテム</span><small id="chipText">ひらく</small>';
-  laserBtn.innerHTML='<span class="btnMain">🔫 レーザービーム</span><small id="laserAmmoText">打ち放題 ∞</small>';
-  jumpBtn.innerHTML='<span class="btnMain">⬆️ ジャンプ</span><small>とぶ</small>';
-}
-function v51RenderRewardTexts(){
-  const rt=$('rewardTitle'), rs=$('rewardSub');
-  if(rt) rt.textContent='⭐ ボーナスアイテム';
-  if(rs) rs.textContent='集めた⭐で使える特別アイテム';
-  const map={
-    giant:'🐕 巨大化<br>35⭐',
-    boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
-    cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
-    boneRain:'🦴 ホネホネシャワー<br>45⭐',
-    wormhole:'🌀 ワームホール呼出<br>80⭐',
-    satellite:'🛰️ 衛星ライド<br>40⭐',
-    magnet:'🧲 星マグネット<br>50⭐',
-    friend:'🐕 仲間を増やす<br>100⭐',
-    secret:'📡 宇宙人と交信<br>70⭐'
-  };
-  document.querySelectorAll('.rewardBtn').forEach(btn=>{const k=btn.dataset.special; if(map[k]) btn.innerHTML=map[k];});
-}
-[['pointerdown','add'],['pointerup','remove'],['pointercancel','remove'],['pointerleave','remove']].forEach(([ev,mode])=>{
-  [specialBtn,laserBtn,jumpBtn].forEach(btn=>btn&&btn.addEventListener(ev,()=>btn.classList[mode]('pressed')));
-});
-const __v51SyncHUD=syncHUD;
-syncHUD=function(){
-  __v51SyncHUD();
-  v51RenderBottomButtons();
-  v51RenderRewardTexts();
-  const liveChip=specialBtn.querySelector('small');
-  const liveAmmo=laserBtn.querySelector('small');
-  if(liveChip) liveChip.textContent='ひらく';
-  if(liveAmmo) liveAmmo.textContent='打ち放題 ∞';
-  updateShopButtons();
-};
-updateShopButtons=function(){
-  v51RenderRewardTexts();
-  const prices={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
-  document.querySelectorAll('.rewardBtn').forEach(btn=>{
-    const kind=btn.dataset.special; const cost=prices[kind]??0; let disabled=false;
-    if(kind==='boneBoomerang') disabled=(system===0&&stage===0)||food<3;
-    else if(kind==='cosmic') disabled=(system===0&&stage===0)||!cosmicPowerReady;
-    else if(kind==='home') disabled=!homeRouteReady||(system===0&&stage===0);
-    else if(!shopUnlocked) disabled=true;
-    else disabled=points<cost;
-    btn.disabled=!!disabled;
-    btn.classList.toggle('locked', !!disabled);
-    if(kind==='home') btn.innerHTML=(system===0&&stage===0)?'🏠 地球へ帰る<br>🌍 いま地球':homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':`🏠 地球へ帰る<br>🌏 ${earthTokenCount} / 3`;
-  });
-};
-buySpecial=function(kind){
-  const prices={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
-  const cost=prices[kind]??999;
-  if(kind==='home'){
-    if(!(homeRouteReady||systems[system].dream)){showToast(`🌏 帰還サインをあと ${Math.max(0,3-earthTokenCount)} 個集めよう！`,1300);return}
-    reward.classList.remove('on');
-    returnFromDogStar=true; earthTokenCount=0; homeRouteReady=false; paused=true; trans.style.display='grid'; warpDog.textContent='🐕🌍'; warpDog.className='spin';
-    transTitle.innerHTML='🌍 EARTH RETURN!'; nextEl.textContent='ついに地球へ帰る帰還ルートが開いた！'; subEl.textContent='HOME EVENT';
-    setTimeout(()=>{system=0;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌳 やっと地球に戻ってきた！',2200)},1800);
-    return;
-  }
-  if(kind==='boneBoomerang'){
-    if(food<3){showToast('🦴 骨が3必要！',900);return}
-    reward.classList.remove('on');
-    fireBoneBoomerang();
-    return;
-  }
-  if(kind==='cosmic'){
-    if(!cosmicPowerReady){showToast(`👽 あと ${Math.max(0,5-cosmicCharge)} で宇宙パワー！`,950);return}
-    reward.classList.remove('on');
-    useCosmicPower();
-    return;
-  }
-  if(!shopUnlocked){showToast('⭐ 30個集めると解禁！',950);return}
-  if(points<cost){showToast(`⭐ あと ${cost-points}個 必要！`,950);return}
-  points-=cost; starTotal=Math.max(0,starTotal-cost); const now=performance.now();
-  if(kind==='giant'){activateBig();showToast('🐕💥 巨大化！ ⭐35',1450)}
-  else if(kind==='boneRain'){boneRainUntil=now+9800;showToast('🦴🦴🦴 ホネホネシャワー MAX！',1500)}
-  else if(kind==='wormhole'){wormholeActive=true;portalX=Math.min(worldLength-260,p.x+820);showToast('🌀 ワームホールを前方に呼び出した！',1450)}
-  else if(kind==='satellite'){satelliteUntil=now+3000;invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100)}
-  else if(kind==='magnet'){magnetUntil=now+10000;showToast('🧲 星マグネット 10秒！',1100)}
-  else if(kind==='friend'){companionCount++;showToast(`🐕 仲間を増やした！ いま ${companionCount+1}匹`,1450)}
-  else if(kind==='secret'){
-    const hints=[
-      '🌏を3つ集めると、地球帰還ルートが開くみたい…',
-      '犬の星まで進むと、地球へ帰るチャンスが見えてくる…',
-      'ブラックホールは奥まで進めば、ホワイトホール脱出が待っている…'
-    ];
-    const msg=hints[Math.floor(Math.random()*hints.length)];
-    $('commTitle').textContent='📡 宇宙人と交信';
-    $('commText').textContent=msg;
-    comm.classList.remove('on'); void comm.offsetWidth; comm.classList.add('on');
-    setTimeout(()=>comm.classList.remove('on'),2600);
-    showToast('📡 宇宙人がヒントをくれた！',1500);
-  }
-  reward.classList.remove('on');
-  syncHUD();
-};
-const __v51SpawnEvents=spawnEvents;
-spawnEvents=function(){
-  __v51SpawnEvents();
-  if(performance.now()<boneRainUntil&&eventPhase%2===0){
-    for(let i=0;i<4;i++) items.push({x:p.x+W*(.06+Math.random()*.9),y:18+Math.random()*Math.max(90,H*.24),r:18+Math.random()*3,got:false,color:'#fff0aa',food:true,fall:true});
-    eventEl.textContent='🦴 ホネホネシャワー ✦ 骨取り放題！';
-  }
-};
-v51RenderBottomButtons();
-v51RenderRewardTexts();
-
-})();
-</script>
 
 <!-- v52 control/item polish patch -->
 <style>
@@ -4106,158 +4529,7 @@ v51RenderRewardTexts();
   #reward{width:min(462px,93vw)!important;max-height:68vh!important}
 }
 </style>
-<script>
-(function(){
-  const $=id=>document.getElementById(id);
-  const specialBtn=window.specialBtn||$('special');
-  const laserBtn=window.laserBtn||$('laser');
-  const jumpBtn=window.jumpBtn||$('jump');
-  const reward=window.reward||$('reward');
-  const rewardTitle=$('rewardTitle');
-  const rewardSub=$('rewardSub');
-  const comm=window.comm||$('comm');
-  const commTitle=$('commTitle');
-  const commText=$('commText');
-  const homeBtn=$('homeWarpBtn');
-  function renderBottomButtons(){
-    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ ボーナスアイテム</span>';
-    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 レーザービーム</span>';
-    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">⬆️ ジャンプ</span>';
-  }
-  function renderRewardTexts(){
-    if(rewardTitle) rewardTitle.textContent='⭐ ボーナスアイテム';
-    if(rewardSub) rewardSub.textContent='集めた⭐で使える特別アイテム';
-    const map={
-      giant:'🐕 巨大化<br>35⭐',
-      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
-      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
-      boneRain:'🦴 ホネホネシャワー<br>45⭐',
-      wormhole:'🌀 ワームホール呼出<br>80⭐',
-      satellite:'🛰️ 衛星ライド<br>40⭐',
-      magnet:'🧲 星マグネット<br>50⭐',
-      friend:'🐕 仲間を増やす<br>100⭐',
-      secret:'📡 宇宙人と交信<br>70⭐'
-    };
-    document.querySelectorAll('.rewardBtn').forEach(btn=>{
-      const kind=btn.dataset.special;
-      if(kind==='home') return;
-      if(map[kind]) btn.innerHTML=map[kind];
-    });
-  }
-  function wirePress(btn){
-    if(!btn || btn.dataset.v52wired==='1') return;
-    btn.dataset.v52wired='1';
-    const on=()=>btn.classList.add('pressed');
-    const off=()=>btn.classList.remove('pressed');
-    ['pointerdown','touchstart'].forEach(ev=>btn.addEventListener(ev,on,{passive:true}));
-    ['pointerup','pointercancel','pointerleave','touchend','touchcancel'].forEach(ev=>btn.addEventListener(ev,off,{passive:true}));
-    btn.addEventListener('click',()=>{btn.classList.add('pressed'); setTimeout(()=>btn.classList.remove('pressed'),110)});
-  }
-  [specialBtn,laserBtn,jumpBtn].forEach(wirePress);
 
-  const PRICES={giant:35,boneRain:45,wormhole:80,satellite:40,magnet:50,friend:100,secret:70,home:0,boneBoomerang:0,cosmic:0};
-  window.updateShopButtons=function(){
-    renderRewardTexts();
-    document.querySelectorAll('.rewardBtn').forEach(btn=>{
-      const kind=btn.dataset.special; const cost=PRICES[kind]??0; let disabled=false;
-      if(kind==='boneBoomerang') disabled=((window.system===0&&window.stage===0)||window.food<3);
-      else if(kind==='cosmic') disabled=((window.system===0&&window.stage===0)||!(window.cosmicPowerReady||window.cosmicCharge>=5));
-      else if(kind==='home') disabled=(!window.homeRouteReady||(window.system===0&&window.stage===0));
-      else if(!window.shopUnlocked) disabled=true;
-      else disabled=(window.points<cost);
-      btn.disabled=!!disabled;
-      btn.classList.toggle('locked',!!disabled);
-      if(kind==='home'){
-        btn.innerHTML=(window.system===0&&window.stage===0)?'🏠 地球へ帰る<br>🌍 いま地球':window.homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':`🏠 地球へ帰る<br>🌏 ${window.earthTokenCount} / 3`;
-      }
-    });
-  };
-
-  const prevSync=window.syncHUD;
-  window.syncHUD=function(){
-    if(typeof prevSync==='function') prevSync();
-    renderBottomButtons();
-    renderRewardTexts();
-    if(typeof window.updateShopButtons==='function') window.updateShopButtons();
-  };
-  if(typeof syncHUD!=='undefined') syncHUD=window.syncHUD;
-
-  window.buySpecial=function(kind){
-    const cost=PRICES[kind]??999;
-    if(kind==='home'){
-      if(!(window.homeRouteReady||window.systems?.[window.system]?.dream)){window.showToast?.(`🌏 帰還サインをあと ${Math.max(0,3-window.earthTokenCount)} 個集めよう！`,1300);return}
-      reward?.classList.remove('on');
-      window.returnFromDogStar=true;window.earthTokenCount=0;window.homeRouteReady=false;window.paused=true;
-      window.trans.style.display='grid';window.warpDog.textContent='🐕🌍';window.warpDog.className='spin';
-      window.transTitle.innerHTML='🌍 EARTH RETURN!';window.nextEl.textContent='ついに地球へ帰る帰還ルートが開いた！';window.subEl.textContent='HOME EVENT';
-      setTimeout(()=>{window.system=0;window.stage=0;window.stageStart();window.trans.style.display='none';window.warpDog.className='';window.paused=false;window.showToast?.('🌳 やっと地球に戻ってきた！',2200)},1800);
-      return;
-    }
-    if(kind==='boneBoomerang'){
-      if(window.food<3){window.showToast?.('🦴 骨が3必要！',950);return}
-      reward?.classList.remove('on');
-      window.fireBoneBoomerang?.();
-      return;
-    }
-    if(kind==='cosmic'){
-      if(!(window.cosmicPowerReady||window.cosmicCharge>=5)){window.showToast?.(`👽 あと ${Math.max(0,5-window.cosmicCharge)} で宇宙パワー！`,1000);return}
-      reward?.classList.remove('on');
-      window.useCosmicPower?.();
-      return;
-    }
-    if(!window.shopUnlocked){window.showToast?.('⭐ 30個集めると解禁！',950);return}
-    if(window.points<cost){window.showToast?.(`⭐ あと ${cost-window.points}個 必要！`,1000);return}
-    window.points-=cost; window.starTotal=Math.max(0,(window.starTotal||0)-cost);
-    const now=performance.now();
-    if(kind==='giant'){window.activateBig?.();window.showToast?.('🐕💥 巨大化！',1400)}
-    else if(kind==='boneRain'){window.boneRainUntil=now+12000;window.showToast?.('🦴🦴🦴 ホネホネシャワー！',1500)}
-    else if(kind==='wormhole'){window.wormholeActive=true;window.portalX=Math.min(window.worldLength-260,window.p.x+820);window.showToast?.('🌀 ワームホールを前方に呼び出した！',1450)}
-    else if(kind==='satellite'){window.satelliteUntil=now+3000;window.invincibleUntil=Math.max(window.invincibleUntil,now+3000);window.showToast?.('🛰️ 衛星ライド 3秒！',1100)}
-    else if(kind==='magnet'){window.magnetUntil=now+10000;window.showToast?.('🧲 星マグネット 10秒！',1100)}
-    else if(kind==='friend'){window.companionCount=(window.companionCount||0)+1;window.showToast?.(`🐕 仲間を増やした！ いま ${(window.companionCount||0)+1}匹`,1500)}
-    else if(kind==='secret'){
-      const hints=[
-        '🌏を3つ集めると、地球帰還ルートが開くらしい…',
-        '犬の星まで進むと、地球へ帰るチャンスが見えてくる…',
-        'ブラックホールは奥まで進めば、ホワイトホール脱出が待っている…',
-        '夢の月へは、我が家で眠ったあとにもう一度つながるみたい…'
-      ];
-      const msg=hints[Math.floor(Math.random()*hints.length)];
-      if(comm && commText){
-        if(commTitle) commTitle.textContent='📡 宇宙人と交信';
-        commText.textContent=msg;
-        comm.classList.remove('on'); void comm.offsetWidth; comm.classList.add('on');
-        setTimeout(()=>comm.classList.remove('on'),2600);
-      }
-      window.showToast?.('📡 宇宙人がエンディングのヒントをくれた！',1700);
-    }
-    reward?.classList.remove('on');
-    window.syncHUD?.();
-  };
-  if(typeof buySpecial!=='undefined') buySpecial=window.buySpecial;
-
-  const prevSpawn=window.spawnEvents;
-  window.spawnEvents=function(){
-    if(typeof prevSpawn==='function') prevSpawn();
-    if(performance.now()<(window.boneRainUntil||0) && window.eventPhase%1===0){
-      for(let i=0;i<10;i++){
-        window.items.push({
-          x:window.p.x+window.W*(.05+Math.random()*.92),
-          y:18+Math.random()*Math.max(110,window.H*.28),
-          r:18+Math.random()*4,
-          got:false,color:'#fff0aa',food:true,fall:true
-        });
-      }
-      if(window.eventEl) window.eventEl.textContent='🦴 ホネホネシャワー ✦ 骨取り放題！';
-    }
-  };
-  if(typeof spawnEvents!=='undefined') spawnEvents=window.spawnEvents;
-
-  renderBottomButtons();
-  renderRewardTexts();
-  window.syncHUD?.();
-})();
-</script>
 
 <!-- v53 button polish patch -->
 <style>
@@ -4298,32 +4570,7 @@ v51RenderRewardTexts();
   #astroInfo .distValue{font-size:15px!important}
 }
 </style>
-<script>
-(function(){
-  const $=id=>document.getElementById(id);
-  const specialBtn=$('special'), laserBtn=$('laser'), jumpBtn=$('jump'), astroInfo=$('astroInfo');
 
-  function renderBottomButtonsV53(){
-    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
-    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
-    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
-  }
-  function tweakAstroInfo(){
-    if(!astroInfo) return;
-    astroInfo.innerHTML=astroInfo.innerHTML.replace(/<span class="distanceBig">🌍 地球から\s*([^<]+)<\/span>/,'<span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">$1</span></span>');
-  }
-  const prevSync=window.syncHUD;
-  window.syncHUD=function(){
-    if(typeof prevSync==='function') prevSync();
-    renderBottomButtonsV53();
-    tweakAstroInfo();
-  };
-  if(typeof syncHUD!=='undefined') syncHUD=window.syncHUD;
-  renderBottomButtonsV53();
-  tweakAstroInfo();
-  window.syncHUD?.();
-})();
-</script>
 
 <!-- v54 y2k ship controls + magnet + bone cap patch -->
 <style>
@@ -4455,130 +4702,7 @@ v51RenderRewardTexts();
   .rewardBtn{min-height:62px!important;font-size:10px!important}
 }
 </style>
-<script>
-(function(){
-  const FOOD_CAP=30;
-  const $=id=>document.getElementById(id);
-  const specialBtn=$('special'), laserBtn=$('laser'), jumpBtn=$('jump');
-  const reward=$('reward');
-  const rewardTitle=$('rewardTitle'), rewardSub=$('rewardSub');
 
-  function renderBottomButtonsV54(){
-    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
-    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
-    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
-  }
-
-  function renderRewardTextsV54(){
-    if(rewardTitle) rewardTitle.textContent='⭐ アイテム';
-    if(rewardSub) rewardSub.textContent='集めた⭐や🦴や👽で使える宇宙アイテム';
-    const map={
-      giant:'🐕 巨大化<br>35⭐',
-      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
-      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
-      boneRain:'🦴 ホネホネシャワー<br>45⭐',
-      wormhole:'🌀 ワームホール呼出<br>80⭐',
-      satellite:'🛰️ 衛星ライド<br>40⭐',
-      magnet:'🧲 星磁石<br>50⭐ / 拾うと即発動',
-      friend:'🐕 仲間を増やす<br>100⭐',
-      secret:'📡 宇宙人と交信<br>70⭐'
-    };
-    document.querySelectorAll('.rewardBtn').forEach(btn=>{
-      const kind=btn.dataset.special;
-      if(kind==='home') return;
-      if(map[kind]) btn.innerHTML=map[kind];
-    });
-  }
-
-  function strongPress(btn){
-    if(!btn || btn.dataset.v54press==='1') return;
-    btn.dataset.v54press='1';
-    const on=()=>btn.classList.add('pressed');
-    const off=()=>btn.classList.remove('pressed');
-    ['pointerdown','touchstart'].forEach(ev=>btn.addEventListener(ev,on,{passive:true}));
-    ['pointerup','pointercancel','pointerleave','touchend','touchcancel'].forEach(ev=>btn.addEventListener(ev,off,{passive:true}));
-    btn.addEventListener('click',()=>{on();setTimeout(off,120)});
-  }
-  [specialBtn,laserBtn,jumpBtn].forEach(strongPress);
-
-  const prevCollect=collectGood;
-  collectGood=function(it){
-    if(!it || it.got) return;
-    it.got=true;
-    if(it.magnet){
-      magnetUntil=performance.now()+12000;
-      showToast('🧲 星磁石 発動！ 12秒',1200);
-      syncHUD();
-      return;
-    }
-    if(it.food){
-      if(food<FOOD_CAP){
-        food++;
-        showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 元気 +1　${food}/${FOOD_CAP}`,850);
-      }else{
-        points+=1;starTotal+=1;
-        showToast('🦴 元気たっぷり！ ⭐+1',900);
-      }
-      syncHUD();
-      return;
-    }
-    const gain=big?2:1;
-    points+=gain;starTotal+=gain;
-    if(points>=30 && !shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}
-    syncHUD();
-  };
-  window.collectGood=collectGood;
-
-  const prevDraw=drawGood;
-  drawGood=function(it){
-    if(it && it.magnet){
-      const sx=it.x-camera;
-      if(sx<-70||sx>W+70||it.got) return;
-      ctx.save();
-      ctx.translate(sx,it.y);
-      ctx.rotate(Math.sin(performance.now()/260)*.08);
-      ctx.shadowColor='#8bffdf';
-      ctx.shadowBlur=22;
-      ctx.font='900 34px system-ui';
-      ctx.fillText('🧲',-17,12);
-      ctx.restore();
-      return;
-    }
-    prevDraw(it);
-  };
-  window.drawGood=drawGood;
-
-  const prevSpawn=spawnEvents;
-  spawnEvents=function(){
-    if(typeof prevSpawn==='function') prevSpawn();
-    if(paused||doghouseInterior) return;
-    if(system===0&&stage===0) return;
-    if(eventPhase%220===0 && Math.random()<0.35){
-      items.push({x:p.x+W*(.74+Math.random()*.18),y:46+Math.random()*Math.max(90,H*.22),r:20,got:false,magnet:true,color:'#8fffe8'});
-      if(eventEl) eventEl.textContent='🧲 MAGNET SIGNAL — 星磁石が流れてきた！';
-    }
-  };
-  window.spawnEvents=spawnEvents;
-
-  const prevSync=syncHUD;
-  syncHUD=function(){
-    if(typeof prevSync==='function') prevSync();
-    renderBottomButtonsV54();
-    renderRewardTextsV54();
-    if(foodEl) foodEl.textContent=`🦴 ${food}`;
-    if(reward && reward.classList.contains('on')){
-      reward.style.top='50%';
-      reward.style.bottom='auto';
-      reward.style.transform='translate(-50%,-50%)';
-    }
-  };
-  window.syncHUD=syncHUD;
-
-  renderBottomButtonsV54();
-  renderRewardTextsV54();
-  syncHUD();
-})();
-</script>
 
 <!-- v55 y2k spaceship console + reliable bone collection -->
 <style>
@@ -4722,135 +4846,7 @@ v51RenderRewardTexts();
   .rewardBtn{min-height:63px!important;font-size:10px!important}
 }
 </style>
-<script>
-(function(){
-  const FOOD_CAP=30;
-  const $=id=>document.getElementById(id);
-  const reward=$('reward');
-  const rewardTitle=$('rewardTitle'), rewardSub=$('rewardSub');
-  const specialBtn=$('special'), laserBtn=$('laser'), jumpBtn=$('jump');
 
-  function renderBottom(){
-    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
-    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
-    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
-  }
-  function renderItems(){
-    if(rewardTitle) rewardTitle.textContent='⭐ アイテム';
-    if(rewardSub) rewardSub.textContent='宇宙で集めたパワーを使う';
-  }
-  function pressWire(btn){
-    if(!btn || btn.dataset.v55press==='1') return;
-    btn.dataset.v55press='1';
-    const on=()=>btn.classList.add('pressed');
-    const off=()=>btn.classList.remove('pressed');
-    btn.addEventListener('pointerdown',on,{passive:true});
-    ['pointerup','pointercancel','pointerleave'].forEach(ev=>btn.addEventListener(ev,off,{passive:true}));
-    btn.addEventListener('click',()=>{on();setTimeout(off,135)});
-  }
-  [specialBtn,laserBtn,jumpBtn].forEach(pressWire);
-
-  // Hard-fix bone pickup: cap is 30 everywhere from this point forward.
-  collectGood=function(it){
-    if(!it || it.got) return;
-    it.got=true;
-    if(it.magnet){
-      magnetUntil=performance.now()+12000;
-      showToast('🧲 星磁石 発動！ 12秒',1200);
-      syncHUD();
-      return;
-    }
-    if(it.food){
-      if(food<FOOD_CAP){
-        food=Math.min(FOOD_CAP,food+1);
-        showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 +1　${food}/${FOOD_CAP}`,700);
-      }else{
-        points+=1;starTotal+=1;
-        showToast('🦴 30個たまった！ ⭐+1',700);
-      }
-      syncHUD();
-      return;
-    }
-    const gain=big?2:1;
-    points+=gain;starTotal+=gain;
-    if(points>=30&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}
-    syncHUD();
-  };
-  window.collectGood=collectGood;
-
-  // Make shower bones home toward the dog slightly, so actually touching the shower earns bones.
-  const prevUpdate=update;
-  update=function(dt){
-    const now=performance.now();
-    if(now<boneRainUntil){
-      for(const it of items){
-        if(it.got||!it.food||!it.fall) continue;
-        if(Math.abs(it.x-p.x)<520){
-          it.x+=(p.x-it.x)*0.045*dt;
-          if(it.y>p.y-20) it.y+=(p.y+22-it.y)*0.025*dt;
-        }
-      }
-    }
-    prevUpdate(dt);
-  };
-  window.update=update;
-
-  // Spawn a lot more bones during shower and keep them on screen longer.
-  const prevSpawn=spawnEvents;
-  spawnEvents=function(){
-    if(typeof prevSpawn==='function') prevSpawn();
-    const now=performance.now();
-    if(now<boneRainUntil && eventPhase%2===0){
-      for(let i=0;i<6;i++){
-        items.push({
-          x:p.x+W*(.04+Math.random()*.92),
-          y:12+Math.random()*Math.max(90,H*.22),
-          r:18+Math.random()*3,
-          got:false,color:'#fff0aa',food:true,fall:true,shower:true
-        });
-      }
-      eventEl.textContent='🦴 ホネホネシャワー ✦ 取り放題！';
-    }
-    // Occasional free magnet pickup in space (not on Earth).
-    if(!(system===0&&stage===0) && eventPhase%260===0 && Math.random()<0.5){
-      items.push({x:p.x+W*(.72+Math.random()*.20),y:55+Math.random()*Math.max(90,H*.20),r:20,got:false,magnet:true,color:'#82ffe4'});
-      eventEl.textContent='🧲 MAGNET SIGNAL — 星磁石が流れてきた！';
-    }
-  };
-  window.spawnEvents=spawnEvents;
-
-  const prevDraw=drawGood;
-  drawGood=function(it){
-    if(it?.magnet){
-      const sx=it.x-camera;
-      if(sx<-60||sx>W+60||it.got)return;
-      ctx.save();
-      ctx.translate(sx,it.y);
-      ctx.rotate(Math.sin(performance.now()/220)*.12);
-      ctx.shadowColor='#72ffe2';ctx.shadowBlur=24;
-      ctx.font='900 36px system-ui';
-      ctx.fillText('🧲',-18,13);
-      ctx.restore();
-      return;
-    }
-    prevDraw(it);
-  };
-  window.drawGood=drawGood;
-
-  const prevSync=syncHUD;
-  syncHUD=function(){
-    if(typeof prevSync==='function') prevSync();
-    renderBottom();renderItems();
-    if(foodEl)foodEl.textContent=`🦴 ${food}`;
-    if(reward?.classList.contains('on')){
-      reward.style.top='50%';reward.style.bottom='auto';reward.style.transform='translate(-50%,-50%)';
-    }
-  };
-  window.syncHUD=syncHUD;
-
-  renderBottom();renderItems();syncHUD();
-})();
-</script>
 
 <!-- v56 transparent bottom controls + unlimited bones/cosmic -->
 <style>
@@ -4875,110 +4871,7 @@ v51RenderRewardTexts();
 #special .btnMain,#laser .btnMain,#jump .btnMain{font-size:13px!important}
 #special,#laser,#jump{backdrop-filter:none!important}
 </style>
-<script>
-(function(){
-  const UNLIMITED_CAP = Number.MAX_SAFE_INTEGER;
-  const $ = id => document.getElementById(id);
-  const foodEl = $('food');
-  const alienHitEl = $('alienHitCount');
-  const reward = $('reward');
-  const specialBtn = $('special');
-  const laserBtn = $('laser');
-  const jumpBtn = $('jump');
 
-  function renderBottomV56(){
-    if(specialBtn) specialBtn.innerHTML='<span class="btnMain">⭐ アイテム</span>';
-    if(laserBtn) laserBtn.innerHTML='<span class="btnMain">🔫 ビーム</span>';
-    if(jumpBtn) jumpBtn.innerHTML='<span class="btnMain">🔺 ジャンプ</span>';
-  }
-
-  collectGood = function(it){
-    if(!it || it.got) return;
-    it.got = true;
-    if(it.magnet){
-      magnetUntil = performance.now() + 12000;
-      showToast('🧲 星磁石 発動！ 12秒',1200);
-      syncHUD();
-      return;
-    }
-    if(it.food){
-      food += 1;
-      showToast(it.inert ? '🔋 無機エネルギー GET！' : `🦴 +1　${food}` ,700);
-      syncHUD();
-      return;
-    }
-    const gain = big ? 2 : 1;
-    points += gain;
-    starTotal += gain;
-    if(points>=30 && !shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}
-    syncHUD();
-  };
-  window.collectGood = collectGood;
-
-  awardFetchedItem = function(b){
-    if(!b || !b.fetched) return;
-    if(b.fetched==='🦴'){
-      food += 1;
-      showToast('🦴 とってきた！ 骨 +1',900);
-    }else if(b.fetched==='⭐'){
-      points += 2;
-      starTotal += 2;
-      showToast('⭐ とってきた！ 星 +2',900);
-    }
-    syncHUD();
-  };
-  window.awardFetchedItem = awardFetchedItem;
-
-  registerAlienHit = function(amount=1){
-    const beforeReady = cosmicPowerReady;
-    cosmicCharge += amount;
-    alienHitTotal += amount;
-    if(cosmicCharge >= 5){
-      cosmicPowerReady = true;
-      if(!beforeReady) showToast('👽✨ 宇宙パワー満タン！ 発動できる',1500);
-      else showToast(`👽 宇宙パワー +${amount}`,650);
-    }else{
-      showToast(`👽 宇宙パワー +${amount}`,650);
-    }
-    syncHUD();
-  };
-  window.registerAlienHit = registerAlienHit;
-
-  useCosmicPower = function(){
-    if(paused || system===0&&stage===0) return;
-    if(cosmicCharge < 5){
-      showToast(`👽 あと ${Math.max(0,5-cosmicCharge)} で宇宙パワー！`,1000);
-      return;
-    }
-    cosmicCharge = Math.max(0, cosmicCharge - 5);
-    cosmicPowerReady = cosmicCharge >= 5;
-    cosmicPowerUntil = performance.now() + 9000;
-    cosmicBonus = 1;
-    invincibleUntil = Math.max(invincibleUntil, cosmicPowerUntil);
-    showToast('🕳️🌌 宇宙パワー発動！ 時空歪曲ボーナスタイム 9秒！',1900);
-    spawnStarRain(20);
-    syncHUD();
-  };
-  window.useCosmicPower = useCosmicPower;
-
-  const prevSync = syncHUD;
-  syncHUD = function(){
-    if(typeof prevSync==='function') prevSync();
-    renderBottomV56();
-    if(foodEl) foodEl.textContent = `🦴 ${food}`;
-    if(alienHitEl) alienHitEl.textContent = `👽 ${cosmicCharge}`;
-    if(reward?.classList.contains('on')){
-      reward.style.top='50%';
-      reward.style.bottom='auto';
-      reward.style.transform='translate(-50%,-50%)';
-    }
-  };
-  window.syncHUD = syncHUD;
-
-  renderBottomV56();
-  syncHUD();
-})();
-</script>
 
 <!-- v57 item cleanup + world events + dedicated return -->
 <style>
@@ -5004,206 +4897,8 @@ v51RenderRewardTexts();
   #reward{width:min(402px,94vw)!important}
 }
 </style>
-<script>
-(function(){
-  const $=id=>document.getElementById(id);
-  const reward=$('reward'),rewardTitle=$('rewardTitle'),rewardSub=$('rewardSub');
-  const comm=$('comm'),commTitle=$('commTitle'),commText=$('commText');
 
-  /* 1) Keep only six deliberate items. */
-  const REMOVED=new Set(['wormhole','magnet','secret','home']);
-  document.querySelectorAll('.rewardBtn').forEach(btn=>{
-    if(REMOVED.has(btn.dataset.special)) btn.remove();
-  });
-  function renderSixItems(){
-    if(rewardTitle)rewardTitle.textContent='⭐ アイテム';
-    if(rewardSub)rewardSub.textContent='選んで使うアイテムは6種類';
-    const labels={
-      giant:'🐕 巨大化<br>35⭐',
-      boneBoomerang:'🦴 骨ブーメラン<br>3🦴',
-      cosmic:'👽 時空が歪む宇宙パワー<br>5👽',
-      boneRain:'🦴 ホネホネシャワー<br>45⭐',
-      satellite:'🛰️ 衛星ライド<br>40⭐',
-      friend:'🐕 仲間を増やす<br>100⭐'
-    };
-    document.querySelectorAll('.rewardBtn').forEach(btn=>{if(labels[btn.dataset.special])btn.innerHTML=labels[btn.dataset.special]});
-  }
 
-  /* 2) Dedicated Earth-return story button. */
-  const earthReturnBtn=document.createElement('button');
-  earthReturnBtn.id='earthReturnEventBtn';
-  earthReturnBtn.innerHTML='🌍 地球帰還ルート OPEN<small>タップして地球へ帰る</small>';
-  wrap.appendChild(earthReturnBtn);
-  function refreshEarthReturnBtn(){
-    checkHomeRoute();
-    const earth=system===0&&stage===0;
-    earthReturnBtn.classList.toggle('on',!!homeRouteReady&&!earth&&!doghouseInterior?.classList.contains('on'));
-  }
-  earthReturnBtn.addEventListener('click',()=>{
-    if(!homeRouteReady)return;
-    reward?.classList.remove('on');
-    buySpecial('home');
-    earthReturnBtn.classList.remove('on');
-  });
-
-  collectEarthToken=function(obj){
-    if(!obj||obj.got)return;
-    obj.got=true;
-    earthTokenCount=Math.min(3,earthTokenCount+1);
-    checkHomeRoute();
-    showToast(`🌏 帰還サイン GET！ ${earthTokenCount}/3`,1200);
-    if(homeRouteReady){
-      eventEl.textContent='🌍 EARTH RETURN ROUTE OPEN!';
-      setTimeout(()=>showToast('🌍 地球帰還ルート OPEN！',1700),260);
-    }
-    refreshEarthReturnBtn();syncHUD();
-  };
-  window.collectEarthToken=collectEarthToken;
-
-  /* 3) Alien communication is an automatic milestone event, not a purchasable item. */
-  let lastAutoCommMilestone=Math.floor((alienHitTotal||0)/5);
-  const endingHints=[
-    '🌏 帰還サインを3つ集めると、地球へ帰る道が見える。',
-    '🐾 犬の星の最後では「ここに残る」という選択肢があるらしい。',
-    '⚫ ブラックホールでは、光とは反対の奥を選ぶ道もある。',
-    '👽 何度も宇宙人と接触すると、いつか向こうから誘いが来る。',
-    '🌙 地球へ帰って眠ったあとも、旅は夢の中で続くかもしれない。'
-  ];
-  function showAutoCommunication(milestone){
-    if(!comm||!commText)return;
-    const hint=endingHints[(milestone-1)%endingHints.length];
-    if(commTitle)commTitle.textContent='📡 SIGNAL RECEIVED — ENDING HINT';
-    commText.textContent=hint;
-    comm.classList.remove('on','milestone');void comm.offsetWidth;comm.classList.add('milestone');
-    showToast('👽📡 宇宙人からエンディングのヒント！',1500);
-    setTimeout(()=>{comm.classList.remove('milestone');if(commTitle)commTitle.textContent='📡 SIGNAL RECEIVED'},2800);
-  }
-  const prevRegisterAlienHit=registerAlienHit;
-  registerAlienHit=function(amount=1){
-    prevRegisterAlienHit(amount);
-    const milestone=Math.floor((alienHitTotal||0)/5);
-    if(milestone>lastAutoCommMilestone){
-      lastAutoCommMilestone=milestone;
-      setTimeout(()=>showAutoCommunication(milestone),240);
-    }
-  };
-  window.registerAlienHit=registerAlienHit;
-
-  /* 4) Rare pickups belong in the world: magnet, rainbow star, UFO ticket. */
-  let rarePickupSerial=0;
-  const rareIcons={magnet:'🧲',rainbow:'🌈',ufo:'🛸'};
-  function applyRarePickup(kind){
-    const now=performance.now();
-    if(kind==='magnet'){
-      magnetUntil=now+12000;showToast('🧲 星磁石！ ⭐が12秒吸い寄せられる',1400);
-    }else if(kind==='rainbow'){
-      points+=10;starTotal+=10;if(points>=30&&!shopUnlocked)shopUnlocked=true;showToast('🌈 レインボースター！ ⭐+10',1400);
-    }else if(kind==='ufo'){
-      satelliteUntil=Math.max(satelliteUntil,now+5000);invincibleUntil=Math.max(invincibleUntil,now+5000);showToast('🛸 UFOチケット！ 5秒高速ライド',1400);
-    }
-    syncHUD();
-  }
-  const prevCollectGood=collectGood;
-  collectGood=function(it){
-    if(it?.rareKind&&!it.got){it.got=true;applyRarePickup(it.rareKind);return}
-    prevCollectGood(it);
-  };
-  window.collectGood=collectGood;
-  const prevDrawGood=drawGood;
-  drawGood=function(it){
-    if(it?.rareKind){
-      const sx=it.x-camera;if(sx<-70||sx>W+70||it.got)return;
-      ctx.save();ctx.translate(sx,it.y);ctx.rotate(Math.sin(performance.now()/300+it.phase)*.08);ctx.shadowColor=it.rareKind==='magnet'?'#87ffe0':it.rareKind==='rainbow'?'#fff18a':'#91ddff';ctx.shadowBlur=24;ctx.font='900 34px system-ui';ctx.fillText(rareIcons[it.rareKind]||'✨',-17,12);ctx.restore();return;
-    }
-    prevDrawGood(it);
-  };
-  window.drawGood=drawGood;
-  const prevSpawnEvents=spawnEvents;
-  spawnEvents=function(){
-    prevSpawnEvents();
-    if(paused||system===0&&stage===0||systems[system]?.dream)return;
-    if(eventPhase%340===0&&Math.random()<.32){
-      const roll=Math.random();const kind=roll<.5?'magnet':roll<.78?'rainbow':'ufo';
-      items.push({x:p.x+W+160,y:70+Math.random()*Math.max(100,H*.34),r:22,got:false,rareKind:kind,phase:rarePickupSerial++*.7});
-      eventEl.textContent=`${rareIcons[kind]} RARE ITEM SIGNAL — なにか流れてきた！`;
-    }
-  };
-  window.spawnEvents=spawnEvents;
-
-  /* Bone boomerang can retrieve rare pickups too, and bones remain unlimited. */
-  nearestBoomerangTarget=function(){
-    const candidates=[];
-    for(const o of secretPickups){if(!o.got&&!o._boomerangReserved&&o.x>p.x-40&&o.x<p.x+1150)candidates.push({type:o.kind==='earth'?'earth':'secret',obj:o,icon:o.icon||'✨',d:Math.abs(o.x-p.x)})}
-    for(const it of items){
-      if(it.got||it._boomerangReserved||it.x<=p.x-40||it.x>=p.x+1150)continue;
-      if(it.rareKind)candidates.push({type:'rare',obj:it,icon:rareIcons[it.rareKind]||'✨',rareKind:it.rareKind,d:Math.abs(it.x-p.x)});
-      else candidates.push({type:it.food?'bone':'star',obj:it,icon:it.food?'🦴':'⭐',d:Math.abs(it.x-p.x)});
-    }
-    const priority={earth:0,rare:1,secret:2,star:3,bone:4};
-    candidates.sort((a,b)=>(priority[a.type]??9)-(priority[b.type]??9)||a.d-b.d);
-    return candidates[0]||null;
-  };
-  window.nearestBoomerangTarget=nearestBoomerangTarget;
-  finishBoomerangFetch=function(b){
-    const t=b.target;if(!t?.obj)return;
-    t.obj._boomerangReserved=false;t.obj.got=true;b.fetched=t.icon;
-    b.fetchType=t.type;b.rareKind=t.rareKind||t.obj.rareKind||null;
-  };
-  window.finishBoomerangFetch=finishBoomerangFetch;
-  awardBoomerangFetch=function(b){
-    if(!b?.fetched)return;
-    if(b.fetchType==='earth'){
-      earthTokenCount=Math.min(3,earthTokenCount+1);checkHomeRoute();showToast(`🌏 とってきた！ ${earthTokenCount}/3`,1100);if(homeRouteReady)showToast('🌍 地球帰還ルート OPEN！',1500);
-    }else if(b.fetchType==='rare'){
-      applyRarePickup(b.rareKind);
-    }else if(b.fetchType==='secret'){
-      points+=3;starTotal+=3;showToast(`${b.fetched} とってきた！ ⭐+3`,950);
-    }else if(b.fetchType==='bone'){
-      food+=3;showToast('🦴 とってきた！ 骨 +3',900);
-    }else if(b.fetchType==='star'){
-      points+=2;starTotal+=2;showToast('⭐ とってきた！ 星 +2',900);
-    }
-    refreshEarthReturnBtn();syncHUD();
-  };
-  window.awardBoomerangFetch=awardBoomerangFetch;
-
-  /* Refresh after legacy HUD functions have run. */
-  const prevSyncHUD=syncHUD;
-  syncHUD=function(){
-    prevSyncHUD();
-    renderSixItems();
-    refreshEarthReturnBtn();
-  };
-  window.syncHUD=syncHUD;
-
-  renderSixItems();refreshEarthReturnBtn();syncHUD();
-})();
-</script>
-<script>
-/* v57.1 reliable dedicated Earth return */
-(function(){
-  const reward=document.getElementById('reward');
-  const earthReturnBtn=document.getElementById('earthReturnEventBtn');
-  function returnToEarthV57(){
-    checkHomeRoute();
-    if(!homeRouteReady){showToast(`🌏 帰還サインをあと ${Math.max(0,3-earthTokenCount)} 個集めよう！`,1300);return}
-    reward?.classList.remove('on');
-    returnFromDogStar=true;earthTokenCount=0;homeRouteReady=false;paused=true;
-    if(earthReturnBtn)earthReturnBtn.classList.remove('on');
-    trans.style.display='grid';warpDog.textContent='🐕🌍';warpDog.className='spin';
-    transTitle.innerHTML='🌍 EARTH RETURN!';nextEl.textContent='地球への帰還ルートが開いた！';subEl.textContent='HOME EVENT';
-    setTimeout(()=>{system=0;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('🌳 地球に帰ってきた！',2200)},1800);
-  }
-  if(earthReturnBtn){
-    const clone=earthReturnBtn.cloneNode(true);
-    earthReturnBtn.replaceWith(clone);
-    clone.addEventListener('click',returnToEarthV57);
-  }
-  const prevBuySpecial=buySpecial;
-  buySpecial=function(kind){if(kind==='home'){returnToEarthV57();return}return prevBuySpecial(kind)};
-  window.buySpecial=buySpecial;
-})();
-</script>
 
 <!-- v58 no-game-over / emergency dog rescue -->
 <style>
@@ -5242,129 +4937,7 @@ v51RenderRewardTexts();
 }
 #wrap.rescueDanger{box-shadow:inset 0 0 74px rgba(255,70,154,.24)!important}
 </style>
-<script>
-(function(){
-  let rescueHits=0;
-  let lastRescueHitAt=0;
-  let rescueInProgress=false;
-  let rescueCooldownUntil=0;
-  let rescueOriginX=115;
 
-  const overlay=gameOverEl;
-  const overlayTitle=document.getElementById('gameOverTitle');
-  const overlaySub=document.getElementById('gameOverSub');
-
-  function resetRescueDanger(){
-    rescueHits=0;
-    lastRescueHitAt=0;
-    criticalEl?.classList.remove('on');
-    wrap?.classList.remove('criticalMode','rescueDanger');
-  }
-
-  function previousSafeSystem(){
-    const candidates=systems.map((s,i)=>({s,i,r:systemDistanceRank[i]??0}))
-      .filter(o=>o.i!==BLACK_HOLE_SYSTEM&&!o.s.secret&&!o.s.dream&&o.r<=Math.max(1,furthestRank));
-    candidates.sort((a,b)=>b.r-a.r);
-    return candidates[0]||{i:0,r:0};
-  }
-
-  function showRescueOverlay(blackHoleRescue){
-    if(!overlay)return;
-    overlay.innerHTML=`<div class="rescueUfo">🛸</div><div id="gameOverTitle">⚠ EMERGENCY DOG RESCUE</div><div id="gameOverSub">🐕 犬星くんを救助中…<br>${blackHoleRescue?'⚫ ブラックホールから緊急離脱！':'📡 宇宙救助信号を受信しました'}<br><span class="insurance">宇宙保険が適用されました</span></div>`;
-    overlay.classList.add('on');
-  }
-
-  function emergencyRescue(reason='damage'){
-    if(rescueInProgress||performance.now()<rescueCooldownUntil)return;
-    rescueInProgress=true;
-    rescueOriginX=p.x;
-    const fromBlackHole=system===BLACK_HOLE_SYSTEM;
-    paused=true;
-    reward?.classList.remove('on');
-    invincibleUntil=performance.now()+6000;
-    showRescueOverlay(fromBlackHole);
-    eventEl.textContent='🛸 EMERGENCY DOG RESCUE — 救助中！';
-
-    setTimeout(()=>{
-      if(fromBlackHole){
-        const pick=previousSafeSystem();
-        system=pick.i;
-        stage=system===0?0:Math.max(0,Math.min(stage,systems[system].stages.length-1));
-        playerDog='🐕';morphUntil=0;
-        stageStart();
-        showToast('🛸 ブラックホールから救助！ 少し前の星域へ戻された',1900);
-      }else{
-        const backTo=Math.max(115,rescueOriginX-850);
-        stageStart();
-        p.x=backTo;
-        p.y=groundY()-p.h;
-        p.vy=0;p.on=true;
-        camera=Math.max(0,p.x-W*.34);
-        showToast('🛸 救助完了！ 少し前から旅を再開',1700);
-      }
-
-      if(food<3)food=3;
-      if(points<5){const add=5-points;points=5;starTotal+=Math.max(0,add)}
-      syncHUD();
-      resetRescueDanger();
-      overlay?.classList.remove('on');
-      paused=false;
-      invincibleUntil=performance.now()+2600;
-      rescueCooldownUntil=performance.now()+5000;
-      rescueInProgress=false;
-      eventEl.textContent='🛸 RESCUE COMPLETE — 旅を続けよう！';
-    },1800);
-  }
-  window.emergencyDogRescue=emergencyRescue;
-
-  const previousHitHazard=hitHazard;
-  hitHazard=function(h){
-    if(rescueInProgress)return;
-    const beforeFood=food,beforePoints=points;
-    previousHitHazard(h);
-    const damaged=food<beforeFood||points<beforePoints;
-    if(!damaged)return;
-
-    const now=performance.now();
-    if(now-lastRescueHitAt>11000)rescueHits=0;
-    rescueHits++;
-    lastRescueHitAt=now;
-
-    const limit=system===BLACK_HOLE_SYSTEM?3:4;
-    if((food<=0&&points<=0)||rescueHits>=limit){
-      setTimeout(()=>emergencyRescue(food<=0&&points<=0?'resources':'damage'),180);
-    }else if(rescueHits===limit-1){
-      showToast('🐕💫 犬星くんがふらふら… 次の大ダメージで救助UFO！',1300);
-    }
-  };
-  window.hitHazard=hitHazard;
-
-  updateCritical=function(){
-    if(rescueInProgress){criticalEl?.classList.remove('on');wrap?.classList.remove('rescueDanger','criticalMode');return}
-    const now=performance.now();
-    if(lastRescueHitAt&&now-lastRescueHitAt>11000){resetRescueDanger();return}
-    const limit=system===BLACK_HOLE_SYSTEM?3:4;
-    if(rescueHits>=limit-1){
-      if(criticalEl){
-        criticalEl.textContent='⚠️ DOG RESCUE SIGNAL — かなりふらふら！';
-        criticalEl.classList.add('on');
-      }
-      wrap?.classList.add('rescueDanger');
-    }else{
-      criticalEl?.classList.remove('on');
-      wrap?.classList.remove('rescueDanger','criticalMode');
-    }
-  };
-  window.updateCritical=updateCritical;
-
-  gameOver=function(){emergencyRescue('legacy')};
-  window.gameOver=gameOver;
-
-  if(overlayTitle)overlayTitle.textContent='⚠ EMERGENCY DOG RESCUE';
-  if(overlaySub)overlaySub.innerHTML='🐕 犬星くんを救助中…<br><span class="insurance">宇宙保険が適用されました</span>';
-  if(criticalEl)criticalEl.textContent='⚠️ DOG RESCUE SIGNAL';
-})();
-</script>
 
 <!-- v59 visible space insurance + easier rescue trigger -->
 <style>
@@ -5414,319 +4987,120 @@ v51RenderRewardTexts();
   #spaceInsuranceBadge{right:7px;top:120px;min-width:118px;font-size:9px;padding:6px 8px}
 }
 </style>
-<script>
-(function(){
-  const wrapEl=document.getElementById('wrap');
-  const eventBox=document.getElementById('event');
-  const toastEl=document.getElementById('toast');
-  let badge=document.getElementById('spaceInsuranceBadge');
-  if(!badge){
-    badge=document.createElement('div');
-    badge.id='spaceInsuranceBadge';
-    badge.textContent='🛸 宇宙保険 ON';
-    wrapEl?.appendChild(badge);
-  }
 
-  let insuranceHits=0;
-  let lastInsuranceHitAt=0;
-  let insuranceTriggering=false;
 
-  function currentLimit(){
-    return (typeof BLACK_HOLE_SYSTEM!=='undefined' && system===BLACK_HOLE_SYSTEM) ? 2 : 3;
-  }
-  function renderInsuranceBadge(){
-    if(!badge)return;
-    const limit=currentLimit();
-    badge.classList.toggle('warn',insuranceHits>0 && insuranceHits<limit);
-    badge.classList.toggle('rescuing',insuranceTriggering);
-    badge.textContent=insuranceTriggering
-      ? '🛸 宇宙保険 救助中！'
-      : insuranceHits>0
-        ? `🛸 宇宙保険 ${insuranceHits}/${limit}`
-        : '🛸 宇宙保険 ON';
-  }
-  function resetInsurance(delay=0){
-    setTimeout(()=>{
-      insuranceHits=0;
-      lastInsuranceHitAt=0;
-      insuranceTriggering=false;
-      renderInsuranceBadge();
-    },delay);
-  }
-  function triggerInsurance(reason){
-    if(insuranceTriggering)return;
-    insuranceTriggering=true;
-    renderInsuranceBadge();
-    if(eventBox)eventBox.textContent='🛸 EMERGENCY DOG RESCUE — 宇宙保険発動！';
-    if(typeof showToast==='function')showToast('🛸 宇宙保険発動！ 救助UFOが来る！',1500);
-    if(typeof window.emergencyDogRescue==='function')window.emergencyDogRescue(reason||'insurance');
-    resetInsurance(3200);
-  }
-
-  const previousHit=hitHazard;
-  hitHazard=function(h){
-    const beforeFood=food;
-    const beforePoints=points;
-    previousHit(h);
-    const damaged=food<beforeFood || points<beforePoints;
-    if(!damaged)return;
-
-    const now=performance.now();
-    if(now-lastInsuranceHitAt>20000)insuranceHits=0;
-    insuranceHits++;
-    lastInsuranceHitAt=now;
-    renderInsuranceBadge();
-
-    const limit=currentLimit();
-    if((food<=0 && points<=0) || insuranceHits>=limit){
-      setTimeout(()=>triggerInsurance(food<=0&&points<=0?'resources':'damage'),120);
-    }else{
-      const left=limit-insuranceHits;
-      if(typeof showToast==='function')showToast(`🛸 宇宙保険：あと${left}回の大ダメージで救助`,1050);
-    }
-  };
-  window.hitHazard=hitHazard;
-
-  const prevStageStart=stageStart;
-  stageStart=function(){
-    prevStageStart();
-    if(performance.now()-lastInsuranceHitAt>20000){
-      insuranceHits=0;
-      renderInsuranceBadge();
-    }
-  };
-  window.stageStart=stageStart;
-
-  renderInsuranceBadge();
-  setTimeout(()=>{
-    if(typeof showToast==='function')showToast('🛸 宇宙保険 ON｜大ダメージが続くと救助UFOが来る',2300);
-  },5200);
-})();
-</script>
-
-<!-- v60 cosmic hierarchy + researched size/gravity + 30 destination consolidation -->
 <style>
-#astroInfo{
-  width:min(222px,52vw)!important;
-  padding:11px 12px!important;
-  border-radius:18px!important;
-  line-height:1.28!important;
-  background:linear-gradient(180deg,rgba(10,16,42,.86),rgba(15,9,38,.88))!important;
-  border:1px solid rgba(190,235,255,.62)!important;
-  box-shadow:0 0 16px rgba(83,221,255,.24),0 0 22px rgba(255,91,213,.12)!important;
-  backdrop-filter:blur(8px)!important;
+/* v60 story pacing / UI spacing */
+#v60StoryPrelude{
+  display:none;position:absolute;z-index:180;inset:0;place-items:center;text-align:center;pointer-events:none;
+  background:radial-gradient(circle at 50% 45%,rgba(50,35,96,.60),rgba(3,5,18,.78) 56%,rgba(1,2,8,.92));
+  color:#fff;padding:28px;
 }
-#astroInfo .v60Name{font-size:15px;font-weight:1000;color:#fff;text-shadow:0 0 9px rgba(255,255,255,.35)}
-#astroInfo .v60Address{margin-top:4px;font-size:9px;font-weight:900;color:#aeefff;letter-spacing:.02em}
-#astroInfo .v60Distance{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.16);font-size:11px;font-weight:1000;color:#fff5b5}
-#astroInfo .v60Physics{display:grid;grid-template-columns:1fr;gap:3px;margin-top:6px;font-size:9px;color:#e8ebff}
-#astroInfo .v60Physics b{color:#fff}
-#astroInfo .v60SizeBar{letter-spacing:.03em;color:#7ee8ff;text-shadow:0 0 7px rgba(126,232,255,.45)}
-#astroInfo .v60Fact{margin-top:6px;font-size:8px;line-height:1.35;color:#cdd4f4;opacity:.88}
-#astroInfo .v60Theory{color:#ffcfef!important}
-#chapterFlashV60{
-  position:absolute;z-index:72;left:50%;top:19%;transform:translate(-50%,-14px) scale(.96);
-  width:min(390px,88vw);padding:14px 18px;border-radius:22px;text-align:center;
-  border:1px solid rgba(255,255,255,.78);background:linear-gradient(180deg,rgba(28,33,75,.95),rgba(22,10,51,.94));
-  box-shadow:0 0 24px rgba(82,230,255,.42),0 0 35px rgba(255,90,212,.24);
-  color:#fff;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease;
-}
-#chapterFlashV60.on{opacity:1;transform:translate(-50%,0) scale(1)}
-#chapterFlashV60 .v60ChapterTop{font-size:9px;letter-spacing:.18em;color:#9defff;font-weight:1000}
-#chapterFlashV60 .v60ChapterName{margin-top:4px;font-size:22px;font-weight:1000;text-shadow:0 0 12px rgba(255,255,255,.4)}
-#chapterFlashV60 .v60ChapterSub{margin-top:3px;font-size:10px;color:#e4dfff}
-#location{max-width:min(280px,65vw)!important}
+#v60StoryPrelude.on{display:grid;animation:v60PreludeIn .25s ease-out both}
+#v60StoryPrelude .v60PreludeIcon{font-size:58px;filter:drop-shadow(0 0 18px rgba(107,230,255,.75));animation:v60Float .55s ease-in-out infinite alternate}
+#v60StoryPrelude .v60PreludeTitle{font-size:clamp(22px,6vw,36px);font-weight:1000;letter-spacing:.08em;text-shadow:0 0 12px #fff,0 0 24px #6de7ff;margin-top:10px}
+#v60StoryPrelude .v60PreludeText{max-width:390px;margin-top:9px;font-size:13px;line-height:1.7;color:#e6e7ff}
+@keyframes v60PreludeIn{from{opacity:0;transform:scale(1.025)}to{opacity:1;transform:scale(1)}}
+@keyframes v60Float{to{transform:translateY(-7px)}}
+#earthReturnEventBtn{top:176px!important}
+@media(max-width:520px){#earthReturnEventBtn{top:158px!important}}
+</style>
+
+<!-- v61 cinematic endings: void / alien planet / white cube / dog-star paradise -->
+<style id="v61-ending-scenes-css">
+#v61EndingScene{display:none;position:absolute;z-index:1400;inset:0;overflow:hidden;font-family:system-ui,-apple-system,sans-serif}
+#v61EndingScene.on{display:block;animation:v61SceneIn .45s ease-out both}
+@keyframes v61SceneIn{from{opacity:0}to{opacity:1}}
+#v61EndingScene .v61Final{position:absolute;z-index:20;left:50%;bottom:7%;width:min(500px,90%);transform:translateX(-50%) translateY(12px);text-align:center;opacity:0;transition:opacity .8s ease,transform .8s ease;pointer-events:none}
+#v61EndingScene .v61Final.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+#v61EndingScene .v61Kicker{font-size:10px;font-weight:1000;letter-spacing:.22em;margin-bottom:7px}
+#v61EndingScene .v61Title{font-size:clamp(24px,6vw,38px);font-weight:1000;line-height:1.08;margin-bottom:10px}
+#v61EndingScene .v61Text{font-size:13px;line-height:1.72;margin:0 auto 13px;max-width:440px}
+#v61EndingScene .v61Count{font-size:10px;font-weight:1000;letter-spacing:.14em;margin:9px 0 12px}
+#v61EndingScene .v61Action{border:1.5px solid currentColor;border-radius:999px;min-height:46px;padding:9px 20px;font-weight:1000;font-size:11px;cursor:pointer}
+
+/* BLACK HOLE END: literally nothing but black. */
+#v61EndingScene.black{background:#000;color:#fff}
+#v61EndingScene.black .v61VoidDog{position:absolute;left:50%;top:46%;font-size:47px;transform:translate(-50%,-50%);filter:grayscale(1);animation:v61VoidDog 3.1s ease-in forwards}
+#v61EndingScene.black .v61Final{bottom:9%;color:#d8d8d8}
+#v61EndingScene.black .v61Kicker,#v61EndingScene.black .v61Count{color:#777}
+#v61EndingScene.black .v61Text{color:#b8b8b8}
+#v61EndingScene.black .v61Action{background:#000;color:#bbb;border-color:#444;box-shadow:none}
+@keyframes v61VoidDog{0%{opacity:.9;transform:translate(-50%,-50%) scale(1)}55%{opacity:.42;transform:translate(-50%,-50%) scale(.68)}100%{opacity:.12;transform:translate(-50%,-50%) scale(.40)}}
+
+/* ALIEN END: another planet, and the dog somehow fits right in. */
+#v61EndingScene.alien{background:linear-gradient(180deg,#161039 0%,#372060 40%,#5b337b 63%,#7fb98d 64%,#526e5d 100%);color:#fff}
+#v61EndingScene.alien:before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 18% 20%,#d3fffb 0 2px,transparent 3px),radial-gradient(circle at 74% 14%,#ffd6ff 0 2px,transparent 3px),radial-gradient(circle at 48% 29%,#fff 0 1px,transparent 2px);background-size:110px 90px,145px 120px,78px 74px;opacity:.72}
+#v61EndingScene .v61AlienMoon{position:absolute;border-radius:50%;box-shadow:inset -18px -16px 0 rgba(0,0,0,.17),0 0 35px rgba(211,255,250,.30)}
+#v61EndingScene .v61AlienMoon.m1{width:108px;height:108px;right:8%;top:8%;background:#bff7e8}
+#v61EndingScene .v61AlienMoon.m2{width:48px;height:48px;left:12%;top:18%;background:#ffc9f4}
+#v61EndingScene .v61AlienGround{position:absolute;left:-10%;right:-10%;bottom:-13%;height:48%;border-radius:50% 50% 0 0;background:linear-gradient(180deg,#8fd69d,#415d51);box-shadow:inset 0 25px 45px rgba(255,255,255,.14)}
+#v61EndingScene .v61AlienHome{position:absolute;left:50%;top:36%;transform:translateX(-50%);font-size:78px;filter:drop-shadow(0 0 22px rgba(132,255,234,.45));animation:v61Hover 1.7s ease-in-out infinite alternate}
+#v61EndingScene .v61AlienDog{position:absolute;z-index:6;left:50%;top:55%;transform:translate(-50%,-50%);font-size:62px;filter:drop-shadow(0 8px 5px rgba(0,0,0,.28))}
+#v61EndingScene .v61AlienCrowd{position:absolute;z-index:5;left:50%;top:56%;width:min(520px,94%);transform:translate(-50%,-50%);display:flex;justify-content:space-between;align-items:center;font-size:44px}
+#v61EndingScene .v61AlienCrowd span{animation:v61AlienBob .8s ease-in-out infinite alternate}.v61AlienCrowd span:nth-child(2n){animation-delay:.22s}.v61AlienCrowd span:nth-child(3n){animation-delay:.4s}
+#v61EndingScene.alien .v61Final{color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.65)}
+#v61EndingScene.alien .v61Kicker,#v61EndingScene.alien .v61Count{color:#bfffe9}
+#v61EndingScene.alien .v61Action{background:linear-gradient(180deg,#e8fff8,#a7f4dd);color:#16352f;border-color:#fff;box-shadow:0 5px 0 rgba(17,45,40,.52)}
+@keyframes v61Hover{to{transform:translateX(-50%) translateY(-8px) rotate(2deg)}}
+@keyframes v61AlienBob{to{transform:translateY(-8px) rotate(4deg)}}
+
+/* DOG STAR END: aggressively comfortable. */
+#v61EndingScene.dogstar{background:linear-gradient(180deg,#8fc9ff 0%,#dfc2ff 41%,#ffd7e9 64%,#f2d6a5 65%,#e6be85 100%);color:#522b63}
+#v61EndingScene.dogstar:before{content:'GOOD DOG   GOOD DOG   GOOD DOG';position:absolute;left:-4%;right:-4%;top:7%;white-space:nowrap;text-align:center;font-size:clamp(17px,5vw,34px);font-weight:1000;letter-spacing:.13em;color:rgba(255,255,255,.72);transform:rotate(-3deg);text-shadow:0 2px 0 rgba(118,70,140,.18)}
+#v61EndingScene .v61Cloud{position:absolute;font-size:72px;filter:drop-shadow(0 8px 8px rgba(93,74,116,.12));opacity:.9}
+#v61EndingScene .v61Cloud.c1{left:5%;top:14%}.v61Cloud.c2{right:7%;top:23%;transform:scale(.75)}
+#v61EndingScene .v61Cushion{position:absolute;left:50%;top:53%;transform:translate(-50%,-50%);font-size:112px;filter:drop-shadow(0 14px 10px rgba(111,68,88,.2))}
+#v61EndingScene .v61DogStarDog{position:absolute;z-index:6;left:50%;top:49%;transform:translate(-50%,-50%);font-size:65px;animation:v61Sleepy 1.6s ease-in-out infinite alternate}
+#v61EndingScene .v61DogFriends{position:absolute;z-index:5;left:50%;top:55%;width:min(560px,95%);transform:translate(-50%,-50%);display:flex;justify-content:space-between;font-size:42px}
+#v61EndingScene .v61DogFriends span{animation:v61DogWag .65s ease-in-out infinite alternate}.v61DogFriends span:nth-child(2n){animation-delay:.25s}
+#v61EndingScene .v61BoneRain{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#v61EndingScene .v61BoneRain span{position:absolute;top:-12%;font-size:27px;animation:v61BoneFall linear infinite;filter:drop-shadow(0 3px 3px rgba(118,72,102,.16))}
+#v61EndingScene.dogstar .v61Final{bottom:5%;background:rgba(255,249,255,.70);border:1px solid rgba(255,255,255,.9);border-radius:22px;padding:14px 16px;box-sizing:border-box;box-shadow:0 12px 30px rgba(93,58,112,.18)}
+#v61EndingScene.dogstar .v61Kicker,#v61EndingScene.dogstar .v61Count{color:#a04691}
+#v61EndingScene.dogstar .v61Action{background:linear-gradient(180deg,#fff,#ffd7ef 60%,#d9c1ff);color:#5c2867;border-color:#fff;box-shadow:0 5px 0 rgba(115,73,128,.32)}
+@keyframes v61BoneFall{to{transform:translateY(125vh) rotate(420deg)}}
+@keyframes v61DogWag{to{transform:translateY(-6px) rotate(4deg)}}
+@keyframes v61Sleepy{to{transform:translate(-50%,-50%) scale(1.04) rotate(-2deg)}}
+
+/* WHITE CUBE SECRET END: sterile room + an original cosmic child. */
+#v61EndingScene.cube{background:#fff;color:#111;perspective:800px}
+#v61EndingScene .v61CubeRoom{position:absolute;inset:0;background:linear-gradient(90deg,transparent 49.7%,rgba(0,0,0,.06) 50%,transparent 50.3%),linear-gradient(180deg,#fff 0 68%,#f7f7f7 68% 100%)}
+#v61EndingScene .v61CubeRoom:before{content:'';position:absolute;left:8%;right:8%;bottom:0;height:34%;background:repeating-linear-gradient(90deg,rgba(0,0,0,.09) 0 1px,transparent 1px 80px),repeating-linear-gradient(0deg,rgba(0,0,0,.08) 0 1px,transparent 1px 62px);transform-origin:bottom;transform:rotateX(58deg);opacity:.55}
+#v61EndingScene .v61CubeDog{position:absolute;left:37%;top:55%;font-size:55px;filter:grayscale(.25) drop-shadow(0 9px 8px rgba(0,0,0,.16));animation:v61CubeDog 2.3s ease-in-out infinite alternate}
+#v61EndingScene .v61StarChild{position:absolute;left:66%;top:39%;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 40% 36%,#fff 0 12%,#f5fbff 20%,#cbe6ff 38%,#d8c9ff 62%,rgba(194,217,255,.18) 72%,transparent 74%);box-shadow:0 0 28px #d4e8ff,0 0 72px rgba(169,204,255,.86),0 0 125px rgba(198,170,255,.42);animation:v61ChildGlow 1.8s ease-in-out infinite alternate}
+#v61EndingScene .v61StarChild:after{content:'✦';position:absolute;inset:0;display:grid;place-items:center;font-size:32px;color:#fff;text-shadow:0 0 16px #fff}
+#v61EndingScene.cube .v61Final{bottom:6%;color:#111;background:rgba(255,255,255,.90);padding:12px;border-radius:15px}
+#v61EndingScene.cube .v61Kicker,#v61EndingScene.cube .v61Count{color:#777}
+#v61EndingScene.cube .v61Text{color:#333}
+#v61EndingScene.cube .v61Action{background:#fff;color:#111;border-color:#111;box-shadow:0 4px 0 #ddd}
+@keyframes v61ChildGlow{to{transform:scale(1.08);filter:brightness(1.08)}}
+@keyframes v61CubeDog{to{transform:translateY(-4px) rotate(-2deg)}}
+
 @media(max-width:520px){
-  #astroInfo{width:min(185px,49vw)!important;padding:9px 9px!important}
-  #astroInfo .v60Name{font-size:12px}
-  #astroInfo .v60Address{font-size:8px}
-  #astroInfo .v60Distance{font-size:9px}
-  #astroInfo .v60Physics{font-size:8px}
-  #astroInfo .v60Fact{font-size:7px}
-  #chapterFlashV60{top:17%;width:min(340px,88vw);padding:11px 14px}
-  #chapterFlashV60 .v60ChapterName{font-size:18px}
+ #v61EndingScene .v61Final{bottom:4%;width:92%}.v61AlienCrowd span:nth-child(5),.v61DogFriends span:nth-child(6){display:none}
+ #v61EndingScene .v61AlienCrowd{font-size:36px}.v61DogFriends{font-size:34px}
+ #v61EndingScene .v61AlienDog,#v61EndingScene .v61DogStarDog{font-size:54px}
+ #v61EndingScene .v61AlienHome{font-size:62px}.v61Cushion{font-size:92px}
+ #v61EndingScene .v61CubeDog{left:25%;top:53%;font-size:46px}.v61StarChild{left:62%;top:34%;width:76px;height:76px}
 }
 </style>
-<script>
-(function(){
-  const astroV60=document.getElementById('astroInfo');
-  const wrapV60=document.getElementById('wrap');
-  let chapterV60=document.getElementById('chapterFlashV60');
-  if(!chapterV60){
-    chapterV60=document.createElement('div');
-    chapterV60.id='chapterFlashV60';
-    wrapV60?.appendChild(chapterV60);
-  }
-  let chapterTimerV60=0;
-  let lastSystemV60=system;
 
-  function sizeBarV60(level){
-    const n=Math.max(1,Math.min(10,Math.round(level||5)));
-    return '█'.repeat(n)+'░'.repeat(10-n);
-  }
-  function gameGravityLabelV60(s){
-    if(s.gravity<=.34)return '🪽 GAME：かなり低重力';
-    if(s.gravity<=.45)return '🪽 GAME：低重力';
-    if(s.gravity>=.67)return '⬇️ GAME：強重力';
-    if(s.gravity>=.58)return '↘️ GAME：やや強重力';
-    return '⚖️ GAME：標準寄り';
-  }
-  function renderAstroV60(){
-    if(!astroV60)return;
-    const s=S();
-    const address=(s.address||[systems[system].name]).map(x=>`<span>${x}</span>`).join('<br>');
-    const grav=s.gravityLabel||'❓ 未設定';
-    const theory=(systems[system].theoretical||s.gravityActual==null)&&!['planet','moon','star','gas','ice'].includes(s.bodyKind);
-    astroV60.innerHTML=`
-      <div class="v60Name">${s.name}</div>
-      <div class="v60Address">${address}</div>
-      <div class="v60Distance">${s.distanceDisplay||s.distance||systems[system].distance}</div>
-      <div class="v60Physics${theory?' v60Theory':''}">
-        <div><b>⚖️ 実在/推定重力</b>　${grav}</div>
-        <div>${gameGravityLabelV60(s)}</div>
-        <div><b>📐 SIZE</b>　${s.sizeText||'❓'}</div>
-        <div class="v60SizeBar">${sizeBarV60(s.sizeLevel)}</div>
-      </div>
-      ${s.fact?`<div class="v60Fact">${s.fact}</div>`:''}`;
-  }
-  function showChapterV60(force=false){
-    if(!chapterV60)return;
-    const sys=systems[system],s=S();
-    if(!force && lastSystemV60===system)return;
-    clearTimeout(chapterTimerV60);
-    chapterV60.innerHTML=`<div class="v60ChapterTop">NOW ENTERING</div><div class="v60ChapterName">${sys.name}</div><div class="v60ChapterSub">${sys.chapter||'COSMIC TRAVEL'} · ${s.name}</div>`;
-    chapterV60.classList.add('on');
-    chapterTimerV60=setTimeout(()=>chapterV60.classList.remove('on'),1850);
-  }
 
-  const prevSyncV60=syncHUD;
-  syncHUD=function(){
-    if(typeof prevSyncV60==='function')prevSyncV60();
-    renderAstroV60();
-    if(locationEl)locationEl.textContent=`${systems[system].name}  ·  ${S().name}`;
-  };
-  window.syncHUD=syncHUD;
+<!-- v61 friendly alien communication: keep cosmic charge instead of resetting it -->
 
-  function radialBodyV60(cx,cy,r,s,hot=false){
-    ctx.save();
-    const rg=ctx.createRadialGradient(cx-r*.28,cy-r*.3,Math.max(2,r*.05),cx,cy,r);
-    rg.addColorStop(0,hot?'#fffde1':'#ffffff');
-    rg.addColorStop(.28,s.planet||s.goodColor||'#fff');
-    rg.addColorStop(.74,s.goodColor||s.planet||'#89c8ff');
-    rg.addColorStop(1,'rgba(10,4,25,.22)');
-    ctx.globalAlpha=.64;ctx.fillStyle=rg;ctx.shadowColor=s.goodColor||'#fff';ctx.shadowBlur=hot?45:24;
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
-    ctx.restore();
-  }
-  function drawLensV60(cx,cy,s,variant){
-    const t=performance.now()/1000;ctx.save();ctx.translate(cx,cy);ctx.globalCompositeOperation='screen';
-    for(let i=0;i<6;i++){
-      ctx.globalAlpha=.16+i*.045;ctx.strokeStyle=i%2?s.goodColor:'#fff';ctx.lineWidth=1.2+i*.35;
-      ctx.beginPath();ctx.ellipse(Math.sin(t+i)*5,Math.cos(t*.7+i)*4,42+i*20,(16+i*7)*(variant==='mothra'?1.35:1),Math.sin(t*.35+i)*.45,0,Math.PI*2);ctx.stroke();
-    }
-    ctx.globalAlpha=.95;ctx.shadowColor=s.goodColor;ctx.shadowBlur=32;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,variant==='godzilla'?8:5,0,Math.PI*2);ctx.fill();
-    if(variant==='mothra'){
-      ctx.globalAlpha=.28;ctx.strokeStyle='#ffd9fb';ctx.lineWidth=4;
-      for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(side*35,-55,side*95,-38,side*110,8);ctx.bezierCurveTo(side*75,16,side*38,43,0,0);ctx.stroke()}
-    }
-    ctx.restore();
-  }
-  function drawStageIdentityV60(){
-    const s=S(),t=performance.now()/1000,f=s.feature||'';
-    if(system===0&&stage===0)return;
-    const minWH=Math.min(W,H);
-    let r=Math.max(38,minWH*.105*(s.visualSize||1));
-    r=Math.min(r,minWH*.46);
-    let cx=W*.83,cy=H*.23;
 
-    if(['planet','moon','gas','ice','star'].includes(s.bodyKind)){
-      if(f==='betelgeuse'){cx=W*1.01;cy=H*.28;r=Math.min(minWH*.46,r)}
-      if(f==='saturn'){
-        ctx.save();ctx.translate(cx,cy);ctx.rotate(-.18);ctx.globalAlpha=.5;ctx.strokeStyle='#fff1b3';ctx.lineWidth=Math.max(8,r*.16);ctx.beginPath();ctx.ellipse(0,0,r*1.75,r*.46,0,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.35;ctx.strokeStyle='#c6b4ff';ctx.lineWidth=Math.max(3,r*.07);ctx.beginPath();ctx.ellipse(0,0,r*1.95,r*.54,0,0,Math.PI*2);ctx.stroke();ctx.restore();
-      }
-      radialBodyV60(cx,cy,r,s,s.bodyKind==='star');
-      if(f==='jupiter'){
-        ctx.save();ctx.globalAlpha=.28;ctx.strokeStyle='#7c4b3b';ctx.lineWidth=Math.max(3,r*.055);for(let i=-3;i<=3;i++){ctx.beginPath();ctx.arc(cx,cy+i*r*.16,r*.92,Math.PI*.08,Math.PI*.92);ctx.stroke()}ctx.fillStyle='#c55e45';ctx.beginPath();ctx.ellipse(cx+r*.28,cy+r*.16,r*.2,r*.10,-.1,0,Math.PI*2);ctx.fill();ctx.restore();
-      }else if(f==='saturn'){
-        ctx.save();ctx.translate(cx,cy);ctx.rotate(-.18);ctx.globalAlpha=.62;ctx.strokeStyle='#d7c9ff';ctx.lineWidth=Math.max(3,r*.07);ctx.beginPath();ctx.ellipse(0,0,r*1.88,r*.50,0,Math.PI,Math.PI*2);ctx.stroke();ctx.restore();
-      }else if(f==='uranus'){
-        ctx.save();ctx.translate(cx,cy);ctx.rotate(1.15);ctx.globalAlpha=.45;ctx.strokeStyle='#caffff';ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(0,0,r*1.5,r*.25,0,0,Math.PI*2);ctx.stroke();ctx.restore();
-      }else if(f==='neptune'){
-        ctx.save();ctx.globalAlpha=.18;ctx.strokeStyle='#b8f3ff';for(let i=0;i<12;i++){const yy=40+i*24+(t*65+i*17)%(H*.55);ctx.beginPath();ctx.moveTo(W*.45,yy%(H*.6));ctx.lineTo(W,yy%(H*.6)-18);ctx.stroke()}ctx.restore();
-      }else if(f==='venus'){
-        ctx.save();ctx.globalAlpha=.10;ctx.fillStyle='#ffd9a6';for(let i=0;i<7;i++){ctx.beginPath();ctx.ellipse((i*97+t*18)%(W+150)-75,80+(i%4)*45,90,25,0,0,Math.PI*2);ctx.fill()}ctx.restore();
-      }else if(f==='sirius'){
-        ctx.save();ctx.translate(cx,cy);ctx.globalAlpha=.32;ctx.strokeStyle='#eaffff';ctx.lineWidth=2;for(let a=0;a<4;a++){ctx.rotate(Math.PI/4);ctx.beginPath();ctx.moveTo(-r*1.9,0);ctx.lineTo(r*1.9,0);ctx.stroke()}ctx.restore();
-      }else if(f==='vega'){
-        ctx.save();ctx.globalAlpha=.18;ctx.strokeStyle='#72eaff';ctx.lineWidth=3;for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(W*.5,H*.2+i*18,W*.42+i*14,.1,Math.PI-.1);ctx.stroke()}ctx.restore();
-      }else if(f==='polaris'){
-        ctx.save();ctx.globalAlpha=.22+.10*Math.sin(t*2.5);ctx.strokeStyle='#fff5b8';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,r*(1.18+.05*Math.sin(t*2.5)),0,Math.PI*2);ctx.stroke();ctx.restore();
-      }else if(f==='betelgeuse'){
-        ctx.save();ctx.globalAlpha=.13;ctx.fillStyle='#ffcf7b';for(let i=0;i<9;i++){const a=i*.72+t*.03;ctx.beginPath();ctx.arc(cx+Math.cos(a)*r*.52,cy+Math.sin(a*1.2)*r*.45,r*(.08+(i%3)*.025),0,Math.PI*2);ctx.fill()}ctx.restore();
-      }else if(f==='r136'){
-        ctx.save();ctx.globalAlpha=.20;ctx.strokeStyle='#bffaff';for(let i=0;i<20;i++){const a=i/20*Math.PI*2+t*.08;ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);ctx.lineTo(cx+Math.cos(a)*r*1.8,cy+Math.sin(a)*r*1.8);ctx.stroke()}ctx.restore();
-      }
-    }
+<!-- v62 hidden ending preview menu -->
+<style id="v62-ending-dev-style">
+#debugHomeBtn{z-index:140!important;width:30px!important;height:30px!important;left:5px!important;bottom:5px!important;opacity:.18!important;color:rgba(255,255,255,.32)!important;background:rgba(8,8,18,.16)!important;font-size:12px!important}
+#debugHomeBtn:hover,#debugHomeBtn:focus{opacity:.82!important}
+#v62EndingDev{
+  display:none;position:absolute;z-index:180;inset:0;place-items:center;
+  background:rgba(3,4,14,.72);backdrop-filter:blur(8px);padding:18px;
+}
+#v62EndingDev.on{display:grid}
+.v62DevCard{width:min(540px,94vw);max-height:86vh;overflow:auto;padding:18px;border-radius:24px;background:linear-gradient(180deg,rgba(30,31,58,.97),rgba(10,11,25,.98));border:1px solid rgba(255,255,255,.18);box-shadow:0 20px 80px rgba(0,0,0,.58),inset 0 1px rgba(255,255,255,.12);color:#fff;font-family:system-ui,sans-serif}
+.v62DevHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:5px}.v62DevHead b{font-size:17px;letter-spacing:.08em}.v62DevClose{border:0;border-radius:999px;padding:8px 11px;background:rgba(255,255,255,.1);color:#fff;font-weight:900;cursor:pointer}.v62DevSub{font-size:11px;opacity:.62;margin-bottom:13px}.v62DevGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.v62DevBtn{border:1px solid rgba(255,255,255,.15);border-radius:15px;background:rgba(255,255,255,.075);color:#fff;padding:12px 10px;text-align:left;cursor:pointer;font-weight:900;line-height:1.3}.v62DevBtn small{display:block;margin-top:4px;font-size:9px;font-weight:650;opacity:.55}.v62DevBtn:hover{background:rgba(255,255,255,.13)}.v62DevNote{margin-top:12px;padding:10px 12px;border-radius:13px;background:rgba(109,225,255,.08);font-size:10px;line-height:1.55;opacity:.82}
+@media(max-width:520px){.v62DevGrid{grid-template-columns:1fr}.v62DevCard{padding:14px}.v62DevBtn{padding:10px}}
+</style>
 
-    if(f==='andromeda'||f==='m51'||f==='sombrero'){
-      ctx.save();ctx.translate(W*.73,H*.25);ctx.globalCompositeOperation='screen';
-      if(f==='andromeda'){
-        for(let i=0;i<9;i++){ctx.globalAlpha=.10+i*.018;ctx.strokeStyle=i%2?'#cda9ff':'#eaf8ff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,0,90+i*17,24+i*7,-.18+i*.025,0,Math.PI*2);ctx.stroke()}
-      }else if(f==='m51'){
-        ctx.globalAlpha=.26;for(let arm=0;arm<2;arm++){ctx.strokeStyle=arm?'#ff8bd8':'#9eeaff';ctx.lineWidth=3;ctx.beginPath();for(let a=.3;a<Math.PI*4.8;a+=.12){const rr=8+a*8.2,x=Math.cos(a+arm*Math.PI+t*.08)*rr,y=Math.sin(a+arm*Math.PI+t*.08)*rr*.58;a<.42?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke()}
-      }else{
-        ctx.globalAlpha=.36;ctx.fillStyle='#fff0c8';ctx.beginPath();ctx.ellipse(0,0,155,58,-.08,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.72;ctx.fillStyle='#24131d';ctx.fillRect(-170,-9,340,18);ctx.globalAlpha=.62;ctx.fillStyle='#ffe9bd';ctx.beginPath();ctx.arc(0,0,40,0,Math.PI*2);ctx.fill();
-      }ctx.restore();
-    }
-
-    if(['icarus','mothra','godzilla','earendel'].includes(f)){
-      drawLensV60(W*.76,H*.24,s,f);
-      if(f==='godzilla'){
-        ctx.save();ctx.globalAlpha=.09+.07*Math.abs(Math.sin(t*3));ctx.fillStyle='#fff6a8';ctx.fillRect(0,0,W,H);ctx.restore();
-      }
-    }
-    if(f==='cosmicDawn'){
-      ctx.save();for(let i=0;i<38;i++){const phase=(t*.35+i*.071)%1;ctx.globalAlpha=Math.max(.04,phase*.7);ctx.fillStyle=i%3?'#fff2c8':'#b9e8ff';ctx.beginPath();ctx.arc((i*83)%W,35+(i*47)%Math.max(70,H*.55),1+phase*2.2,0,Math.PI*2);ctx.fill()}ctx.restore();
-    }else if(f==='cmb'){
-      ctx.save();ctx.globalAlpha=.12;for(let i=0;i<260;i++){ctx.fillStyle=i%3===0?'#ffbd8b':i%3===1?'#86b8ff':'#fff0d2';ctx.fillRect((i*71+Math.floor(t*12)*13)%W,(i*43+Math.floor(t*8)*17)%Math.max(1,H-120),1+(i%2),1+(i%2))}ctx.restore();
-    }else if(f==='horizon'){
-      ctx.save();const x=W*.68;const grd=ctx.createLinearGradient(x-120,0,x+80,0);grd.addColorStop(0,'transparent');grd.addColorStop(.48,'rgba(174,225,255,.12)');grd.addColorStop(.5,'rgba(255,255,255,.78)');grd.addColorStop(.53,'rgba(211,138,255,.16)');grd.addColorStop(1,'transparent');ctx.fillStyle=grd;ctx.fillRect(x-120,0,200,H);ctx.restore();
-    }else if(f==='beyond'){
-      ctx.save();ctx.globalAlpha=.52;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.globalAlpha=.15;ctx.fillStyle='#d4c8ff';ctx.font='18px system-ui';for(let i=0;i<7;i++)ctx.fillText('🐾',(i*137+t*9)%W,70+(i%4)*78);ctx.restore();
-    }
-  }
-
-  const prevBgV60=drawBackground;
-  drawBackground=function(){
-    prevBgV60();
-    drawStageIdentityV60();
-  };
-  window.drawBackground=drawBackground;
-
-  const prevUpdateV60=update;
-  update=function(now,dt){
-    const s=S();
-    if(s.feature==='r136' && !p.on)p.x+=Math.sin(now/150)*.45*dt;
-    if(s.feature==='m51' && !p.on)p.vy+=Math.sin(now/210)*.022*dt;
-    prevUpdateV60(now,dt);
-  };
-  window.update=update;
-
-  const prevStageV60=stageStart;
-  stageStart=function(){
-    const before=lastSystemV60;
-    prevStageV60();
-    if(system!==before)showChapterV60(true);
-    lastSystemV60=system;
-    renderAstroV60();
-    const s=S();
-    setTimeout(()=>{
-      if(typeof showToast==='function'&&!paused)showToast(`📐 ${s.sizeText||'SIZE ?'}　⚖️ ${s.gravityLabel||'重力 ?'}`,1500);
-    },900);
-  };
-  window.stageStart=stageStart;
-
-  renderAstroV60();
-  setTimeout(()=>showChapterV60(true),700);
-})();
-</script>
