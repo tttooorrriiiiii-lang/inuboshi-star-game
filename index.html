@@ -543,6 +543,34 @@ canvas{display:block;width:100%;height:100%}
 @media(max-width:520px){#v63RadioBadge{right:7px;top:154px;min-width:112px;font-size:8px;padding:6px 7px}#v63RadioBadge small{font-size:7px}.v63RadioCard{padding:22px 16px}.v63RadioIcon{font-size:62px}.v63RadioVoice{font-size:16px}}
 </style>
 
+
+<style id="v66-space-insurance-style">
+#spaceInsuranceBadge{cursor:pointer!important;user-select:none}
+#spaceInsuranceBadge.expired{background:rgba(38,33,49,.90)!important;border-color:#7d718a!important;color:#cfc7d8!important;box-shadow:0 0 12px rgba(130,115,150,.18)!important}
+#spaceInsuranceBadge.stranded{background:rgba(76,8,26,.93)!important;border-color:#ff6e9a!important;color:#fff!important;box-shadow:0 0 20px rgba(255,61,115,.58)!important;animation:v66Alarm .55s ease-in-out infinite alternate}
+.rewardBtn.insuranceItem{background:linear-gradient(180deg,#fbffff,#d8f6ff 48%,#b9c8ff)!important}
+@keyframes v66Alarm{to{filter:brightness(1.35);transform:scale(1.03)}}
+#v66StrandedScene{display:none;position:absolute;z-index:175;inset:0;overflow:hidden;background:#020207;color:#fff;font-family:system-ui,sans-serif}
+#v66StrandedScene.on{display:block}
+#v66StrandedScene:before,#v66StrandedScene:after{content:'';position:absolute;inset:-20%;background-image:radial-gradient(circle,#fff 0 1px,transparent 1.5px);background-size:74px 74px;opacity:.34;animation:v66Stars 18s linear infinite}
+#v66StrandedScene:after{background-size:119px 119px;opacity:.18;animation-duration:30s;transform:rotate(12deg)}
+#v66StrandedScene .v66Nebula{position:absolute;inset:0;background:radial-gradient(circle at 70% 28%,rgba(92,81,175,.14),transparent 29%),radial-gradient(circle at 24% 68%,rgba(48,131,173,.10),transparent 25%)}
+.v66StrandedTop{position:absolute;z-index:4;left:50%;top:7%;transform:translateX(-50%);width:min(560px,90%);text-align:center}
+.v66Kicker{font-size:10px;font-weight:1000;letter-spacing:.22em;color:#ff89ae}.v66Title{margin-top:5px;font-size:clamp(24px,6vw,42px);font-weight:1000;letter-spacing:.04em}.v66Status{margin:8px auto 0;max-width:460px;font-size:12px;line-height:1.6;color:#c9d4e5}.v66DriftCount{display:inline-block;margin-top:9px;padding:6px 10px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.07);font-size:10px;font-weight:900}
+.v66FloatDog{position:absolute;z-index:3;left:50%;top:48%;font-size:72px;filter:drop-shadow(0 0 17px rgba(157,207,255,.42));animation:v66DogFloat 3.8s ease-in-out infinite alternate}
+.v66FloatRadio{position:absolute;z-index:3;left:43%;top:42%;font-size:28px;animation:v66RadioFloat 3.1s ease-in-out infinite alternate}
+.v66DriftField{position:absolute;z-index:5;inset:13% 3% 23%;pointer-events:none}
+.v66DriftStar{pointer-events:auto;position:absolute;border:0;background:transparent;font-size:24px;cursor:pointer;filter:drop-shadow(0 0 9px #ffe979);animation:v66Drift linear infinite alternate;padding:6px}
+.v66DriftStar.pop{animation:v66StarPop .35s ease-out,v66Drift 6s linear .35s infinite alternate}
+.v66StrandedActions{position:absolute;z-index:7;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(650px,94%);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.v66StrandedBtn{min-height:66px;border:1.5px solid rgba(255,255,255,.74);border-radius:17px;background:linear-gradient(180deg,rgba(246,252,255,.96),rgba(180,213,255,.88));color:#162238;padding:9px 8px;font:1000 11px/1.25 system-ui;box-shadow:0 5px 0 rgba(29,45,73,.78),0 0 17px rgba(118,189,255,.22);cursor:pointer}
+.v66StrandedBtn small{display:block;margin-top:4px;font-size:9px;font-weight:750;opacity:.65}.v66StrandedBtn.sos{background:linear-gradient(180deg,#f3ffff,#adf1ef)}.v66StrandedBtn.emergency{background:linear-gradient(180deg,#fff7f1,#ffd0e0)}.v66StrandedBtn.satellite{background:linear-gradient(180deg,#f7f4ff,#cfcbff)}
+.v66StrandedBtn:disabled{opacity:.34;filter:grayscale(.7);cursor:not-allowed;box-shadow:none}
+#v66StrandedScene.waiting .v66FloatRadio{filter:drop-shadow(0 0 18px #72efff);animation-duration:.45s}
+@keyframes v66Stars{to{transform:translate(-90px,45px)}}@keyframes v66DogFloat{0%{transform:translate(-50%,-50%) rotate(-13deg)}100%{transform:translate(-50%,-50%) translate(28px,-25px) rotate(18deg)}}@keyframes v66RadioFloat{to{transform:translate(25px,-18px) rotate(21deg)}}@keyframes v66Drift{to{transform:translate(22px,-28px) rotate(220deg)}}@keyframes v66StarPop{50%{transform:scale(1.8);opacity:.2}100%{transform:scale(.7);opacity:1}}
+@media(max-width:620px){.v66StrandedActions{grid-template-columns:1fr;bottom:max(12px,env(safe-area-inset-bottom));gap:6px}.v66StrandedBtn{min-height:50px;padding:7px;font-size:10px}.v66StrandedBtn small{font-size:8px;margin-top:2px}.v66FloatDog{top:43%;font-size:60px}.v66FloatRadio{top:37%}.v66StrandedTop{top:4%}.v66Status{font-size:10px}.v66DriftField{bottom:39%}}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -2556,6 +2584,247 @@ startCommunication=function(obj){
   return out;
 };
 
+
+/* === v64 integrated performance patch === */
+/* ===== v64 performance polish =====
+   Keep the same game feel while reducing progressive slowdown.
+*/
+(function(){
+  // 1) HUD: gameplay helpers call syncHUD extremely often (including every frame).
+  // Coalesce those calls to ~8 updates/sec; immediate gameplay rendering stays at RAF speed.
+  const rawSyncHUD=syncHUD;
+  let lastHudAt=0, hudTimer=0;
+  syncHUD=function(force=false){
+    const now=performance.now();
+    const minGap=120;
+    if(force || now-lastHudAt>=minGap){
+      if(hudTimer){clearTimeout(hudTimer);hudTimer=0;}
+      lastHudAt=now;
+      rawSyncHUD();
+      return;
+    }
+    if(!hudTimer){
+      hudTimer=setTimeout(()=>{
+        hudTimer=0;
+        lastHudAt=performance.now();
+        rawSyncHUD();
+      },Math.max(16,minGap-(now-lastHudAt)));
+    }
+  };
+
+  // 2) Collected-star aura: previously up to 180 emoji + shadows were drawn every frame.
+  // Keep a rich pile, but cap actual glyph rendering and show the real total numerically.
+  drawStarPile=function(sx,py,big){
+    if(system===BLACK_HOLE_SYSTEM)return;
+    const visible=Math.min(points,42), cols=big?9:7, step=big?8:5.6, size=big?10:7;
+    ctx.save();
+    ctx.textAlign='center';
+    ctx.globalAlpha=.9;
+    ctx.shadowColor='#ffe45a';
+    ctx.shadowBlur=4;
+    ctx.font=`${size}px system-ui`;
+    for(let i=0;i<visible;i++){
+      const row=Math.floor(i/cols),col=i%cols;
+      const x=sx+(big?58:34)+(col-(cols-1)/2)*step*.72;
+      const y=py+(big?72:43)-row*step*.66;
+      ctx.fillText('⭐',x,y);
+    }
+    if(points>42){
+      ctx.globalAlpha=.96;
+      ctx.shadowBlur=7;
+      ctx.fillStyle='#fff';
+      ctx.font=`900 ${big?16:11}px system-ui`;
+      ctx.fillText(`⭐×${points}`,sx+(big?58:34),py-(big?20:13));
+    }
+    ctx.restore();
+  };
+
+  // 3) Periodically discard collected / far-behind transient objects.
+  // World objects in front of the player are untouched.
+  let cleanupTick=0;
+  const rawUpdate=update;
+  update=function(now,dt){
+    rawUpdate(now,dt);
+    if(paused)return;
+    cleanupTick++;
+    if(cleanupTick%30!==0)return;
+    const back=p.x-Math.max(900,W*.9);
+    items=items.filter(o=>!o.got && o.x>back && (!o.fall || o.y<H+180));
+    hazards=hazards.filter(o=>!o.got && o.x>back && o.y<H+220);
+    aliens=aliens.filter(o=>!o.got && o.x>back);
+    morphs=morphs.filter(o=>!o.got && o.x>back);
+    swarm=swarm.filter(o=>!o.got && o.x>back);
+    satellites=satellites.filter(o=>!o.got && o.x>back);
+    secretPickups=secretPickups.filter(o=>!o.got && o.x>back);
+    bosses=bosses.filter(o=>!o.dead && o.x>back);
+    // Bone shower can create hundreds of falling bones. Keep nearest/current ones only.
+    if(items.length>190){
+      const fixed=items.filter(o=>!o.fall);
+      const falling=items.filter(o=>o.fall).sort((a,b)=>Math.abs(a.x-p.x)-Math.abs(b.x-p.x)).slice(0,Math.max(0,190-fixed.length));
+      items=fixed.concat(falling);
+    }
+    // Swarm / target events should never need hundreds of stale entities at once.
+    if(swarm.length>120)swarm=swarm.slice(-120);
+  };
+})();
+
+/* === v65 integrated Earth contact === */
+/* ===== v65 Earth opening: an actual radio contact before boarding the alien craft ===== */
+(function(){
+  let v65EarthContacted=false;
+  let v65ContactActive=false;
+  const V65_CONTACT_X=1580;
+
+  function v65ContactCard(){
+    return '<div class="v63RadioCard">'+
+      '<div class="v63RadioIcon">📻</div>'+
+      '<div class="v63RadioKicker">INCOMING TRANSMISSION</div>'+
+      '<div class="v63RadioNoise">ザー……　ピッ……　ザザ……</div>'+
+      '<div class="v63RadioVoice">「……きこえる？」<br>「……近くに……船……」<br>「……その通信機……鍵……」</div>'+
+      '<div class="v63RadioMeta">位置データの一部を受信中……</div>'+
+      '<button class="v65RadioReply" type="button">📻 応答する</button>'+
+    '</div>';
+  }
+
+  function v65ShowEarthContact(){
+    if(v65EarthContacted||v65ContactActive||!v63RadioFound||!v63IsOpeningEarth())return;
+    v65ContactActive=true;paused=true;reward?.classList.remove('on');
+    eventEl.textContent='📻 INCOMING TRANSMISSION';
+    missionEl.textContent='📻 救助信号に応答する';
+    v63RadioScene.innerHTML=v65ContactCard();
+    v63RadioScene.classList.remove('heard','reply');
+    v63RadioScene.classList.add('on','contact');
+    const btn=v63RadioScene.querySelector('.v65RadioReply');
+    btn?.addEventListener('click',()=>{
+      if(v65EarthContacted)return;
+      v65EarthContacted=true;
+      v63RadioScene.classList.add('reply');
+      v63RadioScene.classList.remove('contact');
+      v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">REPLY SENT</div><div class="v63RadioNoise">ピッ——</div><div class="v63RadioVoice" style="opacity:1">🐕「ワン！」<br><br>「……きこえた……」</div><div class="v63RadioMeta">COORDINATES RECEIVED / 信号座標を受信</div></div>';
+      eventEl.textContent='📡 COORDINATES RECEIVED';
+      missionEl.textContent='🛸 受信した座標へ向かう';
+      setTimeout(()=>{
+        v63RadioScene.classList.remove('on','heard','reply','contact');
+        paused=false;v65ContactActive=false;
+        showToast('📻 座標を受信。近くに何かある……。',1750);
+        v63RenderRadio();
+      },1750);
+    },{once:true});
+  }
+
+  // Trigger the contact before the craft comes into view. This deliberately pauses the walk
+  // until the player answers once, so the transition no longer feels automatic or abrupt.
+  const v65PrevUpdate=update;
+  update=function(now,dt){
+    if(!paused&&v63IsOpeningEarth()&&v63RadioFound&&!v65EarthContacted&&p.x>=V65_CONTACT_X){
+      v65ShowEarthContact();return;
+    }
+    v65PrevUpdate(now,dt);
+  };
+
+  // The craft can only launch after the second contact has supplied its coordinates/key hint.
+  const v65PrevRocketToMoon=rocketToMoon;
+  rocketToMoon=function(){
+    if(v63IsOpeningEarth()&&v63RadioFound&&!v65EarthContacted){
+      p.x=Math.min(p.x,rocketX-130);
+      showToast('📻 まだ通信が途切れている。もう一度応答してみよう。',1650);
+      if(!v65ContactActive)v65ShowEarthContact();
+      return;
+    }
+    return v65PrevRocketToMoon();
+  };
+
+  // Make the little radio HUD explain that the coordinates have been received.
+  const v65PrevRenderRadio=v63RenderRadio;
+  v63RenderRadio=function(){
+    v65PrevRenderRadio();
+    if(v65EarthContacted&&v63IsOpeningEarth()&&v63RadioBadge?.classList.contains('on')){
+      v63RadioBadge.innerHTML=`📻 SIGNAL ${v63SignalPercent()}%<small>COORDINATES RECEIVED</small>`;
+      missionEl.textContent='🛸 受信した座標へ向かう';
+      if(p.x<2200)eventEl.textContent='📡 COORDINATES RECEIVED';
+    }
+  };
+
+  // Replace the old lightweight Earth hint with the new interaction's pacing.
+  v63SignalSeen.add('weak');
+})();
+
+
+/* ===== v66: one-use space insurance + stranded mini-stage ===== */
+(function(){
+ const COST=20;
+ let insuranceActive=true,initialPolicy=true,stranded=false,strandedOriginX=115,driftCount=0,satelliteReady=false,strandedTimer=0;
+
+ const scene=document.createElement('div');scene.id='v66StrandedScene';
+ scene.innerHTML=`<div class="v66Nebula"></div><div class="v66StrandedTop"><div class="v66Kicker">🚨 STRANDED DOG</div><div class="v66Title">宇宙に放り出された！</div><div class="v66Status">救助船は来ない。📻トランシーバーだけが生きている。</div><div class="v66DriftCount">⭐ 漂流スター <b>0</b> / 20</div></div><div class="v66FloatDog">🐕</div><div class="v66FloatRadio">📻</div><div class="v66DriftField"></div><div class="v66StrandedActions"><button class="v66StrandedBtn sos" data-v66="sos">📻 SOSを送る<small>5秒待つ・無料</small></button><button class="v66StrandedBtn emergency" data-v66="emergency">🛸 緊急再加入＋救助 20⭐<small>今すぐ帰還＋保険ON</small></button><button class="v66StrandedBtn satellite" data-v66="satellite" disabled>🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small></button></div>`;
+ wrap.appendChild(scene);
+ const q=s=>scene.querySelector(s);
+
+ function refreshStranded(){
+  q('.v66DriftCount b').textContent=driftCount;
+  const e=q('[data-v66="emergency"]');
+  e.disabled=points<COST;
+  e.innerHTML=points>=COST?`🛸 緊急再加入＋救助 ${COST}⭐<small>今すぐ帰還＋保険ON</small>`:`🛸 緊急再加入＋救助 ${COST}⭐<small>あと ${COST-points}⭐</small>`;
+  const s=q('[data-v66="satellite"]');
+  s.disabled=!satelliteReady;
+  s.innerHTML=satelliteReady?'🛰️ 漂流衛星につかまる<small>近くの安全地点へ</small>':'🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small>';
+ }
+ function placeStar(el,delay=0){el.style.left=(8+Math.random()*84)+'%';el.style.top=(18+Math.random()*55)+'%';el.style.animationDelay=delay+'ms';el.style.animationDuration=(5+Math.random()*4)+'s'}
+ function buildStars(){
+  const field=q('.v66DriftField');field.innerHTML='';
+  for(let i=0;i<8;i++){const s=document.createElement('button');s.type='button';s.className='v66DriftStar';s.textContent='⭐';placeStar(s,i*130);s.addEventListener('click',()=>{if(!stranded||driftCount>=20)return;driftCount++;points++;starTotal++;s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');placeStar(s);refreshStranded();syncHUD(true)});field.appendChild(s)}
+ }
+ function safeRespawn(mode){
+  const fromBH=system===BLACK_HOLE_SYSTEM;
+  if(fromBH){let best=0,bestRank=-1;for(let i=0;i<systems.length;i++){const r=systemDistanceRank[i]??-1;if(!systems[i].secret&&!systems[i].dream&&i!==BLACK_HOLE_SYSTEM&&r<=furthestRank&&r>bestRank){best=i;bestRank=r}}system=best;stage=0;stageStart()}
+  else{const ox=strandedOriginX;stageStart();p.x=Math.max(115,ox-650);p.y=groundY()-p.h;p.vy=0;p.on=true;camera=Math.max(0,p.x-W*.34)}
+  v60RescueHits=0;v60LastRescueHit=0;invincibleUntil=performance.now()+3000;stranded=false;satelliteReady=false;if(strandedTimer){clearTimeout(strandedTimer);strandedTimer=0}scene.classList.remove('on','waiting');paused=false;v60RenderInsurance();syncHUD(true);
+  if(mode==='sos')showToast('👽「マタ オマエカ」　救助された。保険はまだ切れたまま。',1900);else if(mode==='satellite')showToast('🛰️ 漂流衛星につかまって帰還！ 保険はまだ切れたまま。',1800);else showToast('🛸 緊急再加入完了！ 宇宙保険 ON',1700)
+ }
+ function enterStranded(){
+  if(stranded||v60Rescuing)return;stranded=true;strandedOriginX=p.x;driftCount=0;satelliteReady=false;v60RescueHits=0;v60LastRescueHit=0;paused=true;reward?.classList.remove('on');gameOverEl.classList.remove('on');trans.style.display='none';eventEl.textContent='🚨 STRANDED DOG — 宇宙保険切れ';q('.v66Status').textContent='救助船は来ない。📻トランシーバーだけが生きている。';buildStars();refreshStranded();scene.classList.add('on');v60RenderInsurance();
+  strandedTimer=setTimeout(()=>{if(!stranded)return;satelliteReady=true;refreshStranded();q('.v66Status').textContent='遠くから壊れかけの衛星が流れてきた……！'},6000)
+ }
+ scene.addEventListener('click',e=>{
+  const b=e.target.closest('[data-v66]');if(!b||b.disabled||!stranded)return;
+  if(b.dataset.v66==='sos'){scene.classList.add('waiting');q('.v66Status').textContent='📻 SOS送信中……　ザー……　応答を待っている。';scene.querySelectorAll('.v66StrandedBtn').forEach(x=>x.disabled=true);setTimeout(()=>{if(stranded)q('.v66Status').textContent='📻 ……受信。「マタ オマエカ」'},2700);setTimeout(()=>{if(stranded)safeRespawn('sos')},5000)}
+  else if(b.dataset.v66==='emergency'){if(points<COST){refreshStranded();return}points-=COST;insuranceActive=true;initialPolicy=false;safeRespawn('insured')}
+  else if(b.dataset.v66==='satellite'&&satelliteReady)safeRespawn('satellite')
+ });
+
+ function ensureInsuranceButton(){
+  let b=reward.querySelector('.rewardBtn[data-special="insurance"]');
+  if(!b){b=document.createElement('button');b.className='rewardBtn insuranceItem';b.dataset.special='insurance';b.dataset.cost=String(COST);reward.querySelector('.rewardBtns')?.appendChild(b);b.addEventListener('click',()=>buySpecial('insurance'))}
+  return b
+ }
+ const oldRenderItems=v60RenderItems;
+ v60RenderItems=function(){oldRenderItems();const b=ensureInsuranceButton();b.innerHTML=insuranceActive?'🛸 宇宙保険<br>加入中 ✓':`🛸 宇宙保険 再加入<br>${COST}⭐`;b.dataset.cost=String(COST)};
+ const oldUpdateShop=updateShopButtons;
+ updateShopButtons=function(){ensureInsuranceButton();oldUpdateShop();const b=reward.querySelector('.rewardBtn[data-special="insurance"]');const d=insuranceActive||!shopUnlocked||points<COST;b.disabled=d;b.classList.toggle('locked',d);b.title=insuranceActive?'現在加入中。救助1回で保険切れ。':'20⭐で次の救助1回ぶん再加入'};
+ const oldBuy=buySpecial;
+ buySpecial=function(kind){if(kind!=='insurance')return oldBuy(kind);if(insuranceActive){showToast('🛸 宇宙保険は加入中！',950);return}if(points<COST){showToast(`⭐ あと ${COST-points}個で再加入`,1000);return}points-=COST;insuranceActive=true;initialPolicy=false;v60RescueHits=0;v60LastRescueHit=0;reward.classList.remove('on');v60RenderInsurance();v60RenderItems();updateShopButtons();syncHUD(true);showToast('🛸 宇宙保険に再加入！ 次の救助1回まで有効',1600)};
+
+ const oldRescue=v60EmergencyRescue;
+ v60EmergencyRescue=function(){if(stranded||v60Rescuing)return;if(!insuranceActive){enterStranded();return}if(performance.now()<v60RescueCooldown)return;initialPolicy=false;insuranceActive=false;oldRescue()};
+ v60RenderInsurance=function(){const lim=v60RescueLimit();v60InsuranceBadge.classList.toggle('warn',v60RescueHits>0&&!v60Rescuing&&insuranceActive);v60InsuranceBadge.classList.toggle('rescuing',v60Rescuing);v60InsuranceBadge.classList.toggle('expired',!insuranceActive&&!v60Rescuing&&!stranded);v60InsuranceBadge.classList.toggle('stranded',stranded);if(stranded)v60InsuranceBadge.textContent='🚨 宇宙遭難';else if(v60Rescuing)v60InsuranceBadge.textContent='🛸 宇宙保険 救助中！';else if(!insuranceActive)v60InsuranceBadge.textContent='🛸 宇宙保険 EXPIRED';else if(v60RescueHits)v60InsuranceBadge.textContent=`🛸 宇宙保険 ${v60RescueHits}/${lim}`;else v60InsuranceBadge.textContent=initialPolicy?'🛸 宇宙保険 ON・初回無料':'🛸 宇宙保険 ON・1回有効'};
+
+ v60InsuranceBadge.style.pointerEvents='auto';v60InsuranceBadge.setAttribute('role','button');v60InsuranceBadge.setAttribute('tabindex','0');
+ const openInsurance=()=>{if(stranded)return;if(insuranceActive){showToast('🛸 加入中。救助1回で保険切れになるよ',1150);return}if(points<V60_SHOP_UNLOCK&&!shopUnlocked){showToast(`⭐ あと ${Math.max(0,COST-points)}個で宇宙保険に再加入できる`,1200);return}openShop();setTimeout(()=>reward.querySelector('.rewardBtn[data-special="insurance"]')?.focus(),50)};
+ v60InsuranceBadge.addEventListener('click',openInsurance);v60InsuranceBadge.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openInsurance()}});
+
+ // Hidden QA buttons: same 🐾 menu used for ending previews.
+ const devGrid=document.querySelector('#v62EndingDev .v62DevGrid');
+ if(devGrid&&!devGrid.querySelector('[data-v66-test]')){
+  const rescueTest=document.createElement('button');rescueTest.className='v62DevBtn';rescueTest.dataset.v66Test='rescue';rescueTest.innerHTML='🛸 保険救助テスト<small>1回救助 → EXPIREDを確認</small>';
+  const strandedTest=document.createElement('button');strandedTest.className='v62DevBtn';strandedTest.dataset.v66Test='stranded';strandedTest.innerHTML='🚨 遭難テスト<small>保険切れ → 宇宙漂流へ</small>';
+  devGrid.append(rescueTest,strandedTest);
+  rescueTest.addEventListener('click',()=>{dev.classList.remove('on');paused=false;insuranceActive=true;v60RescueHits=v60RescueLimit();v60RenderInsurance();v60EmergencyRescue()});
+  strandedTest.addEventListener('click',()=>{dev.classList.remove('on');paused=false;insuranceActive=false;v60RenderInsurance();enterStranded()});
+ }
+ v60RenderItems();updateShopButtons();v60RenderInsurance();syncHUD(true)
+})();
+
+
 /* Initialize the opening after all v63 wrappers are ready. */
 if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌍 EARTH / NORMAL DAY';}
 /* === end v63 opening story === */
@@ -2563,6 +2832,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの道を歩いている。',1900),550);requestAnimationFrame(frame);
 })();
 </script>
+<style id="v65-earth-radio-contact-style">
+#v63RadioScene .v65RadioReply{margin-top:18px;border:1.5px solid rgba(125,239,255,.72);border-radius:999px;padding:11px 20px;min-width:180px;background:linear-gradient(180deg,#e9feff,#9aebf4);color:#12333d;font:1000 12px system-ui;letter-spacing:.05em;box-shadow:0 5px 0 rgba(29,89,102,.55),0 0 25px rgba(92,234,255,.22);cursor:pointer}
+#v63RadioScene .v65RadioReply:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(29,89,102,.55)}
+#v63RadioScene.contact .v63RadioIcon{animation:v63RadioShake .22s steps(2,end) infinite}
+#v63RadioScene.contact .v63RadioVoice{opacity:1}
+#v63RadioScene.reply .v63RadioIcon{animation:none;filter:drop-shadow(0 0 20px #b9fbff)}
+@media(max-width:520px){#v63RadioScene .v65RadioReply{min-width:160px;padding:10px 17px;font-size:11px}}
+</style>
 </body>
 </html>
 
