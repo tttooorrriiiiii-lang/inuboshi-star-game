@@ -10,7 +10,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;fon
 #wrap{position:relative;width:100%;height:100dvh;overflow:hidden;background:#050714;touch-action:none;user-select:none}
 canvas{display:block;width:100%;height:100%}
 #wrap:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:8;background:repeating-linear-gradient(180deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px);mix-blend-mode:screen;opacity:.4}
-#hud{position:absolute;z-index:10;top:10px;left:10px;width:min(52%,440px);display:block;pointer-events:none}
+#hud{position:absolute;z-index:10;top:10px;left:10px;width:min(52%,440px);display:block;pointer-events:none;transition:opacity .25s ease}
 .stack{display:flex;gap:6px;flex-wrap:wrap;max-width:100%;align-items:center}
 .pill{position:relative;overflow:hidden;background:linear-gradient(180deg,#fff,#e9e5ff 46%,#a99bd0 52%,#fff);color:#1d1233;border:2px solid #fff;border-radius:15px;padding:7px 10px;font-size:12px;line-height:1;font-weight:1000;letter-spacing:.3px;text-shadow:0 1px 0 #fff;box-shadow:inset 0 0 0 1px rgba(94,69,147,.7),0 0 0 1px rgba(255,79,216,.4),0 0 14px rgba(86,231,255,.2),0 4px 0 rgba(14,5,35,.72)}
 .pill:before{content:"";position:absolute;left:8px;right:8px;top:2px;height:35%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.9),transparent)}
@@ -571,6 +571,20 @@ canvas{display:block;width:100%;height:100%}
 @media(max-width:620px){.v66StrandedActions{grid-template-columns:1fr;bottom:max(12px,env(safe-area-inset-bottom));gap:6px}.v66StrandedBtn{min-height:50px;padding:7px;font-size:10px}.v66StrandedBtn small{font-size:8px;margin-top:2px}.v66FloatDog{top:43%;font-size:60px}.v66FloatRadio{top:37%}.v66StrandedTop{top:4%}.v66Status{font-size:10px}.v66DriftField{bottom:39%}}
 </style>
 
+<style id="v70-bone-time-style">
+#v70BoneHud{position:absolute;z-index:13;left:10px;bottom:86px;min-width:132px;padding:7px 10px;border-radius:12px;border:1px solid rgba(255,230,115,.55);background:rgba(8,10,24,.72);backdrop-filter:blur(8px);color:#fff6b3;font:1000 10px system-ui;letter-spacing:.04em;box-shadow:0 0 18px rgba(255,215,72,.12);pointer-events:none}
+#v70BoneHud small{display:block;margin-top:2px;font-size:8px;color:#fff}
+#v70BoneHud span{display:block;height:4px;margin-top:5px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden}
+#v70BoneHud span i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#fff5ad,#ffbf4b)}
+#v70BoneHud.ready{animation:v70BoneReady .55s infinite alternate}
+#v70BoneHud.active{border-color:#fff3a0;background:rgba(91,56,5,.82);box-shadow:0 0 26px rgba(255,218,68,.5)}
+#v70BoneBanner{position:absolute;z-index:70;left:50%;top:27%;transform:translate(-50%,-50%) scale(.72);opacity:0;pointer-events:none;text-align:center;white-space:nowrap;color:#fff8b6;text-shadow:0 0 14px #ffb900,0 3px 0 #5b2700;font:1000 clamp(25px,5vw,48px) system-ui;letter-spacing:.03em}
+#v70BoneBanner small{display:block;margin-top:8px;color:#fff;font:1000 11px system-ui;text-shadow:0 2px 8px #000}
+#v70BoneBanner.on{animation:v70BonePop 2.1s ease both}
+@keyframes v70BoneReady{to{filter:brightness(1.45);transform:scale(1.03)}}
+@keyframes v70BonePop{0%{opacity:0;transform:translate(-50%,-50%) scale(.55) rotate(-3deg)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.12) rotate(2deg)}68%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-65%) scale(.92)}}
+@media(max-width:520px){#v70BoneHud{left:7px;bottom:74px;min-width:112px;padding:6px 8px;font-size:9px}#v70BoneBanner small{font-size:9px}}
+</style>
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -579,7 +593,7 @@ canvas{display:block;width:100%;height:100%}
 <div id="mission"></div><div id="event"></div><div id="astroInfo"></div><div id="toast"></div>
 <div id="bigBanner">✦ 超巨大化！ ✦<small>犬星くん超巨大化フィーバー！ ジャンプもできる！</small></div>
 <div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3｜⭐も謎物体も吸引</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザー<small id="laserAmmoText">攻撃 8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">👽 宇宙パワー<small id="cosmicPowerText">時空を曲げる</small></button><button class="ctrl jumpCtrl" id="jump">⬆️ ジャンプ<small>タップでジャンプ</small></button></div>
-<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ アイテムを使う</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 超巨大化<br>35⭐</button><button class="rewardBtn utilityItem" data-special="boneBoomerang" data-cost="0">🦴 骨ブーメラン連射<br>骨3で5連射・回収</button><button class="rewardBtn cosmicItem" data-special="cosmic" data-cost="0">👽 宇宙パワー<br>時空を曲げる</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 ホネホネシャワー<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
+<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ アイテムを使う</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 超巨大化<br>35⭐</button><button class="rewardBtn utilityItem" data-special="boneBoomerang" data-cost="0">🦴 骨ブーメラン連射<br>骨3で5連射・回収</button><button class="rewardBtn cosmicItem" data-special="cosmic" data-cost="0">👽 宇宙パワー<br>時空を曲げる</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
 <div id="comm"><div id="commTitle">📡 SIGNAL RECEIVED</div><div id="commText"></div><div id="commWave">▂▄▆█▆▄▂</div></div>
 <div id="critical">⚠️ CRITICAL! あと1回でGAME OVER</div><div id="gameOver"><div id="gameOverTitle">GAME OVER</div><div id="gameOverSub">宇宙はそんなにやさしくない…<br>⭐ 20 LOST<br><br>RETRYING…</div></div>
 
@@ -2485,7 +2499,7 @@ const v63SignalSeen=new Set();
 let v63RadioScene=document.getElementById('v63RadioScene');
 if(!v63RadioScene){
   v63RadioScene=document.createElement('div');v63RadioScene.id='v63RadioScene';
-  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN DISTRESS SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……たす……け……」</div><div class="v63RadioMeta">発信源：不明　／　距離：測定不能</div></div>';
+  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……たす……け……」</div><div class="v63RadioMeta">発信源：不明　／　距離：測定不能</div></div>';
   wrap.appendChild(v63RadioScene);
 }
 let v63RadioBadge=document.getElementById('v63RadioBadge');
@@ -2508,7 +2522,7 @@ function v63RenderRadio(){
 function v63PickupRadio(){
   if(v63RadioFound)return;
   v63RadioFound=true;paused=true;reward?.classList.remove('on');
-  missionEl.textContent='📻 救助信号の発信源を追う';eventEl.textContent='📡 UNKNOWN DISTRESS SIGNAL';
+  missionEl.textContent='📻 骨の信号の発信源を追う';eventEl.textContent='📡 UNKNOWN SIGNAL';
   v63RadioScene.classList.add('on');v63RenderRadio();
   setTimeout(()=>{if(v63RadioScene.classList.contains('on'))v63RadioScene.classList.add('heard')},650);
   setTimeout(()=>{v63RadioScene.classList.remove('on','heard');paused=false;showToast('📻 信号が指す方向へ行ってみよう。',1700);},2850);
@@ -2553,7 +2567,7 @@ rocketToMoon=function(){
   trans.style.display='grid';trans.style.background='radial-gradient(circle at 50% 45%,rgba(101,82,160,.48),rgba(3,5,15,.96) 64%)';
   warpDog.textContent='🐕📻🛸';warpDog.className='spin';
   transTitle.innerHTML='🛸 UNLOCKED';nextEl.textContent='';subEl.textContent='READY';
-  setTimeout(()=>{transTitle.innerHTML='📻 救助信号の方向へ';nextEl.textContent='';subEl.textContent='AUTO TRACE';},850);
+  setTimeout(()=>{transTitle.innerHTML='📻 骨の信号の方向へ';nextEl.textContent='';subEl.textContent='AUTO TRACE';},850);
   setTimeout(()=>{
     system=0;stage=1;deepWarpCount=0;stageStart();trans.style.display='none';trans.style.background='';warpDog.className='';paused=false;rocketLaunched=false;
     showToast('🌙 月',1200);v63RenderRadio();
@@ -2564,8 +2578,8 @@ const v63BaseStageStart=stageStart;
 stageStart=function(){
   v63BaseStageStart();
   if(v63IsOpeningEarth()){
-    missionEl.textContent=v63RadioFound?'📻 救助信号の発信源を追う':'🐕 いつもの散歩';
-    eventEl.textContent=v63RadioFound?'📡 UNKNOWN DISTRESS SIGNAL':'🌍 EARTH / NORMAL DAY';
+    missionEl.textContent=v63RadioFound?'📻 骨の信号の発信源を追う':'🐕 いつもの散歩';
+    eventEl.textContent=v63RadioFound?'📡 UNKNOWN SIGNAL':'🌍 EARTH / NORMAL DAY';
   }else if(v63RadioFound&&!returnFromDogStar){
     v63RenderRadio();
     const rank=systemDistanceRank[system]??0;
@@ -2681,8 +2695,8 @@ startCommunication=function(obj){
       '<div class="v63RadioIcon">📻</div>'+
       '<div class="v63RadioKicker">INCOMING TRANSMISSION</div>'+
       '<div class="v63RadioNoise">ザー……　ピッ……　ザザ……</div>'+
-      '<div class="v63RadioVoice">「……そこに……船がある……」<br>「……その船なら……ここまで……来られる……」</div>'+
-      '<div class="v63RadioMeta">救助信号の方向データを受信中……</div>'+
+      '<div class="v63RadioVoice">「……エサだらけの星があるよ……」<br>「……そこにある船で来られるよ……」</div>'+
+      '<div class="v63RadioMeta">BONE SIGNAL ROUTE</div>'+
       '<button class="v65RadioReply" type="button">📻 応答する</button>'+
     '</div>';
   }
@@ -2691,7 +2705,7 @@ startCommunication=function(obj){
     if(v65EarthContacted||v65ContactActive||!v63RadioFound||!v63IsOpeningEarth())return;
     v65ContactActive=true;paused=true;reward?.classList.remove('on');
     eventEl.textContent='📻 INCOMING TRANSMISSION';
-    missionEl.textContent='📻 救助信号に応答する';
+    missionEl.textContent='📻 謎の信号に応答する';
     v63RadioScene.innerHTML=v65ContactCard();
     v63RadioScene.classList.remove('heard','reply');
     v63RadioScene.classList.add('on','contact');
@@ -2701,13 +2715,13 @@ startCommunication=function(obj){
       v65EarthContacted=true;
       v63RadioScene.classList.add('reply');
       v63RadioScene.classList.remove('contact');
-      v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">REPLY SENT</div><div class="v63RadioNoise">ピッ——</div><div class="v63RadioVoice" style="opacity:1">🐕「ワン！」</div><div class="v63RadioMeta">COORDINATES RECEIVED</div></div>';
-      eventEl.textContent='📡 COORDINATES RECEIVED';
-      missionEl.textContent='🛸 受信した座標へ向かう';
+      v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">ROUTE RECEIVED</div><div class="v63RadioNoise">ピッ——</div><div class="v63RadioMeta">BONE SIGNAL LOCKED</div></div>';
+      eventEl.textContent='🦴 BONE SIGNAL LOCKED';
+      missionEl.textContent='🛸 宇宙船へ向かう';
       setTimeout(()=>{
         v63RadioScene.classList.remove('on','heard','reply','contact');
         paused=false;v65ContactActive=false;
-        showToast('📻 座標を受信。',1100);
+        showToast('🦴 骨の信号をロック。',1000);
         v63RenderRadio();
       },1750);
     },{once:true});
@@ -2728,7 +2742,7 @@ startCommunication=function(obj){
   rocketToMoon=function(){
     if(v63IsOpeningEarth()&&v63RadioFound&&!v65EarthContacted){
       p.x=Math.min(p.x,rocketX-130);
-      showToast('📻 まだ通信が途切れている。もう一度応答してみよう。',1650);
+      showToast('📻 もう一度、信号を受け取ろう。',1300);
       if(!v65ContactActive)v65ShowEarthContact();
       return;
     }
@@ -2740,9 +2754,9 @@ startCommunication=function(obj){
   v63RenderRadio=function(){
     v65PrevRenderRadio();
     if(v65EarthContacted&&v63IsOpeningEarth()&&v63RadioBadge?.classList.contains('on')){
-      v63RadioBadge.innerHTML=`📻 SIGNAL ${v63SignalPercent()}%<small>COORDINATES RECEIVED</small>`;
-      missionEl.textContent='🛸 受信した座標へ向かう';
-      if(p.x<2200)eventEl.textContent='📡 COORDINATES RECEIVED';
+      v63RadioBadge.innerHTML=`🦴 BONE SIGNAL<small>ROUTE LOCKED</small>`;
+      missionEl.textContent='🛸 宇宙船へ向かう';
+      if(p.x<2200)eventEl.textContent='🦴 BONE SIGNAL LOCKED';
     }
   };
 
@@ -2871,7 +2885,7 @@ let v67InsuranceGraceUntil=0;
     const rem=Math.max(0,Math.min(98,Math.round(100-progress)));
     v63RadioBadge.classList.toggle('max',rem<=2);
     const state=system===BLACK_HOLE_SYSTEM?'重力干渉で測定が乱れている':v68DistanceState(rem);
-    v63RadioBadge.innerHTML=`📻 救助信号までの距離<small>残り目安 ${rem}%｜${state}</small>`;
+    v63RadioBadge.innerHTML=`📻 骨の信号までの距離<small>残り目安 ${rem}%｜${state}</small>`;
   };
 
   /* Drifting wireless-message pickups. */
@@ -2890,7 +2904,7 @@ let v67InsuranceGraceUntil=0;
     let idx=v68RadioMessageIndex++%Math.min(v68RadioMessages.length,rank>=18?v68RadioMessages.length:6);
     const msg=v68RadioMessages[idx];
     const ct=comm?.querySelector('#commTitle');
-    if(ct)ct.textContent='🛜 救助信号の断片を受信';
+    if(ct)ct.textContent='🛜 骨の信号の断片を受信';
     if(commText)commText.textContent=msg;
     comm?.classList.remove('on','milestone');void comm?.offsetWidth;comm?.classList.add('milestone');
     eventEl.textContent='🛜 MESSAGE SIGNAL RECEIVED';
@@ -2904,7 +2918,7 @@ let v67InsuranceGraceUntil=0;
     if(eventPhase>=v68NextRadioWave){
       if(!items.some(o=>o.v68RadioWave&&!o.got)){
         items.push({x:p.x+W+150+Math.random()*180,y:75+Math.random()*Math.max(100,H*.34),r:24,got:false,v68RadioWave:true,phase:Math.random()*6.2,color:'#8ef6ff'});
-        eventEl.textContent='🛜 救助信号の断片が流れてきた！';
+        eventEl.textContent='🛜 骨の信号の断片が流れてきた！';
       }
       v68NextRadioWave=eventPhase+650+Math.floor(Math.random()*650);
     }
@@ -3033,7 +3047,7 @@ let v67InsuranceGraceUntil=0;
     v69PrevRadio();
     if(!v63RadioFound||returnFromDogStar||!v63RadioBadge?.classList.contains('on'))return;
     v63RadioBadge.classList.toggle('max',!!systems[system]?.dream);
-    v63RadioBadge.innerHTML=`📻 救助信号までの距離<small>${v69SignalDistanceLabel()}</small>`;
+    v63RadioBadge.innerHTML=`📻 骨の信号までの距離<small>${v69SignalDistanceLabel()}</small>`;
   };
 
   /* --- Stars are the shield. The warning appears only after a real reserve has been depleted. --- */
@@ -3118,6 +3132,185 @@ let v67InsuranceGraceUntil=0;
   }
   document.querySelectorAll('[data-v66-test]').forEach(b=>b.style.display='none');
   v60RenderItems();updateShopButtons();v69RenderStarDanger();v63RenderRadio();syncHUD(true);
+})();
+
+/* ===== v70: BONE SIGNAL story cleanup + automatic BONE TIME ===== */
+(function(){
+  /* --- Story spine: this is no longer a rescue mission. The dog is being lured by food. --- */
+  const V70_SIGNAL_LABELS=[
+    {rank:0,name:'月',dist:'約38.4万 km'},
+    {rank:1,name:'火星方面',dist:'約5,500万 km'},
+    {rank:3,name:'太陽系外縁',dist:'約43億 km'},
+    {rank:5,name:'シリウス方面',dist:'約8.6 光年'},
+    {rank:8,name:'ベガ方面',dist:'約25 光年'},
+    {rank:11,name:'赤色巨星域',dist:'約550 光年'},
+    {rank:14,name:'銀河の外',dist:'約250万 光年級'},
+    {rank:18,name:'遠方銀河域',dist:'約100億 光年級'},
+    {rank:22,name:'宇宙の果て側',dist:'約456億 光年級'},
+    {rank:26,name:'骨の星？',dist:'SIGNAL MAX'}
+  ];
+  function v70SignalCheckpoint(){
+    if(systems[system]?.dream)return {name:'骨の星？',dist:'SIGNAL MAX'};
+    if(v63IsOpeningEarth())return {name:'月',dist:'約38.4万 km'};
+    const rank=Math.max(0,systemDistanceRank[system]??0);
+    let pick=V70_SIGNAL_LABELS[0];
+    for(const c of V70_SIGNAL_LABELS){if(rank>=c.rank)pick=c;}
+    return pick;
+  }
+  v63RenderRadio=function(){
+    if(!v63RadioFound||returnFromDogStar){v63RadioBadge.classList.remove('on','max');return;}
+    const c=v70SignalCheckpoint();
+    v63RadioBadge.classList.add('on');
+    v63RadioBadge.classList.toggle('max',!!systems[system]?.dream);
+    v63RadioBadge.innerHTML=systems[system]?.dream
+      ? '🦴 BONE SIGNAL MAX<small>骨の星……？</small>'
+      : `🦴 BONE SIGNAL<small>次：${c.name}｜${c.dist}</small>`;
+  };
+
+  v63PickupRadio=function(){
+    if(v63RadioFound)return;
+    v63RadioFound=true;paused=true;reward?.classList.remove('on');
+    missionEl.textContent='🦴 謎の信号を追う';eventEl.textContent='📻 UNKNOWN SIGNAL';
+    v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……もっと……食べたくない？」</div><div class="v63RadioMeta">発信源：不明</div></div>';
+    v63RadioScene.classList.add('on');v63RenderRadio();
+    setTimeout(()=>{if(v63RadioScene.classList.contains('on'))v63RadioScene.classList.add('heard')},520);
+    setTimeout(()=>{v63RadioScene.classList.remove('on','heard');paused=false;showToast('📻 ……この先から聞こえる。',1200);},2450);
+  };
+
+  const v70PrevRocket=rocketToMoon;
+  rocketToMoon=function(){
+    if(paused||rocketLaunched)return v70PrevRocket();
+    if(!v63RadioFound)return v70PrevRocket();
+    /* Let the v65 gate decide whether the second contact has happened. Once it has, use the lighter launch copy. */
+    const before=rocketLaunched;
+    v70PrevRocket();
+    if(!before&&rocketLaunched&&trans?.style.display==='grid'){
+      transTitle.innerHTML='🦴 BONE SIGNAL LOCKED';nextEl.textContent='';subEl.textContent='';
+      setTimeout(()=>{if(trans?.style.display==='grid'){transTitle.innerHTML='🦴 骨の星の方向へ';nextEl.textContent='';subEl.textContent='AUTO TRACE';}},620);
+    }
+  };
+
+  /* --- Space radio pickups: no dialogue overlay, no pause, just a tiny playful line. --- */
+  const v70RadioLines=['📻「骨、まだあるよ」','📻「もっと先」','📻「でっかい骨もあるよ」','📻「こっちこっち」'];
+  let v70RadioLine=0;
+  const v70PrevCollectGood=collectGood;
+  collectGood=function(it){
+    if(it?.v68RadioWave&&!it.got){
+      it.got=true;
+      const line=v70RadioLines[v70RadioLine++%v70RadioLines.length];
+      eventEl.textContent='🛜 BONE SIGNAL';showToast(line,900);syncHUD();return;
+    }
+    return v70PrevCollectGood(it);
+  };
+
+  /* Kill the old chatter frequency and create one small 🛜 signal only at selected route milestones. */
+  const v70SignalSpawned=new Set();
+  const v70PrevSpawnEvents=spawnEvents;
+  spawnEvents=function(){
+    const now=performance.now(),boneActive=now<boneRainUntil,savedBoneUntil=boneRainUntil;
+    /* Older versions spawned an extremely dense shower. Temporarily hide the flag from them, then v70 creates a controlled shower. */
+    if(boneActive)boneRainUntil=0;
+    v70PrevSpawnEvents();
+    if(boneActive)boneRainUntil=savedBoneUntil;
+    /* Remove auto-generated v68 signal chatter. v70 owns the signal pickups. */
+    items=items.filter(o=>!o.v68RadioWave||o.v70RadioWave);
+    if(boneActive&&eventPhase%18===0){
+      for(let i=0;i<2;i++)items.push({x:p.x+W*(.12+Math.random()*.82),y:28+Math.random()*Math.max(90,H*.24),r:19,got:false,color:'#fff0aa',food:true,fall:true,v70BoneTimeDrop:true});
+      eventEl.textContent='🦴 BONE TIME!!';
+    }
+    if(paused||!v63RadioFound||v63IsOpeningEarth()||system===BLACK_HOLE_SYSTEM||systems[system]?.dream)return;
+    const rank=Math.max(0,systemDistanceRank[system]??0),key=`${system}:${stage}`;
+    const milestone=[1,4,7,11,15,19,22].includes(rank);
+    if(milestone&&eventPhase>620&&!v70SignalSpawned.has(key)){
+      v70SignalSpawned.add(key);
+      items.push({x:p.x+W+150,y:90+Math.random()*Math.max(90,H*.28),r:24,got:false,v68RadioWave:true,v70RadioWave:true,phase:Math.random()*6.2,color:'#8ef6ff'});
+    }
+  };
+
+  /* --- BONE TIME: the old purchasable bone shower becomes an automatic achievement reward. --- */
+  const oldBoneRainBtn=reward?.querySelector('.rewardBtn[data-special="boneRain"]');
+  if(oldBoneRainBtn)oldBoneRainBtn.remove();
+  let v70BoneMeter=0,v70BoneReady=false,v70BoneTimes=0;
+  const V70_BONE_GOAL=15;
+  let v70BoneHud=document.getElementById('v70BoneHud');
+  if(!v70BoneHud){v70BoneHud=document.createElement('div');v70BoneHud.id='v70BoneHud';wrap.appendChild(v70BoneHud);}
+  let v70BoneBanner=document.getElementById('v70BoneBanner');
+  if(!v70BoneBanner){v70BoneBanner=document.createElement('div');v70BoneBanner.id='v70BoneBanner';v70BoneBanner.innerHTML='🦴 BONE TIME!! 🦴<small>骨が降ってくる！ 骨ブーメラン無料！</small>';wrap.appendChild(v70BoneBanner);}
+  function v70BoneTimeActive(){return performance.now()<boneRainUntil;}
+  function v70RenderBoneHud(){
+    const active=v70BoneTimeActive();
+    v70BoneHud.classList.toggle('active',active);v70BoneHud.classList.toggle('ready',v70BoneReady&&!active);v70BoneHud.style.opacity=(active||v70BoneMeter>=5)?'1':'0';
+    v70BoneHud.innerHTML=active?'🦴 BONE TIME!<small>ブーメラン FREE</small>':`🦴 BONE ${Math.min(v70BoneMeter,V70_BONE_GOAL)} / ${V70_BONE_GOAL}<span><i style="width:${Math.min(100,v70BoneMeter/V70_BONE_GOAL*100)}%"></i></span>`;
+  }
+  function v70StartBoneTime(){
+    if(v70BoneTimeActive()||paused||v63IsOpeningEarth()){v70BoneReady=true;v70RenderBoneHud();return;}
+    v70BoneReady=false;v70BoneMeter=0;v70BoneTimes++;
+    const now=performance.now();boneRainUntil=now+9000;
+    for(let i=0;i<14;i++)v60BoneFx.push({born:now+i*38,dx:(Math.random()-.5)*120,dy:-35-Math.random()*85,icon:i%3===0?'✨':'🦴'});
+    v70BoneBanner.classList.remove('on');void v70BoneBanner.offsetWidth;v70BoneBanner.classList.add('on');
+    setTimeout(()=>v70BoneBanner.classList.remove('on'),2100);
+    eventEl.textContent='🦴 BONE TIME!!';showToast('🦴🦴🦴 BONE TIME!!',1300);v70RenderBoneHud();
+  }
+  function v70AddBoneProgress(n){
+    if(n<=0||v70BoneTimeActive()||doghouseInterior?.classList.contains('on'))return;
+    v70BoneMeter+=n;
+    if(v70BoneMeter>=V70_BONE_GOAL){v70BoneMeter=V70_BONE_GOAL;v70BoneReady=true;if(!v63IsOpeningEarth()&&!paused)v70StartBoneTime();}
+    v70RenderBoneHud();
+  }
+  const v70CollectForBone=v70PrevCollectGood;
+  /* v70PrevCollectGood is the last normal collector before the radio interception above. Wrap through the current symbol instead. */
+  const v70CurrentCollect=collectGood;
+  collectGood=function(it){
+    const before=food,isNormalBone=!!it?.food&&!it?.got;
+    const out=v70CurrentCollect(it);
+    if(isNormalBone) v70AddBoneProgress(Math.max(0,food-before));
+    return out;
+  };
+  const v70PrevAwardBoom=awardBoomerangFetch;
+  awardBoomerangFetch=function(b){const before=food;const out=v70PrevAwardBoom(b);if(b?.fetchType==='bone')v70AddBoneProgress(Math.max(0,food-before));return out;};
+
+  /* During BONE TIME the retrieval volley is free. Outside it still costs 3 bones. */
+  fireBoneBoomerang=function(){
+    if(paused||system===0&&stage===0)return;
+    const free=v70BoneTimeActive();
+    if(!free&&food<3){showToast('🦴 骨が3必要！',900);return;}
+    if(!free)food-=3;
+    for(let i=0;i<5;i++)launchBoomerangVolleyShot(i*190);
+    showToast(free?'🦴🌀 BONE TIME！ ブーメラン無料！':'🦴🌀 骨ブーメラン吸引！',850);
+    if(Math.random()<.34){const weird=['🪼','🧿','🪩','💿','🪞','🔮'];morphs.push({x:p.x+W+180+Math.random()*260,y:groundY()-100-Math.random()*150,r:28,got:false,dog:weird[Math.floor(Math.random()*weird.length)]});}
+    syncHUD();
+  };
+
+  const v70PrevStageStart=stageStart;
+  stageStart=function(){
+    v70PrevStageStart();
+    if(v70BoneReady&&!v63IsOpeningEarth())setTimeout(()=>{if(!paused)v70StartBoneTime();},700);
+    if(v63IsOpeningEarth()){
+      missionEl.textContent=v63RadioFound?'🦴 謎の信号を追う':'🐕 いつもの散歩';
+      eventEl.textContent=v63RadioFound?'📻 UNKNOWN SIGNAL':'🌍 EARTH / NORMAL DAY';
+    }else if(v63RadioFound&&!returnFromDogStar){
+      missionEl.textContent='🦴 骨の信号を追う';
+    }
+    v63RenderRadio();v70RenderBoneHud();
+  };
+
+  const v70PrevSync=syncHUD;
+  syncHUD=function(force=false){
+    v70PrevSync(force);v63RenderRadio();v70RenderBoneHud();
+    const boneBtn=document.getElementById('big');if(boneBtn){const sm=boneBtn.querySelector('small');if(sm)sm.textContent=v70BoneTimeActive()?'BONE TIME｜無料':'骨3｜⭐・🛜・謎物体を吸引';}
+  };
+
+  /* Debug helpers for the new reward loop. */
+  const dg=document.querySelector('#v62EndingDev .v62DevGrid');
+  if(dg&&!dg.querySelector('[data-v70-bonetime]')){
+    const b=document.createElement('button');b.className='v62DevBtn';b.dataset.v70Bonetime='1';b.innerHTML='🦴 BONE TIME テスト<small>自動ごほうびを即発動</small>';dg.appendChild(b);
+    b.addEventListener('click',()=>{document.getElementById('v62EndingDev')?.classList.remove('on');paused=false;v70BoneMeter=V70_BONE_GOAL;v70BoneReady=true;v70StartBoneTime();});
+  }
+
+  /* Final shop cleanup: no manual bone shower. */
+  const v70PrevItems=v60RenderItems;
+  v60RenderItems=function(){v70PrevItems();reward?.querySelector('.rewardBtn[data-special="boneRain"]')?.remove();const rt=document.getElementById('rewardTitle');if(rt)rt.textContent='⭐ アイテムを使う';};
+  v60RenderItems();updateShopButtons();v70RenderBoneHud();v63RenderRadio();
 })();
 
 /* Initialize the opening after all v63 wrappers are ready. */
