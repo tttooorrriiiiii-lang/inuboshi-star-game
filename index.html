@@ -1441,7 +1441,7 @@ for(const it of items){if(it.fall&&!it.got)it.y+=2.4*dt;if(it.got)continue;if(no
 for(const h of hazards){if(h.fall&&!h.got)h.y+=3.6*dt;if(h.diagonal&&!h.got){if(system===BLACK_HOLE_SYSTEM){h.x+=(h.vx||-1.8)*dt*1.25;h.y+=(h.vy||1.5)*dt*(.4+Math.abs(Math.sin(now/260+h.x))*.9)}else{h.x+=(h.vx||-1.8)*dt;h.y+=(h.vy||1.5)*dt}}if(!h.got&&!big&&rectHit(playerRect(),{x:h.x,y:h.y,w:h.w,h:h.h}))hitHazard(h)}
 for(const a of aliens){if(a.got)continue;if(rectHit(playerRect(),{x:a.x,y:a.y,w:a.w,h:a.h})){startCommunication(a);break}}
 for(const m of morphs){if(!m.got&&rectHit(playerRect(),{x:m.x-m.r,y:m.y-m.r,w:m.r*2,h:m.r*2})){m.got=true;playerDog=m.dog;morphUntil=now+(system===BLACK_HOLE_SYSTEM?12000:9000);showToast(system===BLACK_HOLE_SYSTEM?`❓ 無生物になった！？ ${playerDog}`:`✨ 変身！ ${playerDog}`,1300)}}if(now>=morphUntil&&playerDog!=='🐕')playerDog='🐕';
-for(const o of swarm){if(o.got)continue;o.x-=o.v*dt;if(rectHit(playerRect(),{x:o.x,y:o.y,w:o.w,h:o.h})){o.got=true;hitHazard({x:o.x,y:o.y,w:o.w,h:o.h,got:false,evil:o.kind==='evil'});break}}
+for(const o of swarm){if(o.got)continue;o.x-=o.v*dt;if(rectHit(playerRect(),{x:o.x,y:o.y,w:o.w,h:o.h})){o.got=true;hitHazard({x:o.x,y:o.y,w:o.w,h:o.h,got:false,evil:o.kind==='evil',swarmKind:o.kind,steal:o.steal||0});break}}
 for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/220+o.phase)*.18*dt;if(rectHit(playerRect(),{x:o.x-o.r,y:o.y-o.r,w:o.r*2,h:o.r*2})){if(o.kind==='earth'){collectEarthToken(o)}else{o.got=true;secretWarp(o.kind)}break}}secretPickups=secretPickups.filter(o=>!o.got&&o.x>p.x-W-180);
 for(const sat of satellites){if(sat.got)continue;sat.x-=sat.v*dt;sat.y+=Math.sin(now/210+sat.phase)*.20*dt;if(rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){sat.got=true;satelliteUntil=Math.max(satelliteUntil,now+3000);invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100);syncHUD()}}satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
 for(const b of bosses){if(b.dead)continue;b.x-=b.v*dt;if(b.hitFlash>0)b.hitFlash-=dt;if(rectHit(playerRect(),{x:b.x+8,y:b.y+6,w:b.w-16,h:b.h-6}))hitHazard({x:b.x,y:b.y,w:b.w,h:b.h,got:false,evil:true})}bosses=bosses.filter(b=>!b.dead&&b.x>p.x-W-240);
@@ -2552,12 +2552,12 @@ rocketToMoon=function(){
   rocketLaunched=true;paused=true;reward?.classList.remove('on');
   trans.style.display='grid';trans.style.background='radial-gradient(circle at 50% 45%,rgba(101,82,160,.48),rgba(3,5,15,.96) 64%)';
   warpDog.textContent='🐕📻🛸';warpDog.className='spin';
-  transTitle.innerHTML='🛸 EMERGENCY CRAFT UNLOCKED';nextEl.textContent='トランシーバーと同じ記号が、船体で光った。';subEl.textContent='OWNER SIGNAL DETECTED';
-  setTimeout(()=>{transTitle.innerHTML='📻 救助信号の方向へ出発';nextEl.textContent='進路を救助信号の発信方向に固定した。';subEl.textContent='RESCUE SIGNAL COURSE LOCKED';},1050);
+  transTitle.innerHTML='🛸 UNLOCKED';nextEl.textContent='';subEl.textContent='READY';
+  setTimeout(()=>{transTitle.innerHTML='📻 救助信号の方向へ';nextEl.textContent='';subEl.textContent='AUTO TRACE';},850);
   setTimeout(()=>{
     system=0;stage=1;deepWarpCount=0;stageStart();trans.style.display='none';trans.style.background='';warpDog.className='';paused=false;rocketLaunched=false;
-    showToast('🌙 月に到着。救助信号の方向へ航行を続ける。',2200);v63RenderRadio();
-  },2650);
+    showToast('🌙 月',1200);v63RenderRadio();
+  },2200);
 };
 
 const v63BaseStageStart=stageStart;
@@ -2674,14 +2674,14 @@ startCommunication=function(obj){
 (function(){
   let v65EarthContacted=false;
   let v65ContactActive=false;
-  const V65_CONTACT_X=2350;
+  const V65_CONTACT_X=2570;
 
   function v65ContactCard(){
     return '<div class="v63RadioCard">'+
       '<div class="v63RadioIcon">📻</div>'+
       '<div class="v63RadioKicker">INCOMING TRANSMISSION</div>'+
       '<div class="v63RadioNoise">ザー……　ピッ……　ザザ……</div>'+
-      '<div class="v63RadioVoice">「……きこえる？」<br>「……そこに……船がある……」<br>「……その船なら……ここまで……来られる……」<br>「……お願い……」</div>'+
+      '<div class="v63RadioVoice">「……そこに……船がある……」<br>「……その船なら……ここまで……来られる……」</div>'+
       '<div class="v63RadioMeta">救助信号の方向データを受信中……</div>'+
       '<button class="v65RadioReply" type="button">📻 応答する</button>'+
     '</div>';
@@ -2701,13 +2701,13 @@ startCommunication=function(obj){
       v65EarthContacted=true;
       v63RadioScene.classList.add('reply');
       v63RadioScene.classList.remove('contact');
-      v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">REPLY SENT</div><div class="v63RadioNoise">ピッ——</div><div class="v63RadioVoice" style="opacity:1">🐕「ワン！」<br><br>「……きこえた……」</div><div class="v63RadioMeta">COORDINATES RECEIVED / 信号座標を受信</div></div>';
+      v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">REPLY SENT</div><div class="v63RadioNoise">ピッ——</div><div class="v63RadioVoice" style="opacity:1">🐕「ワン！」</div><div class="v63RadioMeta">COORDINATES RECEIVED</div></div>';
       eventEl.textContent='📡 COORDINATES RECEIVED';
       missionEl.textContent='🛸 受信した座標へ向かう';
       setTimeout(()=>{
         v63RadioScene.classList.remove('on','heard','reply','contact');
         paused=false;v65ContactActive=false;
-        showToast('📻 救助信号の方向を受信。近くに宇宙船がある……。',1750);
+        showToast('📻 座標を受信。',1100);
         v63RenderRadio();
       },1750);
     },{once:true});
@@ -2762,7 +2762,7 @@ let v67InsuranceGraceUntil=0;
  v60RescueLimit=function(){return insuranceActive?(system===BLACK_HOLE_SYSTEM?4:6):(system===BLACK_HOLE_SYSTEM?7:10)};
 
  const scene=document.createElement('div');scene.id='v66StrandedScene';
- scene.innerHTML=`<div class="v66Nebula"></div><div class="v66StrandedTop"><div class="v66Kicker">🚨 STRANDED DOG</div><div class="v66Title">宇宙に放り出された！</div><div class="v66Status">救助船は来ない。📻トランシーバーだけが生きている。</div><div class="v66DriftCount">⭐ 漂流スター <b>0</b> / 20</div></div><div class="v66FloatDog">🐕</div><div class="v66FloatRadio">📻</div><div class="v66DriftField"></div><div class="v66StrandedActions"><button class="v66StrandedBtn sos" data-v66="sos">📻 SOSを送る<small>5秒待つ・無料</small></button><button class="v66StrandedBtn emergency" data-v66="emergency">🛸 緊急レスキュー 20⭐<small>今すぐ帰還＋レスキュー再チャージ</small></button><button class="v66StrandedBtn satellite" data-v66="satellite" disabled>🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small></button></div>`;
+ scene.innerHTML=`<div class="v66Nebula"></div><div class="v66StrandedTop"><div class="v66Kicker">🚨 STRANDED DOG</div><div class="v66Title">宇宙に放り出された！</div><div class="v66Status">⭐が尽きた。📻トランシーバーだけが生きている。</div><div class="v66DriftCount">⭐ 漂流スター <b>0</b> / 20</div></div><div class="v66FloatDog">🐕</div><div class="v66FloatRadio">📻</div><div class="v66DriftField"></div><div class="v66StrandedActions"><button class="v66StrandedBtn sos" data-v66="sos">📻 SOSを送る<small>5秒待つ・無料</small></button><button class="v66StrandedBtn emergency" data-v66="emergency">🛸 緊急帰還 20⭐<small>漂流スターを集めて帰る</small></button><button class="v66StrandedBtn satellite" data-v66="satellite" disabled>🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small></button></div>`;
  wrap.appendChild(scene);
  const q=s=>scene.querySelector(s);
 
@@ -2770,7 +2770,7 @@ let v67InsuranceGraceUntil=0;
   q('.v66DriftCount b').textContent=driftCount;
   const e=q('[data-v66="emergency"]');
   e.disabled=points<COST;
-  e.innerHTML=points>=COST?`🛸 緊急レスキュー ${COST}⭐<small>今すぐ帰還＋レスキュー再チャージ</small>`:`🛸 緊急レスキュー ${COST}⭐<small>あと ${COST-points}⭐</small>`;
+  e.innerHTML=points>=COST?`🛸 緊急帰還 ${COST}⭐<small>今すぐ近くの航路へ戻る</small>`:`🛸 緊急帰還 ${COST}⭐<small>あと ${COST-points}⭐</small>`;
   const s=q('[data-v66="satellite"]');
   s.disabled=!satelliteReady;
   s.innerHTML=satelliteReady?'🛰️ 漂流衛星につかまる<small>近くの安全地点へ</small>':'🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small>';
@@ -2784,11 +2784,11 @@ let v67InsuranceGraceUntil=0;
   const fromBH=system===BLACK_HOLE_SYSTEM;
   if(fromBH){let best=0,bestRank=-1;for(let i=0;i<systems.length;i++){const r=systemDistanceRank[i]??-1;if(!systems[i].secret&&!systems[i].dream&&i!==BLACK_HOLE_SYSTEM&&r<=furthestRank&&r>bestRank){best=i;bestRank=r}}system=best;stage=0;stageStart()}
   else{const ox=strandedOriginX;stageStart();p.x=Math.max(115,ox-650);p.y=groundY()-p.h;p.vy=0;p.on=true;camera=Math.max(0,p.x-W*.34)}
-  v60RescueHits=0;v60LastRescueHit=0;v67InsuranceGraceUntil=performance.now()+60000;invincibleUntil=performance.now()+4200;stranded=false;satelliteReady=false;if(strandedTimer){clearTimeout(strandedTimer);strandedTimer=0}scene.classList.remove('on','waiting');paused=false;v60RenderInsurance();syncHUD(true);
-  if(mode==='sos')showToast('👽「マタ オマエカ」　救助された。宇宙レスキューは使用済みのまま。',1900);else if(mode==='satellite')showToast('🛰️ 漂流衛星につかまって帰還！ 宇宙レスキューは使用済みのまま。',1800);else showToast('🛸 緊急レスキュー完了！ 次の救助まで待機中',1700)
+  const reserveGain=Math.max(0,10-points);if(reserveGain){points+=reserveGain;starTotal+=reserveGain;}v60RescueHits=0;v60LastRescueHit=0;v67InsuranceGraceUntil=performance.now()+60000;invincibleUntil=performance.now()+4200;stranded=false;satelliteReady=false;if(strandedTimer){clearTimeout(strandedTimer);strandedTimer=0}scene.classList.remove('on','waiting');paused=false;v60RenderInsurance();syncHUD(true);
+  if(mode==='sos')showToast('👽「マタ オマエカ」　近くの航路へ戻された。',1900);else if(mode==='satellite')showToast('🛰️ 漂流衛星につかまって航路へ復帰！',1800);else showToast('🛸 緊急帰還！ 航路へ復帰',1700)
  }
  function enterStranded(){
-  if(stranded||v60Rescuing)return;stranded=true;strandedOriginX=p.x;driftCount=0;satelliteReady=false;v60RescueHits=0;v60LastRescueHit=0;paused=true;reward?.classList.remove('on');gameOverEl.classList.remove('on');trans.style.display='none';eventEl.textContent='🚨 STRANDED DOG — 宇宙レスキュー使用済み';q('.v66Status').textContent='救助船は来ない。📻トランシーバーだけが生きている。';buildStars();refreshStranded();scene.classList.add('on');v60RenderInsurance();
+  if(stranded||v60Rescuing)return;stranded=true;strandedOriginX=p.x;driftCount=0;satelliteReady=false;v60RescueHits=0;v60LastRescueHit=0;paused=true;reward?.classList.remove('on');gameOverEl.classList.remove('on');trans.style.display='none';eventEl.textContent='🚨 STRANDED DOG — STAR RESERVE EMPTY';q('.v66Status').textContent='⭐が尽きた。📻トランシーバーだけが生きている。';buildStars();refreshStranded();scene.classList.add('on');v60RenderInsurance();
   strandedTimer=setTimeout(()=>{if(!stranded)return;satelliteReady=true;refreshStranded();q('.v66Status').textContent='遠くから壊れかけの衛星が流れてきた……！'},6000)
  }
  scene.addEventListener('click',e=>{
@@ -2838,6 +2838,7 @@ let v67InsuranceGraceUntil=0;
   rescueTest.addEventListener('click',()=>{dev.classList.remove('on');paused=false;insuranceActive=true;v60RescueHits=v60RescueLimit();v60RenderInsurance();v60EmergencyRescue()});
   strandedTest.addEventListener('click',()=>{dev.classList.remove('on');paused=false;insuranceActive=false;v60RenderInsurance();enterStranded()});
  }
+ window.__dogstarStranded={enter:enterStranded,is:()=>stranded};
  v60RenderItems();updateShopButtons();v60RenderInsurance();syncHUD(true)
 })();
 
@@ -2994,6 +2995,129 @@ let v67InsuranceGraceUntil=0;
   const jump=document.getElementById('jump');if(jump)jump.innerHTML='⬆️ ジャンプ<small>タップでジャンプ</small>';
   const bone=document.getElementById('big');if(bone)bone.innerHTML='🦴 骨ブーメラン<small>骨3｜⭐・🛜・謎物体を吸引</small>';
   v63RenderRadio();
+})();
+
+
+/* ===== v69: simpler opening + numeric rescue distance + star reserve danger + STAR EATER ===== */
+(function(){
+  const v69IsStranded=()=>!!window.__dogstarStranded?.is?.();
+  const v69EnterStranded=()=>window.__dogstarStranded?.enter?.();
+
+  /* --- Rescue-signal distance. Unit is 億光年 (100 million light-years). --- */
+  const V69_SIGNAL_TARGET_OKU=470; // game estimate: just beyond the ~465億光年 observable horizon
+  function v69EarthDistanceOku(){
+    if(systems[system]?.dream)return V69_SIGNAL_TARGET_OKU;
+    if(system===BLACK_HOLE_SYSTEM)return Math.min(464,Math.max(0,(furthestRank||0)*13));
+    const name=systems[system]?.name||'';
+    const known={'📡 宇宙背景放射の壁':456,'🧭 観測可能宇宙の地平線':465,'🫥 観測不能宇宙':467,'♾️ 膨張フロンティア':469};
+    if(known[name]!=null)return known[name];
+    const txt=((S()?.distance||'')+' '+(systems[system]?.distance||''));
+    let m=txt.match(/約?\s*([\d.]+)億光年/);if(m)return Math.min(469,parseFloat(m[1]));
+    m=txt.match(/約?\s*([\d.]+)光年/);if(m)return Math.min(.001,parseFloat(m[1])/1e8);
+    const rank=systemDistanceRank[system]??0;
+    const rankApprox={0:.001,1:.0016,2:.025,3:.027,4:.27,5:.293,6:.31,7:1,8:5,9:10,10:20,11:40,12:60,13:80,14:94,15:105,16:108,17:109,18:125,19:129,20:132,21:134,22:456,23:465,24:467,25:469,26:470};
+    return Math.min(469,rankApprox[rank]??0);
+  }
+  function v69SignalDistanceLabel(){
+    if(systems[system]?.dream)return '0光年';
+    if((systems[system]?.name||'').includes('観測不能'))return '測定不能';
+    let remain=Math.max(0,V69_SIGNAL_TARGET_OKU-v69EarthDistanceOku());
+    if(v63IsOpeningEarth())remain=V69_SIGNAL_TARGET_OKU;
+    if(remain>=100)return `約${Math.round(remain/10)*10}億光年先`;
+    if(remain>=10)return `約${Math.round(remain)}億光年先`;
+    if(remain>=1)return `約${remain.toFixed(1)}億光年先`;
+    return 'もうすぐ';
+  }
+  const v69PrevRadio=v63RenderRadio;
+  v63RenderRadio=function(){
+    v69PrevRadio();
+    if(!v63RadioFound||returnFromDogStar||!v63RadioBadge?.classList.contains('on'))return;
+    v63RadioBadge.classList.toggle('max',!!systems[system]?.dream);
+    v63RadioBadge.innerHTML=`📻 救助信号までの距離<small>${v69SignalDistanceLabel()}</small>`;
+  };
+
+  /* --- Stars are the shield. The warning appears only after a real reserve has been depleted. --- */
+  let v69HadStarReserve=points>0,v69StarDanger=false;
+  function v69RenderStarDanger(){
+    if(v69IsStranded()){v60InsuranceBadge.style.display='none';return;}
+    if(points>0)v69HadStarReserve=true;
+    if(!v69HadStarReserve){v60InsuranceBadge.style.display='none';return;}
+    if(points<=0){
+      v69StarDanger=true;v60InsuranceBadge.style.display='block';v60InsuranceBadge.className='warn';v60InsuranceBadge.textContent='🚨 危険信号　⭐ 0';
+    }else if(v69StarDanger&&points<10){
+      v60InsuranceBadge.style.display='block';v60InsuranceBadge.className='warn';v60InsuranceBadge.textContent=`⚠️ STAR RESERVE　⭐ ${points}`;
+    }else{
+      if(points>=10)v69StarDanger=false;v60InsuranceBadge.style.display='none';
+    }
+  }
+  // No permanent rescue subscription / recharge item.
+  const v69OldRenderItems=v60RenderItems;
+  v60RenderItems=function(){v69OldRenderItems();const b=reward.querySelector('.rewardBtn[data-special="insurance"]');if(b){b.style.display='none';b.disabled=true;}};
+  const v69OldUpdateShop=updateShopButtons;
+  updateShopButtons=function(){v69OldUpdateShop();const b=reward.querySelector('.rewardBtn[data-special="insurance"]');if(b){b.style.display='none';b.disabled=true;}};
+  v60InsuranceBadge.style.pointerEvents='none';v60InsuranceBadge.removeAttribute('role');v60InsuranceBadge.removeAttribute('tabindex');
+  v60RenderInsurance=v69RenderStarDanger;
+  v60EmergencyRescue=function(){if(!v69IsStranded())v69EnterStranded();};
+  gameOver=function(){if(!v69IsStranded())v69EnterStranded();};
+
+  function v69SpillManyStars(n){
+    const lost=Math.min(n,points);points=Math.max(0,points-lost);starTotal=Math.max(0,starTotal-lost);
+    const visible=Math.min(18,lost);
+    for(let i=0;i<visible;i++)fallingStars.push({x:p.x+20+(Math.random()-.5)*35,y:p.y+20,vx:-4+Math.random()*8,vy:-7-Math.random()*5,life:70+Math.random()*25});
+    const oldFlash=guardFlash.innerHTML;guardFlash.innerHTML=`🦑 STAR EATEN!<br><span style="font-size:16px">⭐-${lost}</span>`;guardFlash.classList.remove('on');void guardFlash.offsetWidth;guardFlash.classList.add('on');setTimeout(()=>{guardFlash.classList.remove('on');guardFlash.innerHTML=oldFlash;},820);return lost;
+  }
+  hitHazard=function(h){
+    const now=performance.now();
+    if(!h||h.got||now<invincibleUntil||big||v69IsStranded())return;
+    h.got=true;
+    if(h.steal){
+      invincibleUntil=now+2800;const lost=v69SpillManyStars(h.steal);p.vy=-9;shake=24;hurtUntil=now+900;popDamage();
+      eventEl.textContent=`🦑 STAR EATER — ⭐-${lost}`;showToast(`🦑 星喰い！ ⭐-${lost}`,1600);
+      wrap.style.boxShadow='inset 0 0 130px rgba(173,49,255,.75),inset 0 0 190px rgba(255,45,116,.40)';setTimeout(()=>wrap.style.boxShadow='',700);
+      if(points<=0&&v69HadStarReserve){v69StarDanger=true;setTimeout(()=>showToast('🚨 星が尽きた！ 次の衝突で宇宙遭難',1750),500)}
+      v69RenderStarDanger();syncHUD(true);return;
+    }
+    const before=points,hadBone=food>0;
+    invincibleUntil=now+1700;spillStars(5);if(hadBone)spillBones(1);p.vy=-7;shake=16;hurtUntil=now+720;popDamage();
+    wrap.style.boxShadow='inset 0 0 100px rgba(255,88,132,.72)';setTimeout(()=>wrap.style.boxShadow='',520);
+    showToast(`💥 ダメージ！ ⭐-5 / 🦴-${hadBone?1:0}`,1050);
+    if(before>0&&points<=0){v69StarDanger=true;eventEl.textContent='🚨 DANGER SIGNAL — STAR RESERVE EMPTY';setTimeout(()=>showToast('🚨 星がなくなった！ 次にぶつかると宇宙遭難',1850),220);}
+    else if(before<=0&&v69HadStarReserve&&points<=0){setTimeout(()=>{if(!v69IsStranded()&&points<=0)v69EnterStranded();},220);}
+    v69RenderStarDanger();syncHUD(true);
+  };
+
+  /* --- STAR EATER: rare giant enemy. 50⭐ in deep space, 100⭐ in the farthest regions. --- */
+  const v69SpawnedStages=new Set();
+  const v69PrevSpawnEvents=spawnEvents;
+  spawnEvents=function(){
+    v69PrevSpawnEvents();
+    if(paused||system===BLACK_HOLE_SYSTEM||systems[system]?.dream||systems[system]?.secret||v63IsOpeningEarth())return;
+    const rank=systemDistanceRank[system]??0,key=`${system}:${stage}`;
+    const milestone=[7,14,18,22].includes(rank);
+    if(rank>=6&&eventPhase>=720&&!v69SpawnedStages.has(key)&&(milestone||Math.random()<0.0018)){
+      v69SpawnedStages.add(key);const steal=rank>=18?100:50;
+      swarm.push({kind:'starEater',steal,x:p.x+W+190,y:Math.max(70,groundY()-170),w:100,h:100,got:false,v:1.6+Math.random()*.55});
+      eventEl.textContent=`🚨 STAR EATER APPROACHING — ⭐-${steal}`;showToast(`🦑 STAR EATER！ 触れると⭐-${steal}`,1800);
+    }
+  };
+  const v69PrevDrawSwarm=drawSwarm;
+  drawSwarm=function(o){
+    if(o?.kind!=='starEater')return v69PrevDrawSwarm(o);
+    if(o.got)return;const sx=o.x-camera;if(sx<-150||sx>W+170)return;const t=performance.now()/1000;
+    ctx.save();ctx.translate(sx+50,o.y+48);ctx.rotate(Math.sin(t*2.1)*.06);ctx.shadowColor='#d62cff';ctx.shadowBlur=34;ctx.font='92px system-ui';ctx.fillText('🦑',-46,35);ctx.fillStyle='#fff';ctx.font='1000 10px system-ui';ctx.textAlign='center';ctx.fillText(`STAR EATER  -${o.steal}⭐`,0,-58);ctx.strokeStyle='rgba(255,72,205,.85)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,62+Math.sin(t*5)*5,0,Math.PI*2);ctx.stroke();ctx.restore();
+  };
+
+  // Keep danger state current when stars are spent/collected through any path.
+  const v69PrevSyncHUD=syncHUD;
+  syncHUD=function(force=false){v69PrevSyncHUD(force);v69RenderStarDanger();};
+
+  const dg=document.querySelector('#v62EndingDev .v62DevGrid');
+  if(dg&&!dg.querySelector('[data-v69-eater]')){
+    const b=document.createElement('button');b.className='v62DevBtn';b.dataset.v69Eater='1';b.innerHTML='🦑 STAR EATER テスト<small>⭐-100の怪物を出す</small>';dg.appendChild(b);
+    b.addEventListener('click',()=>{document.getElementById('v62EndingDev')?.classList.remove('on');paused=false;swarm.push({kind:'starEater',steal:100,x:p.x+Math.max(280,W*.72),y:Math.max(70,groundY()-170),w:100,h:100,got:false,v:1.25});showToast('🦑 STAR EATERを出した！',900);});
+  }
+  document.querySelectorAll('[data-v66-test]').forEach(b=>b.style.display='none');
+  v60RenderItems();updateShopButtons();v69RenderStarDanger();v63RenderRadio();syncHUD(true);
 })();
 
 /* Initialize the opening after all v63 wrappers are ready. */
