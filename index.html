@@ -575,11 +575,11 @@ canvas{display:block;width:100%;height:100%}
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
 <canvas id="game"></canvas>
-<div id="hud"><div class="stack"><div class="pill" id="location"></div><div class="pill countBig" id="points"></div><div class="pill countBig" id="food"></div><div class="pill countBig" id="alienHitCount">👽 0</div></div><div id="powerBox"><div id="powerTop"><span>巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
+<div id="hud"><div class="stack"><div class="pill" id="location"></div><div class="pill countBig" id="points"></div><div class="pill countBig" id="food"></div><div class="pill countBig" id="alienHitCount">👽 0</div></div><div id="powerBox"><div id="powerTop"><span>超巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
 <div id="mission"></div><div id="event"></div><div id="astroInfo"></div><div id="toast"></div>
-<div id="bigBanner">✦ 巨大化！ ✦<small>犬星くん巨大化フィーバー！ ジャンプもできる！</small></div>
-<div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3｜遠くを回収</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザー<small id="laserAmmoText">攻撃 8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">👽 宇宙パワー<small id="cosmicPowerText">時空を曲げる</small></button><button class="ctrl jumpCtrl" id="jump">⬆️<small>ジャンプ</small></button></div>
-<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ 星アイテム</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 巨大化<br>35⭐</button><button class="rewardBtn utilityItem" data-special="boneBoomerang" data-cost="0">🦴 骨ブーメラン連射<br>骨3で5連射・回収</button><button class="rewardBtn cosmicItem" data-special="cosmic" data-cost="0">👽 宇宙パワー<br>時空を曲げる</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 ホネホネシャワー<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
+<div id="bigBanner">✦ 超巨大化！ ✦<small>犬星くん超巨大化フィーバー！ ジャンプもできる！</small></div>
+<div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3｜⭐も謎物体も吸引</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザー<small id="laserAmmoText">攻撃 8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">👽 宇宙パワー<small id="cosmicPowerText">時空を曲げる</small></button><button class="ctrl jumpCtrl" id="jump">⬆️ ジャンプ<small>タップでジャンプ</small></button></div>
+<div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ アイテムを使う</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 超巨大化<br>35⭐</button><button class="rewardBtn utilityItem" data-special="boneBoomerang" data-cost="0">🦴 骨ブーメラン連射<br>骨3で5連射・回収</button><button class="rewardBtn cosmicItem" data-special="cosmic" data-cost="0">👽 宇宙パワー<br>時空を曲げる</button><button class="rewardBtn attack" data-special="boneRain" data-cost="45">🦴 ホネホネシャワー<br>45⭐</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn" data-special="satellite" data-cost="40">🛰️ 衛星ライド<br>40⭐</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
 <div id="comm"><div id="commTitle">📡 SIGNAL RECEIVED</div><div id="commText"></div><div id="commWave">▂▄▆█▆▄▂</div></div>
 <div id="critical">⚠️ CRITICAL! あと1回でGAME OVER</div><div id="gameOver"><div id="gameOverTitle">GAME OVER</div><div id="gameOverSub">宇宙はそんなにやさしくない…<br>⭐ 20 LOST<br><br>RETRYING…</div></div>
 
@@ -885,7 +885,7 @@ function buySpecial(kind){
  }
  if(points<cost){showToast(`⭐ あと ${cost-points}個 必要！`,1000);return}
  points-=cost;starTotal=Math.max(0,starTotal-cost);const now=performance.now();
- if(kind==='giant'){activateBig();showToast('🐕💥 巨大化！ ⭐35',1500)}
+ if(kind==='giant'){activateBig();showToast('🐕💥 超巨大化！ ⭐35',1500)}
  else if(kind==='laser'){laserAmmo=Math.min(laserAmmoMax,laserAmmo+20);showToast(`🔫 レーザー弾 補充！ ${laserAmmo}/${laserAmmoMax}`,1400)}
  else if(kind==='boneRain'){boneRainUntil=now+7000;showToast('🦴 ホネホネシャワー！ 骨取り放題！',1500)}
  else if(kind==='wormhole'){wormholeActive=true;portalX=Math.min(worldLength-260,p.x+820);showToast('🌀 ワームホールを前方に呼び出した！',1500)}
@@ -1461,7 +1461,7 @@ let fallingBones=[];
 (function(){
   const rewardGiant=document.querySelector('.rewardBtn[data-special="giant"]');
   const rewardBoneRain=document.querySelector('.rewardBtn[data-special="boneRain"]');
-  if(rewardGiant)rewardGiant.innerHTML='🐕 巨大化<br>35⭐';
+  if(rewardGiant)rewardGiant.innerHTML='🐕 超巨大化<br>35⭐';
   if(rewardBoneRain)rewardBoneRain.innerHTML='🦴 ホネホネシャワー<br>45⭐';
   const scene=doghouseInterior?.querySelector('.doghouseScene');
   if(scene && !scene.querySelector('.dhToy')){
@@ -1731,7 +1731,7 @@ syncHUD=function(){
   checkHomeRoute();
   if(homeBtn){homeBtn.disabled=!homeRouteReady||earth;homeBtn.innerHTML=earth?'🏠 地球へ帰る<br>🌍 いま地球':homeRouteReady?'🏠 地球へ帰る<br>🌏 帰還イベント':'🏠 地球へ帰る<br>🌏 '+earthTokenCount+' / 3';}
   updateShopButtons();
-  const bsmall=bigBtn?.querySelector('small');if(bsmall)bsmall.textContent='骨3｜遠くを回収';
+  const bsmall=bigBtn?.querySelector('small');if(bsmall)bsmall.textContent='骨3｜⭐も謎物体も吸引';
   if(laserAmmoText)laserAmmoText.textContent=`攻撃 ${laserAmmo} / ${laserAmmoMax}`;
   if(cosmicPowerText)cosmicPowerText.textContent=performance.now()<cosmicPowerUntil?'時空ぐにゃぐにゃ中':cosmicPowerReady?'READY! 時空を曲げる':'時空を曲げる';
 }
@@ -1984,7 +1984,7 @@ fireBoneBoomerang=function(){
   if(food<3){showToast('🦴 骨が3必要！',900);return}
   food-=3;
   for(let i=0;i<5;i++)launchBoomerangVolleyShot(i*220);
-  showToast('🦴💫 骨ブーメラン 5連射！',1050);
+  showToast('🦴🌀 骨ブーメラン吸引！ ⭐も謎物体も引き寄せる',1150);
   syncHUD();
 }
 
@@ -2071,9 +2071,9 @@ const v60Removed=new Set(['wormhole','magnet','secret','home','laser']);
 document.querySelectorAll('.rewardBtn').forEach(btn=>{if(v60Removed.has(btn.dataset.special))btn.remove();});
 function v60RenderItems(){
  const labels={
-  giant:'🐕 巨大化<br>20⭐',boneBoomerang:'🦴 骨ブーメラン<br>3🦴',cosmic:'👽 時空が歪む宇宙パワー<br>5👽',boneRain:'🦴 ホネホネシャワー<br>25⭐',satellite:'🛰️ 衛星ライド<br>20⭐',friend:'🐕 仲間を増やす<br>50⭐'
+  giant:'🐕 超巨大化<br>20⭐',boneBoomerang:'🦴 骨ブーメラン<br>3🦴｜⭐・🛜・謎物体を吸引',cosmic:'👽 時空が歪む宇宙パワー<br>5👽',boneRain:'🦴 ホネホネシャワー<br>25⭐',satellite:'🛰️ 衛星ライド<br>20⭐',friend:'🐕 仲間を増やす<br>50⭐'
  };
- const rt=$('rewardTitle'),rs=$('rewardSub');if(rt)rt.textContent='⭐ アイテム';if(rs)rs.textContent='星はたくさん拾える。気軽に使おう！';
+ const rt=$('rewardTitle'),rs=$('rewardSub');if(rt)rt.textContent='⭐ アイテムを使う';if(rs)rs.textContent='星はたくさん拾える。気軽に使おう！';
  document.querySelectorAll('.rewardBtn').forEach(btn=>{const k=btn.dataset.special;if(labels[k]){btn.innerHTML=labels[k];btn.dataset.cost=String(V60_PRICES[k]||0);}});
 }
 updateShopButtons=function(){
@@ -2207,7 +2207,7 @@ buySpecial=function(kind){
  if(kind==='cosmic'){if(cosmicCharge<5){useCosmicPower();updateShopButtons();return;}useCosmicPower();reward.classList.remove('on');updateShopButtons();return;}
  const cost=V60_PRICES[kind]??999;if(!shopUnlocked){showToast(`⭐ ${V60_SHOP_UNLOCK}個でアイテム解禁！`,900);return;}if(points<cost){showToast(`⭐ あと ${cost-points}個必要！`,850);return;}
  points-=cost;const now=performance.now();
- if(kind==='giant'){activateBig();showToast('🐕💥 巨大化！ ⭐20',1200);}
+ if(kind==='giant'){activateBig();showToast('🐕💥 超巨大化！ ⭐20',1200);}
  else if(kind==='boneRain'){boneRainUntil=now+12000;for(let i=0;i<9;i++)v60BoneFx.push({born:now+i*30,dx:(Math.random()-.5)*90,dy:-30-Math.random()*60,icon:i%2?'✨':'💖'});showToast('🦴💖 ホネホネシャワー！ 元気チャージ！',1500);}
  else if(kind==='satellite'){satelliteUntil=now+5000;invincibleUntil=Math.max(invincibleUntil,now+5000);showToast('🛰️ 衛星ライド 5秒！',1050);}
  else if(kind==='friend'){companionCount++;showToast(`🐕 仲間が増えた！ ${companionCount+1}匹`,1200);}
@@ -2243,10 +2243,10 @@ const v60BaseRegisteredEnding=showRegisteredEnding;showRegisteredEnding=function
 /* Stable emergency dog rescue / space insurance. */
 let v60InsuranceBadge=$('spaceInsuranceBadge');if(!v60InsuranceBadge){v60InsuranceBadge=document.createElement('div');v60InsuranceBadge.id='spaceInsuranceBadge';wrap.appendChild(v60InsuranceBadge);}
 function v60RescueLimit(){return system===BLACK_HOLE_SYSTEM?2:3;}
-function v60RenderInsurance(){const lim=v60RescueLimit();v60InsuranceBadge.classList.toggle('warn',v60RescueHits>0&&!v60Rescuing);v60InsuranceBadge.classList.toggle('rescuing',v60Rescuing);v60InsuranceBadge.textContent=v60Rescuing?'🛸 宇宙保険 救助中！':v60RescueHits?`🛸 宇宙保険 ${v60RescueHits}/${lim}`:'🛸 宇宙保険 ON';}
+function v60RenderInsurance(){const lim=v60RescueLimit();v60InsuranceBadge.classList.toggle('warn',v60RescueHits>0&&!v60Rescuing);v60InsuranceBadge.classList.toggle('rescuing',v60Rescuing);v60InsuranceBadge.textContent=v60Rescuing?'🛸 宇宙レスキュー 救助中！':v60RescueHits?`🛸 宇宙レスキュー ${v60RescueHits}/${lim}`:'🛸 宇宙レスキュー 待機中';}
 function v60EmergencyRescue(){
  if(v60Rescuing||performance.now()<v60RescueCooldown)return;v60Rescuing=true;v60RenderInsurance();paused=true;reward.classList.remove('on');
- gameOverEl.innerHTML='<div class="rescueUfo">🛸</div><div id="gameOverTitle">⚠ EMERGENCY DOG RESCUE</div><div id="gameOverSub">🐕 犬星くんを救助中…<br><span class="insurance">宇宙保険が適用されました</span></div>';gameOverEl.classList.add('on');eventEl.textContent='🛸 EMERGENCY DOG RESCUE — 宇宙保険発動！';
+ gameOverEl.innerHTML='<div class="rescueUfo">🛸</div><div id="gameOverTitle">⚠ EMERGENCY DOG RESCUE</div><div id="gameOverSub">🐕 犬星くんを救助中…<br><span class="insurance">宇宙レスキューが到着しました</span></div>';gameOverEl.classList.add('on');eventEl.textContent='🛸 EMERGENCY DOG RESCUE — 宇宙レスキュー到着！';
  const ox=p.x,fromBH=system===BLACK_HOLE_SYSTEM;setTimeout(()=>{
   if(fromBH){let best=0,bestRank=-1;for(let i=0;i<systems.length;i++){const r=systemDistanceRank[i]??-1;if(!systems[i].secret&&!systems[i].dream&&i!==BLACK_HOLE_SYSTEM&&r<=furthestRank&&r>bestRank){best=i;bestRank=r;}}system=best;stage=0;stageStart();}
   else{stageStart();p.x=Math.max(115,ox-850);p.y=groundY()-p.h;p.vy=0;p.on=true;camera=Math.max(0,p.x-W*.34);}
@@ -2255,8 +2255,9 @@ function v60EmergencyRescue(){
 }
 hitHazard=function(h){
  const now=performance.now();if(!h||h.got||now<invincibleUntil||big||v60Rescuing)return;
- h.got=true;invincibleUntil=now+1000;const hadBone=food>0;spillStars(5);if(hadBone)spillBones(1);p.vy=-7;shake=16;hurtUntil=now+720;popDamage();
+ h.got=true;invincibleUntil=now+1700;const hadBone=food>0;spillStars(5);if(hadBone)spillBones(1);p.vy=-7;shake=16;hurtUntil=now+720;popDamage();
  wrap.style.boxShadow='inset 0 0 100px rgba(255,88,132,.72)';setTimeout(()=>wrap.style.boxShadow='',520);showToast(`💥 ダメージ！ ⭐-5 / 🦴-${hadBone?1:0}`,1050);
+ if(now<v67InsuranceGraceUntil){syncHUD();return}
  if(now-v60LastRescueHit>20000)v60RescueHits=0;v60RescueHits++;v60LastRescueHit=now;v60RenderInsurance();if(v60RescueHits>=v60RescueLimit())setTimeout(v60EmergencyRescue,120);syncHUD();
 };
 gameOver=function(){v60EmergencyRescue();};
@@ -2484,7 +2485,7 @@ const v63SignalSeen=new Set();
 let v63RadioScene=document.getElementById('v63RadioScene');
 if(!v63RadioScene){
   v63RadioScene=document.createElement('div');v63RadioScene.id='v63RadioScene';
-  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN DISTRESS SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……たす……け……」<br>「……ワン……」</div><div class="v63RadioMeta">発信源：不明　／　距離：測定不能</div></div>';
+  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN DISTRESS SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……たす……け……」</div><div class="v63RadioMeta">発信源：不明　／　距離：測定不能</div></div>';
   wrap.appendChild(v63RadioScene);
 }
 let v63RadioBadge=document.getElementById('v63RadioBadge');
@@ -2552,10 +2553,10 @@ rocketToMoon=function(){
   trans.style.display='grid';trans.style.background='radial-gradient(circle at 50% 45%,rgba(101,82,160,.48),rgba(3,5,15,.96) 64%)';
   warpDog.textContent='🐕📻🛸';warpDog.className='spin';
   transTitle.innerHTML='🛸 EMERGENCY CRAFT UNLOCKED';nextEl.textContent='トランシーバーと同じ記号が、船体で光った。';subEl.textContent='OWNER SIGNAL DETECTED';
-  setTimeout(()=>{transTitle.innerHTML='📡 DISTRESS SIGNAL LOCKED';nextEl.textContent='発信源を自動追跡します。';subEl.textContent='AUTO TRACE : ON';},1050);
+  setTimeout(()=>{transTitle.innerHTML='📻 救助信号の方向へ出発';nextEl.textContent='進路を救助信号の発信方向に固定した。';subEl.textContent='RESCUE SIGNAL COURSE LOCKED';},1050);
   setTimeout(()=>{
     system=0;stage=1;deepWarpCount=0;stageStart();trans.style.display='none';trans.style.background='';warpDog.className='';paused=false;rocketLaunched=false;
-    showToast('🌙 月に到着。📻救助信号の追跡は続いている。',2200);v63RenderRadio();
+    showToast('🌙 月に到着。救助信号の方向へ航行を続ける。',2200);v63RenderRadio();
   },2650);
 };
 
@@ -2673,15 +2674,15 @@ startCommunication=function(obj){
 (function(){
   let v65EarthContacted=false;
   let v65ContactActive=false;
-  const V65_CONTACT_X=1580;
+  const V65_CONTACT_X=2350;
 
   function v65ContactCard(){
     return '<div class="v63RadioCard">'+
       '<div class="v63RadioIcon">📻</div>'+
       '<div class="v63RadioKicker">INCOMING TRANSMISSION</div>'+
       '<div class="v63RadioNoise">ザー……　ピッ……　ザザ……</div>'+
-      '<div class="v63RadioVoice">「……きこえる？」<br>「……近くに……船……」<br>「……その通信機……鍵……」</div>'+
-      '<div class="v63RadioMeta">位置データの一部を受信中……</div>'+
+      '<div class="v63RadioVoice">「……きこえる？」<br>「……そこに……船がある……」<br>「……その船なら……ここまで……来られる……」<br>「……お願い……」</div>'+
+      '<div class="v63RadioMeta">救助信号の方向データを受信中……</div>'+
       '<button class="v65RadioReply" type="button">📻 応答する</button>'+
     '</div>';
   }
@@ -2706,7 +2707,7 @@ startCommunication=function(obj){
       setTimeout(()=>{
         v63RadioScene.classList.remove('on','heard','reply','contact');
         paused=false;v65ContactActive=false;
-        showToast('📻 座標を受信。近くに何かある……。',1750);
+        showToast('📻 救助信号の方向を受信。近くに宇宙船がある……。',1750);
         v63RenderRadio();
       },1750);
     },{once:true});
@@ -2750,13 +2751,18 @@ startCommunication=function(obj){
 })();
 
 
-/* ===== v66: one-use space insurance + stranded mini-stage ===== */
+/* ===== v67: calmer space insurance + rare stranded event ===== */
+let v67InsuranceGraceUntil=0;
 (function(){
  const COST=20;
- let insuranceActive=true,initialPolicy=true,stranded=false,strandedOriginX=115,driftCount=0,satelliteReady=false,strandedTimer=0;
+ let insuranceActive=true,initialPolicy=true,stranded=false,strandedOriginX=115,driftCount=0,satelliteReady=false,strandedTimer=0,lastStrandedAt=-Infinity;
+
+ // Insurance is a safety net, not the main event. Active policies rescue after several rapid hits;
+ // expired policies need even more rapid hits before STRANDED DOG can happen.
+ v60RescueLimit=function(){return insuranceActive?(system===BLACK_HOLE_SYSTEM?4:6):(system===BLACK_HOLE_SYSTEM?7:10)};
 
  const scene=document.createElement('div');scene.id='v66StrandedScene';
- scene.innerHTML=`<div class="v66Nebula"></div><div class="v66StrandedTop"><div class="v66Kicker">🚨 STRANDED DOG</div><div class="v66Title">宇宙に放り出された！</div><div class="v66Status">救助船は来ない。📻トランシーバーだけが生きている。</div><div class="v66DriftCount">⭐ 漂流スター <b>0</b> / 20</div></div><div class="v66FloatDog">🐕</div><div class="v66FloatRadio">📻</div><div class="v66DriftField"></div><div class="v66StrandedActions"><button class="v66StrandedBtn sos" data-v66="sos">📻 SOSを送る<small>5秒待つ・無料</small></button><button class="v66StrandedBtn emergency" data-v66="emergency">🛸 緊急再加入＋救助 20⭐<small>今すぐ帰還＋保険ON</small></button><button class="v66StrandedBtn satellite" data-v66="satellite" disabled>🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small></button></div>`;
+ scene.innerHTML=`<div class="v66Nebula"></div><div class="v66StrandedTop"><div class="v66Kicker">🚨 STRANDED DOG</div><div class="v66Title">宇宙に放り出された！</div><div class="v66Status">救助船は来ない。📻トランシーバーだけが生きている。</div><div class="v66DriftCount">⭐ 漂流スター <b>0</b> / 20</div></div><div class="v66FloatDog">🐕</div><div class="v66FloatRadio">📻</div><div class="v66DriftField"></div><div class="v66StrandedActions"><button class="v66StrandedBtn sos" data-v66="sos">📻 SOSを送る<small>5秒待つ・無料</small></button><button class="v66StrandedBtn emergency" data-v66="emergency">🛸 緊急レスキュー 20⭐<small>今すぐ帰還＋レスキュー再チャージ</small></button><button class="v66StrandedBtn satellite" data-v66="satellite" disabled>🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small></button></div>`;
  wrap.appendChild(scene);
  const q=s=>scene.querySelector(s);
 
@@ -2764,7 +2770,7 @@ startCommunication=function(obj){
   q('.v66DriftCount b').textContent=driftCount;
   const e=q('[data-v66="emergency"]');
   e.disabled=points<COST;
-  e.innerHTML=points>=COST?`🛸 緊急再加入＋救助 ${COST}⭐<small>今すぐ帰還＋保険ON</small>`:`🛸 緊急再加入＋救助 ${COST}⭐<small>あと ${COST-points}⭐</small>`;
+  e.innerHTML=points>=COST?`🛸 緊急レスキュー ${COST}⭐<small>今すぐ帰還＋レスキュー再チャージ</small>`:`🛸 緊急レスキュー ${COST}⭐<small>あと ${COST-points}⭐</small>`;
   const s=q('[data-v66="satellite"]');
   s.disabled=!satelliteReady;
   s.innerHTML=satelliteReady?'🛰️ 漂流衛星につかまる<small>近くの安全地点へ</small>':'🛰️ 漂流衛星を待つ<small>少し待つと通りかかる</small>';
@@ -2778,11 +2784,11 @@ startCommunication=function(obj){
   const fromBH=system===BLACK_HOLE_SYSTEM;
   if(fromBH){let best=0,bestRank=-1;for(let i=0;i<systems.length;i++){const r=systemDistanceRank[i]??-1;if(!systems[i].secret&&!systems[i].dream&&i!==BLACK_HOLE_SYSTEM&&r<=furthestRank&&r>bestRank){best=i;bestRank=r}}system=best;stage=0;stageStart()}
   else{const ox=strandedOriginX;stageStart();p.x=Math.max(115,ox-650);p.y=groundY()-p.h;p.vy=0;p.on=true;camera=Math.max(0,p.x-W*.34)}
-  v60RescueHits=0;v60LastRescueHit=0;invincibleUntil=performance.now()+3000;stranded=false;satelliteReady=false;if(strandedTimer){clearTimeout(strandedTimer);strandedTimer=0}scene.classList.remove('on','waiting');paused=false;v60RenderInsurance();syncHUD(true);
-  if(mode==='sos')showToast('👽「マタ オマエカ」　救助された。保険はまだ切れたまま。',1900);else if(mode==='satellite')showToast('🛰️ 漂流衛星につかまって帰還！ 保険はまだ切れたまま。',1800);else showToast('🛸 緊急再加入完了！ 宇宙保険 ON',1700)
+  v60RescueHits=0;v60LastRescueHit=0;v67InsuranceGraceUntil=performance.now()+60000;invincibleUntil=performance.now()+4200;stranded=false;satelliteReady=false;if(strandedTimer){clearTimeout(strandedTimer);strandedTimer=0}scene.classList.remove('on','waiting');paused=false;v60RenderInsurance();syncHUD(true);
+  if(mode==='sos')showToast('👽「マタ オマエカ」　救助された。宇宙レスキューは使用済みのまま。',1900);else if(mode==='satellite')showToast('🛰️ 漂流衛星につかまって帰還！ 宇宙レスキューは使用済みのまま。',1800);else showToast('🛸 緊急レスキュー完了！ 次の救助まで待機中',1700)
  }
  function enterStranded(){
-  if(stranded||v60Rescuing)return;stranded=true;strandedOriginX=p.x;driftCount=0;satelliteReady=false;v60RescueHits=0;v60LastRescueHit=0;paused=true;reward?.classList.remove('on');gameOverEl.classList.remove('on');trans.style.display='none';eventEl.textContent='🚨 STRANDED DOG — 宇宙保険切れ';q('.v66Status').textContent='救助船は来ない。📻トランシーバーだけが生きている。';buildStars();refreshStranded();scene.classList.add('on');v60RenderInsurance();
+  if(stranded||v60Rescuing)return;stranded=true;strandedOriginX=p.x;driftCount=0;satelliteReady=false;v60RescueHits=0;v60LastRescueHit=0;paused=true;reward?.classList.remove('on');gameOverEl.classList.remove('on');trans.style.display='none';eventEl.textContent='🚨 STRANDED DOG — 宇宙レスキュー使用済み';q('.v66Status').textContent='救助船は来ない。📻トランシーバーだけが生きている。';buildStars();refreshStranded();scene.classList.add('on');v60RenderInsurance();
   strandedTimer=setTimeout(()=>{if(!stranded)return;satelliteReady=true;refreshStranded();q('.v66Status').textContent='遠くから壊れかけの衛星が流れてきた……！'},6000)
  }
  scene.addEventListener('click',e=>{
@@ -2798,25 +2804,36 @@ startCommunication=function(obj){
   return b
  }
  const oldRenderItems=v60RenderItems;
- v60RenderItems=function(){oldRenderItems();const b=ensureInsuranceButton();b.innerHTML=insuranceActive?'🛸 宇宙保険<br>加入中 ✓':`🛸 宇宙保険 再加入<br>${COST}⭐`;b.dataset.cost=String(COST)};
+ v60RenderItems=function(){oldRenderItems();const b=ensureInsuranceButton();b.innerHTML=insuranceActive?'🛸 宇宙レスキュー<br>待機中 ✓':`🛸 宇宙レスキュー 再チャージ<br>${COST}⭐`;b.dataset.cost=String(COST)};
  const oldUpdateShop=updateShopButtons;
- updateShopButtons=function(){ensureInsuranceButton();oldUpdateShop();const b=reward.querySelector('.rewardBtn[data-special="insurance"]');const d=insuranceActive||!shopUnlocked||points<COST;b.disabled=d;b.classList.toggle('locked',d);b.title=insuranceActive?'現在加入中。救助1回で保険切れ。':'20⭐で次の救助1回ぶん再加入'};
+ updateShopButtons=function(){ensureInsuranceButton();oldUpdateShop();const b=reward.querySelector('.rewardBtn[data-special="insurance"]');const d=insuranceActive||!shopUnlocked||points<COST;b.disabled=d;b.classList.toggle('locked',d);b.title=insuranceActive?'現在待機中。救助1回でレスキュー使用済み。':'20⭐で次の救助1回ぶん再チャージ'};
  const oldBuy=buySpecial;
- buySpecial=function(kind){if(kind!=='insurance')return oldBuy(kind);if(insuranceActive){showToast('🛸 宇宙保険は加入中！',950);return}if(points<COST){showToast(`⭐ あと ${COST-points}個で再加入`,1000);return}points-=COST;insuranceActive=true;initialPolicy=false;v60RescueHits=0;v60LastRescueHit=0;reward.classList.remove('on');v60RenderInsurance();v60RenderItems();updateShopButtons();syncHUD(true);showToast('🛸 宇宙保険に再加入！ 次の救助1回まで有効',1600)};
+ buySpecial=function(kind){if(kind!=='insurance')return oldBuy(kind);if(insuranceActive){showToast('🛸 宇宙レスキューは待機中！',950);return}if(points<COST){showToast(`⭐ あと ${COST-points}個で再チャージ`,1000);return}points-=COST;insuranceActive=true;initialPolicy=false;v60RescueHits=0;v60LastRescueHit=0;v67InsuranceGraceUntil=performance.now()+30000;reward.classList.remove('on');v60RenderInsurance();v60RenderItems();updateShopButtons();syncHUD(true);showToast('🛸 宇宙レスキューを再チャージ！ 次の救助1回まで有効',1600)};
 
  const oldRescue=v60EmergencyRescue;
- v60EmergencyRescue=function(){if(stranded||v60Rescuing)return;if(!insuranceActive){enterStranded();return}if(performance.now()<v60RescueCooldown)return;initialPolicy=false;insuranceActive=false;oldRescue()};
- v60RenderInsurance=function(){const lim=v60RescueLimit();v60InsuranceBadge.classList.toggle('warn',v60RescueHits>0&&!v60Rescuing&&insuranceActive);v60InsuranceBadge.classList.toggle('rescuing',v60Rescuing);v60InsuranceBadge.classList.toggle('expired',!insuranceActive&&!v60Rescuing&&!stranded);v60InsuranceBadge.classList.toggle('stranded',stranded);if(stranded)v60InsuranceBadge.textContent='🚨 宇宙遭難';else if(v60Rescuing)v60InsuranceBadge.textContent='🛸 宇宙保険 救助中！';else if(!insuranceActive)v60InsuranceBadge.textContent='🛸 宇宙保険 EXPIRED';else if(v60RescueHits)v60InsuranceBadge.textContent=`🛸 宇宙保険 ${v60RescueHits}/${lim}`;else v60InsuranceBadge.textContent=initialPolicy?'🛸 宇宙保険 ON・初回無料':'🛸 宇宙保険 ON・1回有効'};
+ v60EmergencyRescue=function(){
+  if(stranded||v60Rescuing)return;
+  const now=performance.now();
+  if(now<v67InsuranceGraceUntil){v60RescueHits=0;v60LastRescueHit=now;v60RenderInsurance();return}
+  if(!insuranceActive){
+    // STRANDED DOG itself also has a long repeat lock, so it never chains.
+    if(now-lastStrandedAt<180000){v60RescueHits=0;v60LastRescueHit=now;invincibleUntil=Math.max(invincibleUntil,now+2600);v60RenderInsurance();return}
+    lastStrandedAt=now;v67InsuranceGraceUntil=now+60000;enterStranded();return
+  }
+  if(now<v60RescueCooldown)return;
+  initialPolicy=false;insuranceActive=false;v67InsuranceGraceUntil=now+45000;oldRescue()
+};
+ v60RenderInsurance=function(){const lim=v60RescueLimit(),near=v60RescueHits>=Math.max(1,lim-2);v60InsuranceBadge.classList.toggle('warn',near&&!v60Rescuing&&insuranceActive);v60InsuranceBadge.classList.toggle('rescuing',v60Rescuing);v60InsuranceBadge.classList.toggle('expired',!insuranceActive&&!v60Rescuing&&!stranded);v60InsuranceBadge.classList.toggle('stranded',stranded);if(stranded)v60InsuranceBadge.textContent='🚨 宇宙遭難';else if(v60Rescuing)v60InsuranceBadge.textContent='🛸 宇宙レスキュー 救助中！';else if(!insuranceActive)v60InsuranceBadge.textContent=near?`🛸 レスキュー使用済み・危険 ${v60RescueHits}/${lim}`:'🛸 宇宙レスキュー 使用済み';else if(near)v60InsuranceBadge.textContent=`🛸 宇宙レスキュー ${v60RescueHits}/${lim}`;else v60InsuranceBadge.textContent='🛸 宇宙レスキュー 待機中'};
 
  v60InsuranceBadge.style.pointerEvents='auto';v60InsuranceBadge.setAttribute('role','button');v60InsuranceBadge.setAttribute('tabindex','0');
- const openInsurance=()=>{if(stranded)return;if(insuranceActive){showToast('🛸 加入中。救助1回で保険切れになるよ',1150);return}if(points<V60_SHOP_UNLOCK&&!shopUnlocked){showToast(`⭐ あと ${Math.max(0,COST-points)}個で宇宙保険に再加入できる`,1200);return}openShop();setTimeout(()=>reward.querySelector('.rewardBtn[data-special="insurance"]')?.focus(),50)};
+ const openInsurance=()=>{if(stranded)return;if(insuranceActive){showToast('🛸 待機中。大ダメージが続いた時だけ救助されるよ',1250);return}if(points<V60_SHOP_UNLOCK&&!shopUnlocked){showToast(`⭐ あと ${Math.max(0,COST-points)}個で宇宙レスキューに再チャージできる`,1200);return}openShop();setTimeout(()=>reward.querySelector('.rewardBtn[data-special="insurance"]')?.focus(),50)};
  v60InsuranceBadge.addEventListener('click',openInsurance);v60InsuranceBadge.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openInsurance()}});
 
  // Hidden QA buttons: same 🐾 menu used for ending previews.
  const devGrid=document.querySelector('#v62EndingDev .v62DevGrid');
  if(devGrid&&!devGrid.querySelector('[data-v66-test]')){
-  const rescueTest=document.createElement('button');rescueTest.className='v62DevBtn';rescueTest.dataset.v66Test='rescue';rescueTest.innerHTML='🛸 保険救助テスト<small>1回救助 → EXPIREDを確認</small>';
-  const strandedTest=document.createElement('button');strandedTest.className='v62DevBtn';strandedTest.dataset.v66Test='stranded';strandedTest.innerHTML='🚨 遭難テスト<small>保険切れ → 宇宙漂流へ</small>';
+  const rescueTest=document.createElement('button');rescueTest.className='v62DevBtn';rescueTest.dataset.v66Test='rescue';rescueTest.innerHTML='🛸 レスキューテスト<small>1回救助 → 使用済みを確認</small>';
+  const strandedTest=document.createElement('button');strandedTest.className='v62DevBtn';strandedTest.dataset.v66Test='stranded';strandedTest.innerHTML='🚨 遭難テスト<small>レスキュー使用済み → 宇宙漂流へ</small>';
   devGrid.append(rescueTest,strandedTest);
   rescueTest.addEventListener('click',()=>{dev.classList.remove('on');paused=false;insuranceActive=true;v60RescueHits=v60RescueLimit();v60RenderInsurance();v60EmergencyRescue()});
   strandedTest.addEventListener('click',()=>{dev.classList.remove('on');paused=false;insuranceActive=false;v60RenderInsurance();enterStranded()});
@@ -2824,6 +2841,160 @@ startCommunication=function(obj){
  v60RenderItems();updateShopButtons();v60RenderInsurance();syncHUD(true)
 })();
 
+
+
+/* ===== v68: story/UI polish + rescue-distance radio + signal pickups + boomerang vacuum ===== */
+(function(){
+  /* Radio HUD is now about distance-to-rescue-signal, not abstract SIGNAL strength. */
+  function v68DistanceState(rem){
+    if(systems[system]?.dream)return 'ほぼ 0｜発信源：ここ……？';
+    if(v63IsOpeningEarth())return rem>86?'まだ遠い｜地球上で方向を追跡中':rem>80?'接近中｜宇宙船の座標付近':'宇宙船のすぐ近く';
+    if(rem>72)return 'とても遠い';
+    if(rem>52)return 'かなり遠い';
+    if(rem>32)return '少しずつ近づいている';
+    if(rem>14)return 'かなり近い';
+    return 'もうすぐ';
+  }
+  const v68PrevRenderRadio=v63RenderRadio;
+  v63RenderRadio=function(){
+    v68PrevRenderRadio();
+    if(!v63RadioFound||returnFromDogStar||!v63RadioBadge?.classList.contains('on'))return;
+    let progress=0;
+    const dogStarIndex=systems.findIndex(x=>x.dream);
+    if(systems[system]?.dream)progress=100;
+    else if(system===BLACK_HOLE_SYSTEM)progress=Math.max(18,Math.min(94,20+(furthestRank||0)*3));
+    else if(system===0){
+      if(stage===0)progress=2+Math.max(0,Math.min(5,(p.x-V63_RADIO_X)/(rocketX-V63_RADIO_X)*5));
+      else progress=7+(stage/Math.max(1,systems[0].stages.length-1))*18;
+    }else progress=25+(system/Math.max(1,dogStarIndex))*73;
+    const rem=Math.max(0,Math.min(98,Math.round(100-progress)));
+    v63RadioBadge.classList.toggle('max',rem<=2);
+    const state=system===BLACK_HOLE_SYSTEM?'重力干渉で測定が乱れている':v68DistanceState(rem);
+    v63RadioBadge.innerHTML=`📻 救助信号までの距離<small>残り目安 ${rem}%｜${state}</small>`;
+  };
+
+  /* Drifting wireless-message pickups. */
+  const v68RadioMessages=[
+    '📻「……きこえてる……？」',
+    '📻「……その方向で……合ってる……」',
+    '📻「……星がたくさん見える……」',
+    '📻「……その船なら……届く……」',
+    '📻「……まだ……ここにいる……」',
+    '📻「……もう少し……先……」',
+    '📻「……白い光が……見えることがある……」'
+  ];
+  let v68RadioMessageIndex=0,v68NextRadioWave=420+Math.floor(Math.random()*420);
+  function v68HearRadioMessage(){
+    const rank=systemDistanceRank[system]??0;
+    let idx=v68RadioMessageIndex++%Math.min(v68RadioMessages.length,rank>=18?v68RadioMessages.length:6);
+    const msg=v68RadioMessages[idx];
+    const ct=comm?.querySelector('#commTitle');
+    if(ct)ct.textContent='🛜 救助信号の断片を受信';
+    if(commText)commText.textContent=msg;
+    comm?.classList.remove('on','milestone');void comm?.offsetWidth;comm?.classList.add('milestone');
+    eventEl.textContent='🛜 MESSAGE SIGNAL RECEIVED';
+    showToast('🛜 通信のかけらを拾った！',950);
+    setTimeout(()=>{comm?.classList.remove('milestone');if(ct)ct.textContent='📡 SIGNAL RECEIVED';},3000);
+  }
+  const v68PrevSpawnEvents=spawnEvents;
+  spawnEvents=function(){
+    v68PrevSpawnEvents();
+    if(paused||!v63RadioFound||v63IsOpeningEarth()||system===BLACK_HOLE_SYSTEM)return;
+    if(eventPhase>=v68NextRadioWave){
+      if(!items.some(o=>o.v68RadioWave&&!o.got)){
+        items.push({x:p.x+W+150+Math.random()*180,y:75+Math.random()*Math.max(100,H*.34),r:24,got:false,v68RadioWave:true,phase:Math.random()*6.2,color:'#8ef6ff'});
+        eventEl.textContent='🛜 救助信号の断片が流れてきた！';
+      }
+      v68NextRadioWave=eventPhase+650+Math.floor(Math.random()*650);
+    }
+  };
+  const v68PrevStageStart=stageStart;
+  stageStart=function(){
+    v68PrevStageStart();
+    v68NextRadioWave=360+Math.floor(Math.random()*480);
+  };
+  const v68PrevDrawGood=drawGood;
+  drawGood=function(it){
+    if(!it?.v68RadioWave)return v68PrevDrawGood(it);
+    if(it.got)return;
+    const sx=it.x-camera;if(sx<-90||sx>W+100)return;
+    const t=performance.now()/1000,bob=Math.sin(t*3+it.phase)*12;
+    ctx.save();ctx.translate(sx,it.y+bob);ctx.globalAlpha=.93;ctx.shadowColor='#71f4ff';ctx.shadowBlur=26;ctx.font='38px system-ui';ctx.fillText('🛜',-19,13);
+    ctx.strokeStyle='rgba(130,247,255,.7)';ctx.lineWidth=2;for(let r=30;r<=48;r+=9){ctx.globalAlpha=.42-(r-30)*.012;ctx.beginPath();ctx.arc(0,0,r+Math.sin(t*4+r)*3,0,Math.PI*2);ctx.stroke()}ctx.restore();
+  };
+  const v68PrevCollectGood=collectGood;
+  collectGood=function(it){
+    if(it?.v68RadioWave&&!it.got){it.got=true;v68HearRadioMessage();syncHUD();return;}
+    return v68PrevCollectGood(it);
+  };
+
+  /* Boomerang: multi-pickup vacuum for stars/rare signals + attracts ? morph objects. */
+  const v68PrevNearest=nearestBoomerangTarget;
+  nearestBoomerangTarget=function(){
+    const radio=items.filter(o=>o.v68RadioWave&&!o.got&&!o._boomerangReserved&&o.x>p.x-40&&o.x<p.x+1250)
+      .sort((a,b)=>Math.abs(a.x-p.x)-Math.abs(b.x-p.x))[0];
+    if(radio)return {type:'radio',obj:radio,icon:'🛜',d:Math.abs(radio.x-p.x)};
+    return v68PrevNearest();
+  };
+  const v68PrevFinish=finishBoomerangFetch;
+  finishBoomerangFetch=function(b){
+    if(b?.target?.type==='radio'&&b.target.obj){b.target.obj._boomerangReserved=false;b.target.obj.got=true;b.fetched='🛜';b.fetchType='radio';return;}
+    return v68PrevFinish(b);
+  };
+  const v68PrevAward=awardBoomerangFetch;
+  awardBoomerangFetch=function(b){
+    if(b?.fetchType==='radio'){v68HearRadioMessage();return;}
+    return v68PrevAward(b);
+  };
+  const v68PrevUpdateBoneShots=updateBoneShots;
+  updateBoneShots=function(dt){
+    /* Pull collectibles into every flying bone before the normal lock-on movement runs. */
+    for(const b of boneShots){
+      if(b.life<=0)continue;
+      for(const it of items){
+        if(it.got||it._boomerangReserved)continue;
+        const dx=b.x-it.x,dy=b.y-it.y,d=Math.hypot(dx,dy)||1;
+        if(d<300){it.x+=dx/d*5.6*dt;it.y+=dy/d*5.6*dt;if(d<34)collectGood(it);}
+      }
+      for(const m of morphs){
+        if(m.got)continue;
+        const d=Math.hypot(b.x-m.x,b.y-m.y)||1;
+        if(d<430){const dx=(p.x+95)-m.x,dy=(p.y+25)-m.y,md=Math.hypot(dx,dy)||1;m.x+=dx/md*4.0*dt;m.y+=dy/md*3.2*dt;}
+      }
+    }
+    v68PrevUpdateBoneShots(dt);
+  };
+  const v68PrevDrawBoneShots=drawBoneShots;
+  drawBoneShots=function(){
+    v68PrevDrawBoneShots();
+    ctx.save();ctx.strokeStyle='rgba(126,244,255,.30)';ctx.lineWidth=2;
+    for(const b of boneShots){const sx=b.x-camera;ctx.beginPath();ctx.arc(sx,b.y,48+8*Math.sin(performance.now()/120+b.phase),0,Math.PI*2);ctx.stroke();}
+    ctx.restore();
+  };
+  const v68PrevFireBone=fireBoneBoomerang;
+  fireBoneBoomerang=function(){
+    const canFire=!paused&&!(system===0&&stage===0)&&food>=3;
+    v68PrevFireBone();
+    if(canFire&&Math.random()<.40){
+      const weird=['🪼','🧿','🪩','💿','🪞','🔮'];
+      morphs.push({x:p.x+W+180+Math.random()*260,y:groundY()-100-Math.random()*150,r:28,got:false,dog:weird[Math.floor(Math.random()*weird.length)]});
+      setTimeout(()=>showToast('🦴🌀 ……変なものまで引き寄せた。',1000),420);
+    }
+  };
+
+  /* Quick QA: spawn one wireless-message pickup from the hidden 🐾 menu. */
+  const v68DevGrid=document.querySelector('#v62EndingDev .v62DevGrid');
+  if(v68DevGrid&&!v68DevGrid.querySelector('[data-v68-radio-test]')){
+    const b=document.createElement('button');b.className='v62DevBtn';b.dataset.v68RadioTest='1';b.innerHTML='🛜 通信アイテムテスト<small>目の前に1個流す</small>';v68DevGrid.appendChild(b);
+    b.addEventListener('click',()=>{dev?.classList.remove('on');paused=false;items.push({x:p.x+Math.max(220,W*.58),y:110,r:24,got:false,v68RadioWave:true,phase:Math.random()*6.2,color:'#8ef6ff'});showToast('🛜 通信のかけらを流した！',900);});
+  }
+
+  /* Final visible UI wording. */
+  const rt=document.getElementById('rewardTitle');if(rt)rt.textContent='⭐ アイテムを使う';
+  const jump=document.getElementById('jump');if(jump)jump.innerHTML='⬆️ ジャンプ<small>タップでジャンプ</small>';
+  const bone=document.getElementById('big');if(bone)bone.innerHTML='🦴 骨ブーメラン<small>骨3｜⭐・🛜・謎物体を吸引</small>';
+  v63RenderRadio();
+})();
 
 /* Initialize the opening after all v63 wrappers are ready. */
 if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌍 EARTH / NORMAL DAY';}
