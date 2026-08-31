@@ -895,9 +895,9 @@ function syncHUD(){
  missionEl.innerHTML=earth?(returnFromDogStar?'🏠 やっと地球に帰ってきた。いつもの道を歩こう':'🐕 いつもの散歩道。先にロケットが見える…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ご褒美ステージ ✨ ⭐星アイテムから地球へ帰れる':`🌀 ワームホール通過 ${deepWarpCount}<br>${areaNames[difficultyTier]}`;
  eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌳 WALK EVENT — 犬や人とすれ違う普通の散歩'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`⚡ ${s.event} — ${s.eventText}`;
  const dist=(s.distance||systems[system].distance.replace('地球から','')),endless=systems[system].endless;
- const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'地球から遠ざかっている…':'まだ地球の近く';
+ const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'宇宙の奥へ進んでいる…':'まだ宇宙の入口' ;
  const distanceLabel=endless?'観測不能域 / 膨張フロンティア':dist;
- const gravLabel=s.gravity<=.40?'🪽 低重力｜ジャンプ力UP':s.gravity>=.56?'⬇️ 高重力｜ジャンプ力DOWN':'⚖️ 標準重力｜ジャンプ力NORMAL';
+ const gravLabel=s.gravity<=.40?'ジャンプ力🔼':s.gravity>=.56?'ジャンプ力🔽':'ジャンプ力↔️';
  astroInfo.innerHTML=earth?`<b>🌍 地球・散歩道</b><br>${returnFromDogStar?'宇宙一周のあと、帰ってきた街':'ビルと木のあるいつもの街'}<br><span class="distanceBig">${returnFromDogStar?'🏠 地球帰還':'🚶 まだ地球'}</span><span class="distanceHint">${returnFromDogStar?'やっと帰ってきた地球':'いつもの街。まだ宇宙の旅は始まっていない'}</span>`:`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig">🌍 地球から ${distanceLabel}</span><span class="distanceHint">${gravLabel}<br>${farHint}</span>`;
  bigBtn.classList.toggle('ready',food>=3);
  chipText.textContent=shopUnlocked?'ひらく':'星30で解禁';
@@ -1231,7 +1231,7 @@ function homeEnding(){returnFromDogStar=true;system=0;stage=0;stageStart()}
 
 function wormholeMilestoneEffect(count){
  if(count===1){
-   showToast('🌀 最初のワームホール。地球圏を離れる。',1900)
+   showToast('🌀 最初のワームホール。宇宙の深部へ。',1900)
  }else if(count===3){
    transTitle.innerHTML='🌌 GALAXY SCALE';
    nextEl.textContent='銀河が、ただの光の島に見えてくる。';
@@ -1255,7 +1255,7 @@ function wormholeMilestoneEffect(count){
  }
 }
 
-function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 WORMHOLE!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 地球からもっと遠くへ！';subEl.textContent=black?'SPAGHETTIFICATION':`WORMHOLE ${deepWarpCount+1}`;
+function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 WORMHOLE!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 宇宙のもっと奥へ！';subEl.textContent=black?'SPAGHETTIFICATION':`WORMHOLE ${deepWarpCount+1}`;
  setTimeout(()=>{
   if(black){blackHoleVisited=true;system=BLACK_HOLE_SYSTEM;stage=0}
   else if(systems[system].endless){
@@ -1488,7 +1488,7 @@ function drawPlayer(){const now=performance.now(),sx=p.x-camera;const alienGlow=
    ctx.beginPath();ctx.ellipse(0,0,96,25,0,0,Math.PI*2);ctx.stroke();
    ctx.rotate(-now/700);ctx.strokeStyle='rgba(207,124,255,.45)';ctx.beginPath();ctx.ellipse(0,0,72,18,.7,0,Math.PI*2);ctx.stroke();
    ctx.restore()
- }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText('🔫',0,0);ctx.restore()}}
+ }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v73BoneTimeActive&&window.__v73BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
 function spawnEvents(){
  const s=S(),name=s.name,isSun=name.includes('太陽'),isMars=name.includes('火星'),isEarth=system===0&&stage===0,isMoon=name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth)return;
@@ -1513,7 +1513,7 @@ function spawnEvents(){
 
  if(system!==BLACK_HOLE_SYSTEM&&!isMoon&&!isSun&&!isMars&&difficultyTier>=1&&eventPhase%Math.max(38,92-difficultyTier*12)===0){const hy=20+Math.random()*Math.max(130,H*.32);hazards.push({x:p.x+W+130+Math.random()*160,y:hy,w:44,h:44,got:false,symbol:'☄️',diagonal:true,vx:-1.55-Math.random()*.8,vy:1.15+Math.random()*.7})}
  // 太陽は炎の嵐。進むほど明確に増える
- if(isSun&&eventPhase%Math.max(14,42-difficultyTier*7)===0)hazards.push({x:p.x+W+70+Math.random()*120,y:28+Math.random()*150,w:42,h:42,got:false,symbol:'🔥',fall:true});
+ if(isSun&&eventPhase%Math.max(7,22-difficultyTier*3)===0){const n=eventPhase%44===0?3:1;for(let i=0;i<n;i++)hazards.push({x:p.x+W+40+Math.random()*210+i*38,y:18+Math.random()*175,w:42,h:42,got:false,symbol:'🔥',fall:true});}
  else if(s.event==='SOLAR FLARE'&&eventPhase%145===0)hazards.push({x:p.x+W+70,y:40+Math.random()*120,w:42,h:42,got:false,symbol:'🔥',fall:true});
  if(s.event==='CRYSTAL RAIN'&&eventPhase%95===0)items.push({x:p.x+W+60,y:80,r:16,got:false,color:s.goodColor,fall:true});
  if(s.event==='RING RUSH'&&eventPhase%140===0)for(let i=0;i<8;i++)items.push({x:p.x+W+80+i*45,y:groundY()-90-(i%4)*38,r:15,got:false,color:s.goodColor});
@@ -2315,7 +2315,7 @@ syncHUD=function(){
   locationEl.textContent='🌍 地球';missionEl.textContent=returnFromDogStar?'🐕 地球に帰ってきた。いつもの道を歩こう。':'🐕 地球を散歩中。道の先に何かある…';eventEl.textContent='🌳 地球';
   astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'ここから宇宙の旅が始まる'}</span>`;
  }else{
-  const grav=s.gravity<=.40?'🪽 低重力｜ジャンプ力UP':s.gravity>=.56?'⬇️ 高重力｜ジャンプ力DOWN':'⚖️ 標準重力｜ジャンプ力NORMAL';
+  const grav=s.gravity<=.40?'ジャンプ力🔼':s.gravity>=.56?'ジャンプ力🔽':'ジャンプ力↔️';
   astroInfo.innerHTML=`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span><span class="distanceHint">${grav}</span>`;
  }
  pointsEl.textContent=`⭐ ${points}`;foodEl.textContent=`🦴 ${food}`;if(alienHitEl)alienHitEl.textContent=`👽 ${cosmicCharge}`;specialBtn.classList.toggle('ready',shopUnlocked||points>=V60_SHOP_UNLOCK);v60RefreshReturnBtn();
@@ -3309,16 +3309,17 @@ let v67InsuranceGraceUntil=0;
   const oldBoneRainBtn=reward?.querySelector('.rewardBtn[data-special="boneRain"]');
   if(oldBoneRainBtn)oldBoneRainBtn.remove();
   let v70BoneMeter=0,v70BoneReady=false,v70BoneTimes=0;
-  const V70_BONE_GOAL=15;
+  const V70_BONE_GOAL=30;
   let v70BoneHud=document.getElementById('v70BoneHud');
   if(!v70BoneHud){v70BoneHud=document.createElement('div');v70BoneHud.id='v70BoneHud';wrap.appendChild(v70BoneHud);}
   let v70BoneBanner=document.getElementById('v70BoneBanner');
-  if(!v70BoneBanner){v70BoneBanner=document.createElement('div');v70BoneBanner.id='v70BoneBanner';v70BoneBanner.innerHTML='🦴 BONE TIME!! 🦴<small>骨が降ってくる！ 骨ブーメラン無料！</small>';wrap.appendChild(v70BoneBanner);}
+  if(!v70BoneBanner){v70BoneBanner=document.createElement('div');v70BoneBanner.id='v70BoneBanner';v70BoneBanner.innerHTML='🦴 BONE TIME!! 🦴<small>骨が降ってくる！ レーザーが骨ブーメランに変化！</small>';wrap.appendChild(v70BoneBanner);}
   function v70BoneTimeActive(){return performance.now()<boneRainUntil;}
+  window.__v73BoneTimeActive=v70BoneTimeActive;
   function v70RenderBoneHud(){
     const active=v70BoneTimeActive();
     v70BoneHud.classList.toggle('active',active);v70BoneHud.classList.toggle('ready',v70BoneReady&&!active);v70BoneHud.style.opacity=(active||v70BoneMeter>=5)?'1':'0';
-    v70BoneHud.innerHTML=active?'🦴 BONE TIME!<small>ブーメラン FREE</small>':`🦴 BONE ${Math.min(v70BoneMeter,V70_BONE_GOAL)} / ${V70_BONE_GOAL}<span><i style="width:${Math.min(100,v70BoneMeter/V70_BONE_GOAL*100)}%"></i></span>`;
+    v70BoneHud.innerHTML=active?'🦴 BONE TIME!<small>🔫→🦴 ブーメラン</small>':`🦴 BONE ${Math.min(v70BoneMeter,V70_BONE_GOAL)} / ${V70_BONE_GOAL}<span><i style="width:${Math.min(100,v70BoneMeter/V70_BONE_GOAL*100)}%"></i></span>`;
   }
   function v70StartBoneTime(){
     if(v70BoneTimeActive()||paused||v63IsOpeningEarth()){v70BoneReady=true;v70RenderBoneHud();return;}
@@ -3649,6 +3650,91 @@ let v67InsuranceGraceUntil=0;
   }
 })();
 
+/* === v73: depth language / BONE TIME weapon / stronger solar identities === */
+(function(){
+  /* Laser button becomes the actual bone boomerang trigger during BONE TIME. */
+  const v73PrevFireLaser=fireLaser;
+  fireLaser=function(){
+    if(window.__v73BoneTimeActive&&window.__v73BoneTimeActive()){
+      fireBoneBoomerang();
+      return;
+    }
+    v73PrevFireLaser();
+  };
+
+  const v73PrevSync=syncHUD;
+  syncHUD=function(force){
+    v73PrevSync(force);
+    const bt=!!(window.__v73BoneTimeActive&&window.__v73BoneTimeActive());
+    if(laserBtn){
+      laserBtn.classList.toggle('v73BoneWeapon',bt);
+      laserBtn.innerHTML=bt
+        ? '🦴 骨ブーメラン<small> BONE TIME｜無料</small>'
+        : `🔫 レーザー<small id="laserAmmoText">攻撃 ${laserAmmo} / ${laserAmmoMax}</small>`;
+    }
+  };
+
+  /* Give each solar-system body a stronger gameplay signature. */
+  const v73PrevSpawn=spawnEvents;
+  spawnEvents=function(){
+    v73PrevSpawn();
+    if(system!==0)return;
+    const name=S().name;
+    if(name.includes('水星')){
+      // Mercury: relentless small solar sparks skimming low and high.
+      if(eventPhase%86===0)hazards.push({x:p.x+W+90,y:35+Math.random()*190,w:34,h:34,got:false,symbol:'☀️',diagonal:true,vx:-2.4,vy:.7+Math.random()*.7});
+    }else if(name.includes('金星')){
+      // Venus: thick gas banks; visual pressure and drifting hazards.
+      if(eventPhase%115===0)gasClouds.push({x:W+120,y:70+Math.random()*240,r:62+Math.random()*45,vx:1.05+Math.random()*.45});
+      if(eventPhase%170===0)hazards.push({x:p.x+W+100,y:groundY()-92,w:48,h:48,got:false,symbol:'🫧'});
+    }else if(name.includes('火星')){
+      // Mars: red dust + meteor bursts.
+      if(eventPhase%150===0)for(let i=0;i<2;i++)hazards.push({x:p.x+W+90+i*85,y:35+i*38,w:43,h:43,got:false,symbol:'☄️',diagonal:true,vx:-2.5-i*.25,vy:1.45+i*.2});
+    }else if(name.includes('木星')){
+      // Jupiter: storm bursts that briefly increase shake, no extra rewards.
+      if(eventPhase%210===0){shake=Math.max(shake,9);eventEl.textContent='🟠 GREAT STORM ✦ 巨大渦が接近！';}
+    }else if(name.includes('土星')){
+      // Saturn: ring debris lines instead of star-giveaway lanes.
+      if(eventPhase%165===0)for(let i=0;i<4;i++)hazards.push({x:p.x+W+100+i*72,y:groundY()-75-(i%2)*70,w:32,h:32,got:false,symbol:'💫',diagonal:true,vx:-1.45,vy:.12});
+    }else if(name.includes('天王星')){
+      // Uranus: icy sideways shards.
+      if(eventPhase%135===0)hazards.push({x:p.x+W+110,y:60+Math.random()*210,w:38,h:38,got:false,symbol:'🧊',diagonal:true,vx:-2.2,vy:.15});
+    }else if(name.includes('海王星')){
+      // Neptune: blue storm fronts come in pairs.
+      if(eventPhase%150===0)for(let i=0;i<2;i++)hazards.push({x:p.x+W+110+i*105,y:55+Math.random()*190,w:39,h:39,got:false,symbol:'💨',diagonal:true,vx:-2.7,vy:.25});
+    }else if(name.includes('太陽')){
+      if(eventPhase%75===0)eventEl.textContent='🔥 SOLAR INFERNO ✦ 炎が降り注ぐ！';
+    }
+  };
+
+  /* Add unmistakable planet-specific scenery over the existing background. */
+  const v73PrevBackground=drawBackground;
+  drawBackground=function(){
+    v73PrevBackground();
+    if(system!==0)return;
+    const name=S().name, now=performance.now();
+    ctx.save();
+    if(name.includes('水星')){
+      ctx.globalAlpha=.25;ctx.fillStyle='#ffad52';for(let i=0;i<7;i++){ctx.beginPath();ctx.arc((i*117-eventPhase*.6)%(W+100),H*.28+(i%3)*44,8+(i%3)*4,0,Math.PI*2);ctx.fill()}
+    }else if(name.includes('金星')){
+      ctx.globalAlpha=.18;ctx.fillStyle='#ffd28d';for(let i=0;i<5;i++){ctx.beginPath();ctx.ellipse(((i*170-eventPhase*.28)%(W+260))-100,90+(i%3)*75,120,38,0,0,Math.PI*2);ctx.fill()}
+    }else if(name.includes('火星')){
+      ctx.globalAlpha=.16;ctx.fillStyle='#f06038';ctx.fillRect(0,H*.35+Math.sin(now/500)*20,W,55);
+    }else if(name.includes('木星')){
+      ctx.globalAlpha=.3;ctx.strokeStyle='#ffb36d';ctx.lineWidth=14;ctx.beginPath();ctx.arc(W*.78,H*.26,78,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#b94a2e';ctx.beginPath();ctx.ellipse(W*.76,H*.28,34,18,-.2,0,Math.PI*2);ctx.fill();
+    }else if(name.includes('土星')){
+      ctx.globalAlpha=.48;ctx.strokeStyle='#ffe0a0';ctx.lineWidth=8;ctx.beginPath();ctx.ellipse(W*.81,H*.28,95,28,-.22,0,Math.PI*2);ctx.stroke();
+    }else if(name.includes('天王星')){
+      ctx.globalAlpha=.16;ctx.strokeStyle='#b8ffff';ctx.lineWidth=5;for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-50,H*.2+i*58);ctx.lineTo(W+50,H*.12+i*58);ctx.stroke()}
+    }else if(name.includes('海王星')){
+      ctx.globalAlpha=.18;ctx.strokeStyle='#75a8ff';ctx.lineWidth=9;for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(W*.45+i*90,H*.25+(i%2)*65,65,0,Math.PI*1.45);ctx.stroke()}
+    }else if(name.includes('太陽')){
+      ctx.globalAlpha=.3;ctx.fillStyle='#ff5b00';for(let i=0;i<7;i++){ctx.font=`${24+(i%3)*10}px system-ui`;ctx.fillText('🔥',((i*121+eventPhase*1.2)%(W+100))-40,45+(i%4)*70)}
+    }
+    ctx.restore();
+  };
+})();
+
 /* Initialize the opening after all v63 wrappers are ready. */
 if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌍 EARTH / NORMAL DAY';}
 /* === end v63 opening story === */
@@ -3663,6 +3749,44 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 #v63RadioScene.contact .v63RadioVoice{opacity:1}
 #v63RadioScene.reply .v63RadioIcon{animation:none;filter:drop-shadow(0 0 20px #b9fbff)}
 @media(max-width:520px){#v63RadioScene .v65RadioReply{min-width:160px;padding:10px 17px;font-size:11px}}
+</style>
+<style id="v73-final-ui">
+/* Controls: three separated buttons with breathing room on phones. */
+.controls{
+  position:absolute!important;
+  left:50%!important;right:auto!important;
+  transform:translateX(-50%)!important;
+  bottom:max(16px,env(safe-area-inset-bottom))!important;
+  width:min(390px,92vw)!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:16px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  overflow:visible!important;
+}
+#special,#laser,#jump{
+  position:relative!important;inset:auto!important;
+  width:100%!important;min-width:0!important;
+  height:70px!important;min-height:70px!important;max-height:70px!important;
+  margin:0!important;padding:9px 5px!important;
+  box-sizing:border-box!important;
+  transform:none!important;
+  clip-path:none!important;
+  border-radius:25px!important;
+  font-size:11px!important;
+}
+#special{order:1!important}
+#laser{order:2!important;display:flex!important;background:linear-gradient(180deg,#f8ffe7,#d9ffad 46%,#91e95d 100%)!important;border-color:#eaffb9!important;box-shadow:0 5px 0 rgba(46,90,24,.78),0 0 18px rgba(151,255,91,.25)!important}
+#jump{order:3!important;border-radius:999px!important}
+#laser.v73BoneWeapon{background:linear-gradient(180deg,#fffbdc,#eaff88 45%,#9bdb3e 100%)!important;color:#24330d!important;box-shadow:0 5px 0 #5e791b,0 0 28px rgba(206,255,91,.7)!important}
+#v70BoneHud{bottom:104px!important;left:14px!important;z-index:8!important}
+@media(max-width:520px){
+ .controls{width:90vw!important;gap:13px!important;bottom:max(18px,env(safe-area-inset-bottom))!important}
+ #special,#laser,#jump{height:66px!important;min-height:66px!important;max-height:66px!important;font-size:10px!important;padding:8px 4px!important}
+ #special small,#laser small,#jump small{font-size:7px!important;line-height:1.15!important}
+ #v70BoneHud{bottom:99px!important;left:10px!important;max-width:145px!important}
+}
 </style>
 </body>
 </html>
