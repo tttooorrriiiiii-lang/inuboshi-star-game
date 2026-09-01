@@ -952,10 +952,10 @@ function makeWorld(){
  const isSun=s.name.includes('太陽'),isMars=s.name.includes('火星'),isEarth=system===0&&stage===0,isMoon=s.name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth){
    // v99: 地球は「骨を追って散歩」がちゃんと遊びになるくらい増量。
-   for(let i=0;i<22;i++){
+   for(let i=0;i<28;i++){
      items.push({
-       x:220+i*142+(i%4)*14,
-       y:groundY()-46-(i%5)*16-Math.random()*16,
+       x:190+i*112+(i%4)*14,
+       y:groundY()-44-(i%5)*16-Math.random()*14,
        r:18,got:false,color:'#ffd65a',food:true
      });
    }
@@ -1633,11 +1633,11 @@ for(const o of swarm){if(o.got)continue;o.x-=o.v*dt;if(rectHit(playerRect(),{x:o
 for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/220+o.phase)*.18*dt;if(rectHit(playerRect(),{x:o.x-o.r,y:o.y-o.r,w:o.r*2,h:o.r*2})){if(o.kind==='earth'){collectEarthToken(o)}else{o.got=true;secretWarp(o.kind)}break}}secretPickups=secretPickups.filter(o=>!o.got&&o.x>p.x-W-180);
 for(const sat of satellites){
  if(sat.got)continue;
- // v99: 衛星は高さを変えず、右から左へ水平に通過するだけ。
  sat.x-=sat.v*dt;
+ if(sat.departure){
+   sat.y=Math.min(sat.targetY||sat.y, sat.y+(sat.vy||1.9)*dt);
+ }
 
- // 吸い付く/近づいただけで乗る判定を廃止。
- // 地球ではジャンプして本当に触れた時だけ乗れる。
  if(!v86Ride&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){
    if(v86BeginTransit('satellite',now,1)){
      sat.got=true;
@@ -4138,7 +4138,7 @@ function v89StartWarpFx(){
   v89SeedWarpStars();
   v89WarpCanvas.classList.add('on');
   const started=performance.now();
-  const dur=4920;
+  const dur=5920;
   const ctx=v89WarpCanvas.getContext('2d');
   const r=wrap.getBoundingClientRect();
 
@@ -4146,9 +4146,9 @@ function v89StartWarpFx(){
     const t=Math.min(1,(now-started)/dur);
     // accelerating feel: slow at first, then suddenly very fast
     const speed=Math.pow(t,2.35);
-    const lineLen=3+speed*(r.width*.28);
-    const drift=1.5+speed*34;
-    const fade=t<.82?Math.min(1,t/.16):Math.max(0,(1-t)/.18);
+    const lineLen=8+speed*(r.width*.42);
+    const drift=1.3+speed*42;
+    const fade=t<.88?Math.min(1,t/.20):Math.max(0,(1-t)/.12);
 
     ctx.clearRect(0,0,r.width,r.height);
 
@@ -4156,7 +4156,7 @@ function v89StartWarpFx(){
     ctx.save();
     ctx.globalCompositeOperation='source-over';
     const darkHold=t<.78?1:Math.max(0,(1-t)/.22);
-    const darkAlpha=Math.min(.82,(.18 + speed*.62) * Math.max(fade,darkHold*.86));
+    const darkAlpha=Math.min(.94,(.28 + speed*.78) * Math.max(fade,darkHold*.92));
     ctx.fillStyle=`rgba(2,4,13,${darkAlpha})`;
     ctx.fillRect(0,0,r.width,r.height);
     ctx.restore();
@@ -4220,8 +4220,8 @@ function v86BeginTransit(type,now,steps=1){
   if(!v86CanRide()||v86Ride)return false;
   type='satellite'; // v92: inter-star travel is satellite-only
   v94SatellitePending=false;
-  v86Ride={type:'transit',kind:'satellite',until:now+6000,fromSystem:system,fromStage:stage,steps};
-  satelliteUntil=Math.max(satelliteUntil,now+6050);invincibleUntil=Math.max(invincibleUntil,now+6200);
+  v86Ride={type:'transit',kind:'satellite',until:now+7000,fromSystem:system,fromStage:stage,steps};
+  satelliteUntil=Math.max(satelliteUntil,now+7050);invincibleUntil=Math.max(invincibleUntil,now+7200);
   wormholeActive=false;blackHoleActive=false;
   v86SetBadge('🐕 → 🛰️  NEXT STAR');
   showToast('🛰️ ポンッ！ 衛星で加速するよ',900);
@@ -4281,7 +4281,7 @@ update=function(now,dt){
   if(bs!==system||bt!==stage){v86ClearRide();v86Rocks=[];v86Ships=[];return}
   if(!v86CanRide()&&!(v86Ride&&v86Ride.type==='transit'))return;
   try{
-    if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=4920){
+    if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=5920){
       v86Ride.warpStarted=true;
       v86SetBadge('🛰️  ACCEL WARP ✦');
       v89StartWarpFx();
@@ -4495,8 +4495,8 @@ syncHUD=function(force=false){
 
     // 深い青の夜空
     const night=ctx.createLinearGradient(0,0,0,gy);
-    night.addColorStop(0,'#01030d');
-    night.addColorStop(.48,'#07132d');
+    night.addColorStop(0,'#00020a');
+    night.addColorStop(.48,'#050f25');
     night.addColorStop(1,'#172848');
     ctx.fillStyle=night;
     ctx.fillRect(0,0,W,gy);
@@ -4597,7 +4597,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v102 late patch: travel stabilization + Earth shooting stars === */
+/* === v103: deeper warp + falling satellites + moon settle fix === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4658,26 +4658,40 @@ syncHUD=function(force=false){
     ctx.lineCap='round';
 
     for(let i=0;i<3;i++){
-      const cycle=6.8+i*1.7;
-      const phase=(t+i*1.83)%cycle;
-      if(phase<1.15){
-        const p1=phase/1.15;
-        const sx=W*(.82-.46*p1)+i*18;
-        const sy=90+i*42+p1*38;
-        const len=34+42*p1;
-        ctx.globalAlpha=.10+.75*(1-p1*.15);
-        ctx.strokeStyle='#fff';
+      const cycle=7.2+i*1.9;
+      const phase=(t+i*1.67)%cycle;
+      if(phase<1.55){
+        const p1=phase/1.55;
+        const sx=W*(.86-.58*p1)+i*24;
+        const sy=82+i*36+p1*122;
+        const len=46+82*p1;
+        const ang=.58;
+        const ex=sx+Math.cos(ang)*len;
+        const ey=sy+Math.sin(ang)*len;
+        const g=ctx.createLinearGradient(sx,sy,ex,ey);
+        g.addColorStop(0,'rgba(255,255,255,.98)');
+        g.addColorStop(.35,'rgba(195,230,255,.70)');
+        g.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.globalAlpha=.18+.82*(1-p1*.10);
+        ctx.strokeStyle=g;
         ctx.shadowColor='#cfe9ff';
-        ctx.shadowBlur=12;
-        ctx.lineWidth=2;
+        ctx.shadowBlur=14;
+        ctx.lineWidth=2.2;
         ctx.beginPath();
         ctx.moveTo(sx,sy);
-        ctx.lineTo(sx+len,sy-len*.34);
+        ctx.lineTo(ex,ey);
+        ctx.stroke();
+        ctx.lineWidth=1.1;
+        ctx.globalAlpha=.12+.42*(1-p1*.18);
+        ctx.beginPath();
+        ctx.moveTo(sx-4,sy+3);
+        ctx.lineTo(ex-8,ey+4);
         ctx.stroke();
 
+        ctx.globalAlpha=.95;
         ctx.fillStyle='#fff';
         ctx.beginPath();
-        ctx.arc(sx,sy,2.2,0,Math.PI*2);
+        ctx.arc(sx,sy,2.0,0,Math.PI*2);
         ctx.fill();
       }
     }
@@ -4833,6 +4847,76 @@ update=function(now,dt){
 /* Initialize the opening after all v63 wrappers are ready. */
 if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌙 EARTH / NIGHT';v63RadioBadge?.classList.remove('on','max');}
 /* === end v63 opening story === */
+
+
+
+/* === v103 late patch: deeper warp + falling satellites + moon settle fix === */
+(function(){
+  let v103StageSettleUntil=0;
+
+  const v103PrevStageStart=stageStart;
+  stageStart=function(){
+    const out=v103PrevStageStart();
+    // 月や火星に着いた直後の「同じ動き繰り返し」を避けるための着地猶予
+    v103StageSettleUntil=performance.now()+850;
+    return out;
+  };
+
+  const v103PrevFinishTransit=v86FinishTransit;
+  v86FinishTransit=function(){
+    v103PrevFinishTransit();
+    if(v86Ride?.type==='arrival'){
+      v103StageSettleUntil=performance.now()+3800;
+    }
+  };
+
+  const v103PrevSpawnEvents=spawnEvents;
+  spawnEvents=function(){
+    if(performance.now()<v103StageSettleUntil)return;
+    v103PrevSpawnEvents();
+  };
+
+  const v103PrevUpdate=update;
+  update=function(now,dt){
+    v103PrevUpdate(now,dt);
+    if(performance.now()<v103StageSettleUntil){
+      // 到着直後は再衝突や即イベント発火を抑制
+      hazards=[];
+      swarm=[];
+      satellites=satellites.filter(s=>!s.departure);
+      v94SatellitePending=!!satellites.some(s=>!s.got&&s.departure);
+    }
+  };
+
+  const v103PrevSpawnSatellite=spawnSatellite;
+  spawnSatellite=function(){
+    if(v94SatellitePending||v86Ride)return false;
+    v94SatellitePending=true;
+    satellites=[];
+
+    const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
+    const targetY=isOpeningEarth ? Math.max(44,groundY()-118) : Math.max(48,groundY()-92);
+    const startY=-88-Math.random()*70;
+    satellites.push({
+      x:p.x+Math.min(W*.62,510),
+      y:startY,
+      targetY:targetY,
+      v:1.9+Math.random()*.35,
+      vy:1.75+Math.random()*.35,
+      w:58,h:44,got:false,phase:Math.random()*6.2,
+      departure:true,
+      earthChoice:isOpeningEarth
+    });
+
+    eventEl.textContent=isOpeningEarth?'🛰️ ……？':'🛰️ ORBIT DROP';
+    if(isOpeningEarth)showToast('……上から、何か降りてくる。',950);
+    setTimeout(syncHUD,900);
+    return true;
+  };
+
+  // 衛星移動を「上から降ってくる」挙動に置き換える
+  const oldSatLoop = `for(const sat of satellites){\n if(sat.got)continue;\n // v99: 衛星は高さを変えず、右から左へ水平に通過するだけ。\n sat.x-=sat.v*dt;\n\n // 吸い付く/近づいただけで乗る判定を廃止。\n // 地球ではジャンプして本当に触れた時だけ乗れる。\n if(!v86Ride&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){\n   if(v86BeginTransit('satellite',now,1)){\n     sat.got=true;\n     v94SatellitePending=false;\n   }\n }\n}`;
+})();
 
 stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。犬星くんは散歩している。',1700),550);requestAnimationFrame(frame);
 })();
