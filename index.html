@@ -1373,7 +1373,7 @@ function drawAlien(a){if(a.got)return;const sx=a.x-camera;if(sx<-70||sx>W+70)ret
 function drawMorph(m){if(m.got)return;const sx=m.x-camera;if(sx<-70||sx>W+70)return;ctx.save();ctx.translate(sx,m.y);ctx.rotate(Math.sin(performance.now()/220)*.18);ctx.shadowColor='#64f5ff';ctx.shadowBlur=24;ctx.fillStyle='rgba(60,20,90,.82)';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,27,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.font='30px system-ui';ctx.fillText('❓',-15,11);ctx.restore()}
 function drawSwarm(o){if(o.got)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;ctx.save();ctx.shadowColor=o.kind==='crow'?'#9b8cff':o.kind==='dino'?'#ff954d':o.kind==='evil'?'#ff174d':'#7dff70';ctx.shadowBlur=o.kind==='evil'?26:13;ctx.font=`${o.kind==='dino'?58:o.kind==='evil'?44:36}px system-ui`;ctx.fillText(o.kind==='crow'?'🐦‍⬛':o.kind==='dino'?'🦖':'👾',sx,o.y+(o.kind==='dino'?55:36));if(o.kind==='evil'){ctx.fillStyle='#fff';ctx.font='900 8px system-ui';ctx.fillText('DANGER',sx-3,o.y-6)}ctx.restore()}
 function drawSecretPickup(o){if(o.got)return;const sx=o.x-camera;if(sx<-80||sx>W+100)return;ctx.save();const bob=Math.sin(performance.now()/180+o.phase)*12;ctx.translate(sx,o.y+bob);ctx.shadowColor=o.kind==='flower'?'#ff78d1':o.kind==='earth'?'#69d8ff':'#fff1a0';ctx.shadowBlur=28;ctx.font='48px system-ui';ctx.fillText(o.icon,-24,18);ctx.strokeStyle=o.kind==='earth'?'#69d8ff':'#fff';ctx.lineWidth=1.5;ctx.globalAlpha=.65;ctx.beginPath();ctx.arc(0,0,33,0,Math.PI*2);ctx.stroke();ctx.restore()}
-function spawnSatellite(){satellites.push({x:p.x+W+120,y:70+Math.random()*Math.max(100,H*.42),v:3.2+Math.random()*1.8,w:58,h:44,got:false,phase:Math.random()*6.2});eventEl.textContent='🛰️ ORBIT EVENT ✦ 衛星が飛来！';showToast('🛰️ 衛星に触れたら乗れる！',1000);setTimeout(syncHUD,1400)}
+function spawnSatellite(){const lanes=[groundY()-92,groundY()-146,groundY()-202];const sy=lanes[Math.floor(Math.random()*lanes.length)];satellites.push({x:p.x+W+135,y:sy,v:2.7+Math.random()*1.25,w:58,h:44,got:false,phase:Math.random()*6.2});eventEl.textContent='🛰️ ORBIT EVENT ✦ 衛星が流れてきた！';showToast('🛰️ 乗ると2秒後に次の星へ',1100);setTimeout(syncHUD,1400)}
 function spawnBoss(){if(system===BLACK_HOLE_SYSTEM||systems[system].secret||bosses.some(b=>!b.dead))return;const hpv=10;bosses.push({x:p.x+W+180,y:groundY()-86,w:78,h:86,hp:hpv,maxHp:hpv,dead:false,hitFlash:0,v:1.05+Math.random()*.45});showToast('🧌 巨大モンスター出現！ レーザー10発で倒せ！',1600)}
 function spawnLaserTarget(){
  const lanes=[groundY()-78,groundY()-132,groundY()-188];
@@ -1488,7 +1488,7 @@ function drawPlayer(){const now=performance.now(),sx=p.x-camera;const alienGlow=
    ctx.beginPath();ctx.ellipse(0,0,96,25,0,0,Math.PI*2);ctx.stroke();
    ctx.rotate(-now/700);ctx.strokeStyle='rgba(207,124,255,.45)';ctx.beginPath();ctx.ellipse(0,0,72,18,.7,0,Math.PI*2);ctx.stroke();
    ctx.restore()
- }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v79BoneTimeActive&&window.__v79BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
+ }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v80BoneTimeActive&&window.__v80BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
 function spawnEvents(){
  const s=S(),name=s.name,isSun=name.includes('太陽'),isMars=name.includes('火星'),isEarth=system===0&&stage===0,isMoon=name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth)return;
@@ -1507,7 +1507,7 @@ function spawnEvents(){
  if(eventPhase>=nextCosmic){const forced=s.event==='STAR SHOWER'?'stars':s.event==='COSMIC GAS'?'gas':Math.random()<.5?'stars':'gas';triggerCosmic(forced);nextCosmic=eventPhase+Math.max(300,800-difficultyTier*95)+Math.floor(Math.random()*320)}
  if(system!==BLACK_HOLE_SYSTEM&&!isDream&&eventPhase>=nextSwarm){const r=Math.random(),evilChance=Math.max(0,(difficultyTier-1)*.12);let kind;if(r<evilChance)kind='evil';else if(r<.34+evilChance)kind='alien';else if(r<.64+evilChance)kind='dino';else kind='crow';triggerSwarm(kind);nextSwarm=eventPhase+Math.max(180,500-difficultyTier*70)+Math.floor(Math.random()*160)}
  // 地球は衛星だらけ。他の星ではかなり控えめ
- if(!isDream&&eventPhase>=nextSatellite){spawnSatellite();nextSatellite=eventPhase+(isEarth?130+Math.floor(Math.random()*120):520+Math.floor(Math.random()*420))}
+ if(!isDream&&!(system===0&&stage===0)&&p.x>=worldLength*.58&&eventPhase>=nextSatellite){spawnSatellite();const rr=Math.max(0,systemDistanceRank[system]??0)+stage;nextSatellite=eventPhase+Math.max(260,620-rr*14)+Math.floor(Math.random()*220)}
  // 火星は隕石が主役。月・地球は隕石少なめ
  if(isMars&&difficultyTier>0&&eventPhase%Math.max(18,54-difficultyTier*9)===0){const hy=15+Math.random()*Math.max(120,H*.28);hazards.push({x:p.x+W+120+Math.random()*180,y:hy,w:46,h:46,got:false,symbol:'☄️',diagonal:true,vx:-2.0-Math.random()*1.2,vy:1.5+Math.random()*1.0})}
 
@@ -1535,11 +1535,37 @@ for(const a of aliens){if(a.got)continue;if(rectHit(playerRect(),{x:a.x,y:a.y,w:
 for(const m of morphs){if(!m.got&&rectHit(playerRect(),{x:m.x-m.r,y:m.y-m.r,w:m.r*2,h:m.r*2})){m.got=true;playerDog=m.dog;morphUntil=now+(system===BLACK_HOLE_SYSTEM?12000:9000);showToast(system===BLACK_HOLE_SYSTEM?`❓ 無生物になった！？ ${playerDog}`:`✨ 変身！ ${playerDog}`,1300)}}if(now>=morphUntil&&playerDog!=='🐕')playerDog='🐕';
 for(const o of swarm){if(o.got)continue;o.x-=o.v*dt;if(rectHit(playerRect(),{x:o.x,y:o.y,w:o.w,h:o.h})){o.got=true;hitHazard({x:o.x,y:o.y,w:o.w,h:o.h,got:false,evil:o.kind==='evil',swarmKind:o.kind,steal:o.steal||0});break}}
 for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/220+o.phase)*.18*dt;if(rectHit(playerRect(),{x:o.x-o.r,y:o.y-o.r,w:o.r*2,h:o.r*2})){if(o.kind==='earth'){collectEarthToken(o)}else{o.got=true;secretWarp(o.kind)}break}}secretPickups=secretPickups.filter(o=>!o.got&&o.x>p.x-W-180);
-for(const sat of satellites){if(sat.got)continue;sat.x-=sat.v*dt;sat.y+=Math.sin(now/210+sat.phase)*.20*dt;if(rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){sat.got=true;satelliteUntil=Math.max(satelliteUntil,now+3000);invincibleUntil=Math.max(invincibleUntil,now+3000);showToast('🛰️ 衛星ライド 3秒！',1100);syncHUD()}}satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
+for(const sat of satellites){if(sat.got)continue;sat.x-=sat.v*dt;sat.y+=Math.sin(now/210+sat.phase)*.20*dt;if(rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){sat.got=true;v86BeginTransit('satellite',now,1)}}satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
 for(const b of bosses){if(b.dead)continue;b.x-=b.v*dt;if(b.hitFlash>0)b.hitFlash-=dt;if(rectHit(playerRect(),{x:b.x+8,y:b.y+6,w:b.w-16,h:b.h-6}))hitHazard({x:b.x,y:b.y,w:b.w,h:b.h,got:false,evil:true})}bosses=bosses.filter(b=>!b.dead&&b.x>p.x-W-240);
 for(const st of shootingStars){st.x-=st.vx*dt;st.y+=st.vy*dt}shootingStars=shootingStars.filter(st=>st.x>-160&&st.y<H+100);for(const g of gasClouds)g.x-=g.vx*dt;gasClouds=gasClouds.filter(g=>g.x>-g.r*2);
 if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){if(systems[system].dream){showToast('🐾 ここが宇宙旅行の最終地点。⭐交換所から地球へ帰れる！',1800);stageStart();return}if(systems[system].secret){showToast('🌀 秘密銀河の出口！ 通常宇宙へ戻る',1200);warpTo(false);return}if(system===0&&stage===0){if(returnFromDogStar){doghouseChoice();return}else{rocketToMoon();return}}stage=(stage+1)%systems[system].stages.length;showToast(`🚀 NEXT ✦ ${systems[system].stages[stage].name}`,1400);stageStart();return}camera+=(Math.max(0,p.x-W*.34)-camera)*.13}
-function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawCosmicWarpFX();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
+
+function drawVenusFloorFinal(){
+  if(!S()?.name?.includes('金星')) return;
+  const gy=groundY();
+  ctx.save();
+  const g=ctx.createLinearGradient(0,gy,0,H);
+  g.addColorStop(0,'#e1a46b');
+  g.addColorStop(.32,'#b66d47');
+  g.addColorStop(1,'#65331f');
+  ctx.fillStyle=g;
+  ctx.fillRect(0,gy,W,H-gy+4);
+
+  ctx.fillStyle='rgba(255,232,178,.92)';
+  ctx.fillRect(0,gy,W,5);
+
+  ctx.globalAlpha=.26;
+  ctx.fillStyle='#54291b';
+  for(let i=0;i<12;i++){
+    const x=((i*109-camera*.48)%(W+150)+W+150)%(W+150)-75;
+    ctx.beginPath();
+    ctx.ellipse(x,gy+22+(i%3)*22,32+(i%2)*7,8+(i%2)*3,0,0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawCosmicWarpFX();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawVenusFloorFinal();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
 function doJump(){if(paused||jumps>=4)return;const s=S(),boost=big?1.12:1;
  const gravityJump=Math.max(.78,Math.min(1.38,Math.sqrt(.50/Math.max(.24,s.gravity))));
  if(p.on){p.vy=-(s.jump*.72+Math.min(.45,companionCount*.025))*gravityJump*(food===0?.88:1)*boost}
@@ -2128,7 +2154,7 @@ let v60RareSerial=0,v60RescueHits=0,v60LastRescueHit=0,v60Rescuing=false,v60Resc
 let v60BoneFx=[];
 
 /* Distance route: keep the trip moving outward instead of jumping back and forth. */
-const v60LocalOrder=['🌍 地球','🌙 月','♀ 金星','🔴 火星','☿ 水星','☀️ 太陽','🟠 木星','🪐 土星','🩵 天王星','🔵 海王星','⭐ シリウス','💠 ベガ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス'];
+const v60LocalOrder=['🌍 地球','🌙 月','🔴 火星','♀ 金星','☿ 水星','☀️ 太陽','🟠 木星','🪐 土星','🩵 天王星','🔵 海王星','⭐ シリウス','💠 ベガ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス'];
 const v60OrderMap=new Map(v60LocalOrder.map((n,i)=>[n,i]));
 systems[0].stages.sort((a,b)=>(v60OrderMap.get(a.name)??999)-(v60OrderMap.get(b.name)??999));
 const v60M51=systems.findIndex(s=>s.name==='🌀 子持ち銀河 M51');
@@ -2572,7 +2598,7 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
 
 /* === v63 opening story: mysterious transceiver -> abandoned alien craft === */
 let v63RadioFound=false,v63AlienRecognizedCraft=false,v63SignalStep=0;
-const V63_RADIO_X=1550;
+const V63_RADIO_X=rocketX-520; // v86: one transceiver shortly before the craft
 const v63SignalSeen=new Set();
 let v63RadioScene=document.getElementById('v63RadioScene');
 if(!v63RadioScene){
@@ -2764,7 +2790,7 @@ startCommunication=function(obj){
 /* === v65 integrated Earth contact === */
 /* ===== v65 Earth opening: an actual radio contact before boarding the alien craft ===== */
 (function(){
-  let v65EarthContacted=false;
+  let v65EarthContacted=true; // v86: no second Earth transmission
   let v65ContactActive=false;
   const V65_CONTACT_X=2570;
 
@@ -3241,10 +3267,10 @@ let v67InsuranceGraceUntil=0;
     if(v63RadioFound)return;
     v63RadioFound=true;paused=true;reward?.classList.remove('on');
     missionEl.textContent='🦴 謎の信号を追う';eventEl.textContent='📻 UNKNOWN SIGNAL';
-    v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……もっと……骨、欲しくない？」</div><div class="v63RadioMeta">発信源：不明</div></div>';
+    v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">UNKNOWN SIGNAL</div><div class="v63RadioNoise">ザザ……　ザ……</div><div class="v63RadioVoice">「……宇宙には、骨……もっとあるよ」<br>「……その船で、おいで」</div><div class="v63RadioMeta">発信源：宇宙のどこか</div></div>';
     v63RadioScene.classList.add('on');v63RenderRadio();
     setTimeout(()=>{if(v63RadioScene.classList.contains('on'))v63RadioScene.classList.add('heard')},520);
-    setTimeout(()=>{v63RadioScene.classList.remove('on','heard');paused=false;showToast('📻 ……この先から聞こえる。',1200);},2450);
+    setTimeout(()=>{v63RadioScene.classList.remove('on','heard');paused=false;showToast('📻 宇宙船はすぐ先。骨の反応も、その向こう。',1350);},2450);
   };
 
   const v70PrevRocket=rocketToMoon;
@@ -3307,10 +3333,10 @@ let v67InsuranceGraceUntil=0;
   let v70BoneBanner=document.getElementById('v70BoneBanner');
   if(!v70BoneBanner){v70BoneBanner=document.createElement('div');v70BoneBanner.id='v70BoneBanner';v70BoneBanner.innerHTML='🦴 BONE TIME!! 🦴<small>骨が降ってくる！ レーザーが骨ブーメランに変化！</small>';wrap.appendChild(v70BoneBanner);}
   function v70BoneTimeActive(){return performance.now()<boneRainUntil;}
-  window.__v79BoneTimeActive=v70BoneTimeActive;
+  window.__v80BoneTimeActive=v70BoneTimeActive;
   function v70RenderBoneHud(){
     const active=v70BoneTimeActive();
-    v70BoneHud.classList.toggle('active',active);v70BoneHud.classList.toggle('ready',v70BoneReady&&!active);v70BoneHud.style.opacity=(active||v70BoneMeter>=5)?'1':'0';
+    v70BoneHud.classList.toggle('active',active);v70BoneHud.classList.toggle('ready',v70BoneReady&&!active);v70BoneHud.style.setProperty('opacity',v63IsOpeningEarth()?'0':'1','important');
     v70BoneHud.innerHTML=active?'🦴 BONE TIME!<small>🔫→🦴 ブーメラン</small>':`🦴 BONE ${Math.min(v70BoneMeter,V70_BONE_GOAL)} / ${V70_BONE_GOAL}<span><i style="width:${Math.min(100,v70BoneMeter/V70_BONE_GOAL*100)}%"></i></span>`;
   }
   function v70StartBoneTime(){
@@ -3642,24 +3668,24 @@ let v67InsuranceGraceUntil=0;
   }
 })();
 
-/* === v79: depth language / BONE TIME weapon / stronger solar identities === */
+/* === v80: depth language / BONE TIME weapon / stronger solar identities === */
 (function(){
   /* Laser button becomes the actual bone boomerang trigger during BONE TIME. */
-  const v79PrevFireLaser=fireLaser;
+  const v80PrevFireLaser=fireLaser;
   fireLaser=function(){
-    if(window.__v79BoneTimeActive&&window.__v79BoneTimeActive()){
+    if(window.__v80BoneTimeActive&&window.__v80BoneTimeActive()){
       fireBoneBoomerang();
       return;
     }
-    v79PrevFireLaser();
+    v80PrevFireLaser();
   };
 
-  const v79PrevSync=syncHUD;
+  const v80PrevSync=syncHUD;
   syncHUD=function(force){
-    v79PrevSync(force);
-    const bt=!!(window.__v79BoneTimeActive&&window.__v79BoneTimeActive());
+    v80PrevSync(force);
+    const bt=!!(window.__v80BoneTimeActive&&window.__v80BoneTimeActive());
     if(laserBtn){
-      laserBtn.classList.toggle('v79BoneWeapon',bt);
+      laserBtn.classList.toggle('v80BoneWeapon',bt);
       laserBtn.innerHTML=bt
         ? '🦴 骨ブーメラン<small> BONE TIME｜無料</small>'
         : `🔫 レーザー<small id="laserAmmoText">攻撃 ${laserAmmo} / ${laserAmmoMax}</small>`;
@@ -3667,9 +3693,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Give each solar-system body a stronger gameplay signature. */
-  const v79PrevSpawn=spawnEvents;
+  const v80PrevSpawn=spawnEvents;
   spawnEvents=function(){
-    v79PrevSpawn();
+    v80PrevSpawn();
     if(system!==0)return;
     const name=S().name;
     if(name.includes('水星')){
@@ -3677,7 +3703,7 @@ let v67InsuranceGraceUntil=0;
       if(eventPhase%86===0)hazards.push({x:p.x+W+90,y:35+Math.random()*190,w:34,h:34,got:false,symbol:'☀️',diagonal:true,vx:-2.4,vy:.7+Math.random()*.7});
     }else if(name.includes('金星')){
       // Venus: thick gas banks; visual pressure and drifting hazards.
-      if(eventPhase%115===0)gasClouds.push({x:W+120,y:70+Math.random()*240,r:62+Math.random()*45,vx:1.05+Math.random()*.45});
+      if(eventPhase%115===0)gasClouds.push({x:W+120,y:70+Math.random()*240,r:62+Math.random()*45,vx:1.05+Math.random()*.45,a:.14+Math.random()*.06,color:S().goodColor||'#ffb45f'});
       if(eventPhase%170===0)hazards.push({x:p.x+W+100,y:groundY()-92,w:48,h:48,got:false,symbol:'🫧'});
     }else if(name.includes('火星')){
       // Mars: red dust + meteor bursts.
@@ -3700,9 +3726,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Add unmistakable planet-specific scenery over the existing background. */
-  const v79PrevBackground=drawBackground;
+  const v80PrevBackground=drawBackground;
   drawBackground=function(){
-    v79PrevBackground();
+    v80PrevBackground();
     if(system!==0)return;
     const name=S().name, now=performance.now();
     ctx.save();
@@ -3728,12 +3754,12 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v79: morning Earth / rays / Venus floor / meteor direction === */
+/* === v80: morning Earth / rays / Venus floor / meteor direction === */
 (function(){
-  let v79RayUntil=0, v79RayKind='', v79RayY=0, v79RayPhase=0;
+  let v80RayUntil=0, v80RayKind='', v80RayY=0, v80RayPhase=0;
 
   /* Meteor emoji orientation: rotate so the fire trail points downward. */
-  const v79PrevDrawHazard=drawHazard;
+  const v80PrevDrawHazard=drawHazard;
   drawHazard=function(h){
     if(h && h.symbol==='☄️'){
       const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;
@@ -3745,13 +3771,13 @@ let v67InsuranceGraceUntil=0;
       ctx.restore();
       return;
     }
-    v79PrevDrawHazard(h);
+    v80PrevDrawHazard(h);
   };
 
   /* Venus always has a visible solid floor. */
-  const v79PrevGround=drawGround;
+  const v80PrevGround=drawGround;
   drawGround=function(){
-    v79PrevGround();
+    v80PrevGround();
     if(system===0 && S().name.includes('金星')){
       const gy=groundY(), g=ctx.createLinearGradient(0,gy,0,H);
       g.addColorStop(0,'#d89a62');g.addColorStop(1,'#74402b');
@@ -3764,9 +3790,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Morning Earth: sunrise, pale blue sky, soft clouds. */
-  const v79PrevBg=drawBackground;
+  const v80PrevBg=drawBackground;
   drawBackground=function(){
-    v79PrevBg();
+    v80PrevBg();
     if(v63IsOpeningEarth()){
       ctx.save();
       const dawn=ctx.createLinearGradient(0,0,0,H*.72);
@@ -3786,46 +3812,46 @@ let v67InsuranceGraceUntil=0;
 
     /* Active solar/cosmic radiation beam. */
     const now=performance.now();
-    if(now<v79RayUntil){
-      const life=(v79RayUntil-now)/1150;
+    if(now<v80RayUntil){
+      const life=(v80RayUntil-now)/1150;
       ctx.save();ctx.globalCompositeOperation='screen';
-      const isSolar=v79RayKind==='solar';
+      const isSolar=v80RayKind==='solar';
       ctx.globalAlpha=.35+.38*Math.abs(Math.sin(now/80));
       ctx.strokeStyle=isSolar?'#fff19a':'#a8f7ff';
       ctx.shadowColor=isSolar?'#ffd43b':'#69eaff';
       ctx.shadowBlur=24;ctx.lineWidth=5;
-      ctx.beginPath();ctx.moveTo(-80,v79RayY-120);ctx.lineTo(W+80,v79RayY+80);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-80,v80RayY-120);ctx.lineTo(W+80,v80RayY+80);ctx.stroke();
       ctx.lineWidth=1.5;ctx.globalAlpha=.65;
-      for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-50,v79RayY-90+i*14);ctx.lineTo(W+50,v79RayY+65+i*14);ctx.stroke();}
+      for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(-50,v80RayY-90+i*14);ctx.lineTo(W+50,v80RayY+65+i*14);ctx.stroke();}
       ctx.restore();
     }
   };
 
   /* More radiation action without turning every second into a popup. */
-  const v79PrevSpawn=spawnEvents;
+  const v80PrevSpawn=spawnEvents;
   spawnEvents=function(){
-    v79PrevSpawn();
+    v80PrevSpawn();
     if(paused||systems[system]?.dream)return;
     const name=S().name, rank=Math.max(0,systemDistanceRank[system]??0);
     const solar = system===0 && (name.includes('太陽')||name.includes('水星')||name.includes('金星'));
     const cosmic = rank>=4;
     const cadence = solar ? 155 : (cosmic ? 330 : 520);
     if(eventPhase%cadence===0){
-      v79RayKind=solar?'solar':'cosmic';
-      v79RayY=90+Math.random()*(H-270);
-      v79RayUntil=performance.now()+1150;
-      v79RayPhase++;
-      if(v79RayPhase%2===0){
-        hazards.push({x:p.x+W+80,y:Math.max(40,v79RayY-25),w:36,h:36,got:false,symbol:'⚡',diagonal:true,vx:-3.2,vy:.45});
+      v80RayKind=solar?'solar':'cosmic';
+      v80RayY=90+Math.random()*(H-270);
+      v80RayUntil=performance.now()+1150;
+      v80RayPhase++;
+      if(v80RayPhase%2===0){
+        hazards.push({x:p.x+W+80,y:Math.max(40,v80RayY-25),w:36,h:36,got:false,symbol:'⚡',diagonal:true,vx:-3.2,vy:.45});
       }
       eventEl.textContent=solar?'☀️ SOLAR RAY — 太陽線が走る！':'⚡ COSMIC RAY — 宇宙線が走る！';
     }
   };
 
   /* Keep the explicit gravity label even after later HUD wrappers run. */
-  const v79PrevSync=syncHUD;
+  const v80PrevSync=syncHUD;
   syncHUD=function(force){
-    v79PrevSync(force);
+    v80PrevSync(force);
     if(system===0&&stage===0)return;
     const s=S();
     const hint=astroInfo?.querySelector('.distanceHint');
@@ -3836,10 +3862,10 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v79: top HUD spacing / Earth foreground / Venus floor / meteor angle === */
+/* === v80: top HUD spacing / Earth foreground / Venus floor / meteor angle === */
 (function(){
   /* Meteor head should point upper-right. */
-  const v79PrevDrawHazard=drawHazard;
+  const v80PrevDrawHazard=drawHazard;
   drawHazard=function(h){
     if(h && h.symbol==='☄️'){
       const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;
@@ -3851,13 +3877,13 @@ let v67InsuranceGraceUntil=0;
       ctx.restore();
       return;
     }
-    v79PrevDrawHazard(h);
+    v80PrevDrawHazard(h);
   };
 
   /* Venus floor: stage can live in a reordered system, so key off the stage name only. */
-  const v79PrevGround=drawGround;
+  const v80PrevGround=drawGround;
   drawGround=function(){
-    v79PrevGround();
+    v80PrevGround();
     if(S().name.includes('金星')){
       const gy=groundY(), g=ctx.createLinearGradient(0,gy,0,H);
       g.addColorStop(0,'#dca06a');g.addColorStop(1,'#713b27');
@@ -3874,9 +3900,9 @@ let v67InsuranceGraceUntil=0;
   };
 
   /* Redraw Earth buildings/trees AFTER sunrise glow, so light stays behind them. */
-  const v79PrevBg=drawBackground;
+  const v80PrevBg=drawBackground;
   drawBackground=function(){
-    v79PrevBg();
+    v80PrevBg();
     if(v63IsOpeningEarth()){
       const gy=groundY();
       ctx.save();
@@ -3900,67 +3926,213 @@ let v67InsuranceGraceUntil=0;
 })();
 
 
-/* === v79: safe cleanup === */
+/* === v86: keep Bone Charge HUD === */
+(function(){ /* intentionally retained */ })();
+
+
+/* === v82: Venus crash fix + defensive gas rendering === */
 (function(){
-  try{
-    const boneHud=document.getElementById('v70BoneHud');
-    if(boneHud) boneHud.remove();
-  }catch(e){}
+  const v82PrevDrawCosmic=drawCosmic;
+  drawCosmic=function(){
+    for(const g of gasClouds){
+      if(!g) continue;
+      if(!g.color) g.color=S()?.goodColor||'#d693ff';
+      if(!Number.isFinite(g.a)) g.a=.14;
+      if(!Number.isFinite(g.r) || g.r<=0) g.r=72;
+      if(!Number.isFinite(g.x)) g.x=W+120;
+      if(!Number.isFinite(g.y)) g.y=H*.32;
+    }
+    try{ v82PrevDrawCosmic(); }
+    catch(err){
+      console.error('v82 drawCosmic recovered',err);
+      gasClouds=[];
+    }
+  };
 })();
 
-
-/* === v79: Venus hard floor guarantee === */
+/* === v81: Venus player visibility + collision guard === */
 (function(){
-  const v79PrevUpdate=update;
+  const v81PrevUpdate=update;
   update=function(now,dt){
-    v79PrevUpdate(now,dt);
+    v81PrevUpdate(now,dt);
     if(S()?.name?.includes('金星')){
-      const floor=H-155;
-      if(p.y+p.h>=floor || !Number.isFinite(p.y)){
-        p.y=floor-p.h;
+      const gy=groundY();
+      if(!Number.isFinite(p.x)) p.x=115;
+      if(!Number.isFinite(camera)) camera=0;
+      if(!Number.isFinite(p.y) || p.y+p.h>gy){
+        p.y=gy-p.h;
         p.vy=0;
         p.on=true;
         jumps=0;
       }
-    }
-  };
-
-  const v79PrevDrawPlayer=drawPlayer;
-  drawPlayer=function(){
-    if(S()?.name?.includes('金星')){
-      const floor=H-155;
-      ctx.save();
-
-      const g=ctx.createLinearGradient(0,floor,0,H);
-      g.addColorStop(0,'#e3aa72');
-      g.addColorStop(.25,'#b96f48');
-      g.addColorStop(1,'#693522');
-      ctx.fillStyle=g;
-      ctx.fillRect(0,floor,W,H-floor+2);
-
-      ctx.fillStyle='rgba(255,235,179,.9)';
-      ctx.fillRect(0,floor,W,5);
-
-      ctx.globalAlpha=.25;
-      ctx.fillStyle='#4f271b';
-      for(let i=0;i<12;i++){
-        const x=((i*103-camera*.42)%(W+130)+W+130)%(W+130)-65;
-        ctx.beginPath();
-        ctx.ellipse(x,floor+22+(i%3)*20,30+(i%3)*7,8+(i%2)*3,0,0,Math.PI*2);
-        ctx.fill();
-      }
-      ctx.globalAlpha=1;
-      ctx.restore();
-
-      if(!Number.isFinite(p.y) || p.y+p.h>floor){
-        p.y=floor-p.h;
-        p.vy=0;
-        p.on=true;
+      const sx=p.x-camera;
+      if(!Number.isFinite(sx) || sx < -p.w || sx > W+p.w){
+        camera=Math.max(0,p.x-W*.34);
       }
     }
-    v79PrevDrawPlayer();
   };
 })();
+
+/* === v88: longer arrival ride + BYOOON warp === */
+let v86Ride=null,v86Rocks=[],v86Ships=[];
+let v86NextRockX=Infinity,v86ShipX=Infinity,v86ShipSpawned=false,v86ShipWillSpawn=false;
+let v86RideBadge=document.getElementById('v86RideBadge');
+if(!v86RideBadge){v86RideBadge=document.createElement('div');v86RideBadge.id='v86RideBadge';wrap.appendChild(v86RideBadge);}
+
+/* v88: visual-only warp layer. Gameplay timing stays in update(). */
+let v88WarpFx=document.getElementById('v88WarpFx');
+if(!v88WarpFx){
+  v88WarpFx=document.createElement('div');
+  v88WarpFx.id='v88WarpFx';
+  wrap.appendChild(v88WarpFx);
+}
+function v88StartWarpFx(){
+  wrap.classList.remove('v88Warp');
+  void wrap.offsetWidth;
+  wrap.classList.add('v88Warp');
+  // visual cleanup only; stage progression does not depend on this timer
+  setTimeout(()=>wrap.classList.remove('v88Warp'),980);
+}
+
+function v86SetBadge(t,on=true){v86RideBadge.textContent=t||'';v86RideBadge.classList.toggle('on',!!on)}
+function v86ClearRide(){v86Ride=null;v86SetBadge('',false)}
+function v86CanRide(){return !paused&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM&&!systems[system]?.secret&&!systems[system]?.dream&&!systems[system]?.endless}
+function v86Advance(steps=1){
+  let ns=stage;
+  for(let i=0;i<steps;i++)ns=(ns+1)%systems[system].stages.length;
+  return ns;
+}
+function v86BeginTransit(type,now,steps=1){
+  if(!v86CanRide()||v86Ride?.type==='transit')return false;
+  v86Ride={type:'transit',kind:type,until:now+2000,fromSystem:system,fromStage:stage,steps};
+  satelliteUntil=Math.max(satelliteUntil,now+2050);invincibleUntil=Math.max(invincibleUntil,now+2200);
+  wormholeActive=false;blackHoleActive=false;
+  v86SetBadge(type==='satellite'?'🐕 → 🛰️  NEXT STAR':'🐕 → 🚀  SPACE HOP');
+  showToast(type==='satellite'?'🛰️ ポンッ！ 2秒だけ衛星ライド':'🚀 ポンッ！ 宇宙船に乗った！',900);
+  return true;
+}
+function v86FinishTransit(){
+  if(!v86Ride||v86Ride.type!=='transit')return;
+  const r=v86Ride;v86ClearRide();
+  if(system!==r.fromSystem||stage!==r.fromStage)return;
+
+  const from=S()?.name||'';
+  stage=v86Advance(r.steps||1);
+  stageStart();
+  const to=S()?.name||'';
+
+  // v87: 衛星で到着した時も、次の星の上空を約2秒そのままライドする。
+  if(r.kind==='satellite'){
+    const arriveNow=performance.now();
+    v86Ride={
+      type:'arrival',
+      kind:'satellite',
+      until:arriveNow+3600,
+      fromSystem:system,
+      fromStage:stage,
+      steps:0
+    };
+    satelliteUntil=Math.max(satelliteUntil,arriveNow+3650);
+    invincibleUntil=Math.max(invincibleUntil,arriveNow+3800);
+    p.y=Math.max(40,groundY()-175);
+    p.vy=0;
+    p.on=false;
+    v86SetBadge('🛰️  ARRIVAL RIDE  ·  3.6 SEC');
+    showToast(`🛰️ ${to} に到着！ しばらく衛星で流れる〜`,1350);
+  }else{
+    showToast(`🚀 ${to} に到着！`,1150);
+  }
+
+  eventEl.textContent=`${r.kind==='satellite'?'🛰️ SATELLITE':'🚀 SPACE SHIP'} ✦ ${from} → ${to}`;
+}
+function v86SpawnRock(){
+  if(v86Rocks.length)return;const lanes=[groundY()-82,groundY()-126,groundY()-170];
+  v86Rocks.push({x:p.x+W+150,y:lanes[Math.floor(Math.random()*lanes.length)],v:2.5+Math.random()*1.1,w:64,h:48,phase:Math.random()*6.2,got:false,rot:(Math.random()-.5)*.018});
+  eventEl.textContent='🪨 DRIFT ROCK ✦ 乗れる岩が流れてきた';
+}
+function v86SpawnShip(){
+  if(v86Ships.length)return;const lanes=[groundY()-112,groundY()-165];
+  v86Ships.push({x:p.x+W+175,y:lanes[Math.floor(Math.random()*lanes.length)],v:2.9+Math.random()*.9,w:76,h:55,phase:Math.random()*6.2,got:false});
+  eventEl.textContent='🚀 SPACE SHIP ✦ 乗ると先へ進める';showToast('🚀 宇宙船が流れてきた！ 乗る？',1000);
+}
+
+const v86PrevStageStart=stageStart;
+stageStart=function(){
+  v86ClearRide();v86Rocks=[];v86Ships=[];
+  const out=v86PrevStageStart();
+  v86NextRockX=worldLength*(.34+Math.random()*.10);
+  v86ShipX=worldLength*(.57+Math.random()*.10);
+  const rr=Math.max(0,systemDistanceRank[system]??0)+stage;
+  v86ShipWillSpawn=Math.random()<Math.min(.58,.26+rr*.014);v86ShipSpawned=false;
+  return out;
+};
+
+const v86PrevUpdate=update;
+update=function(now,dt){
+  const bs=system,bt=stage;
+  v86PrevUpdate(now,dt);
+  if(bs!==system||bt!==stage){v86ClearRide();v86Rocks=[];v86Ships=[];return}
+  if(!v86CanRide()&&!(v86Ride&&v86Ride.type==='transit'))return;
+  try{
+    if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=720){
+      v86Ride.warpStarted=true;
+      v86SetBadge(v86Ride.kind==='satellite'?'🛰️  BYOOON WARP ✦':'🚀  BYOOON WARP ✦');
+      v88StartWarpFx();
+    }
+    if(v86Ride?.type==='transit'&&now>=v86Ride.until){v86FinishTransit();return}
+    if(v86Ride?.type==='arrival'&&now>=v86Ride.until){
+      v86ClearRide();
+      showToast('🐕 ポンッ！ 衛星から着地',700);
+    }
+    if(v86Ride?.type==='rock'&&(now>=v86Ride.until||p.x>=worldLength*.78)){v86ClearRide();showToast('🐕 ポンッ！ 着地',650)}
+
+    // If nothing was chosen, a light ship hop appears near the end so the stage never hard-cuts.
+    if(!v86Ride&&p.x>=worldLength*.84)v86BeginTransit('ship',now,1);
+
+    if(!v86Ride&&!v86Rocks.length&&p.x>=v86NextRockX&&p.x<worldLength*.76){v86SpawnRock();v86NextRockX=p.x+760+Math.random()*430}
+    if(!v86ShipSpawned&&v86ShipWillSpawn&&p.x>=v86ShipX&&p.x<worldLength*.78){v86ShipSpawned=true;v86SpawnShip()}
+
+    for(const r of v86Rocks){
+      if(r.got)continue;r.x-=r.v*dt;r.y+=Math.sin(now/210+r.phase)*.12*dt;
+      if(rectHit(playerRect(),{x:r.x,y:r.y,w:r.w,h:r.h})){
+        r.got=true;if(!v86Ride){v86Ride={type:'rock',kind:'rock',until:now+3900,fromSystem:system,fromStage:stage};invincibleUntil=Math.max(invincibleUntil,now+4000);v86SetBadge('🐕 → 🪨  ROCK SURF');showToast('🪨 ポンッ！ 岩に乗って高速移動！',950)}
+      }
+    }
+    v86Rocks=v86Rocks.filter(r=>!r.got&&r.x>p.x-W-260);
+
+    for(const sh of v86Ships){
+      if(sh.got)continue;sh.x-=sh.v*dt;sh.y+=Math.sin(now/190+sh.phase)*.14*dt;
+      if(rectHit(playerRect(),{x:sh.x,y:sh.y,w:sh.w,h:sh.h})){
+        sh.got=true;const steps=Math.random()<.22?2:1;if(v86BeginTransit('ship',now,steps)&&steps===2)showToast('🚀 EXPRESS！ ちょっと遠くまで！',900)
+      }
+    }
+    v86Ships=v86Ships.filter(sh=>!sh.got&&sh.x>p.x-W-280);
+
+    if(v86Ride?.type==='rock')p.x+=2.6*dt;
+    else if(v86Ride?.type==='transit')p.x+=.20*dt;
+    else if(v86Ride?.type==='arrival')p.x+=.12*dt;
+  }catch(err){console.error('v86 ride recovered',err);v86ClearRide();v86Rocks=[];v86Ships=[]}
+};
+
+const v86PrevDrawGood=drawGood;
+drawGood=function(it){
+  if(it?.rareKind&&!it.got){
+    const sx=it.x-camera;if(sx<-90||sx>W+100)return;const icon=it.rareKind==='magnet'?'🧲':it.rareKind==='rainbow'?'🌈':'🛸';const glow=it.rareKind==='magnet'?'#bffcff':it.rareKind==='rainbow'?'#fff4a4':'#aee9ff';const bob=Math.sin(performance.now()/180+(it.phase||0))*9;
+    ctx.save();ctx.translate(sx,it.y+bob);ctx.globalAlpha=.98;ctx.shadowColor=glow;ctx.shadowBlur=24;ctx.font='42px system-ui';ctx.fillText(icon,-21,15);ctx.restore();return;
+  }
+  return v86PrevDrawGood(it);
+};
+
+const v86PrevDrawPlayer=drawPlayer;
+drawPlayer=function(){
+  const now=performance.now();
+  ctx.save();
+  for(const r of v86Rocks){const sx=r.x-camera;if(sx<-100||sx>W+120||r.got)continue;ctx.save();ctx.translate(sx+30,r.y+30);ctx.rotate(now*(r.rot||.008));ctx.shadowColor='#b9a58d';ctx.shadowBlur=12;ctx.font='52px system-ui';ctx.fillText('🪨',-27,18);ctx.restore()}
+  for(const sh of v86Ships){const sx=sh.x-camera;if(sx<-120||sx>W+150||sh.got)continue;ctx.save();ctx.translate(sx,sh.y);ctx.rotate(-.08+Math.sin(now/260+sh.phase)*.035);ctx.shadowColor='#8cecff';ctx.shadowBlur=22;ctx.font='62px system-ui';ctx.fillText('🚀',0,48);ctx.restore()}
+  if(v86Ride?.type==='rock'){const sx=p.x-camera;ctx.shadowColor='#d8c5a6';ctx.shadowBlur=16;ctx.font='64px system-ui';ctx.fillText('🪨',sx-22,p.y+76)}
+  if(v86Ride?.type==='transit'&&v86Ride.kind==='ship'){const sx=p.x-camera;ctx.save();ctx.translate(sx-24,p.y+72);ctx.rotate(-.08);ctx.shadowColor='#8cecff';ctx.shadowBlur=24;ctx.font='66px system-ui';ctx.fillText('🚀',0,0);ctx.restore()}
+  ctx.restore();v86PrevDrawPlayer();
+};
 
 /* Initialize the opening after all v63 wrappers are ready. */
 if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌍 EARTH / NORMAL DAY';}
@@ -3977,7 +4149,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 #v63RadioScene.reply .v63RadioIcon{animation:none;filter:drop-shadow(0 0 20px #b9fbff)}
 @media(max-width:520px){#v63RadioScene .v65RadioReply{min-width:160px;padding:10px 17px;font-size:11px}}
 </style>
-<style id="v79-final-ui">
+<style id="v80-final-ui">
 /* Controls: three separated buttons with breathing room on phones. */
 .controls{
   position:absolute!important;
@@ -4006,7 +4178,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 #special{order:1!important}
 #laser{order:2!important;display:flex!important;background:linear-gradient(180deg,#f8ffe7,#d9ffad 46%,#91e95d 100%)!important;border-color:#eaffb9!important;box-shadow:0 5px 0 rgba(46,90,24,.78),0 0 18px rgba(151,255,91,.25)!important}
 #jump{order:3!important;border-radius:999px!important}
-#laser.v79BoneWeapon{background:linear-gradient(180deg,#fffbdc,#eaff88 45%,#9bdb3e 100%)!important;color:#24330d!important;box-shadow:0 5px 0 #5e791b,0 0 28px rgba(206,255,91,.7)!important}
+#laser.v80BoneWeapon{background:linear-gradient(180deg,#fffbdc,#eaff88 45%,#9bdb3e 100%)!important;color:#24330d!important;box-shadow:0 5px 0 #5e791b,0 0 28px rgba(206,255,91,.7)!important}
 #v70BoneHud{bottom:104px!important;left:14px!important;z-index:8!important}
 @media(max-width:520px){
  .controls{width:90vw!important;gap:13px!important;bottom:max(18px,env(safe-area-inset-bottom))!important}
@@ -4015,8 +4187,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
  #v70BoneHud{bottom:99px!important;left:10px!important;max-width:145px!important}
 }
 </style>
-</body>
-</html>
+
 
 <style>#powerBox,#secretBadge,#sparkBadge{display:none!important}#mission{top:84px;max-width:54%;line-height:1.35}#event{top:126px;max-width:54%}#astroInfo{top:10px;right:10px;width:min(45%,245px);font-size:11px}#points{font-size:18px!important}.stack #food,.stack #points{flex:0 0 auto}@media(max-width:520px){#hud{width:51%;left:7px;top:7px}.stack{gap:4px}.pill{font-size:9px;padding:5px 6px}#location{font-size:9px}#points{font-size:15px!important;padding:6px 8px}#astroInfo{width:46%;right:7px;top:7px;font-size:9px;line-height:1.35;padding:7px 8px}.distanceBig{font-size:13px}.distanceHint{font-size:9px}#mission{top:82px;left:7px;max-width:58%;font-size:9px;padding:6px 8px}#event{top:122px;left:7px;max-width:58%;font-size:9px;padding:6px 8px}}</style>
 
@@ -6558,7 +6729,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 
 
 
-<style id="v79-absolute-final-ui">
+<style id="v80-absolute-final-ui">
 /* Three controls: deliberately narrower with real gutters. */
 .controls{
   width:min(374px,88vw)!important;
@@ -6586,7 +6757,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
   box-shadow:inset 0 2px 0 #fff,inset 0 11px 16px rgba(255,255,255,.52),inset 0 -10px 16px rgba(39,105,24,.20),0 0 0 2px rgba(151,255,105,.28),0 0 19px rgba(117,240,74,.58),0 7px 0 #315b27!important;
 }
 #jump{order:3!important}
-#laser.v79BoneWeapon{
+#laser.v80BoneWeapon{
   background:linear-gradient(180deg,#fffbe5 0%,#efffa6 30%,#b8ef52 68%,#7fc635 100%)!important;
 }
 #v70BoneHud{bottom:108px!important}
@@ -6601,7 +6772,7 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 
 
 
-<style id="v79-top-hud-spacing">
+<style id="v80-top-hud-spacing">
 /* Top HUD: real gutters, no touching/overlap. */
 #hud{
   top:8px!important;left:8px!important;
@@ -6655,14 +6826,14 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 </style>
 
 
-<style id="v79-bone-radar-cleanup">
+<style id="v80-bone-radar-cleanup">
 #v70BoneHud,[id*="BoneHud"],.boneHud,.bone-radar,[data-bone-radar]{
   display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
 }
 </style>
 
 
-<style id="v79-final-stability-ui">
+<style id="v80-final-stability-ui">
 /* Bone radar is gone completely, including the old top-right route badge. */
 #v70BoneHud,#v63RadioBadge,[id*="BoneHud"],.boneHud,.bone-radar,[data-bone-radar]{
   display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
@@ -6695,3 +6866,76 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 }
 </style>
 
+
+<style id="v82-venus-player-lane">
+/* v82: keep the left-side player lane visible on compact screens. */
+@media (max-width:520px){
+  #mission,#event{left:auto!important;right:8px!important;max-width:44%!important}
+  #mission{top:158px!important}
+  #event{top:198px!important}
+}
+@media (max-width:520px) and (max-height:330px){
+  #mission{top:118px!important;max-width:42%!important}
+  #event{top:154px!important;max-width:42%!important}
+}
+</style>
+<style id="v86-final-overrides">
+#v70BoneHud{display:block!important;visibility:visible!important;pointer-events:none!important}
+#v86RideBadge{position:absolute;z-index:92;left:50%;top:18%;transform:translateX(-50%);display:none;pointer-events:none;padding:7px 12px;border-radius:999px;background:rgba(9,13,29,.74);border:1px solid rgba(255,255,255,.5);color:#fff;font:900 10px/1.1 system-ui,sans-serif;letter-spacing:.06em;white-space:nowrap;text-shadow:0 1px 5px rgba(0,0,0,.7);box-shadow:0 8px 28px rgba(0,0,0,.28)}
+#v86RideBadge.on{display:block;animation:v86RidePulse .8s ease-in-out infinite alternate}
+@keyframes v86RidePulse{from{transform:translateX(-50%) scale(.98);opacity:.82}to{transform:translateX(-50%) scale(1.03);opacity:1}}
+</style>
+
+
+<style id="v88-warp-style">
+#v88WarpFx{
+  position:absolute;
+  z-index:9;
+  inset:-12%;
+  pointer-events:none;
+  opacity:0;
+  transform-origin:50% 50%;
+  background:
+    radial-gradient(ellipse at center,
+      rgba(255,255,255,.92) 0 1%,
+      rgba(120,235,255,.34) 8%,
+      rgba(139,111,255,.20) 19%,
+      rgba(0,0,0,0) 48%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 7%,
+      rgba(255,255,255,.12) 7.3% 7.8%,
+      transparent 8.2% 14%
+    );
+  mix-blend-mode:screen;
+  filter:blur(1px);
+}
+#wrap.v88Warp #game{
+  transform-origin:50% 50%;
+  animation:v88CanvasByooon .94s cubic-bezier(.12,.72,.18,1) both;
+}
+#wrap.v88Warp #v88WarpFx{
+  animation:v88WarpStreak .94s cubic-bezier(.12,.72,.18,1) both;
+}
+@keyframes v88CanvasByooon{
+  0%   {transform:scaleX(1) scaleY(1);filter:brightness(1) blur(0)}
+  22%  {transform:scaleX(1.05) scaleY(.98);filter:brightness(1.08) blur(.3px)}
+  52%  {transform:scaleX(1.24) scaleY(.82);filter:brightness(1.45) blur(1.1px)}
+  68%  {transform:scaleX(1.12) scaleY(.91);filter:brightness(1.22) blur(.5px)}
+  100% {transform:scaleX(1) scaleY(1);filter:brightness(1) blur(0)}
+}
+@keyframes v88WarpStreak{
+  0%   {opacity:0;transform:scaleX(.18) scaleY(.72)}
+  20%  {opacity:.28}
+  52%  {opacity:.94;transform:scaleX(1.8) scaleY(.84)}
+  72%  {opacity:.48;transform:scaleX(2.25) scaleY(1)}
+  100% {opacity:0;transform:scaleX(2.6) scaleY(1.08)}
+}
+@media(max-width:520px){
+  #wrap.v88Warp #game{animation-duration:.88s}
+  #wrap.v88Warp #v88WarpFx{animation-duration:.88s}
+}
+</style>
+
+</body>
+</html>
