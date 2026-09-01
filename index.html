@@ -952,10 +952,10 @@ function makeWorld(){
  const isSun=s.name.includes('太陽'),isMars=s.name.includes('火星'),isEarth=system===0&&stage===0,isMoon=s.name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth){
    // v99: 地球は「骨を追って散歩」がちゃんと遊びになるくらい増量。
-   for(let i=0;i<16;i++){
+   for(let i=0;i<22;i++){
      items.push({
-       x:250+i*178+(i%3)*18,
-       y:groundY()-48-(i%4)*18-Math.random()*18,
+       x:220+i*142+(i%4)*14,
+       y:groundY()-46-(i%5)*16-Math.random()*16,
        r:18,got:false,color:'#ffd65a',food:true
      });
    }
@@ -4138,7 +4138,7 @@ function v89StartWarpFx(){
   v89SeedWarpStars();
   v89WarpCanvas.classList.add('on');
   const started=performance.now();
-  const dur=3920;
+  const dur=4920;
   const ctx=v89WarpCanvas.getContext('2d');
   const r=wrap.getBoundingClientRect();
 
@@ -4220,8 +4220,8 @@ function v86BeginTransit(type,now,steps=1){
   if(!v86CanRide()||v86Ride)return false;
   type='satellite'; // v92: inter-star travel is satellite-only
   v94SatellitePending=false;
-  v86Ride={type:'transit',kind:'satellite',until:now+5000,fromSystem:system,fromStage:stage,steps};
-  satelliteUntil=Math.max(satelliteUntil,now+5050);invincibleUntil=Math.max(invincibleUntil,now+5200);
+  v86Ride={type:'transit',kind:'satellite',until:now+6000,fromSystem:system,fromStage:stage,steps};
+  satelliteUntil=Math.max(satelliteUntil,now+6050);invincibleUntil=Math.max(invincibleUntil,now+6200);
   wormholeActive=false;blackHoleActive=false;
   v86SetBadge('🐕 → 🛰️  NEXT STAR');
   showToast('🛰️ ポンッ！ 衛星で加速するよ',900);
@@ -4281,7 +4281,7 @@ update=function(now,dt){
   if(bs!==system||bt!==stage){v86ClearRide();v86Rocks=[];v86Ships=[];return}
   if(!v86CanRide()&&!(v86Ride&&v86Ride.type==='transit'))return;
   try{
-    if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=3920){
+    if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=4920){
       v86Ride.warpStarted=true;
       v86SetBadge('🛰️  ACCEL WARP ✦');
       v89StartWarpFx();
@@ -4449,7 +4449,7 @@ syncHUD=function(force=false){
 
 
 
-/* === v101: smooth hit reaction + starry night Earth === */
+/* === v102: night shooting stars + smoother interplanet travel === */
 (function(){
   /* 録画で見えた不自然な上下運動は、被弾処理が毎回 p.vy=-7 前後を
      入れて犬を強制ジャンプさせていたのが原因。
@@ -4596,6 +4596,101 @@ syncHUD=function(force=false){
 })();
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
+
+/* === v102 late patch: travel stabilization + Earth shooting stars === */
+(function(){
+  let v102ArrivalGraceUntil=0;
+
+  // 星移動中は余計な当たり判定やスポーンを抑えて、月→火星の変なループを防ぐ。
+  const v102PrevSpawnEvents=spawnEvents;
+  spawnEvents=function(){
+    if(performance.now()<v102ArrivalGraceUntil)return;
+    v102PrevSpawnEvents();
+  };
+
+  const v102PrevBeginTransit=v86BeginTransit;
+  v86BeginTransit=function(type,now,steps=1){
+    const ok=v102PrevBeginTransit(type,now,steps);
+    if(!ok)return false;
+
+    // 旅立ちの瞬間に周辺の当たり判定を整理して、同じ動きの繰り返しを防ぐ。
+    satellites=[];
+    hazards=[];
+    swarm=[];
+    secretPickups=[];
+    bosses=[];
+    p.vy=0;
+    p.on=false;
+    return true;
+  };
+
+  const v102PrevFinishTransit=v86FinishTransit;
+  v86FinishTransit=function(){
+    v102PrevFinishTransit();
+    if(v86Ride?.type==='arrival'){
+      // 到着して少しの間は、火星の隕石などを出さずに衛星ライドを優先する。
+      v102ArrivalGraceUntil=performance.now()+3300;
+    }else{
+      v102ArrivalGraceUntil=0;
+    }
+  };
+
+  const v102PrevUpdate=update;
+  update=function(now,dt){
+    v102PrevUpdate(now,dt);
+
+    // ライド中はダメージ系との再衝突を避ける。
+    if(v86Ride){
+      hazards=hazards.filter(h=>!(rectHit(playerRect(),{x:h.x,y:h.y,w:h.w,h:h.h})));
+      swarm=swarm.filter(o=>!(rectHit(playerRect(),{x:o.x,y:o.y,w:o.w,h:o.h})));
+    }
+  };
+
+  // 地球の夜空だけ、時々流れ星を流す。
+  const v102PrevDrawBackground=drawBackground;
+  drawBackground=function(){
+    v102PrevDrawBackground();
+    if(!v63IsOpeningEarth())return;
+
+    const t=performance.now()/1000;
+    const gy=groundY();
+    ctx.save();
+    ctx.lineCap='round';
+
+    for(let i=0;i<3;i++){
+      const cycle=6.8+i*1.7;
+      const phase=(t+i*1.83)%cycle;
+      if(phase<1.15){
+        const p1=phase/1.15;
+        const sx=W*(.82-.46*p1)+i*18;
+        const sy=90+i*42+p1*38;
+        const len=34+42*p1;
+        ctx.globalAlpha=.10+.75*(1-p1*.15);
+        ctx.strokeStyle='#fff';
+        ctx.shadowColor='#cfe9ff';
+        ctx.shadowBlur=12;
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        ctx.moveTo(sx,sy);
+        ctx.lineTo(sx+len,sy-len*.34);
+        ctx.stroke();
+
+        ctx.fillStyle='#fff';
+        ctx.beginPath();
+        ctx.arc(sx,sy,2.2,0,Math.PI*2);
+        ctx.fill();
+      }
+    }
+
+    // 月の近くに小さいきらめき
+    ctx.globalAlpha=.65+.25*Math.sin(t*2.2);
+    ctx.fillStyle='#fff';
+    ctx.font='14px system-ui';
+    ctx.fillText('✦',W*.70,Math.max(62,gy*.18));
+    ctx.restore();
+  };
+})();
+
 let v99EarthSatelliteNextAt=0;
 let v99SpaceSatelliteDueAt=0;
 let v99WhiteHoleActive=false;
