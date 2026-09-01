@@ -3973,25 +3973,108 @@ let v67InsuranceGraceUntil=0;
   };
 })();
 
-/* === v88: longer arrival ride + BYOOON warp === */
+/* === v91: dark warp + clearer current location === */
 let v86Ride=null,v86Rocks=[],v86Ships=[];
 let v86NextRockX=Infinity,v86ShipX=Infinity,v86ShipSpawned=false,v86ShipWillSpawn=false;
 let v86RideBadge=document.getElementById('v86RideBadge');
 if(!v86RideBadge){v86RideBadge=document.createElement('div');v86RideBadge.id='v86RideBadge';wrap.appendChild(v86RideBadge);}
 
-/* v88: visual-only warp layer. Gameplay timing stays in update(). */
-let v88WarpFx=document.getElementById('v88WarpFx');
-if(!v88WarpFx){
-  v88WarpFx=document.createElement('div');
-  v88WarpFx.id='v88WarpFx';
-  wrap.appendChild(v88WarpFx);
+/* v89: warp = speed increases and background stars stretch into lines.
+   Visual-only overlay; gameplay timing stays in update(). */
+let v89WarpCanvas=document.getElementById('v89WarpCanvas');
+if(!v89WarpCanvas){
+  v89WarpCanvas=document.createElement('canvas');
+  v89WarpCanvas.id='v89WarpCanvas';
+  wrap.appendChild(v89WarpCanvas);
 }
-function v88StartWarpFx(){
-  wrap.classList.remove('v88Warp');
-  void wrap.offsetWidth;
-  wrap.classList.add('v88Warp');
-  // visual cleanup only; stage progression does not depend on this timer
-  setTimeout(()=>wrap.classList.remove('v88Warp'),980);
+let v89WarpRAF=0;
+let v89WarpStars=[];
+function v89ResizeWarpCanvas(){
+  const r=wrap.getBoundingClientRect();
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  v89WarpCanvas.width=Math.max(1,Math.floor(r.width*dpr));
+  v89WarpCanvas.height=Math.max(1,Math.floor(r.height*dpr));
+  v89WarpCanvas.style.width=r.width+'px';
+  v89WarpCanvas.style.height=r.height+'px';
+  const c=v89WarpCanvas.getContext('2d');
+  c.setTransform(dpr,0,0,dpr,0,0);
+}
+function v89SeedWarpStars(){
+  const r=wrap.getBoundingClientRect();
+  const count=Math.max(55,Math.min(110,Math.floor(r.width/7)));
+  v89WarpStars=Array.from({length:count},()=>({
+    x:Math.random()*r.width,
+    y:18+Math.random()*Math.max(80,r.height*.72),
+    z:.25+Math.random()*.75,
+    a:.35+Math.random()*.65,
+    w:.7+Math.random()*1.7
+  }));
+}
+function v89StartWarpFx(){
+  cancelAnimationFrame(v89WarpRAF);
+  v89ResizeWarpCanvas();
+  v89SeedWarpStars();
+  v89WarpCanvas.classList.add('on');
+  const started=performance.now();
+  const dur=1920;
+  const ctx=v89WarpCanvas.getContext('2d');
+  const r=wrap.getBoundingClientRect();
+
+  function frameWarp(now){
+    const t=Math.min(1,(now-started)/dur);
+    // accelerating feel: slow at first, then suddenly very fast
+    const speed=Math.pow(t,2.35);
+    const lineLen=3+speed*(r.width*.28);
+    const drift=1.5+speed*34;
+    const fade=t<.72?Math.min(1,t/.18):Math.max(0,(1-t)/.28);
+
+    ctx.clearRect(0,0,r.width,r.height);
+
+    // v91: 加速するほど少し暗転。真っ黒にはせず、星の線が目立つ程度。
+    ctx.save();
+    ctx.globalCompositeOperation='source-over';
+    const darkAlpha=(.08 + speed*.38) * fade;
+    ctx.fillStyle=`rgba(2,4,13,${darkAlpha})`;
+    ctx.fillRect(0,0,r.width,r.height);
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalCompositeOperation='screen';
+
+    for(const st of v89WarpStars){
+      st.x-=drift*(.45+st.z);
+      if(st.x<-lineLen-20){
+        st.x=r.width+20+Math.random()*120;
+        st.y=18+Math.random()*Math.max(80,r.height*.72);
+      }
+
+      const len=lineLen*(.38+st.z*.85);
+      const g=ctx.createLinearGradient(st.x,st.y,st.x+len,st.y);
+      g.addColorStop(0,'rgba(255,255,255,0)');
+      g.addColorStop(.55,`rgba(190,225,255,${.18*st.a*fade})`);
+      g.addColorStop(1,`rgba(255,255,255,${.95*st.a*fade})`);
+      ctx.strokeStyle=g;
+      ctx.lineWidth=st.w*(.8+speed*1.8);
+      ctx.beginPath();
+      ctx.moveTo(st.x,st.y);
+      ctx.lineTo(st.x+len,st.y);
+      ctx.stroke();
+    }
+
+    // faint speed haze, not a flash
+    ctx.globalAlpha=.08*speed*fade;
+    ctx.fillStyle='#bfe8ff';
+    ctx.fillRect(0,0,r.width,r.height);
+    ctx.restore();
+
+    if(t<1){
+      v89WarpRAF=requestAnimationFrame(frameWarp);
+    }else{
+      ctx.clearRect(0,0,r.width,r.height);
+      v89WarpCanvas.classList.remove('on');
+    }
+  }
+  v89WarpRAF=requestAnimationFrame(frameWarp);
 }
 
 function v86SetBadge(t,on=true){v86RideBadge.textContent=t||'';v86RideBadge.classList.toggle('on',!!on)}
@@ -4004,8 +4087,8 @@ function v86Advance(steps=1){
 }
 function v86BeginTransit(type,now,steps=1){
   if(!v86CanRide()||v86Ride?.type==='transit')return false;
-  v86Ride={type:'transit',kind:type,until:now+2000,fromSystem:system,fromStage:stage,steps};
-  satelliteUntil=Math.max(satelliteUntil,now+2050);invincibleUntil=Math.max(invincibleUntil,now+2200);
+  v86Ride={type:'transit',kind:type,until:now+3000,fromSystem:system,fromStage:stage,steps};
+  satelliteUntil=Math.max(satelliteUntil,now+3050);invincibleUntil=Math.max(invincibleUntil,now+3200);
   wormholeActive=false;blackHoleActive=false;
   v86SetBadge(type==='satellite'?'🐕 → 🛰️  NEXT STAR':'🐕 → 🚀  SPACE HOP');
   showToast(type==='satellite'?'🛰️ ポンッ！ 2秒だけ衛星ライド':'🚀 ポンッ！ 宇宙船に乗った！',900);
@@ -4027,17 +4110,17 @@ function v86FinishTransit(){
     v86Ride={
       type:'arrival',
       kind:'satellite',
-      until:arriveNow+3600,
+      until:arriveNow+3100,
       fromSystem:system,
       fromStage:stage,
       steps:0
     };
-    satelliteUntil=Math.max(satelliteUntil,arriveNow+3650);
-    invincibleUntil=Math.max(invincibleUntil,arriveNow+3800);
+    satelliteUntil=Math.max(satelliteUntil,arriveNow+3150);
+    invincibleUntil=Math.max(invincibleUntil,arriveNow+3300);
     p.y=Math.max(40,groundY()-175);
     p.vy=0;
     p.on=false;
-    v86SetBadge('🛰️  ARRIVAL RIDE  ·  3.6 SEC');
+    v86SetBadge('🛰️  ARRIVAL RIDE  ·  3.1 SEC');
     showToast(`🛰️ ${to} に到着！ しばらく衛星で流れる〜`,1350);
   }else{
     showToast(`🚀 ${to} に到着！`,1150);
@@ -4074,10 +4157,10 @@ update=function(now,dt){
   if(bs!==system||bt!==stage){v86ClearRide();v86Rocks=[];v86Ships=[];return}
   if(!v86CanRide()&&!(v86Ride&&v86Ride.type==='transit'))return;
   try{
-    if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=720){
+    if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=1720){
       v86Ride.warpStarted=true;
-      v86SetBadge(v86Ride.kind==='satellite'?'🛰️  BYOOON WARP ✦':'🚀  BYOOON WARP ✦');
-      v88StartWarpFx();
+      v86SetBadge(v86Ride.kind==='satellite'?'🛰️  ACCEL WARP ✦':'🚀  ACCEL WARP ✦');
+      v89StartWarpFx();
     }
     if(v86Ride?.type==='transit'&&now>=v86Ride.until){v86FinishTransit();return}
     if(v86Ride?.type==='arrival'&&now>=v86Ride.until){
@@ -6887,53 +6970,52 @@ stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの
 </style>
 
 
-<style id="v88-warp-style">
-#v88WarpFx{
+<style id="v89-warp-style">
+#v89WarpCanvas{
   position:absolute;
-  z-index:9;
-  inset:-12%;
+  z-index:88;
+  inset:0;
+  width:100%;
+  height:100%;
   pointer-events:none;
   opacity:0;
-  transform-origin:50% 50%;
-  background:
-    radial-gradient(ellipse at center,
-      rgba(255,255,255,.92) 0 1%,
-      rgba(120,235,255,.34) 8%,
-      rgba(139,111,255,.20) 19%,
-      rgba(0,0,0,0) 48%),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 7%,
-      rgba(255,255,255,.12) 7.3% 7.8%,
-      transparent 8.2% 14%
-    );
-  mix-blend-mode:screen;
-  filter:blur(1px);
 }
-#wrap.v88Warp #game{
-  transform-origin:50% 50%;
-  animation:v88CanvasByooon .94s cubic-bezier(.12,.72,.18,1) both;
+#v89WarpCanvas.on{opacity:1}
+</style>
+
+
+<style id="v91-current-location-style">
+/* 右上を「現在地」としてひと目で読めるようにする */
+#astroInfo::before{
+  content:'📍 現在地';
+  display:block;
+  margin-bottom:4px;
+  font-size:10px;
+  line-height:1;
+  letter-spacing:.08em;
+  color:#9fefff;
+  opacity:.9;
+  text-align:right;
 }
-#wrap.v88Warp #v88WarpFx{
-  animation:v88WarpStreak .94s cubic-bezier(.12,.72,.18,1) both;
-}
-@keyframes v88CanvasByooon{
-  0%   {transform:scaleX(1) scaleY(1);filter:brightness(1) blur(0)}
-  22%  {transform:scaleX(1.05) scaleY(.98);filter:brightness(1.08) blur(.3px)}
-  52%  {transform:scaleX(1.24) scaleY(.82);filter:brightness(1.45) blur(1.1px)}
-  68%  {transform:scaleX(1.12) scaleY(.91);filter:brightness(1.22) blur(.5px)}
-  100% {transform:scaleX(1) scaleY(1);filter:brightness(1) blur(0)}
-}
-@keyframes v88WarpStreak{
-  0%   {opacity:0;transform:scaleX(.18) scaleY(.72)}
-  20%  {opacity:.28}
-  52%  {opacity:.94;transform:scaleX(1.8) scaleY(.84)}
-  72%  {opacity:.48;transform:scaleX(2.25) scaleY(1)}
-  100% {opacity:0;transform:scaleX(2.6) scaleY(1.08)}
+#astroInfo > b{
+  display:block;
+  margin-bottom:5px;
+  font-size:18px!important;
+  line-height:1.08!important;
+  letter-spacing:.02em;
+  color:#fff!important;
+  text-shadow:0 0 9px rgba(86,231,255,.8),0 2px 5px rgba(0,0,0,.8);
 }
 @media(max-width:520px){
-  #wrap.v88Warp #game{animation-duration:.88s}
-  #wrap.v88Warp #v88WarpFx{animation-duration:.88s}
+  #astroInfo::before{
+    margin-bottom:3px;
+    font-size:8px;
+  }
+  #astroInfo > b{
+    margin-bottom:4px;
+    font-size:14px!important;
+    line-height:1.08!important;
+  }
 }
 </style>
 
