@@ -752,6 +752,39 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 
 <div id="transition"><div id="transitionTitle">🐕 ➜ 🌀</div><div class="warpCore"><div id="ring"></div><div id="warpDog">🐕</div></div><div id="next">ぐるぐるぐる〜！</div><div id="sub">INTERGALACTIC WARP</div></div>
 </div>
+
+<script id="v100-boot-guard">
+(()=>{
+  const boot=()=>document.getElementById('bootCheck');
+
+  function showBootError(message){
+    const el=boot();
+    if(!el)return;
+    el.style.zIndex='9999';
+    el.style.background='#03040b';
+    el.style.padding='32px';
+    el.style.textAlign='center';
+    el.innerHTML=
+      '<div style="font:1000 16px system-ui;letter-spacing:.08em">宇宙の起動でつまずいた 🐕</div>'+
+      '<div style="margin-top:12px;font:700 11px/1.7 system-ui;opacity:.72">画面をタップすると再読み込み</div>';
+    el.onclick=()=>location.reload();
+    console.error('[INUBOSHI BOOT]',message||'unknown error');
+  }
+
+  window.addEventListener('error',e=>{
+    if(boot())showBootError(e?.message||'script error');
+  });
+
+  window.addEventListener('unhandledrejection',e=>{
+    if(boot())showBootError(String(e?.reason||'promise error'));
+  });
+
+  setTimeout(()=>{
+    if(boot())showBootError('boot timeout');
+  },4500);
+})();
+</script>
+
 <script>
 (()=>{
 const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),wrap=$('wrap'),locationEl=$('location'),levelEl=$('level'),pointsEl=$('points'),hpEl=$('hp'),foodEl=$('food'),alienHitEl=$('alienHitCount'),powerText=$('powerText'),meterFill=$('meterFill'),missionEl=$('mission'),eventEl=$('event'),astroInfo=$('astroInfo'),toast=$('toast'),bigBtn=$('big'),specialBtn=$('special'),chipText=$('chipText'),jumpBtn=$('jump'),laserBtn=$('laser'),laserAmmoText=$('laserAmmoText'),cosmicBtn=$('cosmicPower'),cosmicPowerText=$('cosmicPowerText'),bigBanner=$('bigBanner'),reward=$('reward'),sparkBadge=$('sparkBadge'),guardFlash=$('guardFlash'),comm=$('comm'),commText=$('commText'),trans=$('transition'),transTitle=$('transitionTitle'),nextEl=$('next'),subEl=$('sub'),warpDog=$('warpDog'),secretBadge=$('secretBadge'),gameOverEl=$('gameOver'),criticalEl=$('critical'),doghouseInterior=$('doghouseInterior'),debugHomeBtn=$('debugHomeBtn'),convertStarsBtn=$('convertStarsBtn');
@@ -2689,7 +2722,8 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
 
 
 /* === v63 opening story: mysterious transceiver -> satellite pickup === */
-let v63RadioFound=true,v63AlienRecognizedCraft=false,v63SignalStep=0; // v99: Earth transceiver removed
+let v63RadioFound=false,v63AlienRecognizedCraft=false,v63SignalStep=0;
+const V100_NO_EARTH_RADIO=true; // v100: 地球トランシーバーは完全休止
 const V63_RADIO_X=rocketX-300; // v98: transceiver sits just before the satellite pickup point
 const v63SignalSeen=new Set();
 let v63RadioScene=document.getElementById('v63RadioScene');
@@ -2728,7 +2762,7 @@ const v63BaseDrawPortal=drawPortal;
 drawPortal=function(){
   if(!v63IsOpeningEarth()){v63BaseDrawPortal();return;}
   const gy=groundY(),t=performance.now()/1000;
-  if(!v63RadioFound){
+  if(!V100_NO_EARTH_RADIO&&!v63RadioFound){
     const rx=V63_RADIO_X-camera;if(rx>-90&&rx<W+90){
       ctx.save();
       ctx.translate(rx,gy-25);
@@ -2744,7 +2778,7 @@ drawPortal=function(){
 
 const v63BaseUpdate=update;
 update=function(now,dt){
-  if(!paused&&v63IsOpeningEarth()&&!v63RadioFound&&p.x>=V63_RADIO_X-24){v63PickupRadio();return;}
+  if(!V100_NO_EARTH_RADIO&&!paused&&v63IsOpeningEarth()&&!v63RadioFound&&p.x>=V63_RADIO_X-24){v63PickupRadio();return;}
   v63BaseUpdate(now,dt);
   if(!paused&&v63RadioFound&&!returnFromDogStar&&!v63IsOpeningEarth()){
     v63RenderRadio();
@@ -2753,7 +2787,7 @@ update=function(now,dt){
 
 rocketToMoon=function(){
   if(paused||rocketLaunched)return;
-  if(!v63RadioFound){p.x=Math.max(115,rocketX-120);showToast('🛸 ハッチが開かない。鍵になる信号が必要みたい。',1500);return;}
+  if(!v63RadioFound&&!v63IsOpeningEarth()){p.x=Math.max(115,rocketX-120);showToast('🛸 ハッチが開かない。鍵になる信号が必要みたい。',1500);return;}
   rocketLaunched=true;paused=true;reward?.classList.remove('on');
   trans.style.display='grid';trans.style.background='radial-gradient(circle at 50% 45%,rgba(101,82,160,.48),rgba(3,5,15,.96) 64%)';
   warpDog.textContent='🐕📻🛸';warpDog.className='spin';
@@ -4414,7 +4448,7 @@ syncHUD=function(force=false){
 };
 
 
-/* === v99: satellite timing + visible cosmic portals === */
+/* === v100: stable boot + satellite timing + visible cosmic portals === */
 let v99EarthSatelliteNextAt=0;
 let v99SpaceSatelliteDueAt=0;
 let v99WhiteHoleActive=false;
