@@ -791,7 +791,7 @@ const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('
 let W=0,H=0,DPR=1;function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;canvas.width=W*DPR;canvas.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize);resize();
 const systems=[
 {name:'🌌 天の川銀河',distance:'地球はこの銀河の中',desc:'太陽系がある銀河',theme:'milky',stages:[
-{name:'🌍 地球',distance:'0光年',desc:'朝の散歩道。ここが出発点',goodColor:'#74d8ff',sky:['#8edcff','#fff0c7'],ground:'#72b96f',ground2:'#4b8d52',planet:'#fff1b5',event:'MORNING WALK',eventText:'🌅 朝の散歩',gravity:.56,jump:15.6},
+{name:'🌍 地球',distance:'0光年',desc:'月が見える星空の夜。ここが出発点',goodColor:'#9dd9ff',sky:['#020617','#101d3d'],ground:'#315846',ground2:'#182f2a',planet:'#eaf4ff',event:'NIGHT WALK',eventText:'🌙 星空の夜',gravity:.56,jump:15.6},
 {name:'🌙 月',distance:'約38万km',desc:'地球の衛星・最初の遠征',goodColor:'#ffe66b',sky:['#050615','#131536'],ground:'#b7b7c2',ground2:'#777682',planet:'#5c8fff',event:'LOW GRAVITY',eventText:'低重力でジャンプが高い！',gravity:.38,jump:15.8},
 {name:'🔴 火星',distance:'約0.000006光年',desc:'地球からさらに遠い赤い惑星',goodColor:'#ff6b4b',sky:['#120504','#4c1710'],ground:'#bd684e',ground2:'#73392d',planet:'#d55a43',event:'METEOR SHOWER',eventText:'危険な隕石が上から降る！',gravity:.50,jump:16.2},
 {name:'🟠 木星',distance:'約0.000066光年',desc:'巨大なガス惑星',goodColor:'#f1c18a',sky:['#100806','#3b2116'],ground:'#b78967',ground2:'#6d4a36',planet:'#cf9b72',event:'GIANT STORM',eventText:'巨大嵐で画面が揺れる！',gravity:.62,jump:16.4},
@@ -926,7 +926,7 @@ function syncHUD(){
  if(alienHitEl)alienHitEl.textContent=`👽 ${cosmicCharge}`;
  const earth=system===0&&stage===0,dream=!!systems[system].dream;
  missionEl.innerHTML=earth?(returnFromDogStar?'🏠 やっと地球に帰ってきた。いつもの道を歩こう':'🐕 いつもの散歩道。今日は少し変な音がする…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ご褒美ステージ ✨ ⭐星アイテムから地球へ帰れる':`🌀 ワームホール通過 ${deepWarpCount}<br>${areaNames[difficultyTier]}`;
- eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌳 EARTH / MORNING'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`${s.event} — ${s.eventText}`;
+ eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌙 EARTH / NIGHT'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`${s.event} — ${s.eventText}`;
  const dist=(s.distance||systems[system].distance.replace('地球から','')),endless=systems[system].endless;
  const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'宇宙の奥へ進んでいる…':'まだ宇宙の入口' ;
  const distanceLabel=endless?'観測不能域 / 膨張フロンティア':dist;
@@ -2804,7 +2804,7 @@ stageStart=function(){
   v63BaseStageStart();
   if(v63IsOpeningEarth()){
     missionEl.textContent=v63RadioFound?'📻 ……':'🐕 いつもの散歩';
-    eventEl.textContent=v63RadioFound?'📡 SIGNAL':'🌳 EARTH / MORNING';
+    eventEl.textContent=v63RadioFound?'📡 SIGNAL':'🌙 EARTH / NIGHT';
   }else if(v63RadioFound&&!returnFromDogStar){
     v63RenderRadio();
     const rank=systemDistanceRank[system]??0;
@@ -3506,7 +3506,7 @@ let v67InsuranceGraceUntil=0;
     if(v70BoneReady&&!v63IsOpeningEarth())setTimeout(()=>{if(!paused)v70StartBoneTime();},700);
     if(v63IsOpeningEarth()){
       missionEl.textContent=v63RadioFound?'🦴 謎の信号を追う':'🐕 いつもの散歩';
-      eventEl.textContent=v63RadioFound?'📻 UNKNOWN SIGNAL':'🌍 EARTH / NORMAL DAY';
+      eventEl.textContent=v63RadioFound?'📻 UNKNOWN SIGNAL':'🌙 EARTH / NIGHT';
     }else if(v63RadioFound&&!returnFromDogStar){
       missionEl.textContent='🦴 骨の反応を追う';
     }
@@ -4433,7 +4433,7 @@ syncHUD=function(force=false){
       eventEl.textContent='🌳 ……';
     }else{
       missionEl.textContent='🐕 いつもの散歩';
-      eventEl.textContent='🌳 EARTH / MORNING';
+      eventEl.textContent='🌙 EARTH / NIGHT';
     }
     return;
   }
@@ -4447,6 +4447,153 @@ syncHUD=function(force=false){
   }
 };
 
+
+
+/* === v101: smooth hit reaction + starry night Earth === */
+(function(){
+  /* 録画で見えた不自然な上下運動は、被弾処理が毎回 p.vy=-7 前後を
+     入れて犬を強制ジャンプさせていたのが原因。
+     ダメージ演出は残しつつ、プレイヤーの縦速度を勝手に変えない。 */
+  const v101PrevHitHazard=hitHazard;
+  hitHazard=function(h){
+    const beforeGot=!!h?.got;
+    const beforeVy=p.vy;
+    const beforeY=p.y;
+    const beforeOn=p.on;
+
+    v101PrevHitHazard(h);
+
+    const actuallyHit=!beforeGot && !!h?.got;
+    if(!actuallyHit)return;
+
+    if(beforeOn){
+      p.y=groundY()-p.h;
+      p.vy=0;
+      p.on=true;
+      jumps=0;
+    }else{
+      // ジャンプ中なら、押したジャンプの軌道をそのまま維持。
+      p.y=beforeY;
+      p.vy=beforeVy;
+    }
+
+    // 画面全体がガクガク見えない程度に抑える。
+    shake=Math.min(shake,3.5);
+  };
+
+  /* 既存の朝焼け背景を最後に夜で覆い直す。
+     最初の地球だけ。帰還後の地球には適用しない。 */
+  const v101PrevDrawBackground=drawBackground;
+  drawBackground=function(){
+    v101PrevDrawBackground();
+    if(!v63IsOpeningEarth())return;
+
+    const gy=groundY();
+    const t=performance.now()/1000;
+
+    ctx.save();
+
+    // 深い青の夜空
+    const night=ctx.createLinearGradient(0,0,0,gy);
+    night.addColorStop(0,'#01030d');
+    night.addColorStop(.48,'#07132d');
+    night.addColorStop(1,'#172848');
+    ctx.fillStyle=night;
+    ctx.fillRect(0,0,W,gy);
+
+    // うっすら天の川
+    ctx.globalAlpha=.11;
+    const milky=ctx.createLinearGradient(0,0,W,H*.5);
+    milky.addColorStop(0,'rgba(125,178,255,0)');
+    milky.addColorStop(.42,'rgba(186,205,255,.75)');
+    milky.addColorStop(.62,'rgba(201,171,255,.55)');
+    milky.addColorStop(1,'rgba(125,178,255,0)');
+    ctx.fillStyle=milky;
+    ctx.save();
+    ctx.translate(W*.48,H*.22);
+    ctx.rotate(-.24);
+    ctx.fillRect(-W*.75,-24,W*1.5,48);
+    ctx.restore();
+
+    // 星空。スクロールに対してゆっくり動かして奥行きを出す
+    ctx.globalAlpha=1;
+    for(let i=0;i<72;i++){
+      const x=((i*83 + (i%5)*37 - camera*.035)%(W+70)+W+70)%(W+70)-35;
+      const y=28+((i*47)%Math.max(90,gy-105));
+      const tw=.55+.45*Math.sin(t*1.8+i*.91);
+      const r=(i%11===0?1.9:i%4===0?1.25:.75);
+      ctx.fillStyle=i%9===0?'#d9e8ff':'#fff';
+      ctx.globalAlpha=.42+.5*tw;
+      ctx.beginPath();
+      ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fill();
+      if(i%17===0){
+        ctx.globalAlpha=.28+.32*tw;
+        ctx.strokeStyle='#dff4ff';
+        ctx.lineWidth=.8;
+        ctx.beginPath();
+        ctx.moveTo(x-4,y);ctx.lineTo(x+4,y);
+        ctx.moveTo(x,y-4);ctx.lineTo(x,y+4);
+        ctx.stroke();
+      }
+    }
+
+    // 月：右上にはっきり見える。まだ「これから行く場所」っぽく少し遠く。
+    const mx=W*.80,my=Math.max(82,H*.17),mr=Math.min(46,W*.105);
+    ctx.globalAlpha=1;
+    ctx.shadowColor='#d9edff';
+    ctx.shadowBlur=28;
+    const moon=ctx.createRadialGradient(mx-10,my-12,4,mx,my,mr);
+    moon.addColorStop(0,'#ffffff');
+    moon.addColorStop(.55,'#eaf2ff');
+    moon.addColorStop(1,'#aebed8');
+    ctx.fillStyle=moon;
+    ctx.beginPath();ctx.arc(mx,my,mr,0,Math.PI*2);ctx.fill();
+
+    // 月面の薄い模様
+    ctx.shadowBlur=0;
+    ctx.globalAlpha=.12;
+    ctx.fillStyle='#63728d';
+    [[-.25,-.12,.18],[.18,.22,.13],[.22,-.28,.10],[-.08,.30,.08]].forEach(([dx,dy,rr])=>{
+      ctx.beginPath();ctx.arc(mx+dx*mr,my+dy*mr,rr*mr,0,Math.PI*2);ctx.fill();
+    });
+
+    // 夜の街：既存の朝の街を夜色で描き直す
+    ctx.globalAlpha=1;
+    for(let i=0;i<11;i++){
+      const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
+      const bh=90+(i%4)*28;
+      ctx.fillStyle=i%2?'#10182b':'#172038';
+      ctx.fillRect(x,gy-bh-30,85,bh);
+      ctx.fillStyle='rgba(255,221,126,.72)';
+      for(let r=0;r<4;r++)for(let c=0;c<3;c++){
+        if((r+c+i)%3!==0)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,8,9);
+      }
+    }
+
+    // 木も夜のシルエットに
+    for(let i=0;i<9;i++){
+      const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
+      ctx.fillStyle='#261b18';ctx.fillRect(x,gy-64,10,64);
+      ctx.fillStyle=i%2?'#173d32':'#1d4938';
+      ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill();
+    }
+
+    ctx.restore();
+  };
+
+  /* 地球の導入文言も夜へ。説明しすぎず、景色に任せる。 */
+  const v101PrevSyncHUD=syncHUD;
+  syncHUD=function(force=false){
+    v101PrevSyncHUD(force);
+    if(v63IsOpeningEarth()){
+      if(!v86Ride){
+        missionEl.textContent='🐕 夜の散歩';
+        if(!v94SatellitePending)eventEl.textContent='🌙 EARTH / NIGHT';
+      }
+    }
+  };
+})();
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 let v99EarthSatelliteNextAt=0;
@@ -4589,10 +4736,10 @@ update=function(now,dt){
 };
 
 /* Initialize the opening after all v63 wrappers are ready. */
-if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌳 EARTH / MORNING';v63RadioBadge?.classList.remove('on','max');}
+if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.textContent='🌙 EARTH / NIGHT';v63RadioBadge?.classList.remove('on','max');}
 /* === end v63 opening story === */
 
-stageStart();setTimeout(()=>showToast('🌍 地球。犬星くんはいつもの道を歩いている。',1900),550);requestAnimationFrame(frame);
+stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。犬星くんは散歩している。',1700),550);requestAnimationFrame(frame);
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
