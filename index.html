@@ -952,10 +952,10 @@ function makeWorld(){
  const isSun=s.name.includes('太陽'),isMars=s.name.includes('火星'),isEarth=system===0&&stage===0,isMoon=s.name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth){
    // v99: 地球は「骨を追って散歩」がちゃんと遊びになるくらい増量。
-   for(let i=0;i<42;i++){
+   for(let i=0;i<50;i++){
      items.push({
-       x:145+i*79+(i%5)*11,
-       y:groundY()-40-(i%5)*14-Math.random()*11,
+       x:130+i*66+(i%6)*10,
+       y:groundY()-39-(i%5)*14-Math.random()*10,
        r:18,got:false,color:'#ffd65a',food:true
      });
    }
@@ -1430,18 +1430,19 @@ function spawnSatellite(){
  satellites=[];
 
  const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
- const targetY=isOpeningEarth ? Math.max(groundY()-122,56) : Math.max(groundY()-98,60);
- const startY=-92-Math.random()*56;
  satellites.push({
    x:camera+W*.56,
-   y:startY,
-   targetY,
-   v:.82+Math.random()*.18,
-   vy:3.25+Math.random()*.55,
+   y:-92-Math.random()*56,
+   v:.48+Math.random()*.14,
+   vy:3.4+Math.random()*.55,
+   gravity:.34,
+   bounce:.62,
    w:58,h:44,got:false,phase:Math.random()*6.2,
    departure:true,
    earthChoice:isOpeningEarth,
-   dropOnly:true
+   dropOnly:true,
+   bounced:false,
+   groundBounces:0
  });
 
  eventEl.textContent=isOpeningEarth?'🛰️ ……？':'🛰️ ORBIT DROP';
@@ -1611,7 +1612,7 @@ function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier
    for(const a of aliens){if(a.got)continue;const dx=p.x-a.x,dy=(p.y+20)-a.y;const d=Math.hypot(dx,dy);if(d<420){a.x+=dx*.026*dt;a.y+=dy*.026*dt}}
    for(const o of swarm){if(o.got)continue;const dx=p.x-o.x,dy=(p.y+20)-o.y;const d=Math.hypot(dx,dy);if(d<360){o.x+=dx*.018*dt;o.y+=dy*.018*dt}}
  }
- let speed=2.12+difficultyTier*.24+Math.min(.14,companionCount*.009);if(food===0)speed*=.82;if(s.event==='SUPER WIND'&&eventPhase%300>170)speed+=.62;if(s.event==='GIANT STORM'&&eventPhase%260>170)shake=5;else shake*=.88;const nearWorldEnd=(!(system===0&&stage===0)&&!v86Ride&&p.x>=worldLength-100);if(!nearWorldEnd)p.x+=speed*dt;else p.x=worldLength-100;if(now<alienRideUntil){p.vy*=.82;p.y+=((groundY()-205)-p.y)*.045*dt}else if(now<satelliteUntil){p.vy*=.88;p.y+=((groundY()-175)-p.y)*.035*dt}else{p.vy+=s.gravity*dt;p.y+=p.vy*dt}const ceiling=34;if(p.y<ceiling){p.y=ceiling;if(p.vy<0)p.vy=0;}if(s.event==='ICE WIND'&&!p.on)p.x+=Math.sin(now/180)*.55*dt;if(s.event==='GRAVITY WELL'&&!p.on){p.x+=Math.sin(now/120)*1.1*dt;p.vy+=.10*dt}if(p.y+p.h>=groundY()){p.y=groundY()-p.h;p.vy=0;p.on=true;jumps=0}else p.on=false;if(system===0&&stage===0){
+ let speed=2.12+difficultyTier*.24+Math.min(.14,companionCount*.009);if(food===0)speed*=.82;if(s.event==='SUPER WIND'&&eventPhase%300>170)speed+=.62;if(s.event==='GIANT STORM'&&eventPhase%260>170)shake=5;else shake*=.88;const rideActive=!!v86Ride;if(!rideActive)p.x+=speed*dt;if(now<alienRideUntil){p.vy*=.82;p.y+=((groundY()-205)-p.y)*.045*dt}else if(now<satelliteUntil){p.vy*=.88;p.y+=((groundY()-175)-p.y)*.035*dt}else{p.vy+=s.gravity*dt;p.y+=p.vy*dt}const ceiling=34;if(p.y<ceiling){p.y=ceiling;if(p.vy<0)p.vy=0;}if(s.event==='ICE WIND'&&!p.on)p.x+=Math.sin(now/180)*.55*dt;if(s.event==='GRAVITY WELL'&&!p.on){p.x+=Math.sin(now/120)*1.1*dt;p.vy+=.10*dt}if(p.y+p.h>=groundY()){p.y=groundY()-p.h;p.vy=0;p.on=true;jumps=0}else p.on=false;if(system===0&&stage===0){
  for(const w of earthWalkers)w.x-=w.v*dt;
 
  if(returnFromDogStar&&p.x>=rocketX-110){
@@ -1620,8 +1621,8 @@ function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier
 
  // v99: 行き止まりで待たせない。
  // かなり手前から衛星が横切り、乗るかどうかはプレイヤー次第。
- if(!returnFromDogStar&&p.x>=1780&&!v86Ride&&!v94SatellitePending&&now>=v99EarthSatelliteNextAt){
-   if(spawnSatellite())v99EarthSatelliteNextAt=now+6500;
+ if(!returnFromDogStar&&p.x>=1450&&!v86Ride&&!v94SatellitePending&&now>=v99EarthSatelliteNextAt){
+   if(spawnSatellite())v99EarthSatelliteNextAt=now+5200;
  }
 }
 for(const it of items){if(it.fall&&!it.got)it.y+=2.4*dt;if(it.got)continue;if(now<magnetUntil&&!it.food&&Math.abs(it.x-p.x)<520){it.x+=(p.x-it.x)*.10*dt;it.y+=(p.y+25-it.y)*.10*dt}if(big||now<satelliteUntil||now<alienRideUntil){if(Math.abs(it.x-p.x)<500)collectGood(it)}else if(rectHit(playerRect(),itemRect(it)))collectGood(it)}
@@ -1632,14 +1633,34 @@ for(const o of swarm){if(o.got)continue;o.x-=o.v*dt;if(rectHit(playerRect(),{x:o
 for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/220+o.phase)*.18*dt;if(rectHit(playerRect(),{x:o.x-o.r,y:o.y-o.r,w:o.r*2,h:o.r*2})){if(o.kind==='earth'){collectEarthToken(o)}else{o.got=true;secretWarp(o.kind)}break}}secretPickups=secretPickups.filter(o=>!o.got&&o.x>p.x-W-180);
 for(const sat of satellites){
  if(sat.got)continue;
- if(sat.departure){
-   if(sat.dropOnly)sat.x=camera+W*.56;
-   sat.y=Math.min(sat.targetY||sat.y, sat.y+(sat.vy||3.2)*dt);
-   if(sat.y>=(sat.targetY||sat.y)-1)sat.dropOnly=false;
+
+ const satGround=groundY()-sat.h;
+
+ if(sat.dropOnly){
+   // 落下中は画面中央寄りを保って、横へ逃げない。
+   sat.x=camera+W*.56;
+   sat.vy+=(sat.gravity||.34)*dt;
+   sat.y+=sat.vy*dt;
+
+   if(sat.y>=satGround){
+     sat.y=satGround;
+     sat.vy=-Math.max(2.4,Math.abs(sat.vy)*(sat.bounce||.62));
+     sat.bounced=true;
+     sat.groundBounces=(sat.groundBounces||0)+1;
+
+     // 数回バウンドしたら地面近くをゆっくり流れる。
+     if(sat.groundBounces>=4||Math.abs(sat.vy)<2.7){
+       sat.dropOnly=false;
+       sat.departure=false;
+       sat.y=satGround;
+       sat.vy=0;
+     }
+   }
  }else{
-   sat.y+=Math.sin(now/210+sat.phase)*.20*dt;
+   // 地面に落ちた後は、乗れる高さのままゆっくり左へ。
+   sat.x-=sat.v*dt;
+   sat.y=satGround+Math.sin(now/230+sat.phase)*2.0;
  }
- if(!sat.dropOnly)sat.x-=sat.v*dt;
 
  if(!v86Ride&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){
    if(v86BeginTransit('satellite',now,1)){
@@ -1653,7 +1674,9 @@ if(v94SatellitePending&&!v86Ride&&!satellites.some(sat=>!sat.got))v94SatellitePe
 for(const b of bosses){if(b.dead)continue;b.x-=b.v*dt;if(b.hitFlash>0)b.hitFlash-=dt;if(rectHit(playerRect(),{x:b.x+8,y:b.y+6,w:b.w-16,h:b.h-6}))hitHazard({x:b.x,y:b.y,w:b.w,h:b.h,got:false,evil:true})}bosses=bosses.filter(b=>!b.dead&&b.x>p.x-W-240);
 for(const st of shootingStars){st.x-=st.vx*dt;st.y+=st.vy*dt}shootingStars=shootingStars.filter(st=>st.x>-160&&st.y<H+100);for(const g of gasClouds)g.x-=g.vx*dt;gasClouds=gasClouds.filter(g=>g.x>-g.r*2);
 if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){
- if(v63IsOpeningEarth()){
+ if(v86Ride){
+   // v111: ワープ/到着ライド中は移動処理側に任せる。終端へ引き戻さない。
+ }else if(v63IsOpeningEarth()){
    // 地球はそのまま走り続ける。衛星への乗車でだけ月へ進む。
  }else if(systems[system].dream){
    showToast('🐾 ここが宇宙旅行の最終地点。',1800);p.x=worldLength-90;return;
@@ -1662,8 +1685,8 @@ if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBi
  }else if(returnFromDogStar&&system===0&&stage===0){
    doghouseChoice();return;
  }else{
-   p.x=worldLength-100;
-   // 通常宇宙は「現在の出現時刻」を待つ。即時衛星は出さない。
+   // v112: 通常宇宙は衛星が来るまでそのまま走り続ける。
+   // 星の端で止めたり、位置を引き戻したりしない。
  }
 }
 camera+=(Math.max(0,p.x-W*.34)-camera)*.13}
@@ -2467,7 +2490,7 @@ syncHUD=function(){
  const earth=system===0&&stage===0,s=S(),dist=v60Distance();
  if(earth){
   locationEl.textContent='🌍 地球';missionEl.textContent=returnFromDogStar?'🐕 地球に帰ってきた。いつもの道を歩こう。':'🐕 地球を散歩中。道の先に何かある…';eventEl.textContent='🌳 地球';
-  astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'骨好きわんこの宇宙旅が始まる'}</span>`;
+  astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'骨好きわんこの宇宙旅'}</span>`;
  }else{
   const grav=s.gravity<=.40?'低重力｜ジャンプ力🔼':s.gravity>=.56?'高重力｜ジャンプ力🔽':'標準重力｜ジャンプ力↔️';
   astroInfo.innerHTML=`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span><span class="distanceHint">${grav}</span>`;
@@ -4647,7 +4670,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v110: meteor sky-only clipping === */
+/* === v112: keep running while waiting for satellite === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4893,17 +4916,19 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     satellites=[];
 
     const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
-    const targetY=isOpeningEarth ? Math.max(groundY()-122,56) : Math.max(groundY()-98,60);
     satellites.push({
       x:camera+W*.56,
       y:-92-Math.random()*56,
-      targetY,
-      v:.82+Math.random()*.18,
-      vy:3.25+Math.random()*.55,
+      v:.48+Math.random()*.14,
+      vy:3.4+Math.random()*.55,
+      gravity:.34,
+      bounce:.62,
       w:58,h:44,got:false,phase:Math.random()*6.2,
       departure:true,
       earthChoice:isOpeningEarth,
-      dropOnly:true
+      dropOnly:true,
+      bounced:false,
+      groundBounces:0
     });
 
     eventEl.textContent=isOpeningEarth?'🛰️ ……？':'🛰️ ORBIT DROP';
