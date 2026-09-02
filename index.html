@@ -1499,7 +1499,7 @@ function spawnLaserTarget(){
  const y=lanes[Math.floor(Math.random()*lanes.length)];
  swarm.push({kind:'target',emoji:'👾',x:p.x+W+100+Math.random()*180,y:y,v:2.0+Math.random()*1.0,w:42,h:42,got:false});
 }
-function drawSatellite(o){if(o.got)return;const now=performance.now();if(o.activeAt&&now<o.activeAt)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;ctx.save();ctx.translate(sx+26,o.y+22);ctx.rotate((o.tilt||0)+Math.sin(now/260+(o.wobble||0))*.045);ctx.shadowColor='#78eaff';ctx.shadowBlur=18;ctx.font='48px system-ui';ctx.fillText('🛰️',-26,16);ctx.restore();if(o.landedFxUntil&&now<o.landedFxUntil){const q=(o.landedFxUntil-now)/520;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,q));ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='900 14px system-ui';ctx.fillText(o.landedFxText||'コロン',sx-4,o.y-8-Math.sin((1-q)*3.14)*6);ctx.restore()}}
+function drawSatellite(o){if(o.got)return;const now=performance.now();if(o.activeAt&&now<o.activeAt)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;const spin=(o.rolling?(o.roll||0):((o.tilt||0)+Math.sin(now/260+(o.wobble||0))*.045));ctx.save();ctx.translate(sx+26,o.y+22);ctx.rotate(spin);ctx.shadowColor=(o.emoji==='🛸')?'#ff9ef7':'#78eaff';ctx.shadowBlur=18;ctx.font='48px system-ui';ctx.fillText(o.emoji||'🛰️',-26,16);ctx.restore();if(o.landedFxUntil&&now<o.landedFxUntil){const q=(o.landedFxUntil-now)/500;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,q));ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='900 14px system-ui';ctx.fillText(o.landedFxText||'コロン',sx-4,o.y-8-Math.sin((1-q)*3.14)*6);ctx.restore()}}
 function drawBoss(b){if(b.dead)return;const sx=b.x-camera;if(sx<-160||sx>W+160)return;ctx.save();ctx.shadowColor=b.hitFlash>0?'#ffe45a':'#ff7bcd';ctx.shadowBlur=b.hitFlash>0?26:14;ctx.font='86px system-ui';ctx.fillText('🧌',sx,b.y+72);ctx.restore();ctx.save();ctx.translate(sx+6,b.y-18);ctx.fillStyle='rgba(12,8,22,.75)';ctx.fillRect(0,0,70,15);ctx.fillStyle='#fff';ctx.font='900 9px system-ui';ctx.fillText('BOSS 10 HIT',6,10);ctx.fillStyle='#20112e';ctx.fillRect(0,18,72,8);ctx.fillStyle='#ff6b6b';ctx.fillRect(1,19,70*(b.hp/b.maxHp),6);ctx.strokeStyle='rgba(255,255,255,.8)';ctx.strokeRect(0,18,72,8);ctx.restore()}
 function drawFlowerRain(){if(system!==SECRET_FLOWER_SYSTEM)return;const t=performance.now()/1000;ctx.save();for(let i=0;i<42;i++){const speed=34+(i%7)*7;const y=((t*speed+i*71)%(H+120))-60;const x=((i*97+Math.sin(t*.8+i)*70)%(W+160))-80;const size=18+(i%5)*4;ctx.globalAlpha=.48+(i%4)*.12;ctx.shadowColor=i%2?'#ff84d6':'#fff';ctx.shadowBlur=10;ctx.font=`${size}px system-ui`;ctx.save();ctx.translate(x,y);ctx.rotate(t*(i%2?.7:-.55)+i);ctx.fillText(i%6===0?'🌺':'🌸',-size/2,size/2);ctx.restore()}ctx.restore();ctx.globalAlpha=1}
 function drawBlackHoleOddities(){
@@ -1680,14 +1680,16 @@ for(const sat of satellites){
  const satGround=groundY()-sat.h;
 
  if(sat.boardingAt){
-   // コンと当たったあと、ほんの少し間を作ってからポンと乗る
-   sat.x=p.x+6;
-   sat.y=Math.min(satGround,p.y+p.h-30);
+   // コンと当たったあと、少し間をおいて乗る。位置は吸い付かせない。
+   sat.x=sat.boardX;
+   sat.y=sat.boardY;
    if(now>=sat.boardingAt&&!v86Ride){
+     p.y=Math.max(34,p.y-14);
+     p.vy=-4.4;
+     p.on=false;
      if(v86BeginTransit('satellite',now,1)){
        sat.got=true;
        v94SatellitePending=false;
-       showToast('🐕 ポンッ！ 衛星に乗った！',720);
        continue;
      }
    }else{
@@ -1709,38 +1711,48 @@ for(const sat of satellites){
 
    if(sat.y>=satGround){
      sat.y=satGround;
-     sat.vy=-Math.max(2.25,Math.abs(sat.vy)*((sat.bounce||.62)+(Math.random()-.5)*.06));
+     sat.vy=-Math.max(1.0,Math.abs(sat.vy)*((sat.bounce||.30)+(Math.random()-.5)*.04));
      if(!sat.bounced){
-       sat.landedFxUntil=now+520;
+       sat.landedFxUntil=now+500;
        sat.landedFxText='コロン';
+       sat.roll=(sat.roll||0)+(.18+Math.random()*.12);
+       sat.rollVel=.13+Math.random()*.05;
      }
      sat.bounced=true;
      sat.groundBounces=(sat.groundBounces||0)+1;
 
-     // 数回バウンドしたら地面近くをゆっくり流れる。
-     if(sat.groundBounces>=4||Math.abs(sat.vy)<2.7){
+     // 低めに1〜2回はねたら、そのままゴロンと転がる。
+     if(sat.groundBounces>=2||Math.abs(sat.vy)<1.15){
        sat.dropOnly=false;
        sat.departure=false;
        sat.y=satGround;
        sat.vy=0;
+       sat.rolling=true;
+       sat.rollVel=Math.max(sat.rollVel||0,.14);
      }
    }
  }else{
-   // 地面に落ちた後は、乗れる高さのままゆっくり左へ。
+   // 地面に着いた後は、少し傾きながらゴロンと転がる。
    sat.x-=sat.v*dt;
-   sat.y=satGround+Math.sin(now/230+sat.phase)*2.0;
+   sat.y=satGround;
+   if(sat.rolling){
+     sat.roll=(sat.roll||0)-(sat.rollVel||.14)*dt;
+     sat.rollVel=Math.max(.018,(sat.rollVel||.14)*0.992);
+   }
  }
 
  if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){
-   // v117: まず「コン」と当たって、その少し後に「ポン」と乗る
-   p.y=Math.max(34,p.y-10);
-   p.vy=-3.9;
+   // v119: まず軽くコンと当たり、そのあと自然に乗る。
+   p.y=Math.max(34,p.y-8);
+   p.vy=-2.8;
    p.on=false;
-   sat.boardingAt=now+140;
+   sat.boardingAt=now+150;
+   sat.boardX=sat.x;
+   sat.boardY=sat.y;
    sat.dropOnly=false;
    sat.departure=false;
+   sat.rolling=false;
    sat.v=0;
-   showToast('🐕 コンッ！',260);
  }
 }
 satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
@@ -4747,7 +4759,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v118: foreshadow satellites + keep others after boarding === */
+/* === v119: staged prelude drops + softer bounce + rolling satellites/UFOs === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4811,6 +4823,7 @@ let v99WhiteHoleY=0;
 let v99EarthWeirdStarted=false;
 let v118EarthPreludeCount=0;
 let v118EarthWaveStarted=false;
+const v119EarthPreludeGaps=[2100,1100,980,860,740];
 
 function v99PortalEligible(){
   if(system===BLACK_HOLE_SYSTEM)return false;
@@ -4828,7 +4841,7 @@ stageStart=function(){
   v118EarthPreludeCount=0;
   v118EarthWaveStarted=false;
   if(v63IsOpeningEarth()){
-    // v118: ちょい遅めに単発の前兆衛星。そのあと大量ウェーブ。
+    // v119: 前兆の単発衛星を重ねてから、大量ウェーブへ。
     v99EarthSatelliteNextAt=performance.now()+1800;
     v99WhiteHoleActive=false;
     wormholeActive=false;
@@ -5001,77 +5014,82 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(isOpeningEarth){
       const nowAt=performance.now();
 
-      if(!v118EarthWaveStarted && v118EarthPreludeCount<2){
-        // 大量に来る前の前兆。安全地帯へ単発で落ちてくる。
+      if(!v118EarthWaveStarted && v118EarthPreludeCount<5){
+        // 前兆フェーズ：最初は安全地帯。2回目は1秒ほど早く、その後も少しずつ間隔が狭まる。
         const preludeCfgs=[
-          {screenStart:.12, screenEnd:.18, xOffset:-8, yOffset:-12, vy:3.02, v:.34, drift:.014},
-          {screenStart:.90, screenEnd:.80, xOffset:10, yOffset:-20, vy:3.14, v:.36, drift:-.018}
+          {screenStart:.12, screenEnd:.18, xOffset:-8, yOffset:-12, vy:2.84, v:.30, drift:.012, emoji:'🛰️'},
+          {screenStart:.90, screenEnd:.80, xOffset:10, yOffset:-20, vy:2.92, v:.31, drift:-.014, emoji:'🛰️'},
+          {screenStart:.18, screenEnd:.24, xOffset:-5, yOffset:-28, vy:2.88, v:.30, drift:.010, emoji:'🛰️'},
+          {screenStart:.84, screenEnd:.76, xOffset:8, yOffset:-18, vy:2.96, v:.31, drift:-.012, emoji:(Math.random()<.38?'🛸':'🛰️')},
+          {screenStart:.68, screenEnd:.58, xOffset:0, yOffset:-24, vy:2.90, v:.30, drift:-.010, emoji:(Math.random()<.32?'🛸':'🛰️')}
         ];
         const cfg=preludeCfgs[v118EarthPreludeCount]||preludeCfgs[0];
         satellites.push({
           x:camera+W*cfg.screenStart+cfg.xOffset,
-          y:-92-Math.random()*20+cfg.yOffset,
+          y:-92-Math.random()*16+cfg.yOffset,
           dropStartY:-92+cfg.yOffset,
           screenStart:cfg.screenStart,
           screenEnd:cfg.screenEnd,
           activeAt:nowAt,
-          v:cfg.v+Math.random()*.06,
-          vy:cfg.vy+Math.random()*.22,
-          drift:(cfg.drift||0)+(Math.random()-.5)*.010,
+          v:cfg.v+Math.random()*.05,
+          vy:cfg.vy+Math.random()*.18,
+          drift:(cfg.drift||0)+(Math.random()-.5)*.008,
           wobble:Math.random()*6.283,
-          tilt:(Math.random()-.5)*.22,
-          gravity:.34,
-          bounce:.62,
+          tilt:(Math.random()-.5)*.18,
+          gravity:.28,
+          bounce:.28,
           w:58,h:44,got:false,phase:Math.random()*6.2,
           departure:true,
           earthChoice:true,
           dropOnly:true,
           bounced:false,
-          groundBounces:0
+          groundBounces:0,
+          emoji:cfg.emoji||'🛰️'
         });
         v118EarthPreludeCount++;
-        v99EarthSatelliteNextAt=nowAt+2100;
+        v99EarthSatelliteNextAt=nowAt+(v119EarthPreludeGaps[v118EarthPreludeCount-1]||720);
         eventEl.textContent='🛰️ ……？';
-        showToast(v118EarthPreludeCount===1?'……遠くで衛星がひとつ落ちた。':'……また衛星。何か起こりそう。',900);
+        showToast(v118EarthPreludeCount===1?'……遠くで衛星がひとつ落ちた。':'……また落ちた。まだ何か来そう。',860);
       }else{
         v118EarthWaveStarted=true;
         const waveStart=nowAt;
         [
-          // 最初の5機は犬に当たらない左右の安全地帯へ。
-          {screenStart:.10, screenEnd:.15, xOffset:-8,  yOffset:-8,   vy:3.02, v:.34, delay:0,   drift:.018},
-          {screenStart:.86, screenEnd:.76, xOffset:10,  yOffset:-26,  vy:3.18, v:.38, delay:120, drift:-.022},
-          {screenStart:.16, screenEnd:.22, xOffset:-4,  yOffset:-52,  vy:3.08, v:.35, delay:245, drift:.016},
-          {screenStart:.90, screenEnd:.80, xOffset:12,  yOffset:-80,  vy:3.24, v:.39, delay:380, drift:-.024},
-          {screenStart:.64, screenEnd:.56, xOffset:-6,  yOffset:-108, vy:3.14, v:.36, delay:525, drift:-.016},
-          // 6機目・7機目は犬の近くへ落ちてきて、どちらかにコンと当たって乗れる。
-          {screenStart:.60, screenEnd:.39, xOffset:4,   yOffset:-138, vy:3.32, v:.35, delay:690, drift:-.012},
-          {screenStart:.48, screenEnd:.34, xOffset:0,   yOffset:-168, vy:3.18, v:.33, delay:860, drift:-.010}
+          // 序盤は安全地帯、そのあと間隔を詰めて犬の近くへ。
+          {screenStart:.10, screenEnd:.15, xOffset:-8,  yOffset:-8,   vy:2.94, v:.32, delay:0,   drift:.014, emoji:'🛰️'},
+          {screenStart:.86, screenEnd:.76, xOffset:10,  yOffset:-26,  vy:3.02, v:.34, delay:180, drift:-.016, emoji:'🛰️'},
+          {screenStart:.16, screenEnd:.22, xOffset:-4,  yOffset:-52,  vy:2.98, v:.33, delay:340, drift:.014, emoji:(Math.random()<.20?'🛸':'🛰️')},
+          {screenStart:.90, screenEnd:.80, xOffset:12,  yOffset:-80,  vy:3.06, v:.35, delay:480, drift:-.018, emoji:'🛰️'},
+          {screenStart:.64, screenEnd:.56, xOffset:-6,  yOffset:-108, vy:2.96, v:.33, delay:600, drift:-.014, emoji:'🛰️'},
+          {screenStart:.60, screenEnd:.39, xOffset:4,   yOffset:-138, vy:3.10, v:.34, delay:700, drift:-.010, emoji:(Math.random()<.24?'🛸':'🛰️')},
+          {screenStart:.48, screenEnd:.34, xOffset:0,   yOffset:-168, vy:3.02, v:.32, delay:780, drift:-.008, emoji:'🛰️'},
+          {screenStart:.56, screenEnd:.35, xOffset:2,   yOffset:-194, vy:3.08, v:.32, delay:850, drift:-.010, emoji:'🛰️'}
         ].forEach(cfg=>{
           satellites.push({
             x:camera+W*cfg.screenStart+cfg.xOffset,
-            y:-92-Math.random()*24+cfg.yOffset,
+            y:-92-Math.random()*20+cfg.yOffset,
             dropStartY:-92+cfg.yOffset,
             screenStart:cfg.screenStart,
             screenEnd:cfg.screenEnd,
-            activeAt:waveStart+cfg.delay+Math.random()*85,
-            v:cfg.v+Math.random()*.08,
-            vy:cfg.vy+Math.random()*.28,
-            drift:(cfg.drift||0)+(Math.random()-.5)*.012,
+            activeAt:waveStart+cfg.delay+Math.random()*70,
+            v:cfg.v+Math.random()*.06,
+            vy:cfg.vy+Math.random()*.22,
+            drift:(cfg.drift||0)+(Math.random()-.5)*.010,
             wobble:Math.random()*6.283,
-            tilt:(Math.random()-.5)*.32,
-            gravity:.34,
-            bounce:.62,
+            tilt:(Math.random()-.5)*.26,
+            gravity:.30,
+            bounce:.30,
             w:58,h:44,got:false,phase:Math.random()*6.2,
             departure:true,
             earthChoice:true,
             dropOnly:true,
             bounced:false,
-            groundBounces:0
+            groundBounces:0,
+            emoji:cfg.emoji||'🛰️'
           });
         });
         v99EarthSatelliteNextAt=nowAt+6200;
         eventEl.textContent='🛰️ ……？';
-        showToast('……ガラガラッ！ まずは避けて、あとから来る衛星に乗れそう。',1200);
+        showToast('……ガラガラッ！ だんだん間隔が狭くなってきた。',1100);
       }
     }else{
       satellites.push({
@@ -5082,14 +5100,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         screenEnd:.55,
         v:.48+Math.random()*.14,
         vy:3.4+Math.random()*.55,
-        gravity:.34,
-        bounce:.62,
+        gravity:.30,
+        bounce:.30,
         w:58,h:44,got:false,phase:Math.random()*6.2,
         departure:true,
         earthChoice:false,
         dropOnly:true,
         bounced:false,
-        groundBounces:0
+        groundBounces:0,
+        emoji:(Math.random()<.20?'🛸':'🛰️')
       });
       eventEl.textContent='🛰️ ORBIT DROP';
     }
