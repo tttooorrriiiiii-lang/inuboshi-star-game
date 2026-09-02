@@ -1735,12 +1735,12 @@ for(const sat of satellites){
  const satGround=groundY()-sat.h;
 
  if(sat.boardingAt){
-   // ぶつかった直後はいったん弾かれる。少し待ってから飛び乗る。
+   // まずぶつかって高めに弾かれる。落ち始めてから飛び乗る。
    sat.x=sat.boardX;
    sat.y=sat.boardY;
-   if(now>=sat.boardingAt&&!v86Ride){
-     p.y=Math.max(34,p.y-16);
-     p.vy=-4.8;
+   if(now>=sat.boardingAt&&p.vy>=0&&!v86Ride){
+     p.y=Math.max(34,p.y-12);
+     p.vy=-3.8;
      p.on=false;
      if(v86BeginTransit(sat.rideKind==='ufo'?'ufo':'satellite',now,1)){
        sat.got=true;
@@ -1804,12 +1804,12 @@ for(const sat of satellites){
      sat.hitUntil=now+380;
    }
  }else if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),satHit)){
-   // まずコンとぶつかって、いったん弾かれる。その後に飛び乗る。
-   p.y=Math.max(34,p.y-10);
-   p.x=Math.max(camera+22,p.x-7);
-   p.vy=-7.2;
+   // まずコンとぶつかって、しっかり弾かれる。その後に飛び乗る。
+   p.y=Math.max(34,p.y-12);
+   p.x=Math.max(camera+18,p.x-10);
+   p.vy=-9.3;
    p.on=false;
-   sat.boardingAt=now+320;
+   sat.boardingAt=now+260;
    sat.boardX=sat.x;
    sat.boardY=sat.y;
    sat.dropOnly=false;
@@ -4824,7 +4824,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v122: ominous first flash + 2 rocks then satellite + bounce-then-board === */
+/* === v123: 4 diagonal rocks + longer ominous flash + clear jump-then-board === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4890,7 +4890,7 @@ let v118EarthPreludeCount=0;
 let v118EarthWaveStarted=false;
 let v121SkyFlashUntil=0;
 let v122SkyFlashPower=.55;
-const v119EarthPreludeGaps=[2100,1100,980,860,740];
+const v119EarthPreludeGaps=[1700,900,760,660,560,500];
 
 function v99PortalEligible(){
   if(system===BLACK_HOLE_SYSTEM)return false;
@@ -5083,20 +5083,21 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(isOpeningEarth){
       const nowAt=performance.now();
 
-      if(!v118EarthWaveStarted && v118EarthPreludeCount<5){
+      if(!v118EarthWaveStarted && v118EarthPreludeCount<6){
         // 最初の一発だけ強い不穏な閃光。そのあと前兆ドロップ。
         const isFirstPrelude=v118EarthPreludeCount===0;
-        v122SkyFlashPower=isFirstPrelude?1.35:.52;
-        window.v122FlashDur=isFirstPrelude?300:160;
-        v121SkyFlashUntil=nowAt+(isFirstPrelude?300:160);
+        v122SkyFlashPower=isFirstPrelude?1.6:.52;
+        window.v122FlashDur=isFirstPrelude?520:160;
+        v121SkyFlashUntil=nowAt+(isFirstPrelude?520:160);
 
         // 指示どおり、最初は岩が2回、その次に衛星。
         const preludeCfgs=[
-          {screenStart:.12, screenEnd:.18, xOffset:-8, yOffset:-12, vy:2.46, v:.26, drift:.012, emoji:'🪨'},
-          {screenStart:.88, screenEnd:.79, xOffset:10, yOffset:-18, vy:2.54, v:.27, drift:-.013, emoji:'🪨'},
-          {screenStart:.18, screenEnd:.24, xOffset:-5, yOffset:-24, vy:2.52, v:.27, drift:.010, emoji:'🛰️'},
-          {screenStart:.82, screenEnd:.74, xOffset:8, yOffset:-18, vy:2.60, v:.28, drift:-.012, emoji:'🛸'},
-          {screenStart:.68, screenEnd:.58, xOffset:0, yOffset:-22, vy:2.56, v:.27, drift:-.010, emoji:'🛰️'}
+          {screenStart:.08, screenEnd:.18, xOffset:-8, yOffset:-12, vy:2.42, v:.26, drift:.016, emoji:'🪨', tilt:-.42},
+          {screenStart:.90, screenEnd:.78, xOffset:10, yOffset:-18, vy:2.48, v:.27, drift:-.017, emoji:'🪨', tilt:.40},
+          {screenStart:.14, screenEnd:.28, xOffset:-5, yOffset:-22, vy:2.50, v:.27, drift:.015, emoji:'🪨', tilt:-.34},
+          {screenStart:.84, screenEnd:.70, xOffset:8, yOffset:-16, vy:2.56, v:.28, drift:-.016, emoji:'🪨', tilt:.36},
+          {screenStart:.22, screenEnd:.30, xOffset:0, yOffset:-18, vy:2.54, v:.27, drift:.010, emoji:'🛰️', tilt:-.10},
+          {screenStart:.76, screenEnd:.64, xOffset:2, yOffset:-20, vy:2.58, v:.27, drift:-.010, emoji:'🛸', tilt:.12}
         ];
         const cfg=preludeCfgs[v118EarthPreludeCount]||preludeCfgs[0];
         satellites.push({
@@ -5110,7 +5111,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           vy:cfg.vy+Math.random()*.18,
           drift:(cfg.drift||0)+(Math.random()-.5)*.008,
           wobble:Math.random()*6.283,
-          tilt:(Math.random()-.5)*.18,
+          tilt:(cfg.tilt||0)+(Math.random()-.5)*.08,
           gravity:.28,
           bounce:.24,
           w:58,h:44,got:false,phase:Math.random()*6.2,
