@@ -1431,8 +1431,11 @@ function spawnSatellite(){
 
  const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
  satellites.push({
-   x:camera+W*.56,
+   x:camera+W*.72,
    y:-92-Math.random()*56,
+   dropStartY:-92,
+   screenStart:.72,
+   screenEnd:.55,
    v:.48+Math.random()*.14,
    vy:3.4+Math.random()*.55,
    gravity:.34,
@@ -1637,10 +1640,14 @@ for(const sat of satellites){
  const satGround=groundY()-sat.h;
 
  if(sat.dropOnly){
-   // 落下中は画面中央寄りを保って、横へ逃げない。
-   sat.x=camera+W*.56;
+   // 右上寄りから中央寄りへ、ほんの少し斜めに落ちる。
    sat.vy+=(sat.gravity||.34)*dt;
    sat.y+=sat.vy*dt;
+   const dropStart=Number.isFinite(sat.dropStartY)?sat.dropStartY:-92;
+   const dropSpan=Math.max(1,satGround-dropStart);
+   const dropQ=Math.max(0,Math.min(1,(sat.y-dropStart)/dropSpan));
+   const screenX=(sat.screenStart||.72)+((sat.screenEnd||.55)-(sat.screenStart||.72))*dropQ;
+   sat.x=camera+W*screenX;
 
    if(sat.y>=satGround){
      sat.y=satGround;
@@ -4271,18 +4278,18 @@ function v86FinishTransit(){
     v86Ride={
       type:'arrival',
       kind:'satellite',
-      until:arriveNow+3100,
+      until:arriveNow+1250,
       fromSystem:system,
       fromStage:stage,
       steps:0
     };
-    satelliteUntil=Math.max(satelliteUntil,arriveNow+3150);
-    invincibleUntil=Math.max(invincibleUntil,arriveNow+3300);
+    satelliteUntil=Math.max(satelliteUntil,arriveNow+1300);
+    invincibleUntil=Math.max(invincibleUntil,arriveNow+1550);
     p.y=Math.max(40,groundY()-175);
     p.vy=0;
     p.on=false;
-    v86SetBadge('🛰️  ARRIVAL RIDE  ·  3.1 SEC');
-    showToast(`🛰️ ${to} に到着！ しばらく衛星で流れる〜`,1350);
+    v86SetBadge('🛰️  ARRIVAL RIDE');
+    showToast(`🛰️ ${to} に到着！`,900);
   }else{
     showToast(`🚀 ${to} に到着！`,1150);
   }
@@ -4316,14 +4323,17 @@ update=function(now,dt){
     if(v86Ride?.type==='arrival'&&now>=v86Ride.until){
       v86ClearRide();
       satelliteUntil=0;
+      p.y=groundY()-p.h;
       p.vy=0;
-      showToast('🐕 ポンッ！ 衛星から着地',700);
+      p.on=true;
+      jumps=0;
+      showToast('🐕 ポンッ！ 衛星から着地',650);
     }
     // v92: 移動手段は衛星だけ。岩・ランダム宇宙船・自動乗車は使わない。
     v86Rocks=[];v86Ships=[];
 
     if(v86Ride?.type==='transit')p.x+=.20*dt;
-    else if(v86Ride?.type==='arrival')p.x+=.12*dt;
+    else if(v86Ride?.type==='arrival')p.x+=1.65*dt;
   }catch(err){console.error('v86 ride recovered',err);v86ClearRide();v86Rocks=[];v86Ships=[]}
 };
 
@@ -4670,7 +4680,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v112: keep running while waiting for satellite === */
+/* === v113: dodgeable diagonal satellite + no arrival stop === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4917,8 +4927,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
     const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
     satellites.push({
-      x:camera+W*.56,
+      x:camera+W*.72,
       y:-92-Math.random()*56,
+      dropStartY:-92,
+      screenStart:.72,
+      screenEnd:.55,
       v:.48+Math.random()*.14,
       vy:3.4+Math.random()*.55,
       gravity:.34,
