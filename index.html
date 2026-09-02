@@ -1430,26 +1430,53 @@ function spawnSatellite(){
  satellites=[];
 
  const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
- satellites.push({
-   x:camera+W*.72,
-   y:-92-Math.random()*56,
-   dropStartY:-92,
-   screenStart:.72,
-   screenEnd:.55,
-   v:.48+Math.random()*.14,
-   vy:3.4+Math.random()*.55,
-   gravity:.34,
-   bounce:.62,
-   w:58,h:44,got:false,phase:Math.random()*6.2,
-   departure:true,
-   earthChoice:isOpeningEarth,
-   dropOnly:true,
-   bounced:false,
-   groundBounces:0
- });
 
- eventEl.textContent=isOpeningEarth?'🛰️ ……？':'🛰️ ORBIT DROP';
- if(isOpeningEarth)showToast('……上から、何か降りてくる。',950);
+ if(isOpeningEarth){
+   // v114: 地球では一度に複数の衛星が降ってくる
+   [
+     {screenStart:.69, screenEnd:.52, xOffset:0,  yOffset:0,   vy:3.25, v:.44},
+     {screenStart:.84, screenEnd:.67, xOffset:12, yOffset:-34, vy:3.05, v:.40}
+   ].forEach(cfg=>{
+     satellites.push({
+       x:camera+W*cfg.screenStart+cfg.xOffset,
+       y:-92-Math.random()*42+cfg.yOffset,
+       dropStartY:-92+cfg.yOffset,
+       screenStart:cfg.screenStart,
+       screenEnd:cfg.screenEnd,
+       v:cfg.v+Math.random()*.10,
+       vy:cfg.vy+Math.random()*.40,
+       gravity:.34,
+       bounce:.62,
+       w:58,h:44,got:false,phase:Math.random()*6.2,
+       departure:true,
+       earthChoice:true,
+       dropOnly:true,
+       bounced:false,
+       groundBounces:0
+     });
+   });
+   eventEl.textContent='🛰️ ……？';
+   showToast('……上から、衛星がいくつも降りてくる。',980);
+ }else{
+   satellites.push({
+     x:camera+W*.72,
+     y:-92-Math.random()*56,
+     dropStartY:-92,
+     screenStart:.72,
+     screenEnd:.55,
+     v:.48+Math.random()*.14,
+     vy:3.4+Math.random()*.55,
+     gravity:.34,
+     bounce:.62,
+     w:58,h:44,got:false,phase:Math.random()*6.2,
+     departure:true,
+     earthChoice:false,
+     dropOnly:true,
+     bounced:false,
+     groundBounces:0
+   });
+   eventEl.textContent='🛰️ ORBIT DROP';
+ }
  setTimeout(syncHUD,900);
  return true;
 }
@@ -4680,7 +4707,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v113: dodgeable diagonal satellite + no arrival stop === */
+/* === v114: multiple Earth satellites per drop === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4926,26 +4953,52 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     satellites=[];
 
     const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
-    satellites.push({
-      x:camera+W*.72,
-      y:-92-Math.random()*56,
-      dropStartY:-92,
-      screenStart:.72,
-      screenEnd:.55,
-      v:.48+Math.random()*.14,
-      vy:3.4+Math.random()*.55,
-      gravity:.34,
-      bounce:.62,
-      w:58,h:44,got:false,phase:Math.random()*6.2,
-      departure:true,
-      earthChoice:isOpeningEarth,
-      dropOnly:true,
-      bounced:false,
-      groundBounces:0
-    });
 
-    eventEl.textContent=isOpeningEarth?'🛰️ ……？':'🛰️ ORBIT DROP';
-    if(isOpeningEarth)showToast('……上から、何か降りてくる。',950);
+    if(isOpeningEarth){
+      [
+        {screenStart:.69, screenEnd:.52, xOffset:0,  yOffset:0,   vy:3.25, v:.44},
+        {screenStart:.84, screenEnd:.67, xOffset:12, yOffset:-34, vy:3.05, v:.40}
+      ].forEach(cfg=>{
+        satellites.push({
+          x:camera+W*cfg.screenStart+cfg.xOffset,
+          y:-92-Math.random()*42+cfg.yOffset,
+          dropStartY:-92+cfg.yOffset,
+          screenStart:cfg.screenStart,
+          screenEnd:cfg.screenEnd,
+          v:cfg.v+Math.random()*.10,
+          vy:cfg.vy+Math.random()*.40,
+          gravity:.34,
+          bounce:.62,
+          w:58,h:44,got:false,phase:Math.random()*6.2,
+          departure:true,
+          earthChoice:true,
+          dropOnly:true,
+          bounced:false,
+          groundBounces:0
+        });
+      });
+      eventEl.textContent='🛰️ ……？';
+      showToast('……上から、衛星がいくつも降りてくる。',980);
+    }else{
+      satellites.push({
+        x:camera+W*.72,
+        y:-92-Math.random()*56,
+        dropStartY:-92,
+        screenStart:.72,
+        screenEnd:.55,
+        v:.48+Math.random()*.14,
+        vy:3.4+Math.random()*.55,
+        gravity:.34,
+        bounce:.62,
+        w:58,h:44,got:false,phase:Math.random()*6.2,
+        departure:true,
+        earthChoice:false,
+        dropOnly:true,
+        bounced:false,
+        groundBounces:0
+      });
+      eventEl.textContent='🛰️ ORBIT DROP';
+    }
     setTimeout(syncHUD,900);
     return true;
   };
