@@ -1499,7 +1499,53 @@ function spawnLaserTarget(){
  const y=lanes[Math.floor(Math.random()*lanes.length)];
  swarm.push({kind:'target',emoji:'👾',x:p.x+W+100+Math.random()*180,y:y,v:2.0+Math.random()*1.0,w:42,h:42,got:false});
 }
-function drawSatellite(o){if(o.got)return;const now=performance.now();if(o.activeAt&&now<o.activeAt)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;const spin=(o.rolling?(o.roll||0):((o.tilt||0)+Math.sin(now/260+(o.wobble||0))*.045));ctx.save();ctx.translate(sx+26,o.y+22);ctx.rotate(spin);ctx.shadowColor=(o.emoji==='🛸')?'#ff9ef7':'#78eaff';ctx.shadowBlur=18;ctx.font='48px system-ui';ctx.fillText(o.emoji||'🛰️',-26,16);ctx.restore();if(o.landedFxUntil&&now<o.landedFxUntil){const q=(o.landedFxUntil-now)/500;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,q));ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='900 14px system-ui';ctx.fillText(o.landedFxText||'コロン',sx-4,o.y-8-Math.sin((1-q)*3.14)*6);ctx.restore()}}
+function drawSatellite(o){
+  if(o.got)return;
+  const now=performance.now();
+  if(o.activeAt&&now<o.activeAt)return;
+  const sx=o.x-camera;
+  if(sx<-100||sx>W+120)return;
+
+  const spin=(o.rolling?(o.roll||0):((o.tilt||0)+Math.sin(now/260+(o.wobble||0))*.045));
+  ctx.save();
+  ctx.translate(sx+26,o.y+22);
+  ctx.rotate(spin);
+  ctx.shadowColor=o.emoji==='🛸'?'#ff9ef7':(o.emoji==='🪨'?'#fff1c4':'#78eaff');
+  ctx.shadowBlur=o.emoji==='🪨'?10:18;
+  ctx.font='48px system-ui';
+  ctx.fillText(o.emoji||'🛰️',-26,16);
+  ctx.restore();
+
+  // 着地した瞬間の「コロン」感は文字なしの小さな衝撃線で表す
+  if(o.landedFxUntil&&now<o.landedFxUntil){
+    const q=(o.landedFxUntil-now)/360;
+    ctx.save();
+    ctx.globalAlpha=Math.max(0,Math.min(1,q));
+    ctx.strokeStyle='rgba(255,255,255,.85)';
+    ctx.lineWidth=1.8;
+    ctx.beginPath();
+    ctx.moveTo(sx+14,o.y+42); ctx.lineTo(sx+4,o.y+48);
+    ctx.moveTo(sx+40,o.y+42); ctx.lineTo(sx+50,o.y+48);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+function drawEarthSkyFlash(){
+  if(!v63IsOpeningEarth())return;
+  const now=performance.now();
+  if(now>=v121SkyFlashUntil)return;
+  const q=(v121SkyFlashUntil-now)/170;
+  const gy=groundY();
+  ctx.save();
+  ctx.globalAlpha=Math.max(0,Math.min(1,q))*.35;
+  const flash=ctx.createLinearGradient(0,0,0,gy*.8);
+  flash.addColorStop(0,'rgba(255,255,255,1)');
+  flash.addColorStop(.35,'rgba(180,220,255,.7)');
+  flash.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=flash;
+  ctx.fillRect(0,0,W,gy-26);
+  ctx.restore();
+}
 function drawBoss(b){if(b.dead)return;const sx=b.x-camera;if(sx<-160||sx>W+160)return;ctx.save();ctx.shadowColor=b.hitFlash>0?'#ffe45a':'#ff7bcd';ctx.shadowBlur=b.hitFlash>0?26:14;ctx.font='86px system-ui';ctx.fillText('🧌',sx,b.y+72);ctx.restore();ctx.save();ctx.translate(sx+6,b.y-18);ctx.fillStyle='rgba(12,8,22,.75)';ctx.fillRect(0,0,70,15);ctx.fillStyle='#fff';ctx.font='900 9px system-ui';ctx.fillText('BOSS 10 HIT',6,10);ctx.fillStyle='#20112e';ctx.fillRect(0,18,72,8);ctx.fillStyle='#ff6b6b';ctx.fillRect(1,19,70*(b.hp/b.maxHp),6);ctx.strokeStyle='rgba(255,255,255,.8)';ctx.strokeRect(0,18,72,8);ctx.restore()}
 function drawFlowerRain(){if(system!==SECRET_FLOWER_SYSTEM)return;const t=performance.now()/1000;ctx.save();for(let i=0;i<42;i++){const speed=34+(i%7)*7;const y=((t*speed+i*71)%(H+120))-60;const x=((i*97+Math.sin(t*.8+i)*70)%(W+160))-80;const size=18+(i%5)*4;ctx.globalAlpha=.48+(i%4)*.12;ctx.shadowColor=i%2?'#ff84d6':'#fff';ctx.shadowBlur=10;ctx.font=`${size}px system-ui`;ctx.save();ctx.translate(x,y);ctx.rotate(t*(i%2?.7:-.55)+i);ctx.fillText(i%6===0?'🌺':'🌸',-size/2,size/2);ctx.restore()}ctx.restore();ctx.globalAlpha=1}
 function drawBlackHoleOddities(){
@@ -1607,7 +1653,7 @@ function drawPlayer(){const now=performance.now(),sx=p.x-camera;const alienGlow=
    ctx.beginPath();ctx.ellipse(0,0,96,25,0,0,Math.PI*2);ctx.stroke();
    ctx.rotate(-now/700);ctx.strokeStyle='rgba(207,124,255,.45)';ctx.beginPath();ctx.ellipse(0,0,72,18,.7,0,Math.PI*2);ctx.stroke();
    ctx.restore()
- }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText('🛰️',sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v80BoneTimeActive&&window.__v80BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
+ }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText((v86Ride?.kind==='ufo'?'🛸':'🛰️'),sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v80BoneTimeActive&&window.__v80BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
 function spawnEvents(){
  const s=S(),name=s.name,isSun=name.includes('太陽'),isMars=name.includes('火星'),isEarth=system===0&&stage===0,isMoon=name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth)return;
@@ -1684,10 +1730,10 @@ for(const sat of satellites){
    sat.x=sat.boardX;
    sat.y=sat.boardY;
    if(now>=sat.boardingAt&&!v86Ride){
-     p.y=Math.max(34,p.y-14);
-     p.vy=-4.4;
+     p.y=Math.max(34,p.y-18);
+     p.vy=-5.1;
      p.on=false;
-     if(v86BeginTransit('satellite',now,1)){
+     if(v86BeginTransit(sat.rideKind==='ufo'?'ufo':'satellite',now,1)){
        sat.got=true;
        v94SatellitePending=false;
        continue;
@@ -1698,7 +1744,6 @@ for(const sat of satellites){
  }
 
  if(sat.dropOnly){
-   // 右上寄りから中央寄りへ、ほんの少し斜めに落ちる。
    sat.vy+=(sat.gravity||.34)*dt;
    sat.y+=sat.vy*dt;
    const dropStart=Number.isFinite(sat.dropStartY)?sat.dropStartY:-92;
@@ -1711,18 +1756,16 @@ for(const sat of satellites){
 
    if(sat.y>=satGround){
      sat.y=satGround;
-     sat.vy=-Math.max(1.0,Math.abs(sat.vy)*((sat.bounce||.30)+(Math.random()-.5)*.04));
+     sat.vy=-Math.max(.92,Math.abs(sat.vy)*((sat.bounce||.26)+(Math.random()-.5)*.035));
      if(!sat.bounced){
-       sat.landedFxUntil=now+500;
-       sat.landedFxText='コロン';
+       sat.landedFxUntil=now+360;
        sat.roll=(sat.roll||0)+(.18+Math.random()*.12);
        sat.rollVel=.13+Math.random()*.05;
      }
      sat.bounced=true;
      sat.groundBounces=(sat.groundBounces||0)+1;
 
-     // 低めに1〜2回はねたら、そのままゴロンと転がる。
-     if(sat.groundBounces>=2||Math.abs(sat.vy)<1.15){
+     if(sat.groundBounces>=2||Math.abs(sat.vy)<1.05){
        sat.dropOnly=false;
        sat.departure=false;
        sat.y=satGround;
@@ -1732,8 +1775,6 @@ for(const sat of satellites){
      }
    }
  }else{
-   // 地面に着いた後は、少し傾きながらゴロンと転がる。
-   // 乗車用衛星は特にゆっくり。犬が追いついて飛び乗りやすい。
    const groundV=sat.boardEasy?Math.min(.12,sat.v):sat.v;
    sat.x-=groundV*dt;
    sat.y=satGround;
@@ -1746,12 +1787,19 @@ for(const sat of satellites){
  const satHit=sat.boardEasy
    ? {x:sat.x-12,y:sat.y-10,w:sat.w+24,h:sat.h+18}
    : {x:sat.x,y:sat.y,w:sat.w,h:sat.h};
- if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),satHit)){
-   // v119: まず軽くコンと当たり、そのあと自然に乗る。
+
+ if(sat.rideKind==='rock'){
+   if(!v86Ride&&(!sat.hitUntil||now>=sat.hitUntil)&&rectHit(playerRect(),satHit)){
+     p.vy=-6.1;
+     p.on=false;
+     sat.hitUntil=now+380;
+   }
+ }else if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),satHit)){
+   // まず軽くコンと当たり、そのあとジャンプして乗る。
    p.y=Math.max(34,p.y-8);
    p.vy=-2.8;
    p.on=false;
-   sat.boardingAt=now+190;
+   sat.boardingAt=now+210;
    sat.boardX=sat.x;
    sat.boardY=sat.y;
    sat.dropOnly=false;
@@ -1807,7 +1855,7 @@ function drawVenusFloorFinal(){
   ctx.restore();
 }
 
-function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawCosmicWarpFX();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawVenusFloorFinal();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
+function frame(now){document.getElementById('bootCheck')?.remove();const dt=Math.min(2,(now-last)/16.67||1);last=now;update(now,dt);ctx.save();if(shake)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawBackground();drawEarthSkyFlash();drawCosmicWarpFX();drawFlowerRain();drawCosmic();drawBlackHoleOddities();drawGround();drawVenusFloorFinal();drawEarthWalkers();items.forEach(drawGood);hazards.forEach(drawHazard);bosses.forEach(drawBoss);aliens.forEach(drawAlien);morphs.forEach(drawMorph);swarm.forEach(drawSwarm);satellites.forEach(drawSatellite);secretPickups.forEach(drawSecretPickup);drawPortal();drawLasers();drawBoneShots();drawFallingStars();drawPlayer();ctx.restore();requestAnimationFrame(frame)}
 function doJump(){if(paused||jumps>=4)return;const s=S(),boost=big?1.12:1;
  const gravityJump=Math.max(.78,Math.min(1.38,Math.sqrt(.50/Math.max(.24,s.gravity))));
  if(p.on){p.vy=-(s.jump*.72+Math.min(.45,companionCount*.025))*gravityJump*(food===0?.88:1)*boost}
@@ -4335,13 +4383,14 @@ function v86Advance(steps=1){
 }
 function v86BeginTransit(type,now,steps=1){
   if(!v86CanRide()||v86Ride)return false;
-  type='satellite'; // v92: inter-star travel is satellite-only
+  const kind=(type==='ufo')?'ufo':'satellite';
+  const icon=kind==='ufo'?'🛸':'🛰️';
   v94SatellitePending=false;
-  v86Ride={type:'transit',kind:'satellite',until:now+7000,fromSystem:system,fromStage:stage,steps};
+  v86Ride={type:'transit',kind,until:now+7000,fromSystem:system,fromStage:stage,steps};
   satelliteUntil=Math.max(satelliteUntil,now+7050);invincibleUntil=Math.max(invincibleUntil,now+7200);
   wormholeActive=false;blackHoleActive=false;
-  v86SetBadge('🐕 → 🛰️  NEXT STAR');
-  showToast('🛰️ ポンッ！ 衛星で加速するよ',900);
+  v86SetBadge(`🐕 → ${icon}  NEXT STAR`);
+  showToast(`${icon} 加速するよ`,900);
   return true;
 }
 function v86FinishTransit(){
@@ -4356,12 +4405,13 @@ function v86FinishTransit(){
   stageStart();
   const to=S()?.name||'';
 
-  // v87: 衛星で到着した時も、次の星の上空を約2秒そのままライドする。
-  if(r.kind==='satellite'){
+  // v121: 衛星でもUFOでも、到着後に少し上空ライド。
+  if(r.kind==='satellite'||r.kind==='ufo'){
     const arriveNow=performance.now();
+    const icon=r.kind==='ufo'?'🛸':'🛰️';
     v86Ride={
       type:'arrival',
-      kind:'satellite',
+      kind:r.kind,
       until:arriveNow+1250,
       fromSystem:system,
       fromStage:stage,
@@ -4372,13 +4422,13 @@ function v86FinishTransit(){
     p.y=Math.max(40,groundY()-175);
     p.vy=0;
     p.on=false;
-    v86SetBadge('🛰️  ARRIVAL RIDE');
-    showToast(`🛰️ ${to} に到着！`,900);
+    v86SetBadge(`${icon}  ARRIVAL RIDE`);
+    showToast(`${icon} ${to} に到着！`,900);
   }else{
     showToast(`🚀 ${to} に到着！`,1150);
   }
 
-  eventEl.textContent=`🛰️ SATELLITE ✦ ${from} → ${to}`;
+  eventEl.textContent=`${r.kind==='ufo'?'🛸 UFO':'🛰️ SATELLITE'} ✦ ${from} → ${to}`;
 }
 
 const v86PrevStageStart=stageStart;
@@ -4764,7 +4814,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v120: easier satellite boarding === */
+/* === v121: flash + ufo ride + rock jump === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4828,6 +4878,7 @@ let v99WhiteHoleY=0;
 let v99EarthWeirdStarted=false;
 let v118EarthPreludeCount=0;
 let v118EarthWaveStarted=false;
+let v121SkyFlashUntil=0;
 const v119EarthPreludeGaps=[2100,1100,980,860,740];
 
 function v99PortalEligible(){
@@ -4845,6 +4896,7 @@ stageStart=function(){
   v99EarthWeirdStarted=false;
   v118EarthPreludeCount=0;
   v118EarthWaveStarted=false;
+  v121SkyFlashUntil=0;
   if(v63IsOpeningEarth()){
     // v119: 前兆の単発衛星を重ねてから、大量ウェーブへ。
     v99EarthSatelliteNextAt=performance.now()+1800;
@@ -5018,15 +5070,16 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
     if(isOpeningEarth){
       const nowAt=performance.now();
+      v121SkyFlashUntil=nowAt+170;
 
       if(!v118EarthWaveStarted && v118EarthPreludeCount<5){
-        // 前兆フェーズ：最初は安全地帯。2回目は1秒ほど早く、その後も少しずつ間隔が狭まる。
+        // 前兆フェーズ：安全地帯にぽつぽつ落ちる。2回目は少し早め、その後も間隔が狭まる。
         const preludeCfgs=[
           {screenStart:.12, screenEnd:.18, xOffset:-8, yOffset:-12, vy:2.55, v:.27, drift:.012, emoji:'🛰️'},
           {screenStart:.90, screenEnd:.80, xOffset:10, yOffset:-20, vy:2.62, v:.28, drift:-.014, emoji:'🛰️'},
-          {screenStart:.18, screenEnd:.24, xOffset:-5, yOffset:-28, vy:2.58, v:.27, drift:.010, emoji:'🛰️'},
-          {screenStart:.84, screenEnd:.76, xOffset:8, yOffset:-18, vy:2.66, v:.28, drift:-.012, emoji:(Math.random()<.38?'🛸':'🛰️')},
-          {screenStart:.68, screenEnd:.58, xOffset:0, yOffset:-24, vy:2.60, v:.27, drift:-.010, emoji:(Math.random()<.32?'🛸':'🛰️')}
+          {screenStart:.18, screenEnd:.24, xOffset:-5, yOffset:-28, vy:2.58, v:.27, drift:.010, emoji:'🪨'},
+          {screenStart:.84, screenEnd:.76, xOffset:8, yOffset:-18, vy:2.66, v:.28, drift:-.012, emoji:(Math.random()<.5?'🛸':'🛰️')},
+          {screenStart:.68, screenEnd:.58, xOffset:0, yOffset:-24, vy:2.60, v:.27, drift:-.010, emoji:(Math.random()<.45?'🛸':'🪨')}
         ];
         const cfg=preludeCfgs[v118EarthPreludeCount]||preludeCfgs[0];
         satellites.push({
@@ -5035,39 +5088,42 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           dropStartY:-92+cfg.yOffset,
           screenStart:cfg.screenStart,
           screenEnd:cfg.screenEnd,
-          activeAt:nowAt,
+          activeAt:nowAt+120,
           v:cfg.v+Math.random()*.05,
           vy:cfg.vy+Math.random()*.18,
           drift:(cfg.drift||0)+(Math.random()-.5)*.008,
           wobble:Math.random()*6.283,
           tilt:(Math.random()-.5)*.18,
           gravity:.28,
-          bounce:.28,
+          bounce:.24,
           w:58,h:44,got:false,phase:Math.random()*6.2,
           departure:true,
           earthChoice:true,
           dropOnly:true,
           bounced:false,
           groundBounces:0,
-          emoji:cfg.emoji||'🛰️'
+          emoji:cfg.emoji||'🛰️',
+          rideKind:(cfg.emoji==='🛸'?'ufo':(cfg.emoji==='🪨'?'rock':'satellite'))
         });
         v118EarthPreludeCount++;
         v99EarthSatelliteNextAt=nowAt+(v119EarthPreludeGaps[v118EarthPreludeCount-1]||720);
         eventEl.textContent='🛰️ ……？';
-        showToast(v118EarthPreludeCount===1?'……遠くで衛星がひとつ落ちた。':'……また落ちた。まだ何か来そう。',860);
+        showToast(v118EarthPreludeCount===1?'……遠くで何か落ちた。':'……また落ちた。まだ何か来そう。',860);
       }else{
         v118EarthWaveStarted=true;
-        const waveStart=nowAt;
+        const waveStart=nowAt+120;
         [
-          // 序盤は安全地帯、そのあと間隔を詰めて犬の近くへ。
+          // 最初は犬に当たりにくい位置
           {screenStart:.10, screenEnd:.15, xOffset:-8,  yOffset:-8,   vy:2.94, v:.32, delay:0,   drift:.014, emoji:'🛰️'},
           {screenStart:.86, screenEnd:.76, xOffset:10,  yOffset:-26,  vy:3.02, v:.34, delay:180, drift:-.016, emoji:'🛰️'},
-          {screenStart:.16, screenEnd:.22, xOffset:-4,  yOffset:-52,  vy:2.98, v:.33, delay:340, drift:.014, emoji:(Math.random()<.20?'🛸':'🛰️')},
+          {screenStart:.16, screenEnd:.22, xOffset:-4,  yOffset:-52,  vy:2.98, v:.33, delay:340, drift:.014, emoji:'🪨'},
           {screenStart:.90, screenEnd:.80, xOffset:12,  yOffset:-80,  vy:3.06, v:.35, delay:480, drift:-.018, emoji:'🛰️'},
-          {screenStart:.64, screenEnd:.56, xOffset:-6,  yOffset:-108, vy:2.96, v:.33, delay:600, drift:-.014, emoji:'🛰️'},
-          {screenStart:.64, screenEnd:.48, xOffset:4,   yOffset:-138, vy:2.55, v:.24, delay:760, drift:-.006, emoji:(Math.random()<.24?'🛸':'🛰️'), boardEasy:true},
+          {screenStart:.64, screenEnd:.56, xOffset:-6,  yOffset:-108, vy:2.96, v:.33, delay:600, drift:-.014, emoji:'🛸'},
+          // ここから間隔が狭くなる
+          {screenStart:.64, screenEnd:.48, xOffset:4,   yOffset:-138, vy:2.55, v:.24, delay:760, drift:-.006, emoji:'🛸', boardEasy:true},
           {screenStart:.58, screenEnd:.43, xOffset:0,   yOffset:-168, vy:2.48, v:.22, delay:940, drift:-.006, emoji:'🛰️', boardEasy:true},
-          {screenStart:.56, screenEnd:.35, xOffset:2,   yOffset:-194, vy:3.08, v:.32, delay:850, drift:-.010, emoji:'🛰️'}
+          {screenStart:.56, screenEnd:.35, xOffset:2,   yOffset:-194, vy:3.08, v:.32, delay:850, drift:-.010, emoji:'🪨'},
+          {screenStart:.52, screenEnd:.39, xOffset:2,   yOffset:-214, vy:2.72, v:.26, delay:1010, drift:-.008, emoji:'🛰️', boardEasy:true}
         ].forEach(cfg=>{
           satellites.push({
             x:camera+W*cfg.screenStart+cfg.xOffset,
@@ -5082,7 +5138,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
             wobble:Math.random()*6.283,
             tilt:(Math.random()-.5)*.26,
             gravity:.30,
-            bounce:.30,
+            bounce:.26,
             w:58,h:44,got:false,phase:Math.random()*6.2,
             departure:true,
             earthChoice:true,
@@ -5090,7 +5146,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
             bounced:false,
             groundBounces:0,
             emoji:cfg.emoji||'🛰️',
-            boardEasy:!!cfg.boardEasy
+            boardEasy:!!cfg.boardEasy,
+            rideKind:(cfg.emoji==='🛸'?'ufo':(cfg.emoji==='🪨'?'rock':'satellite'))
           });
         });
         v99EarthSatelliteNextAt=nowAt+6200;
@@ -5107,15 +5164,17 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         v:.48+Math.random()*.14,
         vy:3.4+Math.random()*.55,
         gravity:.30,
-        bounce:.30,
+        bounce:.26,
         w:58,h:44,got:false,phase:Math.random()*6.2,
         departure:true,
         earthChoice:false,
         dropOnly:true,
         bounced:false,
         groundBounces:0,
-        emoji:(Math.random()<.20?'🛸':'🛰️')
+        emoji:(Math.random()<.20?'🛸':(Math.random()<.38?'🪨':'🛰️')),
+        rideKind:'satellite'
       });
+      satellites[satellites.length-1].rideKind = satellites[satellites.length-1].emoji==='🛸' ? 'ufo' : (satellites[satellites.length-1].emoji==='🪨' ? 'rock' : 'satellite');
       eventEl.textContent='🛰️ ORBIT DROP';
     }
     setTimeout(syncHUD,900);
