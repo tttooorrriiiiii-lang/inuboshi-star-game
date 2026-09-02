@@ -1733,20 +1733,25 @@ for(const sat of satellites){
    }
  }else{
    // 地面に着いた後は、少し傾きながらゴロンと転がる。
-   sat.x-=sat.v*dt;
+   // 乗車用衛星は特にゆっくり。犬が追いついて飛び乗りやすい。
+   const groundV=sat.boardEasy?Math.min(.12,sat.v):sat.v;
+   sat.x-=groundV*dt;
    sat.y=satGround;
    if(sat.rolling){
      sat.roll=(sat.roll||0)-(sat.rollVel||.14)*dt;
-     sat.rollVel=Math.max(.018,(sat.rollVel||.14)*0.992);
+     sat.rollVel=Math.max(.012,(sat.rollVel||.14)*(sat.boardEasy?.996:.992));
    }
  }
 
- if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){
+ const satHit=sat.boardEasy
+   ? {x:sat.x-12,y:sat.y-10,w:sat.w+24,h:sat.h+18}
+   : {x:sat.x,y:sat.y,w:sat.w,h:sat.h};
+ if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),satHit)){
    // v119: まず軽くコンと当たり、そのあと自然に乗る。
    p.y=Math.max(34,p.y-8);
    p.vy=-2.8;
    p.on=false;
-   sat.boardingAt=now+150;
+   sat.boardingAt=now+190;
    sat.boardX=sat.x;
    sat.boardY=sat.y;
    sat.dropOnly=false;
@@ -4759,7 +4764,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v119: staged prelude drops + softer bounce + rolling satellites/UFOs === */
+/* === v120: easier satellite boarding === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -5017,11 +5022,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       if(!v118EarthWaveStarted && v118EarthPreludeCount<5){
         // 前兆フェーズ：最初は安全地帯。2回目は1秒ほど早く、その後も少しずつ間隔が狭まる。
         const preludeCfgs=[
-          {screenStart:.12, screenEnd:.18, xOffset:-8, yOffset:-12, vy:2.84, v:.30, drift:.012, emoji:'🛰️'},
-          {screenStart:.90, screenEnd:.80, xOffset:10, yOffset:-20, vy:2.92, v:.31, drift:-.014, emoji:'🛰️'},
-          {screenStart:.18, screenEnd:.24, xOffset:-5, yOffset:-28, vy:2.88, v:.30, drift:.010, emoji:'🛰️'},
-          {screenStart:.84, screenEnd:.76, xOffset:8, yOffset:-18, vy:2.96, v:.31, drift:-.012, emoji:(Math.random()<.38?'🛸':'🛰️')},
-          {screenStart:.68, screenEnd:.58, xOffset:0, yOffset:-24, vy:2.90, v:.30, drift:-.010, emoji:(Math.random()<.32?'🛸':'🛰️')}
+          {screenStart:.12, screenEnd:.18, xOffset:-8, yOffset:-12, vy:2.55, v:.27, drift:.012, emoji:'🛰️'},
+          {screenStart:.90, screenEnd:.80, xOffset:10, yOffset:-20, vy:2.62, v:.28, drift:-.014, emoji:'🛰️'},
+          {screenStart:.18, screenEnd:.24, xOffset:-5, yOffset:-28, vy:2.58, v:.27, drift:.010, emoji:'🛰️'},
+          {screenStart:.84, screenEnd:.76, xOffset:8, yOffset:-18, vy:2.66, v:.28, drift:-.012, emoji:(Math.random()<.38?'🛸':'🛰️')},
+          {screenStart:.68, screenEnd:.58, xOffset:0, yOffset:-24, vy:2.60, v:.27, drift:-.010, emoji:(Math.random()<.32?'🛸':'🛰️')}
         ];
         const cfg=preludeCfgs[v118EarthPreludeCount]||preludeCfgs[0];
         satellites.push({
@@ -5060,8 +5065,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           {screenStart:.16, screenEnd:.22, xOffset:-4,  yOffset:-52,  vy:2.98, v:.33, delay:340, drift:.014, emoji:(Math.random()<.20?'🛸':'🛰️')},
           {screenStart:.90, screenEnd:.80, xOffset:12,  yOffset:-80,  vy:3.06, v:.35, delay:480, drift:-.018, emoji:'🛰️'},
           {screenStart:.64, screenEnd:.56, xOffset:-6,  yOffset:-108, vy:2.96, v:.33, delay:600, drift:-.014, emoji:'🛰️'},
-          {screenStart:.60, screenEnd:.39, xOffset:4,   yOffset:-138, vy:3.10, v:.34, delay:700, drift:-.010, emoji:(Math.random()<.24?'🛸':'🛰️')},
-          {screenStart:.48, screenEnd:.34, xOffset:0,   yOffset:-168, vy:3.02, v:.32, delay:780, drift:-.008, emoji:'🛰️'},
+          {screenStart:.64, screenEnd:.48, xOffset:4,   yOffset:-138, vy:2.55, v:.24, delay:760, drift:-.006, emoji:(Math.random()<.24?'🛸':'🛰️'), boardEasy:true},
+          {screenStart:.58, screenEnd:.43, xOffset:0,   yOffset:-168, vy:2.48, v:.22, delay:940, drift:-.006, emoji:'🛰️', boardEasy:true},
           {screenStart:.56, screenEnd:.35, xOffset:2,   yOffset:-194, vy:3.08, v:.32, delay:850, drift:-.010, emoji:'🛰️'}
         ].forEach(cfg=>{
           satellites.push({
@@ -5084,7 +5089,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
             dropOnly:true,
             bounced:false,
             groundBounces:0,
-            emoji:cfg.emoji||'🛰️'
+            emoji:cfg.emoji||'🛰️',
+            boardEasy:!!cfg.boardEasy
           });
         });
         v99EarthSatelliteNextAt=nowAt+6200;
