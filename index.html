@@ -952,10 +952,10 @@ function makeWorld(){
  const isSun=s.name.includes('太陽'),isMars=s.name.includes('火星'),isEarth=system===0&&stage===0,isMoon=s.name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth){
    // v99: 地球は「骨を追って散歩」がちゃんと遊びになるくらい増量。
-   for(let i=0;i<34;i++){
+   for(let i=0;i<42;i++){
      items.push({
-       x:170+i*95+(i%4)*14,
-       y:groundY()-42-(i%5)*15-Math.random()*12,
+       x:145+i*79+(i%5)*11,
+       y:groundY()-40-(i%5)*14-Math.random()*11,
        r:18,got:false,color:'#ffd65a',food:true
      });
    }
@@ -1433,7 +1433,7 @@ function spawnSatellite(){
  const targetY=isOpeningEarth ? Math.max(groundY()-122,56) : Math.max(groundY()-98,60);
  const startY=-92-Math.random()*56;
  satellites.push({
-   x:p.x+132+Math.random()*24,
+   x:camera+W*.56,
    y:startY,
    targetY,
    v:.82+Math.random()*.18,
@@ -1633,6 +1633,7 @@ for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/22
 for(const sat of satellites){
  if(sat.got)continue;
  if(sat.departure){
+   if(sat.dropOnly)sat.x=camera+W*.56;
    sat.y=Math.min(sat.targetY||sat.y, sat.y+(sat.vy||3.2)*dt);
    if(sat.y>=(sat.targetY||sat.y)-1)sat.dropOnly=false;
  }else{
@@ -2466,7 +2467,7 @@ syncHUD=function(){
  const earth=system===0&&stage===0,s=S(),dist=v60Distance();
  if(earth){
   locationEl.textContent='🌍 地球';missionEl.textContent=returnFromDogStar?'🐕 地球に帰ってきた。いつもの道を歩こう。':'🐕 地球を散歩中。道の先に何かある…';eventEl.textContent='🌳 地球';
-  astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'ここから宇宙の旅が始まる'}</span>`;
+  astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'骨好きわんこの宇宙旅が始まる'}</span>`;
  }else{
   const grav=s.gravity<=.40?'低重力｜ジャンプ力🔼':s.gravity>=.56?'高重力｜ジャンプ力🔽':'標準重力｜ジャンプ力↔️';
   astroInfo.innerHTML=`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span><span class="distanceHint">${grav}</span>`;
@@ -4560,6 +4561,53 @@ syncHUD=function(force=false){
       ctx.beginPath();ctx.arc(mx+dx*mr,my+dy*mr,rr*mr,0,Math.PI*2);ctx.fill();
     });
 
+
+    // v110: 流れ星は完全に「空」だけ。ビル下や地面には絶対はみ出さない
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0,0,W,Math.max(0,gy-72));
+    ctx.clip();
+    for(let i=0;i<3;i++){
+      const cycle=5.2+i*1.25;
+      const phase=(t+i*1.37)%cycle;
+      if(phase<1.02){
+        const q=phase/1.02;
+        const sx=W*(.92-.74*q)+i*20;
+        const sy=58+i*26+q*(Math.max(gy-170,210));
+        const len=58+110*q;
+        const ang=.96;
+        const tx=sx+Math.cos(ang)*len;
+        const ty=sy-Math.sin(ang)*len;
+        const trail=ctx.createLinearGradient(sx,sy,tx,ty);
+        trail.addColorStop(0,'rgba(255,255,255,1)');
+        trail.addColorStop(.24,'rgba(215,236,255,.82)');
+        trail.addColorStop(1,'rgba(255,255,255,0)');
+        ctx.globalAlpha=.22+.78*(1-q*.08);
+        ctx.strokeStyle=trail;
+        ctx.shadowColor='#cfe9ff';
+        ctx.shadowBlur=16;
+        ctx.lineWidth=2.4;
+        ctx.beginPath();
+        ctx.moveTo(sx,sy);
+        ctx.lineTo(tx,ty);
+        ctx.stroke();
+
+        ctx.lineWidth=1.15;
+        ctx.globalAlpha=.14+.36*(1-q*.12);
+        ctx.beginPath();
+        ctx.moveTo(sx+3,sy+3);
+        ctx.lineTo(tx+8,ty+8);
+        ctx.stroke();
+
+        ctx.globalAlpha=.98;
+        ctx.fillStyle='#fff';
+        ctx.beginPath();
+        ctx.arc(sx,sy,2.2,0,Math.PI*2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+
     // 夜の街：既存の朝の街を夜色で描き直す
     ctx.globalAlpha=1;
     for(let i=0;i<11;i++){
@@ -4599,7 +4647,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v107: stable star-end wait + true vertical satellite drop === */
+/* === v110: meteor sky-only clipping === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4648,62 +4696,10 @@ syncHUD=function(force=false){
     }
   };
 
-  // 地球の夜空だけ、時々流れ星を流す。
+  // v108: 流れ星はv101の街背景内（ビルの後ろ）へ移動済み。
   const v102PrevDrawBackground=drawBackground;
   drawBackground=function(){
     v102PrevDrawBackground();
-    if(!v63IsOpeningEarth())return;
-
-    const t=performance.now()/1000;
-    const gy=groundY();
-    ctx.save();
-    ctx.lineCap='round';
-
-    for(let i=0;i<3;i++){
-      const cycle=5.2+i*1.25;
-      const phase=(t+i*1.37)%cycle;
-      if(phase<1.02){
-        const p1=phase/1.02;
-        const sx=W*(.92-.74*p1)+i*20;
-        const sy=58+i*26+p1*(Math.max(gy-120,240));
-        const len=58+110*p1;
-        const ang=.96;
-        const ex=sx+Math.cos(ang)*len;
-        const ey=sy-Math.sin(ang)*len;
-        const g=ctx.createLinearGradient(sx,sy,ex,ey);
-        g.addColorStop(0,'rgba(255,255,255,1)');
-        g.addColorStop(.25,'rgba(215,236,255,.82)');
-        g.addColorStop(1,'rgba(255,255,255,0)');
-        ctx.globalAlpha=.22+.78*(1-p1*.08);
-        ctx.strokeStyle=g;
-        ctx.shadowColor='#cfe9ff';
-        ctx.shadowBlur=16;
-        ctx.lineWidth=2.4;
-        ctx.beginPath();
-        ctx.moveTo(sx,sy);
-        ctx.lineTo(ex,ey);
-        ctx.stroke();
-        ctx.lineWidth=1.15;
-        ctx.globalAlpha=.14+.36*(1-p1*.12);
-        ctx.beginPath();
-        ctx.moveTo(sx+3,sy+3);
-        ctx.lineTo(ex+8,ey+8);
-        ctx.stroke();
-
-        ctx.globalAlpha=.98;
-        ctx.fillStyle='#fff';
-        ctx.beginPath();
-        ctx.arc(sx,sy,2.2,0,Math.PI*2);
-        ctx.fill();
-      }
-    }
-
-    // 月の近くに小さいきらめき
-    ctx.globalAlpha=.65+.25*Math.sin(t*2.2);
-    ctx.fillStyle='#fff';
-    ctx.font='14px system-ui';
-    ctx.fillText('✦',W*.70,Math.max(62,gy*.18));
-    ctx.restore();
   };
 })();
 
@@ -4899,7 +4895,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
     const targetY=isOpeningEarth ? Math.max(groundY()-122,56) : Math.max(groundY()-98,60);
     satellites.push({
-      x:p.x+132+Math.random()*24,
+      x:camera+W*.56,
       y:-92-Math.random()*56,
       targetY,
       v:.82+Math.random()*.18,
@@ -7769,5 +7765,32 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。犬星くん
   #hud #event{margin-top:4px!important}
 }
 </style>
+
+<style id="v109-polish">
+/* レーザー：点線は消す。でも下側の光沢・発光は残す */
+#laser::after{
+  content:''!important;
+  display:block!important;
+  position:absolute!important;
+  left:23%!important;
+  right:23%!important;
+  bottom:8px!important;
+  height:4px!important;
+  border-radius:999px!important;
+  background:linear-gradient(
+    90deg,
+    rgba(255,255,255,0),
+    rgba(255,255,255,.62) 26%,
+    rgba(255,255,255,.82) 50%,
+    rgba(255,255,255,.62) 74%,
+    rgba(255,255,255,0)
+  )!important;
+  box-shadow:0 0 8px rgba(255,255,255,.46)!important;
+  filter:blur(.15px)!important;
+  opacity:.9!important;
+  pointer-events:none!important;
+}
+</style>
+
 </body>
 </html>
