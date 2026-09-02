@@ -1529,6 +1529,23 @@ function drawSatellite(o){
     ctx.stroke();
     ctx.restore();
   }
+  if(o.impactFxUntil&&now<o.impactFxUntil){
+    const q=(o.impactFxUntil-now)/300;
+    ctx.save();
+    ctx.globalAlpha=Math.max(0,Math.min(1,q));
+    ctx.strokeStyle='rgba(255,240,170,.95)';
+    ctx.lineWidth=2.2;
+    const cx=sx+26, cy=o.y+18;
+    for(let i=0;i<6;i++){
+      const a=i*Math.PI/3 + now/90;
+      const r1=10, r2=18+(1-q)*8;
+      ctx.beginPath();
+      ctx.moveTo(cx+Math.cos(a)*r1, cy+Math.sin(a)*r1);
+      ctx.lineTo(cx+Math.cos(a)*r2, cy+Math.sin(a)*r2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
 }
 function drawEarthSkyFlash(){
   if(!v63IsOpeningEarth())return;
@@ -1739,8 +1756,8 @@ for(const sat of satellites){
    sat.x=sat.boardX;
    sat.y=sat.boardY;
    if(now>=sat.boardingAt&&p.vy>=0&&!v86Ride){
-     p.y=Math.max(34,p.y-12);
-     p.vy=-3.8;
+     p.y=Math.max(34,p.y-16);
+     p.vy=-4.6;
      p.on=false;
      if(v86BeginTransit(sat.rideKind==='ufo'?'ufo':'satellite',now,1)){
        sat.got=true;
@@ -1799,23 +1816,32 @@ for(const sat of satellites){
 
  if(sat.rideKind==='rock'){
    if(!v86Ride&&(!sat.hitUntil||now>=sat.hitUntil)&&rectHit(playerRect(),satHit)){
-     p.vy=-6.1;
+     p.y=Math.max(34,p.y-10);
+     p.x=Math.max(camera+18,p.x-9);
+     p.vy=-8.4;
      p.on=false;
-     sat.hitUntil=now+380;
+     shake=Math.max(shake,10);
+     alienContactFlashUntil=Math.max(alienContactFlashUntil,now+180);
+     sat.impactFxUntil=now+280;
+     sat.hitUntil=now+420;
    }
  }else if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),satHit)){
-   // まずコンとぶつかって、しっかり弾かれる。その後に飛び乗る。
-   p.y=Math.max(34,p.y-12);
-   p.x=Math.max(camera+18,p.x-10);
-   p.vy=-9.3;
+   // 宇宙人とぶつかったみたいにポーン！と飛ぶ。そのあと戸惑いながら飛び乗る。
+   p.y=Math.max(34,p.y-14);
+   p.x=Math.max(camera+14,p.x-14);
+   p.vy=-10.8;
    p.on=false;
-   sat.boardingAt=now+260;
+   shake=Math.max(shake,12);
+   alienContactFlashUntil=Math.max(alienContactFlashUntil,now+220);
+   sat.impactFxUntil=now+300;
+   sat.boardingAt=now+430;
    sat.boardX=sat.x;
    sat.boardY=sat.y;
    sat.dropOnly=false;
    sat.departure=false;
    sat.rolling=false;
    sat.v=0;
+   showToast(sat.rideKind==='ufo'?'🐕 びくっ！ 宇宙船にぶつかった！':'🐕 びくっ！ 衛星にぶつかった！',720);
  }
 }
 satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
@@ -4400,7 +4426,7 @@ function v86BeginTransit(type,now,steps=1){
   satelliteUntil=Math.max(satelliteUntil,now+7050);invincibleUntil=Math.max(invincibleUntil,now+7200);
   wormholeActive=false;blackHoleActive=false;
   v86SetBadge(`🐕 → ${icon}  NEXT STAR`);
-  showToast(`${icon} 加速するよ`,900);
+  showToast(kind==='ufo'?'🛸 宇宙船にぶつかって、そのまま乗ってしまった！':'🛰️ びっくりしながら、衛星にしがみついた！',1080);
   return true;
 }
 function v86FinishTransit(){
@@ -4824,7 +4850,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v123: 4 diagonal rocks + longer ominous flash + clear jump-then-board === */
+/* === v124: stronger story satellite + alien-like impact motion === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -5123,10 +5149,19 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           emoji:cfg.emoji||'🛰️',
           rideKind:(cfg.emoji==='🛸'?'ufo':(cfg.emoji==='🪨'?'rock':'satellite'))
         });
+        const preludeStep=v118EarthPreludeCount;
         v118EarthPreludeCount++;
         v99EarthSatelliteNextAt=nowAt+(v119EarthPreludeGaps[v118EarthPreludeCount-1]||720);
         eventEl.textContent='🛰️ ……？';
-        showToast(isFirstPrelude?'⚠️ 空がやばく光った……何か来る。':'……また落ちた。まだ何か来そう。',980);
+        if(isFirstPrelude){
+          showToast('⚠️ 空がピカーッ……！ 犬が立ち止まって空を見上げた。',1180);
+        }else if(preludeStep<4){
+          showToast('🪨 ゴトッ……まだ何か降ってくる。',860);
+        }else if(cfg.emoji==='🛰️'){
+          showToast('🛰️ 見たことない衛星……犬がびっくりして戸惑ってる。',1160);
+        }else{
+          showToast('🛸 宇宙船まで……空の気配が変だ。',1040);
+        }
       }else{
         v118EarthWaveStarted=true;
         v122SkyFlashPower=.62;
@@ -5174,7 +5209,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         });
         v99EarthSatelliteNextAt=nowAt+6200;
         eventEl.textContent='🛰️ ……？';
-        showToast('……ガラガラッ！ だんだん間隔が狭くなってきた。',1100);
+        showToast('……ガラガラッ！ 犬が戸惑う間もなく、次々落ちてくる！',1180);
       }
     }else{
       satellites.push({
