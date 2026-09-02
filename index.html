@@ -1432,19 +1432,24 @@ function spawnSatellite(){
  const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
 
  if(isOpeningEarth){
-   // v114: 地球では一度に複数の衛星が降ってくる
+   const waveStart=performance.now();
+   // v115: 地球では、まず避けられる衛星が何機も落ちてきて、
+   // 後半の1機がいちばん飛び乗りやすい位置へ来る。
    [
-     {screenStart:.69, screenEnd:.52, xOffset:0,  yOffset:0,   vy:3.25, v:.44},
-     {screenStart:.84, screenEnd:.67, xOffset:12, yOffset:-34, vy:3.05, v:.40}
+     {screenStart:.86, screenEnd:.74, xOffset:8,  yOffset:-18,  vy:3.00, v:.42, delay:0},
+     {screenStart:.79, screenEnd:.67, xOffset:-6, yOffset:-52,  vy:3.08, v:.41, delay:340},
+     {screenStart:.72, screenEnd:.60, xOffset:10, yOffset:-88,  vy:3.16, v:.40, delay:720},
+     {screenStart:.66, screenEnd:.51, xOffset:0,  yOffset:-126, vy:3.24, v:.38, delay:1120}
    ].forEach(cfg=>{
      satellites.push({
        x:camera+W*cfg.screenStart+cfg.xOffset,
-       y:-92-Math.random()*42+cfg.yOffset,
+       y:-92-Math.random()*24+cfg.yOffset,
        dropStartY:-92+cfg.yOffset,
        screenStart:cfg.screenStart,
        screenEnd:cfg.screenEnd,
-       v:cfg.v+Math.random()*.10,
-       vy:cfg.vy+Math.random()*.40,
+       activeAt:waveStart+cfg.delay,
+       v:cfg.v+Math.random()*.08,
+       vy:cfg.vy+Math.random()*.28,
        gravity:.34,
        bounce:.62,
        w:58,h:44,got:false,phase:Math.random()*6.2,
@@ -1456,7 +1461,7 @@ function spawnSatellite(){
      });
    });
    eventEl.textContent='🛰️ ……？';
-   showToast('……上から、衛星がいくつも降りてくる。',980);
+   showToast('……衛星が次々と落ちてくる。どれかに飛び乗れそう。',1150);
  }else{
    satellites.push({
      x:camera+W*.72,
@@ -1486,7 +1491,7 @@ function spawnLaserTarget(){
  const y=lanes[Math.floor(Math.random()*lanes.length)];
  swarm.push({kind:'target',emoji:'👾',x:p.x+W+100+Math.random()*180,y:y,v:2.0+Math.random()*1.0,w:42,h:42,got:false});
 }
-function drawSatellite(o){if(o.got)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;ctx.save();ctx.shadowColor='#78eaff';ctx.shadowBlur=18;ctx.font='48px system-ui';ctx.fillText('🛰️',sx,o.y+38);ctx.restore()}
+function drawSatellite(o){if(o.got)return;if(o.activeAt&&performance.now()<o.activeAt)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;ctx.save();ctx.shadowColor='#78eaff';ctx.shadowBlur=18;ctx.font='48px system-ui';ctx.fillText('🛰️',sx,o.y+38);ctx.restore()}
 function drawBoss(b){if(b.dead)return;const sx=b.x-camera;if(sx<-160||sx>W+160)return;ctx.save();ctx.shadowColor=b.hitFlash>0?'#ffe45a':'#ff7bcd';ctx.shadowBlur=b.hitFlash>0?26:14;ctx.font='86px system-ui';ctx.fillText('🧌',sx,b.y+72);ctx.restore();ctx.save();ctx.translate(sx+6,b.y-18);ctx.fillStyle='rgba(12,8,22,.75)';ctx.fillRect(0,0,70,15);ctx.fillStyle='#fff';ctx.font='900 9px system-ui';ctx.fillText('BOSS 10 HIT',6,10);ctx.fillStyle='#20112e';ctx.fillRect(0,18,72,8);ctx.fillStyle='#ff6b6b';ctx.fillRect(1,19,70*(b.hp/b.maxHp),6);ctx.strokeStyle='rgba(255,255,255,.8)';ctx.strokeRect(0,18,72,8);ctx.restore()}
 function drawFlowerRain(){if(system!==SECRET_FLOWER_SYSTEM)return;const t=performance.now()/1000;ctx.save();for(let i=0;i<42;i++){const speed=34+(i%7)*7;const y=((t*speed+i*71)%(H+120))-60;const x=((i*97+Math.sin(t*.8+i)*70)%(W+160))-80;const size=18+(i%5)*4;ctx.globalAlpha=.48+(i%4)*.12;ctx.shadowColor=i%2?'#ff84d6':'#fff';ctx.shadowBlur=10;ctx.font=`${size}px system-ui`;ctx.save();ctx.translate(x,y);ctx.rotate(t*(i%2?.7:-.55)+i);ctx.fillText(i%6===0?'🌺':'🌸',-size/2,size/2);ctx.restore()}ctx.restore();ctx.globalAlpha=1}
 function drawBlackHoleOddities(){
@@ -1663,6 +1668,7 @@ for(const o of swarm){if(o.got)continue;o.x-=o.v*dt;if(rectHit(playerRect(),{x:o
 for(const o of secretPickups){if(o.got)continue;o.x-=o.v*dt;o.y+=Math.sin(now/220+o.phase)*.18*dt;if(rectHit(playerRect(),{x:o.x-o.r,y:o.y-o.r,w:o.r*2,h:o.r*2})){if(o.kind==='earth'){collectEarthToken(o)}else{o.got=true;secretWarp(o.kind)}break}}secretPickups=secretPickups.filter(o=>!o.got&&o.x>p.x-W-180);
 for(const sat of satellites){
  if(sat.got)continue;
+ if(sat.activeAt&&now<sat.activeAt)continue;
 
  const satGround=groundY()-sat.h;
 
@@ -4707,7 +4713,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v114: multiple Earth satellites per drop === */
+/* === v115: earth satellite wave you can dodge then board === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4955,18 +4961,22 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const isOpeningEarth=(system===0&&stage===0&&!returnFromDogStar);
 
     if(isOpeningEarth){
+      const waveStart=performance.now();
       [
-        {screenStart:.69, screenEnd:.52, xOffset:0,  yOffset:0,   vy:3.25, v:.44},
-        {screenStart:.84, screenEnd:.67, xOffset:12, yOffset:-34, vy:3.05, v:.40}
+        {screenStart:.86, screenEnd:.74, xOffset:8,  yOffset:-18,  vy:3.00, v:.42, delay:0},
+        {screenStart:.79, screenEnd:.67, xOffset:-6, yOffset:-52,  vy:3.08, v:.41, delay:340},
+        {screenStart:.72, screenEnd:.60, xOffset:10, yOffset:-88,  vy:3.16, v:.40, delay:720},
+        {screenStart:.66, screenEnd:.51, xOffset:0,  yOffset:-126, vy:3.24, v:.38, delay:1120}
       ].forEach(cfg=>{
         satellites.push({
           x:camera+W*cfg.screenStart+cfg.xOffset,
-          y:-92-Math.random()*42+cfg.yOffset,
+          y:-92-Math.random()*24+cfg.yOffset,
           dropStartY:-92+cfg.yOffset,
           screenStart:cfg.screenStart,
           screenEnd:cfg.screenEnd,
-          v:cfg.v+Math.random()*.10,
-          vy:cfg.vy+Math.random()*.40,
+          activeAt:waveStart+cfg.delay,
+          v:cfg.v+Math.random()*.08,
+          vy:cfg.vy+Math.random()*.28,
           gravity:.34,
           bounce:.62,
           w:58,h:44,got:false,phase:Math.random()*6.2,
@@ -4978,7 +4988,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         });
       });
       eventEl.textContent='🛰️ ……？';
-      showToast('……上から、衛星がいくつも降りてくる。',980);
+      showToast('……衛星が次々と落ちてくる。どれかに飛び乗れそう。',1150);
     }else{
       satellites.push({
         x:camera+W*.72,
