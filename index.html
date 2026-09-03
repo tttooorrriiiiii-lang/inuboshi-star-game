@@ -934,7 +934,7 @@ function syncHUD(){
  if(alienHitEl)alienHitEl.textContent=`👽 ${cosmicCharge}`;
  const earth=system===0&&stage===0,dream=!!systems[system].dream;
  missionEl.innerHTML=earth?(returnFromDogStar?'🏠 やっと地球に帰ってきた。いつもの道を歩こう':'🐕 いつもの散歩道。今日は少し変な音がする…'):system===BLACK_HOLE_SYSTEM?`⚫ ブラックホールを進め ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%<br>🍝 スパゲッティー化 ${Math.min(100,Math.floor(p.x/whiteHoleX*100))}%`:dream?'🐾 最終地点・犬の星！ ご褒美ステージ ✨ ⭐星アイテムから地球へ帰れる':`🌀 ワームホール通過 ${deepWarpCount}<br>${areaNames[difficultyTier]}`;
- eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌙 EARTH / NIGHT'):system===BLACK_HOLE_SYSTEM?'🌀 脱出ワームホール / 奥にホワイトホール…？':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`${s.event} — ${s.eventText}`;
+ eventEl.textContent=earth?(returnFromDogStar?'🐕 HOME WALK — やっと帰ってきた地球':'🌙 EARTH / NIGHT'):system===BLACK_HOLE_SYSTEM?'⚪ 出口はホワイトホール':dream?'🐕🐩🦮 FINAL DOG WORLD — 犬だらけ！':systems[system].secret?'🌸 SECRET STAGE — 奥のワームホールから脱出できる':`${s.event} — ${s.eventText}`;
  const dist=(s.distance||systems[system].distance.replace('地球から','')),endless=systems[system].endless;
  const farHint=earth?'いつもの街。まだ宇宙の旅は始まっていない':dream?'宇宙の果てのその先・旅の最終地点':endless?'🌑 膨張フロンティア・光の届かない暗闇':systems[system].theoretical?'観測不能域・ここから先は理論ステージ':systems[system].postEarendel?'エアレンデルのさらに先・宇宙の歴史へ':dist.includes('129億')?'エアレンデル到達！ でも旅はまだ続く':dist.includes('億')?'地球はるか彼方':dist.includes('万光年')?'銀河間空間まで来た！':dist.includes('光年')?'宇宙の奥へ進んでいる…':'まだ宇宙の入口' ;
  const distanceLabel=endless?'観測不能域 / 膨張フロンティア':dist;
@@ -5368,6 +5368,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   const oldSatLoop = `for(const sat of satellites){\n if(sat.got)continue;\n // v99: 衛星は高さを変えず、右から左へ水平に通過するだけ。\n sat.x-=sat.v*dt;\n\n // 吸い付く/近づいただけで乗る判定を廃止。\n // 地球ではジャンプして本当に触れた時だけ乗れる。\n if(!v86Ride&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){\n   if(v86BeginTransit('satellite',now,1)){\n     sat.got=true;\n     v94SatellitePending=false;\n   }\n }\n}`;
 })();
 
+/* === v146: white-hole ejection only + black-hole white exit only === */
 /* === v145: Moon late stars + reliable satellite pickup === */
 (function(){
   const v145PrevMakeWorld=makeWorld;
@@ -5399,6 +5400,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   ];
   let v141Ejecta=[];
   let v141NextSpitAt=0;
+  let v146WhiteTouchUntil=0;
+
+  // v146: ブラックホール内の出口はホワイトホールだけ。
+  // 旧「脱出ワームホール」は描画・当たり判定とも発生しない。
+  blackHoleWormholes.length=0;
 
   function v141WhiteCenter(){
     if(system===BLACK_HOLE_SYSTEM){
@@ -5412,21 +5418,23 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function v141SpitOne(center,now,burst=false){
     const icon=v141WeirdIcons[Math.floor(Math.random()*v141WeirdIcons.length)];
-    const toLeft=Math.random()<.82;
-    const speed=(burst?6.2:3.8)+Math.random()*(burst?4.4:3.4);
-    const angle=(Math.random()-.5)*(burst?1.55:1.15);
+    // ホワイトホールは吸い込まず、中心から外向きへ放出する。
+    // 2D画面上でも「中心→外」になるよう、全方向へ噴き出す。
+    let angle=Math.random()*Math.PI*2;
+    if(Math.abs(Math.cos(angle))<.22)angle+=(Math.random()<.5?-.35:.35);
+    const speed=(burst?6.6:4.4)+Math.random()*(burst?4.8:3.8);
     v141Ejecta.push({
-      x:center.x+(toLeft?-10:10),
-      y:center.y+(Math.random()-.5)*22,
-      vx:(toLeft?-1:1)*speed*(.86+Math.random()*.28),
-      vy:Math.sin(angle)*speed-1.5-Math.random()*1.7,
-      gravity:.09+Math.random()*.055,
+      x:center.x+Math.cos(angle)*16,
+      y:center.y+Math.sin(angle)*12,
+      vx:Math.cos(angle)*speed,
+      vy:Math.sin(angle)*speed-0.35,
+      gravity:.075+Math.random()*.045,
       rot:(Math.random()-.5)*.08,
-      spin:(Math.random()-.5)*.15,
-      size:30+Math.random()*22,
+      spin:(Math.random()-.5)*.16,
+      size:30+Math.random()*24,
       icon,
       born:now,
-      life:3600+Math.random()*2200,
+      life:4300+Math.random()*2500,
       bounces:0
     });
   }
@@ -5452,10 +5460,16 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(center){
       const near=Math.abs(p.x-center.x)<Math.max(W*1.55,720);
       if(near&&now>=v141NextSpitAt){
-        const count=Math.random()<.34?2:1;
-        for(let i=0;i<count;i++)v141SpitOne(center,now+i*20,false);
-        v141NextSpitAt=now+260+Math.random()*360;
+        const count=Math.random()<.40?2:1;
+        for(let i=0;i<count;i++)v141SpitOne(center,now+i*18,false);
+        v141NextSpitAt=now+170+Math.random()*210;
       }
+      window.__v146WhiteHoleState={
+        system,stage,
+        ejecta:v141Ejecta.length,
+        active:!!center,
+        blackHole:system===BLACK_HOLE_SYSTEM
+      };
     }
 
     const gy=groundY();
@@ -5524,37 +5538,27 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   v99WhiteHoleForward=function(){
     if(paused||!v99WhiteHoleActive)return;
-    const dest=v86Advance(2);
-    if(!dest.moved){v99WhiteHoleActive=false;return;}
 
+    const now=performance.now();
     const center={x:v99WhiteHoleX,y:v99WhiteHoleY};
-    v141Burst(center,performance.now(),14);
-    v99WhiteHoleActive=false;
 
-    p.vy=-10;
-    p.on=false;
-    shake=Math.max(shake,13);
-    alienContactFlashUntil=Math.max(alienContactFlashUntil,performance.now()+260);
+    // 外から中へは入れないイメージ。
+    // 吸い込まず、噴出に押し返されるだけ。星移動もしない。
+    if(now>=v146WhiteTouchUntil){
+      v146WhiteTouchUntil=now+900;
+      v141Burst(center,now,9);
+      shake=Math.max(shake,8);
+      alienContactFlashUntil=Math.max(alienContactFlashUntil,now+170);
 
-    paused=true;
-    trans.style.display='grid';
-    trans.style.background='radial-gradient(circle at 50% 50%,rgba(255,255,255,.96),rgba(105,217,255,.45) 34%,rgba(4,6,18,.96) 73%)';
-    warpDog.textContent=playerDog;
-    warpDog.className='spin';
-    transTitle.innerHTML='⚪ WHITE HOLE BURST!';
-    nextEl.textContent='外へ吹き飛ばされた！';
-    subEl.textContent='SPIT OUT / OUTWARD ONLY';
+      const dogCenter=p.x+p.w*.5;
+      const dir=dogCenter<center.x?-1:1;
+      p.x+=dir*22;
+      p.y=Math.max(28,p.y-8);
+      p.vy=-5.2;
+      p.on=false;
 
-    setTimeout(()=>{
-      system=dest.system;
-      stage=dest.stage;
-      stageStart();
-      trans.style.display='none';
-      trans.style.background='';
-      warpDog.className='';
-      paused=false;
-      showToast('⚪ ホワイトホールに吹き飛ばされた！',1250);
-    },1200);
+      showToast('⚪ なにかいっぱい出てくる！',900);
+    }
   };
 
   whiteHoleEscape=function(){
