@@ -4506,14 +4506,7 @@ function v86BeginTransit(type,now,steps=1){
   satelliteUntil=Math.max(satelliteUntil,now+7050);invincibleUntil=Math.max(invincibleUntil,now+7200);
   wormholeActive=false;blackHoleActive=false;
   v86SetBadge(`🐕 → ${icon}  NEXT STAR`);
-  showToast(kind==='ufo'?'🛸 えっ！？ なにこれ！？ このまま乗るの！？':'🛰️ びっくりしながら、衛星にしがみついた！',1180);
-  if(kind==='ufo'){
-    setTimeout(()=>{
-      if(v86Ride?.type==='transit'&&v86Ride?.kind==='ufo'){
-        showToast('🐕 わーーー！',1350);
-      }
-    },1450);
-  }
+  showToast(kind==='ufo'?'🛸 うわ！ 捕まった！ どこに行っちゃうんだー！':'🛰️ びっくりしながら、衛星にしがみついた！',1350);
   return true;
 }
 function v86FinishTransit(){
@@ -5224,7 +5217,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     v125EarthUfoPassCount++;
     v125EarthUfoNextAt=nowAt+2300;
     eventEl.textContent='🛸 BEHIND YOU';
-    if(v125EarthUfoPassCount===1)showToast('🛸 後ろから宇宙船が近づいてくる…！',980);
+    if(v125EarthUfoPassCount===1)showToast('🛸 宇宙船が近づいてくる…！',980);
   };
 
   const v103PrevSpawnSatellite=spawnSatellite;
@@ -5372,6 +5365,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   const oldSatLoop = `for(const sat of satellites){\n if(sat.got)continue;\n // v99: 衛星は高さを変えず、右から左へ水平に通過するだけ。\n sat.x-=sat.v*dt;\n\n // 吸い付く/近づいただけで乗る判定を廃止。\n // 地球ではジャンプして本当に触れた時だけ乗れる。\n if(!v86Ride&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){\n   if(v86BeginTransit('satellite',now,1)){\n     sat.got=true;\n     v94SatellitePending=false;\n   }\n }\n}`;
 })();
 
+/* === v142: cleaner UFO capture dialogue === */
 /* === v141: WHITE HOLE spits weird stuff outward === */
 (function(){
   const v141WeirdIcons=[
