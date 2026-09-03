@@ -1707,8 +1707,9 @@ function spawnEvents(){
  if(system!==BLACK_HOLE_SYSTEM&&!isDream&&eventPhase>=nextSwarm){const r=Math.random(),evilChance=Math.max(0,(difficultyTier-1)*.12);let kind;if(r<evilChance)kind='evil';else if(r<.34+evilChance)kind='alien';else if(r<.64+evilChance)kind='dino';else kind='crow';triggerSwarm(kind);nextSwarm=eventPhase+Math.max(180,500-difficultyTier*70)+Math.floor(Math.random()*160)}
  // 地球は衛星だらけ。他の星ではかなり控えめ
  if(!v86Ride&&!v94SatellitePending&&!isDream&&!(system===0&&stage===0)&&p.x>=worldLength*.78){
-   if(!v99SpaceSatelliteDueAt)v99SpaceSatelliteDueAt=performance.now()+5000;
-   if(performance.now()>=v99SpaceSatelliteDueAt&&eventPhase>=nextSatellite){
+   const satelliteWait=isMoon?1400:5000;
+   if(!v99SpaceSatelliteDueAt)v99SpaceSatelliteDueAt=performance.now()+satelliteWait;
+   if(performance.now()>=v99SpaceSatelliteDueAt&&(isMoon||eventPhase>=nextSatellite)){
      spawnSatellite();
      v99SpaceSatelliteDueAt=0;
      const rr=Math.max(0,systemDistanceRank[system]??0)+stage;
@@ -1770,8 +1771,9 @@ for(const sat of satellites){
  const satGround=groundY()-sat.h;
 
  if(sat.boardingAt){
-   // v129: 飛び乗り予約はUFOだけ。衛星/岩の古い予約値は破棄する。
-   if(sat.rideKind!=='ufo'){
+   const canBoardUfo=sat.rideKind==='ufo';
+   const canBoardSpaceSatellite=sat.rideKind==='satellite'&&!v63IsOpeningEarth();
+   if(!canBoardUfo&&!canBoardSpaceSatellite){
      sat.boardingAt=0;
      sat.boardX=undefined;
      sat.boardY=undefined;
@@ -1782,7 +1784,7 @@ for(const sat of satellites){
        p.y=Math.max(34,p.y-16);
        p.vy=-4.6;
        p.on=false;
-       if(v86BeginTransit('ufo',now,1)){
+       if(v86BeginTransit(canBoardUfo?'ufo':'satellite',now,1)){
          sat.got=true;
          v94SatellitePending=false;
          continue;
@@ -1850,7 +1852,7 @@ for(const sat of satellites){
    ? {x:sat.x-12,y:sat.y-10,w:sat.w+24,h:sat.h+18}
    : {x:sat.x,y:sat.y,w:sat.w,h:sat.h};
 
- if(sat.rideKind==='rock' || sat.rideKind==='satellite'){
+ if(sat.rideKind==='rock' || (sat.rideKind==='satellite'&&v63IsOpeningEarth())){
    if(!v86Ride&&!sat.playerHit&&rectHit(playerRect(),satHit)){
      sat.playerHit=true;
      p.y=Math.max(34,p.y-10);
@@ -1882,15 +1884,15 @@ for(const sat of satellites){
      showToast('🐕 イタッ！',760);
    }
  }else if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),satHit)){
-   // 後ろから来たUFOに当たってポーン！と飛び、そのあと乗る。
+   const isSpaceSatellite=sat.rideKind==='satellite'&&!v63IsOpeningEarth();
    p.y=Math.max(34,p.y-14);
    p.x=Math.max(camera+14,p.x-16);
-   p.vy=-11.0;
+   p.vy=isSpaceSatellite?-8.8:-11.0;
    p.on=false;
-   shake=Math.max(shake,12);
+   shake=Math.max(shake,isSpaceSatellite?8:12);
    alienContactFlashUntil=Math.max(alienContactFlashUntil,now+220);
    sat.impactFxUntil=now+300;
-   sat.boardingAt=now+430;
+   sat.boardingAt=now+(isSpaceSatellite?300:430);
    sat.boardX=sat.x;
    sat.boardY=sat.y;
    sat.dropOnly=false;
@@ -1898,7 +1900,8 @@ for(const sat of satellites){
    sat.fromBehind=false;
    sat.rolling=false;
    sat.v=0;
-   showToast('🐕 イタッ！',760);
+   if(isSpaceSatellite)showToast('🛰️ 衛星に乗った！',760);
+   else showToast('🐕 イタッ！',760);
  }
 }
 satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220&&sat.x<p.x+W+320);
@@ -4506,7 +4509,7 @@ function v86BeginTransit(type,now,steps=1){
   satelliteUntil=Math.max(satelliteUntil,now+7050);invincibleUntil=Math.max(invincibleUntil,now+7200);
   wormholeActive=false;blackHoleActive=false;
   v86SetBadge(`🐕 → ${icon}  NEXT STAR`);
-  showToast(kind==='ufo'?'🛸 うわ！ 捕まった！ どこに行っちゃうんだー！':'🛰️ びっくりしながら、衛星にしがみついた！',1350);
+  showToast(kind==='ufo'?'🛸 うわっ！？ なんかに引っぱられるー！':'🛰️ びっくりしながら、衛星にしがみついた！',1350);
   return true;
 }
 function v86FinishTransit(){
@@ -5217,7 +5220,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     v125EarthUfoPassCount++;
     v125EarthUfoNextAt=nowAt+2300;
     eventEl.textContent='🛸 BEHIND YOU';
-    if(v125EarthUfoPassCount===1)showToast('🛸 宇宙船が近づいてくる…！',980);
+    if(v125EarthUfoPassCount===1)showToast('🐕 えっ！？ うしろ！？',980);
   };
 
   const v103PrevSpawnSatellite=spawnSatellite;
@@ -5365,7 +5368,29 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   const oldSatLoop = `for(const sat of satellites){\n if(sat.got)continue;\n // v99: 衛星は高さを変えず、右から左へ水平に通過するだけ。\n sat.x-=sat.v*dt;\n\n // 吸い付く/近づいただけで乗る判定を廃止。\n // 地球ではジャンプして本当に触れた時だけ乗れる。\n if(!v86Ride&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){\n   if(v86BeginTransit('satellite',now,1)){\n     sat.got=true;\n     v94SatellitePending=false;\n   }\n }\n}`;
 })();
 
-/* === v142: cleaner UFO capture dialogue === */
+/* === v145: Moon late stars + reliable satellite pickup === */
+(function(){
+  const v145PrevMakeWorld=makeWorld;
+  makeWorld=function(){
+    v145PrevMakeWorld();
+    if(system===0&&stage===1){
+      const col=S()?.goodColor||'#ffe66b';
+      // 月の後半 55%〜終端まで、走っていて星が途切れない密度にする。
+      for(let i=0;i<18;i++){
+        items.push({
+          x:worldLength*.54+i*92+(i%3)*14,
+          y:groundY()-70-(i%5)*34-Math.random()*22,
+          r:14+Math.random()*3,
+          got:false,
+          color:col,
+          v145MoonStar:true
+        });
+      }
+    }
+  };
+})();
+
+/* === v144: rear-approach reaction dialogue === */
 /* === v141: WHITE HOLE spits weird stuff outward === */
 (function(){
   const v141WeirdIcons=[
