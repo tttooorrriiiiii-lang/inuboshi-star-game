@@ -5599,6 +5599,147 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 })();
 
 
+
+/* === v147: FINAL moon/mars tail flow + real satellite + black/white spacing === */
+(function(){
+  let v147RideSatSpawned=false;
+  let v147NextStarStreamAt=0;
+
+  function v147MoonMars(){
+    return system===0&&(stage===1||stage===2);
+  }
+
+  // 月・火星：最初から後半エリアに星をしっかり配置。
+  const v147PrevMakeWorld=makeWorld;
+  makeWorld=function(){
+    v147PrevMakeWorld();
+    if(!v147MoonMars())return;
+
+    const col=S()?.goodColor||'#ffe66b';
+    for(let i=0;i<24;i++){
+      items.push({
+        x:worldLength*.48+i*78+(i%4)*12,
+        y:groundY()-65-(i%6)*28-Math.random()*20,
+        r:14+Math.random()*3,
+        got:false,
+        color:col,
+        v147TailStar:true
+      });
+    }
+  };
+
+  const v147PrevStageStart=stageStart;
+  stageStart=function(){
+    const out=v147PrevStageStart();
+
+    v147RideSatSpawned=false;
+    v147NextStarStreamAt=performance.now()+500;
+
+    // 今回は「ホワイトホールとブラックホール」を離す。
+    // ワームホールとの距離は変えない。
+    if(system!==BLACK_HOLE_SYSTEM&&blackHoleActive&&v99WhiteHoleActive){
+      if(Math.abs(v99WhiteHoleX-blackHoleX)<950){
+        v99WhiteHoleX=1860+Math.random()*260;
+      }
+    }
+
+    return out;
+  };
+
+  function v147StreamStars(now){
+    if(!v147MoonMars()||v86Ride||p.x<worldLength*.50)return;
+    if(now<v147NextStarStreamAt)return;
+
+    const col=S()?.goodColor||'#ffe66b';
+    const visibleAhead=items.filter(it=>
+      !it.got&&!it.food&&!it.rareKind&&
+      it.x>p.x+25&&it.x<p.x+W+300
+    ).length;
+
+    // 画面前方に最低でも星が見える状態を維持。
+    const add=Math.max(2,6-visibleAhead);
+    for(let i=0;i<add;i++){
+      items.push({
+        x:p.x+W*.34+i*72+Math.random()*42,
+        y:groundY()-70-Math.random()*150,
+        r:14+Math.random()*3,
+        got:false,
+        color:col,
+        v147StreamStar:true
+      });
+    }
+    v147NextStarStreamAt=now+620;
+  }
+
+  function v147SpawnActualSatellite(){
+    if(!v147MoonMars()||v86Ride||v94SatellitePending||v147RideSatSpawned)return;
+    if(p.x<worldLength*.72)return;
+
+    satellites.push({
+      x:p.x+W*.68,
+      y:groundY()-86,
+      baseY:groundY()-86,
+      v:.17,
+      vy:0,
+      gravity:0,
+      bounce:0,
+      w:58,h:44,
+      got:false,
+      phase:Math.random()*6.2,
+      departure:true,
+      earthChoice:false,
+      dropOnly:false,
+      fromBehind:false,
+      rolling:false,
+      bounced:true,
+      groundBounces:99,
+      emoji:'🛰️',
+      boardEasy:true,
+      tilt:0,
+      wobble:Math.random()*6.283,
+      rideKind:'satellite',
+      v147RideSatellite:true
+    });
+
+    v94SatellitePending=true;
+    v147RideSatSpawned=true;
+    missionEl.textContent='🛰️ 衛星が近づいてくる';
+    eventEl.textContent='🛰️ ……！';
+  }
+
+  const v147PrevUpdate=update;
+  update=function(now,dt){
+    v147PrevUpdate(now,dt);
+    if(paused)return;
+
+    v147StreamStars(now);
+
+    // 66%で予告が出たあと、72%で必ず「実物」を出す。
+    if(v147MoonMars()&&!v86Ride){
+      if(p.x>=worldLength*.72&&!v147RideSatSpawned){
+        v147SpawnActualSatellite();
+      }
+
+      // 取り逃して画面外へ消えた場合だけ、もう一度来られる。
+      if(v147RideSatSpawned&&!v94SatellitePending&&!v86Ride&&
+         !satellites.some(o=>!o.got&&o.v147RideSatellite)){
+        v147RideSatSpawned=false;
+      }
+    }
+
+    window.__v147Debug={
+      system,stage,x:p.x,
+      staticTailStars:items.filter(o=>!o.got&&o.v147TailStar).length,
+      streamStars:items.filter(o=>!o.got&&o.v147StreamStar).length,
+      actualSatellite:satellites.some(o=>!o.got&&o.v147RideSatellite),
+      pending:v94SatellitePending,
+      white:v99WhiteHoleActive?v99WhiteHoleX:null,
+      black:blackHoleActive?blackHoleX:null,
+      separation:(v99WhiteHoleActive&&blackHoleActive)?Math.abs(v99WhiteHoleX-blackHoleX):null
+    };
+  };
+})();
+
 stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽しいな♪',1700),550);requestAnimationFrame(frame);
 })();
 </script>
