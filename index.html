@@ -1044,7 +1044,7 @@ function buySpecial(kind){
  }
  reward.classList.remove('on');updateShopButtons();syncHUD()
 }
-function collectGood(it){it.got=true;if(it.food){if(food<30){food++;showToast(it.inert?'🔋 無機エネルギー GET！':`🦴 骨チャージ +1　${food}/30`)}else{points+=1;starTotal+=1;showToast('🦴 骨チャージ満タン！ ⭐+1')}syncHUD();return}const gain=big?2:1;points+=gain;starTotal+=gain;if(points>=30&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}syncHUD()}
+function collectGood(it){it.got=true;if(it.food){if(food<30){food++;showToast(it.inert?'🔋 無機エネルギー GET！':'🦴 骨チャージ！')}else{points+=1;starTotal+=1;showToast('🦴 骨チャージ満タン！ ⭐+1')}syncHUD();return}const gain=big?2:1;points+=gain;starTotal+=gain;if(points>=30&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),160)}syncHUD()}
 function showGuardZero(){guardFlash.classList.remove('on');void guardFlash.offsetWidth;guardFlash.classList.add('on');wrap.style.boxShadow='inset 0 0 90px #ffe95d,inset 0 0 150px #55eaff';setTimeout(()=>{guardFlash.classList.remove('on');wrap.style.boxShadow=''},720)}
 function gameOver(){ /* 星と骨の方式に変更したため通常衝突ではゲームオーバーにしない */ }
 function updateCritical(){criticalEl.classList.remove('on');wrap.classList.remove('criticalMode')}
@@ -1679,7 +1679,7 @@ function drawPlayer(){const now=performance.now(),sx=p.x-camera;const alienGlow=
    ctx.beginPath();ctx.ellipse(0,0,96,25,0,0,Math.PI*2);ctx.stroke();
    ctx.rotate(-now/700);ctx.strokeStyle='rgba(207,124,255,.45)';ctx.beginPath();ctx.ellipse(0,0,72,18,.7,0,Math.PI*2);ctx.stroke();
    ctx.restore()
- }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil){ctx.font='54px system-ui';ctx.fillText((v86Ride?.kind==='ufo'?'🛸':'🛰️'),sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v80BoneTimeActive&&window.__v80BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
+ }if(alienHitTotal>0){ctx.save();ctx.globalAlpha=Math.min(.5,.08+alienHitTotal*.012);ctx.fillStyle='#8ffcff';ctx.shadowColor='#d6a2ff';ctx.shadowBlur=20+alienGlow;ctx.beginPath();ctx.arc(sx+28,p.y+28,26+alienGlow*.65,0,Math.PI*2);ctx.fill();ctx.restore()}if(now<sparkUntil){ctx.save();for(let i=0;i<9;i++){const a=now/280+i*.7,r=36+(i%3)*9;ctx.globalAlpha=.55+.4*Math.sin(now/120+i);ctx.fillStyle=i%2?'#fff':'#ffe45a';ctx.font='14px system-ui';ctx.fillText('✦',sx+22+Math.cos(a)*r,p.y+28+Math.sin(a)*r)}ctx.restore()}drawStarPile(sx,p.y,big);if(companionCount>0&&system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.globalAlpha=.98;ctx.shadowColor='#ffb6ef';ctx.shadowBlur=10;const fs=big?70:40;ctx.font=`${fs}px system-ui`;for(let i=0;i<companionCount;i++){const col=i%5,row=Math.floor(i/5);const cx=sx-(big?58:34)-(col+1)*(big?50:34);const cy=p.y+(big?74:50)-row*(big?47:32);ctx.save();ctx.translate(cx,cy);ctx.scale(-1,1);ctx.fillText(playerDog,-fs,0);ctx.restore()}ctx.restore()}ctx.save();ctx.shadowColor=performance.now()<cosmicPowerUntil?(Math.sin(now/140)>0?'#5dff9a':'#c77dff'):now<invincibleUntil?'#ffe45a':(now<morphUntil?'#63f7ff':'#fff');ctx.shadowBlur=performance.now()<cosmicPowerUntil?72+alienGlow+cosmicGlow:now<invincibleUntil?32:(big?28+alienGlow:(now<morphUntil?22:8+alienGlow));if(now<alienRideUntil){ctx.font='60px system-ui';ctx.shadowColor='#76ff9b';ctx.shadowBlur=24;ctx.fillText('🛸',sx-18,p.y+76);ctx.font='22px system-ui';ctx.fillText('👾',sx+14,p.y+48)}else if(now<satelliteUntil&&(!v63IsOpeningEarth()||v86Ride?.kind==='ufo')){ctx.font='54px system-ui';ctx.fillText((v86Ride?.kind==='ufo'?'🛸':'🛰️'),sx-18,p.y+70)}const dogSize=big?180:56;ctx.font=`${dogSize}px system-ui`;ctx.translate(sx-(big?62:0),p.y+(big?122:52));let stretchX=1,stretchY=1,twist=0;if(system===BLACK_HOLE_SYSTEM){const prog=Math.max(0,Math.min(1,p.x/whiteHoleX));stretchX=Math.max(.28,1-prog*.66);stretchY=1+prog*3.0;twist=Math.sin(now/170)*prog*.22;ctx.shadowColor=prog>.55?'#ff69d2':'#8feaff';ctx.shadowBlur=18+prog*30}ctx.rotate(twist);ctx.scale(-stretchX,stretchY);ctx.fillText(playerDog,-dogSize,0);ctx.restore();if(system!==BLACK_HOLE_SYSTEM){ctx.save();ctx.translate(sx+(big?142:64),p.y+(big?96:38));ctx.scale(-1,1);ctx.font=`${big?52:22}px system-ui`;ctx.shadowColor='#56e7ff';ctx.shadowBlur=12;ctx.fillText((window.__v80BoneTimeActive&&window.__v80BoneTimeActive())?'🦴':'🔫',0,0);ctx.restore()}}
 function spawnEvents(){
  const s=S(),name=s.name,isSun=name.includes('太陽'),isMars=name.includes('火星'),isEarth=system===0&&stage===0,isMoon=name.includes('月'),isDream=!!systems[system].dream;
  if(isEarth)return;
@@ -1727,7 +1727,7 @@ function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier
    for(const a of aliens){if(a.got)continue;const dx=p.x-a.x,dy=(p.y+20)-a.y;const d=Math.hypot(dx,dy);if(d<420){a.x+=dx*.026*dt;a.y+=dy*.026*dt}}
    for(const o of swarm){if(o.got)continue;const dx=p.x-o.x,dy=(p.y+20)-o.y;const d=Math.hypot(dx,dy);if(d<360){o.x+=dx*.018*dt;o.y+=dy*.018*dt}}
  }
- let speed=2.12+difficultyTier*.24+Math.min(.14,companionCount*.009);if(food===0)speed*=.82;if(s.event==='SUPER WIND'&&eventPhase%300>170)speed+=.62;if(s.event==='GIANT STORM'&&eventPhase%260>170)shake=5;else shake*=.88;const rideActive=!!v86Ride;if(!rideActive)p.x+=speed*dt;if(now<alienRideUntil){p.vy*=.82;p.y+=((groundY()-205)-p.y)*.045*dt}else if(now<satelliteUntil){p.vy*=.88;p.y+=((groundY()-175)-p.y)*.035*dt}else{p.vy+=s.gravity*dt;p.y+=p.vy*dt}const ceiling=34;if(p.y<ceiling){p.y=ceiling;if(p.vy<0)p.vy=0;}if(s.event==='ICE WIND'&&!p.on)p.x+=Math.sin(now/180)*.55*dt;if(s.event==='GRAVITY WELL'&&!p.on){p.x+=Math.sin(now/120)*1.1*dt;p.vy+=.10*dt}if(p.y+p.h>=groundY()){p.y=groundY()-p.h;p.vy=0;p.on=true;jumps=0}else p.on=false;if(system===0&&stage===0){
+ let speed=2.12+difficultyTier*.24+Math.min(.14,companionCount*.009);if(food===0)speed*=.82;if(s.event==='SUPER WIND'&&eventPhase%300>170)speed+=.62;if(s.event==='GIANT STORM'&&eventPhase%260>170)shake=5;else shake*=.88;const rideActive=!!v86Ride;if(!rideActive)p.x+=speed*dt;if(now<alienRideUntil){p.vy*=.82;p.y+=((groundY()-205)-p.y)*.045*dt}else if(now<satelliteUntil&&(!v63IsOpeningEarth()||v86Ride?.kind==='ufo')){p.vy*=.88;p.y+=((groundY()-175)-p.y)*.035*dt}else{p.vy+=s.gravity*dt;p.y+=p.vy*dt}const ceiling=34;if(p.y<ceiling){p.y=ceiling;if(p.vy<0)p.vy=0;}if(s.event==='ICE WIND'&&!p.on)p.x+=Math.sin(now/180)*.55*dt;if(s.event==='GRAVITY WELL'&&!p.on){p.x+=Math.sin(now/120)*1.1*dt;p.vy+=.10*dt}if(p.y+p.h>=groundY()){p.y=groundY()-p.h;p.vy=0;p.on=true;jumps=0}else p.on=false;if(system===0&&stage===0){
  for(const w of earthWalkers)w.x-=w.v*dt;
 
  if(returnFromDogStar&&p.x>=rocketX-110){
@@ -1737,6 +1737,13 @@ function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier
  // v118: 少し走ったあと、まず安全な前兆衛星、その後に大量ウェーブ。
  if(!returnFromDogStar&&p.x>=860&&!v86Ride&&!v94SatellitePending&&now>=v99EarthSatelliteNextAt){
    spawnSatellite();
+ }
+ if(!returnFromDogStar&&v118EarthPreludeCount>=4&&!v86Ride&&v125EarthUfoPassCount<4){
+   if(v125EarthUfoNextAt===0)v125EarthUfoNextAt=now+1400;
+   const hasBackUfo=satellites.some(sat=>!sat.got&&sat.fromBehind);
+   if(!hasBackUfo&&now>=v125EarthUfoNextAt){
+     window.v125SpawnBackUfo?.();
+   }
  }
 }
 for(const it of items){if(it.fall&&!it.got)it.y+=2.4*dt;if(it.got)continue;if(now<magnetUntil&&!it.food&&Math.abs(it.x-p.x)<520){it.x+=(p.x-it.x)*.10*dt;it.y+=(p.y+25-it.y)*.10*dt}if(big||now<satelliteUntil||now<alienRideUntil){if(Math.abs(it.x-p.x)<500)collectGood(it)}else if(rectHit(playerRect(),itemRect(it)))collectGood(it)}
@@ -1752,20 +1759,26 @@ for(const sat of satellites){
  const satGround=groundY()-sat.h;
 
  if(sat.boardingAt){
-   // まずぶつかって高めに弾かれる。落ち始めてから飛び乗る。
-   sat.x=sat.boardX;
-   sat.y=sat.boardY;
-   if(now>=sat.boardingAt&&p.vy>=0&&!v86Ride){
-     p.y=Math.max(34,p.y-16);
-     p.vy=-4.6;
-     p.on=false;
-     if(v86BeginTransit(sat.rideKind==='ufo'?'ufo':'satellite',now,1)){
-       sat.got=true;
-       v94SatellitePending=false;
+   // v129: 飛び乗り予約はUFOだけ。衛星/岩の古い予約値は破棄する。
+   if(sat.rideKind!=='ufo'){
+     sat.boardingAt=0;
+     sat.boardX=undefined;
+     sat.boardY=undefined;
+   }else{
+     sat.x=sat.boardX;
+     sat.y=sat.boardY;
+     if(now>=sat.boardingAt&&p.vy>=0&&!v86Ride){
+       p.y=Math.max(34,p.y-16);
+       p.vy=-4.6;
+       p.on=false;
+       if(v86BeginTransit('ufo',now,1)){
+         sat.got=true;
+         v94SatellitePending=false;
+         continue;
+       }
+     }else{
        continue;
      }
-   }else{
-     continue;
    }
  }
 
@@ -1800,6 +1813,10 @@ for(const sat of satellites){
        sat.rollVel=Math.max(sat.rollVel||0,.14);
      }
    }
+ }else if(sat.fromBehind){
+   sat.x+=sat.v*dt;
+   sat.y=(sat.baseY||groundY()-86)+Math.sin(now/170+sat.phase)*5.5;
+   sat.tilt=Math.sin(now/220+sat.phase)*.06;
  }else{
    const groundV=sat.boardEasy?Math.min(.12,sat.v):sat.v;
    sat.x-=groundV*dt;
@@ -1814,22 +1831,45 @@ for(const sat of satellites){
    ? {x:sat.x-12,y:sat.y-10,w:sat.w+24,h:sat.h+18}
    : {x:sat.x,y:sat.y,w:sat.w,h:sat.h};
 
- if(sat.rideKind==='rock'){
-   if(!v86Ride&&(!sat.hitUntil||now>=sat.hitUntil)&&rectHit(playerRect(),satHit)){
+ if(sat.rideKind==='rock' || sat.rideKind==='satellite'){
+   if(!v86Ride&&!sat.playerHit&&rectHit(playerRect(),satHit)){
+     sat.playerHit=true;
      p.y=Math.max(34,p.y-10);
-     p.x=Math.max(camera+18,p.x-9);
-     p.vy=-8.4;
+     // v127: 犬の横位置は戻さない。走行・カメラをそのまま継続する。
+     p.vy=sat.rideKind==='satellite'?-8.6:-8.2;
      p.on=false;
-     shake=Math.max(shake,10);
+     shake=Math.max(shake,sat.rideKind==='satellite'?11:10);
      alienContactFlashUntil=Math.max(alienContactFlashUntil,now+180);
-     sat.impactFxUntil=now+280;
-     sat.hitUntil=now+420;
+     hurtUntil=Math.max(hurtUntil,now+(sat.rideKind==='rock'?520:320));
+     sat.impactFxUntil=now+300;
+
+     // 当たった物体は少し前へ弾かれ、以後はただの転がる物体。
+     sat.x+=26;
+     sat.departure=false;
+     sat.boardingAt=0;
+     sat.boardX=undefined;
+     sat.boardY=undefined;
+     sat.boardEasy=false;
+     sat.v=Math.max(sat.v||0,.24);
+     if(!sat.dropOnly){
+       sat.rolling=true;
+       sat.rollVel=Math.max(sat.rollVel||0,.10);
+     }
+
+     // 衝突でゲーム進行が詰まらないよう pending を解除。
+     v94SatellitePending=false;
+
+     if(sat.rideKind==='rock'){
+       showToast('🐕 イタッ！ 隕石にぶつかった！',900);
+     }else{
+       showToast('🐕 イタッ！ 衛星にぶつかった！',760);
+     }
    }
  }else if(!v86Ride&&!sat.boardingAt&&rectHit(playerRect(),satHit)){
-   // 宇宙人とぶつかったみたいにポーン！と飛ぶ。そのあと戸惑いながら飛び乗る。
+   // 後ろから来たUFOに当たってポーン！と飛び、そのあと乗る。
    p.y=Math.max(34,p.y-14);
-   p.x=Math.max(camera+14,p.x-14);
-   p.vy=-10.8;
+   p.x=Math.max(camera+14,p.x-16);
+   p.vy=-11.0;
    p.on=false;
    shake=Math.max(shake,12);
    alienContactFlashUntil=Math.max(alienContactFlashUntil,now+220);
@@ -1839,13 +1879,14 @@ for(const sat of satellites){
    sat.boardY=sat.y;
    sat.dropOnly=false;
    sat.departure=false;
+   sat.fromBehind=false;
    sat.rolling=false;
    sat.v=0;
-   showToast(sat.rideKind==='ufo'?'🐕 びくっ！ 宇宙船にぶつかった！':'🐕 びくっ！ 衛星にぶつかった！',720);
+   showToast('🐕 イタッ！ 後ろから宇宙船！',820);
  }
 }
-satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220);
-if(v94SatellitePending&&!v86Ride&&!satellites.some(sat=>!sat.got))v94SatellitePending=false;
+satellites=satellites.filter(sat=>!sat.got&&sat.x>p.x-W-220&&sat.x<p.x+W+320);
+if(v94SatellitePending&&!v86Ride&&!satellites.some(sat=>!sat.got&&sat.departure&&!sat.playerHit))v94SatellitePending=false;
 for(const b of bosses){if(b.dead)continue;b.x-=b.v*dt;if(b.hitFlash>0)b.hitFlash-=dt;if(rectHit(playerRect(),{x:b.x+8,y:b.y+6,w:b.w-16,h:b.h-6}))hitHazard({x:b.x,y:b.y,w:b.w,h:b.h,got:false,evil:true})}bosses=bosses.filter(b=>!b.dead&&b.x>p.x-W-240);
 for(const st of shootingStars){st.x-=st.vx*dt;st.y+=st.vy*dt}shootingStars=shootingStars.filter(st=>st.x>-160&&st.y<H+100);for(const g of gasClouds)g.x-=g.vx*dt;gasClouds=gasClouds.filter(g=>g.x>-g.r*2);
 if(now>=sparkUntil)sparkBadge.classList.remove('on');if(big&&now>=bigUntil)endBig();if(now>=cosmicPowerUntil)cosmicBonus=0;updateCritical();const pr=playerRect();if(system===BLACK_HOLE_SYSTEM){for(let i=0;i<blackHoleWormholes.length;i++){const wy=groundY()-72-(i%2)*70;const whb={x:blackHoleWormholes[i]-38,y:wy,w:76,h:78};if(rectHit(pr,whb)){warpTo(false);return}}if(p.x>=whiteHoleX){whiteHoleEscape();return}}else{const wh={x:portalX-38,y:groundY()-205,w:76,h:82};if(wormholeEnabled()&&rectHit(pr,wh))warpTo(false);else if(blackHoleEnabled()){const pcx=p.x+p.w*.5,pcy=p.y+p.h*.5,bhx=blackHoleX,bhy=blackHoleY;if(Math.hypot(pcx-bhx,pcy-bhy)<54)warpTo(true)}}if(p.x>worldLength){
@@ -2554,7 +2595,7 @@ collectGood=function(it){
   if(performance.now()<boneRainUntil){
    for(let i=0;i<5;i++)v60BoneFx.push({born:performance.now(),dx:(Math.random()-.5)*70,dy:-20-Math.random()*48,icon:i%3===0?'💖':i%3===1?'✨':'🦴'});
   }
-  showToast(it.inert?'🔋 無機エネルギー +1':`🦴 骨チャージ +1　${food}`,560);syncHUD();return;
+  showToast(it.inert?'🔋 無機エネルギー +1':'🦴 骨チャージ！',560);syncHUD();return;
  }
  const gain=big?3:2;points+=gain;starTotal+=gain;
  if(points>=V60_SHOP_UNLOCK&&!shopUnlocked){shopUnlocked=true;setTimeout(()=>openShop(true),120);}
@@ -2665,7 +2706,7 @@ syncHUD=function(){
  const earth=system===0&&stage===0,s=S(),dist=v60Distance();
  if(earth){
   locationEl.textContent='🌍 地球';missionEl.textContent=returnFromDogStar?'🐕 地球に帰ってきた。いつもの道を歩こう。':'🐕 地球を散歩中。道の先に何かある…';eventEl.textContent='🌳 地球';
-  astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'骨好きわんこの宇宙旅'}</span>`;
+  astroInfo.innerHTML=`<b>🌍 地球</b><br>${returnFromDogStar?'長い宇宙旅行から帰還':'出発地点'}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${returnFromDogStar?'おかえり、犬星くん':'骨好きわんこの宇宙旅'}<br>🌍 地球重力｜基準 1G</span>`;
  }else{
   const grav=s.gravity<=.40?'低重力｜ジャンプ力🔼':s.gravity>=.56?'高重力｜ジャンプ力🔽':'標準重力｜ジャンプ力↔️';
   astroInfo.innerHTML=`<b>${s.name}</b><br>${s.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span><span class="distanceHint">${grav}</span>`;
@@ -4174,7 +4215,13 @@ let v67InsuranceGraceUntil=0;
   const v80PrevSync=syncHUD;
   syncHUD=function(force){
     v80PrevSync(force);
-    if(system===0&&stage===0)return;
+    if(system===0&&stage===0){
+      const hint=astroInfo?.querySelector('.distanceHint');
+      if(hint && !hint.textContent.includes('地球重力')){
+        hint.innerHTML=`${returnFromDogStar?'おかえり、犬星くん':'骨好きわんこの宇宙旅'}<br>🌍 地球重力｜基準 1G`;
+      }
+      return;
+    }
     const s=S();
     const hint=astroInfo?.querySelector('.distanceHint');
     if(hint){
@@ -4419,6 +4466,11 @@ function v86Advance(steps=1){
 }
 function v86BeginTransit(type,now,steps=1){
   if(!v86CanRide()||v86Ride)return false;
+
+  // v129: 地球のオープニングでは、乗れるのは後ろから来るUFOだけ。
+  // 衛星・岩からは絶対にワープ/黒画面へ入らない。
+  if(v63IsOpeningEarth() && type!=='ufo')return false;
+
   const kind=(type==='ufo')?'ufo':'satellite';
   const icon=kind==='ufo'?'🛸':'🛰️';
   v94SatellitePending=false;
@@ -4486,7 +4538,7 @@ update=function(now,dt){
   try{
     if(v86Ride?.type==='transit'&&!v86Ride.warpStarted&&v86Ride.until-now<=5920){
       v86Ride.warpStarted=true;
-      v86SetBadge('🛰️  ACCEL WARP ✦');
+      v86SetBadge(`${v86Ride.kind==='ufo'?'🛸':'🛰️'}  ACCEL WARP ✦`);
       v89StartWarpFx();
     }
     if(v86Ride?.type==='transit'&&now>=v86Ride.until){v86FinishTransit();return}
@@ -4497,13 +4549,14 @@ update=function(now,dt){
       p.vy=0;
       p.on=true;
       jumps=0;
-      showToast('🐕 ポンッ！ 衛星から着地',650);
+      showToast(`🐕 ${v86Ride?.kind==='ufo'?'宇宙船':'衛星'}から着地！`,650);
     }
-    // v92: 移動手段は衛星だけ。岩・ランダム宇宙船・自動乗車は使わない。
     v86Rocks=[];v86Ships=[];
 
-    if(v86Ride?.type==='transit')p.x+=.20*dt;
-    else if(v86Ride?.type==='arrival')p.x+=1.65*dt;
+    // v128: ライド中も背景がしっかり流れる速度で進む。
+    // 旧 .20 はほぼ停止に見えたため、通常走行に近い速度へ。
+    if(v86Ride?.type==='transit')p.x+=2.35*dt;
+    else if(v86Ride?.type==='arrival')p.x+=1.80*dt;
   }catch(err){console.error('v86 ride recovered',err);v86ClearRide();v86Rocks=[];v86Ships=[]}
 };
 
@@ -4850,7 +4903,7 @@ syncHUD=function(force=false){
 
 /* === v100: stable boot + satellite timing + visible cosmic portals === */
 
-/* === v124: stronger story satellite + alien-like impact motion === */
+/* === v133: trim extra narration === */
 (function(){
   let v102ArrivalGraceUntil=0;
 
@@ -4916,6 +4969,8 @@ let v118EarthPreludeCount=0;
 let v118EarthWaveStarted=false;
 let v121SkyFlashUntil=0;
 let v122SkyFlashPower=.55;
+let v125EarthUfoNextAt=0;
+let v125EarthUfoPassCount=0;
 const v119EarthPreludeGaps=[1700,900,760,660,560,500];
 
 function v99PortalEligible(){
@@ -4935,6 +4990,8 @@ stageStart=function(){
   v118EarthWaveStarted=false;
   v121SkyFlashUntil=0;
   v122SkyFlashPower=.55;
+  v125EarthUfoNextAt=0;
+  v125EarthUfoPassCount=0;
   if(v63IsOpeningEarth()){
     // v119: 前兆の単発衛星を重ねてから、大量ウェーブへ。
     v99EarthSatelliteNextAt=performance.now()+1800;
@@ -5098,6 +5155,36 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
   };
 
+  window.v125SpawnBackUfo=function(){
+    const nowAt=performance.now();
+    satellites.push({
+      x:p.x-W*.60-Math.random()*60,
+      y:groundY()-86-Math.random()*10,
+      baseY:groundY()-86-Math.random()*10,
+      v:4.45+Math.random()*.40,
+      vy:0,
+      gravity:0,
+      bounce:0,
+      w:58,h:44,got:false,phase:Math.random()*6.2,
+      departure:false,
+      earthChoice:true,
+      dropOnly:false,
+      fromBehind:true,
+      rolling:false,
+      bounced:true,
+      groundBounces:99,
+      emoji:'🛸',
+      boardEasy:true,
+      tilt:(Math.random()-.5)*.08,
+      wobble:Math.random()*6.283,
+      rideKind:'ufo'
+    });
+    v125EarthUfoPassCount++;
+    v125EarthUfoNextAt=nowAt+2300;
+    eventEl.textContent='🛸 BEHIND YOU';
+    if(v125EarthUfoPassCount===1)showToast('🛸 後ろから宇宙船が近づいてくる…！',980);
+  };
+
   const v103PrevSpawnSatellite=spawnSatellite;
   spawnSatellite=function(){
     if(v94SatellitePending||v86Ride)return false;
@@ -5123,7 +5210,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           {screenStart:.14, screenEnd:.28, xOffset:-5, yOffset:-22, vy:2.50, v:.27, drift:.015, emoji:'🪨', tilt:-.34},
           {screenStart:.84, screenEnd:.70, xOffset:8, yOffset:-16, vy:2.56, v:.28, drift:-.016, emoji:'🪨', tilt:.36},
           {screenStart:.22, screenEnd:.30, xOffset:0, yOffset:-18, vy:2.54, v:.27, drift:.010, emoji:'🛰️', tilt:-.10},
-          {screenStart:.76, screenEnd:.64, xOffset:2, yOffset:-20, vy:2.58, v:.27, drift:-.010, emoji:'🛸', tilt:.12}
+          {screenStart:.76, screenEnd:.64, xOffset:2, yOffset:-20, vy:2.58, v:.27, drift:-.010, emoji:'🛰️', tilt:.12}
         ];
         const cfg=preludeCfgs[v118EarthPreludeCount]||preludeCfgs[0];
         satellites.push({
@@ -5154,11 +5241,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         v99EarthSatelliteNextAt=nowAt+(v119EarthPreludeGaps[v118EarthPreludeCount-1]||720);
         eventEl.textContent='🛰️ ……？';
         if(isFirstPrelude){
-          showToast('⚠️ 空がピカーッ……！ 犬が立ち止まって空を見上げた。',1180);
+          showToast('⚠️ 空がピカーッ……！ あやしい光だ！',1180);
         }else if(preludeStep<4){
-          showToast('🪨 ゴトッ……まだ何か降ってくる。',860);
+          
         }else if(cfg.emoji==='🛰️'){
-          showToast('🛰️ 見たことない衛星……犬がびっくりして戸惑ってる。',1160);
+          
         }else{
           showToast('🛸 宇宙船まで……空の気配が変だ。',1040);
         }
@@ -5175,9 +5262,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           {screenStart:.86, screenEnd:.76, xOffset:10,  yOffset:-26,  vy:3.02, v:.34, delay:180, drift:-.016, emoji:'🛰️'},
           {screenStart:.16, screenEnd:.22, xOffset:-4,  yOffset:-52,  vy:2.98, v:.33, delay:340, drift:.014, emoji:'🪨'},
           {screenStart:.90, screenEnd:.80, xOffset:12,  yOffset:-80,  vy:3.06, v:.35, delay:480, drift:-.018, emoji:'🛰️'},
-          {screenStart:.64, screenEnd:.56, xOffset:-6,  yOffset:-108, vy:2.96, v:.33, delay:600, drift:-.014, emoji:'🛸'},
+          {screenStart:.64, screenEnd:.56, xOffset:-6,  yOffset:-108, vy:2.96, v:.33, delay:600, drift:-.014, emoji:'🛰️'},
           // ここから間隔が狭くなる
-          {screenStart:.64, screenEnd:.48, xOffset:4,   yOffset:-138, vy:2.55, v:.24, delay:760, drift:-.006, emoji:'🛸', boardEasy:true},
+          {screenStart:.64, screenEnd:.48, xOffset:4,   yOffset:-138, vy:2.55, v:.24, delay:760, drift:-.006, emoji:'🛰️', boardEasy:true},
           {screenStart:.58, screenEnd:.43, xOffset:0,   yOffset:-168, vy:2.48, v:.22, delay:940, drift:-.006, emoji:'🛰️', boardEasy:true},
           {screenStart:.56, screenEnd:.35, xOffset:2,   yOffset:-194, vy:3.08, v:.32, delay:850, drift:-.010, emoji:'🪨'},
           {screenStart:.52, screenEnd:.39, xOffset:2,   yOffset:-214, vy:2.72, v:.26, delay:1010, drift:-.008, emoji:'🛰️', boardEasy:true}
@@ -5208,8 +5295,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           });
         });
         v99EarthSatelliteNextAt=nowAt+6200;
-        eventEl.textContent='🛰️ ……？';
-        showToast('……ガラガラッ！ 犬が戸惑う間もなく、次々落ちてくる！',1180);
+        eventEl.textContent='🌙 EARTH / NIGHT';
       }
     }else{
       satellites.push({
@@ -5242,7 +5328,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   const oldSatLoop = `for(const sat of satellites){\n if(sat.got)continue;\n // v99: 衛星は高さを変えず、右から左へ水平に通過するだけ。\n sat.x-=sat.v*dt;\n\n // 吸い付く/近づいただけで乗る判定を廃止。\n // 地球ではジャンプして本当に触れた時だけ乗れる。\n if(!v86Ride&&rectHit(playerRect(),{x:sat.x,y:sat.y,w:sat.w,h:sat.h})){\n   if(v86BeginTransit('satellite',now,1)){\n     sat.got=true;\n     v94SatellitePending=false;\n   }\n }\n}`;
 })();
 
-stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。犬星くんは散歩している。',1700),550);requestAnimationFrame(frame);
+stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽しいな♪',1700),550);requestAnimationFrame(frame);
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
