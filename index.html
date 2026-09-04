@@ -4730,12 +4730,7 @@ let v67InsuranceGraceUntil=0;
         ctx.fillStyle='rgba(255,244,170,.78)';
         for(let r=0;r<4;r++)for(let c=0;c<3;c++)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
       }
-      for(let i=0;i<9;i++){
-        const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
-        ctx.fillStyle='#6f4a2d';ctx.fillRect(x,gy-64,10,64);
-        ctx.fillStyle=i%2?'#58a765':'#6cb56b';
-        ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill();
-      }
+      // v168: 木はベース背景側で1回だけ描画。ここでは重ね描きしない。
       ctx.restore();
     }
   };
@@ -6186,9 +6181,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   // 昔へ行くほどステージを短くする。
   // 「数億年 → 数分 → 秒 → ほぼ一瞬」をゲームテンポにも反映。
   const v149EpochLengths=[
-    2100,1900,1680,1480,1300,
-    1140,1000,880,780,690,
-    610,530,470,420,350
+    1840,1660,1470,1300,1140,
+    1000,880,775,685,605,
+    535,465,410,365,305
   ];
 
   let v149EpochShift=false;
@@ -6259,6 +6254,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 })();
 
 
+/* === v168: contextual recipes / early-universe motion / pre-universe warp / Earth disappearance === */
 /* === v167: Japanese hypothesis badge === */
 /* === v166: beginning/end hypothesis display format === */
 /* === v165: seven experiential routes / distinct graphics / no hypothesis menus === */
@@ -7990,7 +7986,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   let v160EndRouteFinished=false;
 
   const v160FutureLengths={
-    1:2350,2:2200,3:2050,4:1850,5:1650,6:1450,7:1250
+    1:2350,2:2200,3:1750,4:2050,5:1850,6:1650,7:1450,8:1250
   };
 
   const v160EndInfo={
@@ -8171,7 +8167,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     });
     document.getElementById('v160EndClose')?.addEventListener('click',()=>{
       document.getElementById('v160EndHub')?.classList.remove('on');
-      if(v160IsFuture()&&v160FutureStep()===7){
+      if(v160IsFuture()&&v160FutureStep()===8){
         p.x=Math.min(p.x,900);
         v160FutureAdvanceLock=false;
       }
@@ -8425,7 +8421,62 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       ctx.globalAlpha=.18;ctx.fillStyle='#ff7045';ctx.fillRect(0,0,W,gy);
     }
 
+
     else if(step===3){
+      // 地球の消滅：赤色巨星化した太陽で、地球の地表そのものが崩れていく。
+      const q=Math.max(0,Math.min(1,p.x/1750));
+      const g=ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0,'#210301');g.addColorStop(.55,'#8b210c');g.addColorStop(1,'#2d0b06');
+      ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+
+      // 空いっぱいの赤色巨星
+      const sx=W*.76,sy=H*.20;
+      const sr=250+q*170;
+      const sun=ctx.createRadialGradient(sx,sy,12,sx,sy,sr);
+      sun.addColorStop(0,'#fff1bd');
+      sun.addColorStop(.18,'#ffb04e');
+      sun.addColorStop(.52,'#e5421d');
+      sun.addColorStop(.82,'rgba(130,19,8,.80)');
+      sun.addColorStop(1,'transparent');
+      ctx.fillStyle=sun;ctx.beginPath();ctx.arc(sx,sy,sr,0,Math.PI*2);ctx.fill();
+
+      // 地球の地面が進むほど割れ、光に飲まれていく
+      ctx.globalAlpha=.9-q*.45;
+      ctx.fillStyle='#24100c';ctx.fillRect(0,gy,W,H-gy);
+      for(let i=0;i<13;i++){
+        const x=(i*97-camera*.42)%(W+120)-30;
+        const crack=18+q*55+(i%3)*8;
+        ctx.strokeStyle=`rgba(255,${120+Math.floor(q*80)},55,${.20+.45*q})`;
+        ctx.lineWidth=1.2+q*1.8;
+        ctx.beginPath();
+        ctx.moveTo(x,gy);
+        ctx.lineTo(x+10*Math.sin(i),gy+crack*.35);
+        ctx.lineTo(x-6*Math.cos(i*.7),gy+crack*.75);
+        ctx.lineTo(x+8,gy+crack);
+        ctx.stroke();
+      }
+
+      // 街の残骸が熱で輪郭を失う
+      for(let i=0;i<7;i++){
+        const x=((i*150-camera*.22)%(W+210)+W+210)%(W+210)-80;
+        const h=55+(i%3)*30;
+        ctx.globalAlpha=Math.max(.04,.34-q*.26);
+        ctx.fillStyle='#171010';
+        ctx.fillRect(x,gy-h,72,h);
+      }
+
+      // 終盤は白熱した光に溶ける
+      if(q>.62){
+        ctx.globalAlpha=(q-.62)*1.25;
+        const wash=ctx.createLinearGradient(0,0,0,H);
+        wash.addColorStop(0,'rgba(255,194,99,.12)');
+        wash.addColorStop(1,'rgba(255,240,200,.62)');
+        ctx.fillStyle=wash;ctx.fillRect(0,0,W,H);
+      }
+      ctx.globalAlpha=1;
+    }
+
+    else if(step===4){
       ctx.fillStyle='#01030a';ctx.fillRect(0,0,W,H);
       for(let i=0;i<45;i++){
         ctx.globalAlpha=.12+(i%4)*.10;ctx.fillStyle='#fff';
@@ -8438,7 +8489,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();
     }
 
-    else if(step===4){
+    else if(step===5){
       ctx.fillStyle='#010204';ctx.fillRect(0,0,W,H);
       // 星はかなり少ない。ガス雲もほぼ消える
       for(let i=0;i<14;i++){
@@ -8448,7 +8499,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       }
     }
 
-    else if(step===5){
+    else if(step===6){
       ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
       // 最後の赤色矮星を3つだけ
       const pts=[[.25,.24],[.61,.34],[.84,.17]];
@@ -8460,7 +8511,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       });
     }
 
-    else if(step===6){
+    else if(step===7){
       ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
       const x=W*.69,y=H*.25;
       // ブラックホールは1つだけ。周囲の光も弱い
@@ -8472,7 +8523,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       ctx.globalAlpha=.22;ctx.fillStyle='#d8efff';ctx.beginPath();ctx.arc(x+105+12*Math.sin(t),y-5,1.2,0,Math.PI*2);ctx.fill();
     }
 
-    else if(step===7){
+    else if(step===8){
       ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
       // ほぼ何もない。たまに極小の光子だけ
       for(let i=0;i<4;i++){
@@ -10096,7 +10147,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
 
     // Route 1-4: at the very far future, the player crosses one "future layer".
-    if(systems[system]?.futureEra&&currentFutureStep()===7&&!V165.fateLocked){
+    if(systems[system]?.futureEra&&currentFutureStep()===8&&!V165.fateLocked){
       const split=V165.fateSplitX;
       if(p.x>=split){
         const altitude=groundY()-(p.y+p.h*.5);
@@ -10153,7 +10204,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   }
 
   function drawFateSplitter(){
-    if(!(systems[system]?.futureEra&&currentFutureStep()===7)||V165.fateLocked)return;
+    if(!(systems[system]?.futureEra&&currentFutureStep()===8)||V165.fateLocked)return;
     const sx=V165.fateSplitX-camera,gy=groundY(),t=performance.now()/1000;
     if(sx<-140||sx>W+140)return;
     const lanes=[
@@ -10630,10 +10681,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
     if(V166_START[sk] && (sk==='eternal'||sk==='noboundary')){
       const h=V166_START[sk];
-      locationEl.textContent=`宇宙のはじまり  ·  ${h.name}`;
+      locationEl.textContent=`宇宙以前  ·  ${h.name}`;
       astroInfo.innerHTML=
-        `<b style="font-size:1.08em">宇宙のはじまり</b>`+
-        `<br><span class="v167HypLine"><span class="v167HypBadge">仮説</span><b>その前は？</b></span>`+
+        `<b style="font-size:1.08em">宇宙以前</b>`+
+        `<br><span class="v167HypLine"><span class="v167HypBadge">仮説</span><b>宇宙の前は？</b></span>`+
         `<br><br><b>${h.name}</b>`+
         `<br><strong>${h.one}</strong>`+
         `<br>${h.desc}`;
@@ -10676,7 +10727,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
     const isStart=key==='eternal'||key==='noboundary';
     const h=isStart?V166_START[key]:V166_END[key];
-    b.textContent=`${isStart?'宇宙のはじまり':'宇宙の終わり'}｜${h.name}`;
+    b.textContent=`${isStart?'宇宙以前':'宇宙の終わり'}｜${h.name}`;
     sp.textContent=`HYPOTHESIS｜${isStart?'その前は？':'その先は？'}　${h.one}`;
   }
 
@@ -10695,8 +10746,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const title=bridge.querySelector('h2');
     const text=bridge.querySelector('p');
     const big=bridge.querySelector('.v160BigText');
-    if(kicker)kicker.textContent='宇宙のはじまり';
-    if(title)title.textContent='仮説｜その前は？';
+    if(kicker)kicker.textContent='宇宙以前';
+    if(title)title.textContent='仮説｜宇宙の前は？';
     if(text)text.innerHTML=
       `<b>🔁 ビッグバウンス</b><br>`+
       `前に、縮んでいた宇宙があった？<br>`+
@@ -10717,15 +10768,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const all=(title.textContent+' '+text.textContent).trim();
 
     if(all.includes('何度目の宇宙')||all.includes('循環宇宙')){
-      kicker.textContent='宇宙のはじまり';
-      title.textContent='仮説｜その前は？';
+      kicker.textContent='宇宙以前';
+      title.textContent='仮説｜宇宙の前は？';
       text.innerHTML=
         `<b>♻️ 循環宇宙</b><br>`+
         `<strong>宇宙は何度も繰り返している？</strong><br>`+
         `同じ「収縮 → 跳ね返り → 膨張」がまた起きた。宇宙がこの流れを何度も繰り返しているのかもしれない。`;
     }else if(all.includes('終わりが、始まり')||all.includes('ビッグクランチ')){
-      kicker.textContent='宇宙のはじまり';
-      title.textContent='仮説｜その前は？';
+      kicker.textContent='宇宙以前';
+      title.textContent='仮説｜宇宙の前は？';
       text.innerHTML=
         `<b>🔁 ビッグバウンス</b><br>`+
         `<strong>前に、縮んでいた宇宙があった？</strong><br>`+
@@ -10795,6 +10846,452 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         subtree:true,childList:true,characterData:true
       });
     });
+  }
+
+  if(document.readyState==='loading')addEventListener('DOMContentLoaded',init,{once:true});
+  else setTimeout(init,0);
+})();
+
+
+/* === v168: contextual recipes / early-universe motion / pre-universe time warp / Earth disappearance === */
+(function(){
+  // ----------------------------------------------------------
+  // FUTURE 8-stage route
+  // ----------------------------------------------------------
+  // v164 already gave the original 7 stages their final copy.
+  // Shift the old White Dwarf onward by one and insert Earth disappearance.
+  systems.filter(x=>x?.futureEra).forEach(sys=>{
+    if((sys.futureStep||0)>=3)sys.futureStep+=1;
+  });
+
+  if(!systems.some(x=>x?.v168EarthGone)){
+    systems.push({
+      name:'🌍 地球の消滅',
+      distance:'50億年後以降',
+      desc:'赤色巨星になった太陽に地球が飲み込まれる可能性が高く、少なくとも今の地球の姿は残らない。',
+      theme:'future',futureEra:true,futureStep:3,theoretical:true,v168EarthGone:true,
+      stages:[{
+        name:'🌍 地球の消滅',
+        distance:'50億年後以降',
+        desc:'赤色巨星になった太陽に地球が飲み込まれる可能性が高く、少なくとも今の地球の姿は残らない。',
+        goodColor:'#ff9d62',
+        sky:['#270301','#8d220c'],ground:'#2c110b',ground2:'#100503',
+        planet:'#ff7047',event:'EARTH FATE',
+        eventText:'太陽の老化は、地球そのものの終わりにもつながる',
+        gravity:.52,jump:18.2
+      }]
+    });
+  }
+
+  const V168_FUTURE={
+    1:{name:'☀️ 明るくなる太陽',time:'20億年後',desc:'太陽は年を取るほど明るくなり、地球の海も保てなくなっていく。',group:'☀️ 太陽と地球の未来',local:1,total:4},
+    2:{name:'🔴 赤色巨星',time:'50億年後',desc:'中心の水素が減り、外側が巨大に膨らんで赤い星になる。',group:'☀️ 太陽と地球の未来',local:2,total:4},
+    3:{name:'🌍 地球の消滅',time:'50億年後以降',desc:'赤色巨星になった太陽に地球が飲み込まれる可能性が高く、少なくとも今の地球の姿は残らない。',group:'☀️ 太陽と地球の未来',local:3,total:4},
+    4:{name:'⚪ 白色矮星',time:'60億年後',desc:'太陽は外側のガスを宇宙へ放ち、小さく高密度な中心核だけが残る。',group:'☀️ 太陽と地球の未来',local:4,total:4},
+    5:{name:'🔴 最後の長寿命星',time:'14兆年後',desc:'最も長生きする小さな星も、少しずつ寿命を迎えていく。',group:'🌌 宇宙全体の未来',local:1,total:4},
+    6:{name:'🌌 星の時代の終わり',time:'100兆年後',desc:'新しい星がほぼ生まれず、星が輝く時代そのものが終わる。',group:'🌌 宇宙全体の未来',local:2,total:4},
+    7:{name:'🕳️ ブラックホール時代',time:'1正年後',desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。',group:'🌌 宇宙全体の未来',local:3,total:4},
+    8:{name:'🌑 暗い宇宙',time:'1グーゴル年後',desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。',group:'🌌 宇宙全体の未来',local:4,total:4}
+  };
+
+  // ----------------------------------------------------------
+  // Contextual "recipe": normal planets/stars get their own materials.
+  // Cosmic history gets an era recipe instead of today's 68/27/5.
+  // ----------------------------------------------------------
+  const RC={
+    earth:[['鉄',32,'#ef8d6a'],['酸素',30,'#8edfff'],['ケイ素',15,'#d8c8a8'],['マグネシウム',14,'#c6e6ae'],['その他',9,'#9aa8b8']],
+    moon:[['酸素',43,'#a5dcff'],['ケイ素',21,'#d8c8a8'],['マグネシウム',19,'#c5e3a8'],['鉄',10,'#ef8d6a'],['その他',7,'#9aa8b8']],
+    mars:[['酸素',30,'#a5dcff'],['鉄',23,'#e57755'],['ケイ素',17,'#d8c8a8'],['マグネシウム',14,'#c5e3a8'],['その他',16,'#a88a78']],
+    mercury:[['鉄などの金属',70,'#e78361'],['岩石成分',30,'#beb5a8']],
+    venus:[['鉄',32,'#e78361'],['酸素',30,'#a5dcff'],['ケイ素',16,'#d8c8a8'],['マグネシウム',14,'#c5e3a8'],['その他',8,'#b39b86']],
+    jupiter:[['水素',74,'#8edfff'],['ヘリウム',24,'#d6bdff'],['その他',2,'#f3c98b']],
+    saturn:[['水素',75,'#8edfff'],['ヘリウム',24,'#d6bdff'],['その他',1,'#f3c98b']],
+    uranus:[['水・アンモニア・メタンなど',65,'#8fe9e4'],['水素',26,'#9fdcff'],['ヘリウム',9,'#d6bdff']],
+    neptune:[['水・アンモニア・メタンなど',60,'#7fdccf'],['水素',30,'#8edfff'],['ヘリウム',10,'#d6bdff']],
+    sun:[['水素',74,'#9fe6ff'],['ヘリウム',24,'#d8bfff'],['重い元素',2,'#ffd28f']],
+    normalStar:[['水素',70,'#9fe6ff'],['ヘリウム',28,'#d8bfff'],['重い元素',2,'#ffd28f']],
+    cepheid:[['水素',68,'#9fe6ff'],['ヘリウム',30,'#d8bfff'],['重い元素',2,'#ffd28f']],
+    redSupergiant:[['水素',62,'#9fe6ff'],['ヘリウム',36,'#d8bfff'],['重い元素',2,'#ffd28f']],
+    blueSupergiant:[['水素',65,'#9fe6ff'],['ヘリウム',33,'#d8bfff'],['重い元素',2,'#ffd28f']],
+    lbv:[['水素',55,'#9fe6ff'],['ヘリウム',43,'#d8bfff'],['重い元素',2,'#ffd28f']],
+    wr:[['水素',40,'#9fe6ff'],['ヘリウム',58,'#d8bfff'],['重い元素',2,'#ffd28f']]
+  };
+
+  function recipeForStage(){
+    const n=S()?.name||'';
+    if(n==='🌍 地球')return {kind:'body',rows:RC.earth,note:'地球全体をつくる主な元素の目安'};
+    if(n==='🌙 月')return {kind:'body',rows:RC.moon,note:'月をつくる主な元素の目安'};
+    if(n==='🔴 火星')return {kind:'body',rows:RC.mars,note:'火星全体をつくる主な元素の目安'};
+    if(n==='☿ 水星')return {kind:'body',rows:RC.mercury,note:'水星内部の大まかな構成イメージ'};
+    if(n==='♀ 金星')return {kind:'body',rows:RC.venus,note:'金星全体をつくる主な元素の目安'};
+    if(n==='🟠 木星')return {kind:'body',rows:RC.jupiter,note:'木星の主成分'};
+    if(n==='🪐 土星')return {kind:'body',rows:RC.saturn,note:'土星の主成分'};
+    if(n==='🩵 天王星')return {kind:'body',rows:RC.uranus,note:'内部モデルからみた大まかな主成分'};
+    if(n==='🔵 海王星')return {kind:'body',rows:RC.neptune,note:'内部モデルからみた大まかな主成分'};
+    if(n==='☀️ 太陽')return {kind:'star',rows:RC.sun,note:'太陽の質量で見た主成分の目安'};
+
+    const type=(S()?.v155Type||'')+' '+(S()?.desc||'');
+    if(n==='💙 R136a1'||n==='🟢 ロマーノ星 GR 290')return {kind:'star',rows:RC.wr,note:'進化した大質量星としての主成分イメージ'};
+    if(type.includes('高光度青色変光星'))return {kind:'star',rows:RC.lbv,note:'高光度青色変光星としての主成分イメージ'};
+    if(type.includes('ケフェイド'))return {kind:'star',rows:RC.cepheid,note:'ケフェイド変光星としての主成分イメージ'};
+    if(type.includes('赤色超巨星'))return {kind:'star',rows:RC.redSupergiant,note:'赤色超巨星としての主成分イメージ'};
+    if(type.includes('青色超巨星')||n==='✨ エアレンデル')return {kind:'star',rows:RC.blueSupergiant,note:'青い大質量星としての主成分イメージ'};
+
+    // Other named stars / distant candidates.
+    if((S()?.v155Type||'').includes('星') || /シリウス|ベガ|ポラリス|M31|M33|M51|Warhol|イカロス|モスラ|クイユル|ゴジラ|Abell|MACS/.test(n)){
+      return {kind:'star',rows:RC.normalStar,note:'星の種類から見た主成分の目安'};
+    }
+    return null;
+  }
+
+  const ERA_INDEX={
+    '💫 ビッグバン':1,'❓ プランク時代':2,'◼️ 大統一時代':3,'💥 インフレーション時代':4,
+    '⚡ 電弱時代':5,'🟣 クォーク時代':6,'🔵 ハドロン時代':7,'🌀 レプトン時代':8,
+    '⚛️ ビッグバン元素合成':9,'✨ 光子時代':10,'🌤️ 再結合時代（宇宙の晴れ上がり）':11,
+    '📡 宇宙背景放射（CMB）':12,'🌑 暗黒時代':13,'🌅 宇宙の夜明け':14,'🔥 再電離時代':15
+  };
+
+  function eraRecipe(){
+    const i=ERA_INDEX[systems[system]?.name];
+    if(!i)return null;
+    if(i<=10){
+      return {
+        title:'🌌 この時代の宇宙レシピ',
+        note:'割合ではなく、この時代での「存在感」のイメージ',
+        qualitative:[
+          ['✨ 放射','主役',92,'#ffe88a'],
+          ['🟡 ふつうの物質','材料ができていく',42,'#ffd16f'],
+          ['🟣 暗黒物質','構造の種になる',30,'#b99cff'],
+          ['🔵 暗黒エネルギー','ほぼ影響しない',5,'#73d8ff']
+        ]
+      };
+    }
+    return {
+      title:'🌌 この時代の宇宙レシピ',
+      note:'割合ではなく、この時代での「存在感」のイメージ',
+      qualitative:[
+        ['🟣 暗黒物質','構造づくり',82,'#b99cff'],
+        ['🟡 ふつうの物質','ガス・原子・星の材料',72,'#ffd16f'],
+        ['✨ 放射','だんだん弱まる',35,'#ffe88a'],
+        ['🔵 暗黒エネルギー','まだ目立たない',8,'#73d8ff']
+      ]
+    };
+  }
+
+  function recipeRow(label,val,color,valueText){
+    return `
+      <div class="v162RecipeRow">
+        <div class="v162RecipeName"><span>${label}</span><b>${valueText??(val+'%')}</b></div>
+        <div class="v162Bar"><i style="width:${Math.max(3,Math.min(100,val))}%;background:${color}"></i></div>
+      </div>`;
+  }
+
+  function renderContextRecipe(){
+    const panel=document.getElementById('v162RecipePanel');
+    const body=panel?.querySelector('.v162RecipeBody');
+    const head=panel?.querySelector('.v162RecipeHead strong');
+    const sub=panel?.querySelector('.v162RecipeHead small');
+    const btn=document.getElementById('v162RecipeBtn');
+    if(!body||!head||!sub||!btn)return;
+
+    const er=eraRecipe();
+    const nr=recipeForStage();
+    const special=!!(systems[system]?.hypothesis||systems[system]?.endHypothesis||systems[system]?.futureEra||system===BLACK_HOLE_SYSTEM);
+    btn.classList.toggle('v168RecipeOff',special);
+
+    if(er){
+      btn.textContent='🌌 時代レシピ';
+      head.textContent=er.title;
+      sub.textContent=systems[system]?.name||'宇宙史';
+      body.innerHTML=
+        `<div class="v162EraDominant"><b>${systems[system]?.name}</b> の主役は時代とともに変わる</div>`+
+        `<div class="v162RecipeSub">この時代の存在感</div>`+
+        er.qualitative.map(r=>recipeRow(r[0],r[2],r[3],r[1])).join('')+
+        `<div class="v162RecipeNote">${er.note}</div>`;
+      return;
+    }
+
+    if(nr){
+      btn.textContent='🧪 天体レシピ';
+      head.textContent=`🧪 ${S()?.name} レシピ`;
+      sub.textContent=nr.kind==='star'?'この星は何でできている？':'この天体は何でできている？';
+      body.innerHTML=
+        `<div class="v162EraDominant"><b>${S()?.name}</b> の主な材料</div>`+
+        `<div class="v162RecipeSub">主成分</div>`+
+        nr.rows.map(r=>recipeRow(r[0],r[1],r[2])).join('')+
+        `<div class="v162RecipeNote">${nr.note}</div>`;
+      return;
+    }
+
+    btn.textContent='🌌 宇宙レシピ';
+  }
+
+  function bindRecipe(){
+    const panel=document.getElementById('v162RecipePanel');
+    const btn=document.getElementById('v162RecipeBtn');
+    if(!panel||!btn)return;
+    const st=document.createElement('style');
+    st.id='v168RecipeStyle';
+    st.textContent=`#v162RecipeBtn.v168RecipeOff{visibility:hidden!important;pointer-events:none!important}`;
+    document.head.appendChild(st);
+
+    btn.addEventListener('click',()=>setTimeout(renderContextRecipe,0));
+    new MutationObserver(()=>{
+      if(panel.classList.contains('on'))setTimeout(renderContextRecipe,0);
+    }).observe(panel,{attributes:true,attributeFilter:['class']});
+    renderContextRecipe();
+  }
+
+  // ----------------------------------------------------------
+  // Early-universe motion layer: no stars / no organisms.
+  // Uses particles, plasma streaks, atoms and gas fronts only.
+  // ----------------------------------------------------------
+  function h01(i,seed=0){
+    const n=Math.sin((i+1)*12.9898+seed*78.233)*43758.5453;
+    return n-Math.floor(n);
+  }
+  function mod(v,m){return ((v%m)+m)%m;}
+
+  function drawEraMotion(){
+    const idx=ERA_INDEX[systems[system]?.name];
+    if(!idx)return;
+
+    const t=performance.now()/1000,gy=groundY();
+    ctx.save();
+
+    // Two parallax layers make the automatic run feel visibly in motion.
+    for(let layer=0;layer<2;layer++){
+      const count=layer?15:11;
+      const par=layer?.62:.28;
+      for(let i=0;i<count;i++){
+        const x=mod(i*(117+layer*29)-camera*par+t*(11+layer*8+i%4),W+170)-85;
+        const y=35+h01(i,idx+layer*20)*Math.max(100,gy-80);
+        const a=(layer?.18:.10)+h01(i,idx+80)*.11;
+
+        ctx.globalAlpha=a;
+        if(idx<=5){
+          // Quantum/plasma field: streaks, not stars.
+          ctx.strokeStyle=idx<=2?'#fff1cf':'#a9dcff';
+          ctx.lineWidth=1+layer*.4;
+          ctx.beginPath();
+          ctx.moveTo(x-10-layer*5,y);
+          ctx.lineTo(x+12+layer*8,y+Math.sin(t+i)*6);
+          ctx.stroke();
+        }else if(idx<=9){
+          // Free particles / nuclei.
+          const r=1.6+layer*.8+(i%3)*.45;
+          ctx.fillStyle=i%3===0?'#ffd28f':i%3===1?'#9edfff':'#c8adff';
+          ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+          if(idx>=7&&i%4===0){
+            ctx.strokeStyle='rgba(255,255,255,.20)';
+            ctx.beginPath();ctx.arc(x,y,r+5,0,Math.PI*2);ctx.stroke();
+          }
+        }else if(idx<=12){
+          // Photons / atoms: moving rings and short light paths.
+          ctx.strokeStyle=i%2?'#ffe7a4':'#bfe9ff';
+          ctx.lineWidth=1;
+          if(idx===10){
+            ctx.beginPath();ctx.moveTo(x-12,y-4);ctx.lineTo(x-2,y+4);ctx.lineTo(x+8,y-4);ctx.lineTo(x+18,y+3);ctx.stroke();
+          }else{
+            ctx.beginPath();ctx.ellipse(x,y,7+layer*4,3+layer*2,t*.2+i,0,Math.PI*2);ctx.stroke();
+            ctx.fillStyle='#ffd797';ctx.beginPath();ctx.arc(x,y,1.4,0,Math.PI*2);ctx.fill();
+          }
+        }else{
+          // Dark ages -> reionization: neutral gas / ionization fronts.
+          const r=12+layer*9+(i%3)*5;
+          const rg=ctx.createRadialGradient(x,y,0,x,y,r);
+          rg.addColorStop(0,idx===15?'rgba(135,218,255,.14)':'rgba(170,190,210,.09)');
+          rg.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.fillStyle=rg;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+          ctx.globalAlpha=a*.75;ctx.strokeStyle=idx===15?'rgba(149,226,255,.25)':'rgba(185,201,220,.12)';
+          ctx.beginPath();ctx.arc(x,y,r*.72,0,Math.PI*2);ctx.stroke();
+        }
+      }
+    }
+    ctx.restore();
+    ctx.globalAlpha=1;
+  }
+
+  // ----------------------------------------------------------
+  // "宇宙以前" wormhole -> future Earth
+  // ----------------------------------------------------------
+  let warpStarted=false;
+  const PRE_WORM_X=2760;
+
+  function ensureWarpUI(){
+    if(document.getElementById('v168TimeWarp'))return;
+    const st=document.createElement('style');
+    st.id='v168TimeWarpStyle';
+    st.textContent=`
+      #v168TimeWarp{
+        position:absolute;inset:0;z-index:2147483645;display:none;place-items:center;
+        overflow:hidden;background:#000;color:#fff;pointer-events:none
+      }
+      #v168TimeWarp.on{display:grid}
+      #v168TimeWarp:before{
+        content:"";position:absolute;width:155vmax;height:155vmax;border-radius:50%;
+        background:repeating-conic-gradient(from 0deg,rgba(180,225,255,.0) 0 4deg,rgba(180,225,255,.26) 5deg 6deg,transparent 7deg 12deg);
+        animation:v168WarpSpin .75s linear infinite,v168WarpIn 1.25s cubic-bezier(.2,.8,.2,1) forwards
+      }
+      #v168TimeWarp:after{
+        content:"";position:absolute;inset:-30%;
+        background:radial-gradient(circle at 50% 50%,#fff 0 2%,#9fe5ff 3%,rgba(167,121,255,.42) 8%,rgba(0,0,0,.94) 32%);
+        animation:v168WarpPulse 1.25s ease-in forwards
+      }
+      #v168TimeWarp b{position:relative;z-index:2;font:1000 13px system-ui;letter-spacing:.18em;text-shadow:0 0 20px #b8eaff}
+      @keyframes v168WarpSpin{to{transform:rotate(360deg)}}
+      @keyframes v168WarpIn{0%{scale:.08}100%{scale:1.6}}
+      @keyframes v168WarpPulse{0%{scale:.6;opacity:.45}70%{scale:1.2;opacity:1}100%{scale:3;opacity:1}}
+    `;
+    document.head.appendChild(st);
+    const el=document.createElement('div');
+    el.id='v168TimeWarp';el.innerHTML='<b>🌀 TIME WARP → FUTURE</b>';
+    wrap.appendChild(el);
+  }
+
+  function isPreUniverse(){
+    const k=systems[system]?.hypothesisKey;
+    return k==='eternal'||k==='noboundary';
+  }
+
+  function drawPreWormhole(){
+    if(!isPreUniverse()||warpStarted)return;
+    const sx=PRE_WORM_X-camera,cy=groundY()-105,t=performance.now()/1000;
+    if(sx<-140||sx>W+140)return;
+    ctx.save();
+    const pulse=1+.07*Math.sin(t*2.2);
+    for(let i=7;i>=0;i--){
+      const r=(20+i*10)*pulse;
+      ctx.globalAlpha=.05+i*.025;
+      ctx.strokeStyle=i%2?'#9fe8ff':'#c2a4ff';
+      ctx.lineWidth=1.2+(7-i)*.08;
+      ctx.beginPath();ctx.ellipse(sx,cy,r,r*.56,t*.5+i*.15,0,Math.PI*2);ctx.stroke();
+    }
+    const rg=ctx.createRadialGradient(sx,cy,1,sx,cy,54);
+    rg.addColorStop(0,'#fff');
+    rg.addColorStop(.10,'rgba(174,233,255,.86)');
+    rg.addColorStop(.33,'rgba(171,118,255,.44)');
+    rg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.globalAlpha=.72;ctx.fillStyle=rg;ctx.beginPath();ctx.arc(sx,cy,57,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=.82;ctx.fillStyle='#fff';ctx.font='900 9px system-ui';ctx.textAlign='center';
+    ctx.fillText('🌀 FUTURE',sx,cy-74);
+    ctx.restore();
+  }
+
+  function startFutureWarp(){
+    if(warpStarted)return;
+    warpStarted=true;paused=true;
+    ensureWarpUI();
+    const el=document.getElementById('v168TimeWarp');
+    el?.classList.remove('on');void el?.offsetWidth;el?.classList.add('on');
+    missionEl.textContent='🌀 時間を越えて、未来へ';
+    eventEl.textContent='宇宙以前 → FUTURE';
+    setTimeout(()=>{
+      el?.classList.remove('on');
+      warpStarted=false;
+      if(typeof window.__v160ReturnToFrozenEarth==='function'){
+        window.__v160ReturnToFrozenEarth();
+      }else{
+        system=0;stage=0;paused=false;stageStart();
+      }
+      showToast('⏩ ……未来の地球。',1250);
+    },1280);
+  }
+
+  // ----------------------------------------------------------
+  // Final wrappers
+  // ----------------------------------------------------------
+  const prevStageStart=stageStart;
+  stageStart=function(){
+    const out=prevStageStart();
+    setTimeout(renderContextRecipe,0);
+    return out;
+  };
+
+  const prevUpdate=update;
+  update=function(now,dt){
+    prevUpdate(now,dt);
+    if(paused)return;
+
+    if(isPreUniverse()&&!warpStarted){
+      if(p.x>PRE_WORM_X-520){
+        missionEl.textContent='🌀 時間の出口みたいなものが見える';
+        eventEl.textContent='この先は「前」ではなく、未来へつながっている？';
+      }
+      if(p.x>=PRE_WORM_X-45){
+        p.x=PRE_WORM_X-45;
+        startFutureWarp();
+        return;
+      }
+    }
+  };
+
+  const prevBg=drawBackground;
+  drawBackground=function(){
+    prevBg();
+    drawEraMotion();
+    drawPreWormhole();
+  };
+
+  const prevSync=syncHUD;
+  syncHUD=function(force){
+    prevSync(force);
+    const sys=systems[system],st=S();
+
+    // Pre-universe chapter label: explicit "before" feeling.
+    if(isPreUniverse()){
+      const k=sys.hypothesisKey;
+      const h=k==='eternal'
+        ? {name:'🫧 永遠のインフレーション',one:'私たちの宇宙の外でも、膨張が続いていた？',desc:'膨張し続ける大きな空間の中で、泡のような宇宙が次々生まれているかもしれない。'}
+        : {name:'◯ 無境界仮説',one:'そもそも「宇宙の前」がなかった？',desc:'ビッグバンより前へ進もうとしても、「前」という時間そのものが存在しないのかもしれない。'};
+      locationEl.textContent=`宇宙以前  ·  ${h.name}`;
+      astroInfo.innerHTML=
+        `<b style="font-size:1.08em">宇宙以前</b>`+
+        `<br><span class="v167HypLine"><span class="v167HypBadge">仮説</span><b>宇宙の前は？</b></span>`+
+        `<br><br><b>${h.name}</b>`+
+        `<br><strong>${h.one}</strong>`+
+        `<br>${h.desc}`;
+      return;
+    }
+
+    if(sys?.futureEra){
+      const f=V168_FUTURE[sys.futureStep];
+      if(f){
+        // Keep underlying stage data in sync with the new 8-stage sequence.
+        st.name=f.name;st.distance=f.time;st.desc=f.desc;
+        locationEl.textContent=`FUTURE ${String(sys.futureStep).padStart(2,'0')}  ·  ${f.name}`;
+        astroInfo.innerHTML=
+          `<b>${f.name}</b>`+
+          `<br>${f.desc}`+
+          `<br><span class="distanceBig"><span class="distLead">⏩ 未来</span><span class="distValue">${f.time}</span></span>`+
+          `<span class="distanceHint">${f.group} ${f.local} / ${f.total}`+
+          `${sys.futureStep===7?'<br><small>1正年＝1の後ろに0が40個</small>':''}`+
+          `${sys.futureStep===8?'<br><small>1グーゴル年＝1の後ろに0が100個</small>':''}</span>`;
+        missionEl.textContent=sys.futureStep<=4?'☀️ 地球から、太陽と地球の終わりを見る':'🌌 星が消えた後の宇宙をたどる';
+        return;
+      }
+    }
+  };
+
+  function init(){
+    bindRecipe();
+    ensureWarpUI();
+
+    // Visible chapter labels created dynamically by v165/v166.
+    const normalize=()=>{
+      document.querySelectorAll('#v165Discovery b,.v165EndKicker,#v160BounceBridge .v160Kicker').forEach(el=>{
+        if(el.textContent.includes('宇宙以前')||el.textContent.includes('宇宙のはじまり'))el.textContent='宇宙以前';
+      });
+      document.querySelectorAll('#v165Discovery span,.v165EndTitle,#v160BounceBridge h2').forEach(el=>{
+        el.textContent=el.textContent.replace('仮説｜その前は？','仮説｜宇宙の前は？');
+      });
+    };
+    normalize();
+    [
+      document.getElementById('v165Discovery'),
+      document.getElementById('v165JourneyEnd'),
+      document.getElementById('v160BounceBridge')
+    ].filter(Boolean).forEach(el=>new MutationObserver(normalize).observe(el,{subtree:true,childList:true,characterData:true}));
   }
 
   if(document.readyState==='loading')addEventListener('DOMContentLoaded',init,{once:true});
