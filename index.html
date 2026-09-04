@@ -6254,6 +6254,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 })();
 
 
+/* === v174: recipe encyclopedia details === */
+/* === v173: cosmic/future anti-stall + one-hit hazards === */
+/* === v172: hidden menu / all-stage jump === */
+/* === v171: Earendel HOME WORMHOLE hard-fix === */
 /* === v170: Earendel return / chronological loop / Earth birth === */
 /* === v169: cosmic-material gameplay / era + future abilities === */
 /* === v168: contextual recipes / early-universe motion / pre-universe warp / Earth disappearance === */
@@ -7241,6 +7245,18 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   }
 
   // 通常の galaxy/cloud/ring/planet 表現を、宇宙史では完全に使わない。
+  const prevPortalV170=drawPortal;
+  drawPortal=function(){
+    if((V170.phase==='outbound'&&isEarendel()) ||
+       (V170.phase==='returnMoon'&&isMoon()) ||
+       (V170.phase==='returnEarth'&&isEarth()) ||
+       inBirth() ||
+       (V170.phase==='finalEarth'&&isEarth())){
+      return;
+    }
+    return prevPortalV170();
+  };
+
   const prevBg=drawBackground;
   drawBackground=function(){
     if(isEra()){v156EraBackground();return;}
@@ -11308,7 +11324,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     charge:0,lastStageKey:'',
     phaseUntil:0,shieldUntil:0,shieldHits:0,
     gravityUntil:0,expandUntil:0,burstUntil:0,lightUntil:0,
-    hitGraceUntil:0,abilityFlashUntil:0
+    hitGraceUntil:0,abilityFlashUntil:0,
+    lastProgressX:0,lastProgressAt:performance.now()
   };
 
   const EPOCH_LENGTH={
@@ -11528,6 +11545,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     V169.pickups=[];V169.hazards=[];V169.pops=[];V169.charge=0;
     V169.phaseUntil=0;V169.shieldUntil=0;V169.shieldHits=0;
     V169.gravityUntil=0;V169.expandUntil=0;V169.burstUntil=0;V169.lightUntil=0;
+    V169.lastProgressX=p.x;V169.lastProgressAt=performance.now();
     const c=cfg();
     if(!c){syncUI();return;}
 
@@ -11655,6 +11673,21 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const c=cfg();
     if(!c)return;
 
+    // v173 anti-stall: if the dog has made virtually no forward progress for
+    // several seconds while the game is running, clear only the nearby
+    // cosmic-material obstacle. This never skips a stage; it only prevents a
+    // collision loop from pinning the player in one place.
+    if(p.x>V169.lastProgressX+18){
+      V169.lastProgressX=p.x;
+      V169.lastProgressAt=now;
+    }else if(now-V169.lastProgressAt>2600){
+      const blocker=V169.hazards.find(h=>!h.dead&&h.x>p.x-35&&h.x<p.x+150);
+      if(blocker)blocker.dead=true;
+      p.x+=34;
+      V169.lastProgressX=p.x;
+      V169.lastProgressAt=now;
+    }
+
     // Gravity ability = actual material magnet.
     if(now<V169.gravityUntil){
       for(const o of V169.pickups){
@@ -11687,8 +11720,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           showToast(`🛡️ ${c.skillJa}｜ガード！`,650);
           if(V169.shieldHits<=0)V169.shieldUntil=0;
         }else{
-          V169.hitGraceUntil=now+1050;
-          p.x=Math.max(0,p.x-85);
+          // v173: 宇宙史・未来で同じ障害物に何度も押し戻されると、
+          // 自動走行が永久に同じ場所で止まって見えてしまう。
+          // 通常ステージの障害物と同じく「1回ぶつかったら通過済み」にする。
+          V169.hitGraceUntil=now+900;
+          h.dead=true;
+          p.x=Math.max(0,p.x-38);
           p.vy=-5.2;
           showToast(`〰 ${hazardName(h.kind)}！`,650);
         }
@@ -12030,9 +12067,24 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   // ----------------------------------------------------------
   function enterReturnMoon(){
     V170.phase='returnMoon';
+
+    // v171: 遠方ステージ側の移動状態を完全に切ってから月へ。
+    try{v86ClearRide?.();}catch(e){}
+    try{v94SatellitePending=false;}catch(e){}
+    wormholeActive=false;
+    blackHoleActive=false;
+    satellites=[];
+
     system=0;stage=1;paused=false;stageStart();
     clearNormal();
     p.x=110;camera=0;
+
+    // 月の通常ステージ進行ではなく「帰還用の月」として固定。
+    try{v94SatellitePending=false;}catch(e){}
+    satellites=[];
+    wormholeActive=false;
+    blackHoleActive=false;
+
     showToast('🌙 ……月だ。地球が見える！',1450);
   }
 
@@ -12322,6 +12374,25 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   const prevUpdate=update;
   update=function(now,dt){
     const before=systems[system]?.name||'';
+
+    // v171: エアレンデルの帰還口では、旧「次の星へ進む」ワームホールを先に無効化。
+    // prevUpdate の中で旧 portal が反応して再電離時代へ飛ばないようにする。
+    if(V170.phase==='outbound'&&isEarendel()){
+      wormholeActive=false;
+      blackHoleActive=false;
+      satellites=[];
+      try{v94SatellitePending=false;}catch(e){}
+      try{if(v86Ride)v86ClearRide();}catch(e){}
+
+      // HOME WORMHOLE は x=2700 の専用帰還口。
+      // 中心へ入った時点で、旧処理より先に月への帰還を確定する。
+      if(p.x>=EAR_RETURN_X-62&&!V170.warp){
+        p.x=EAR_RETURN_X-62;
+        warp('🌀 HOME WORMHOLE<br><span style="font-size:10px;opacity:.65">EARENDEL → MOON</span>',enterReturnMoon);
+        return;
+      }
+    }
+
     prevUpdate(now,dt);
     if(paused)return;
 
@@ -12341,9 +12412,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         missionEl.textContent='🌀 帰還ワームホールが見える';
         eventEl.textContent='遠くへ行く旅は、ここで折り返す';
       }
-      if(p.x>=EAR_RETURN_X-45&&!V170.warp){
-        p.x=EAR_RETURN_X-45;
-        warp('🌀 WORMHOLE<br><span style="font-size:10px;opacity:.65">EARTH SIDE → MOON</span>',enterReturnMoon);
+      if(p.x>=EAR_RETURN_X-62&&!V170.warp){
+        p.x=EAR_RETURN_X-62;
+        warp('🌀 HOME WORMHOLE<br><span style="font-size:10px;opacity:.65">EARENDEL → MOON</span>',enterReturnMoon);
       }
     }
 
@@ -12539,7 +12610,534 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       if(si<0)return false;
       system=si;stage=0;paused=false;stageStart();startForwardCosmic();return true;
     },
-    earthBirth:()=>{beginEarthBirth();return true}
+    earthBirth:()=>{beginEarthBirth();return true},
+    finalEarth:()=>{
+      window.__v170ForwardCosmic=false;
+      V170.phase='finalEarth';
+      system=0;stage=0;paused=false;stageStart();clearNormal();
+      p.x=115;camera=0;
+      try{v118EarthWaveStarted=true;}catch(e){}
+      try{v125EarthUfoPassCount=4;}catch(e){}
+      try{v125EarthUfoNextAt=Infinity;}catch(e){}
+      try{v99EarthSatelliteNextAt=Infinity;}catch(e){}
+      try{v94SatellitePending=false;}catch(e){}
+      return true;
+    },
+    jumpStage:(si,ti)=>{
+      if(!systems[si]?.stages?.[ti])return false;
+
+      const sys=systems[si];
+      const st=sys.stages[ti];
+
+      try{v86ClearRide?.();}catch(e){}
+      try{v94SatellitePending=false;}catch(e){}
+      try{satellites=[];}catch(e){}
+      try{alienRideUntil=0;}catch(e){}
+      try{whiteHoleTriggered=false;}catch(e){}
+      wormholeActive=false;
+      blackHoleActive=false;
+
+      // New canonical route: cosmic-history stages are previewed in chronological
+      // (Big Bang -> reionization) mode, not the old Earendel reverse mode.
+      if(sys.v170EarthBirth){
+        beginEarthBirth();
+        return true;
+      }else if(sys.epoch){
+        V170.phase='cosmicForward';
+        window.__v170ForwardCosmic=true;
+      }else if(sys.futureEra){
+        V170.phase='future';
+        window.__v170ForwardCosmic=false;
+      }else if(st?.name==='✨ エアレンデル'){
+        V170.phase='outbound';
+        window.__v170ForwardCosmic=false;
+      }else{
+        V170.phase='outbound';
+        window.__v170ForwardCosmic=false;
+      }
+
+      system=si;stage=ti;paused=false;stageStart();
+      p.x=105;camera=0;
+
+      const label=st?.name||sys?.name||'';
+      showToast(`🛠️ ${label} から確認`,900);
+      return true;
+    }
+  };
+})();
+
+
+/* === v172: hidden paw menu now contains EVERY stage === */
+(function(){
+  const CSS=`
+    #v62EndingDev .v172StageBlock{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12)}
+    #v62EndingDev .v172StageTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+    #v62EndingDev .v172StageTitle b{font:1000 14px/1.2 system-ui;letter-spacing:.04em}
+    #v62EndingDev .v172Count{font:800 9px/1 system-ui;opacity:.48}
+    #v62EndingDev .v172Search{
+      width:100%;box-sizing:border-box;margin:0 0 12px;padding:10px 12px;border-radius:13px;
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;
+      outline:none;font:800 11px/1 system-ui
+    }
+    #v62EndingDev .v172Search::placeholder{color:rgba(255,255,255,.42)}
+    #v62EndingDev .v172Quick{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:14px
+    }
+    #v62EndingDev .v172QuickBtn{
+      border:1px solid rgba(135,221,255,.20);border-radius:13px;background:rgba(97,198,255,.07);
+      color:#fff;padding:10px;text-align:left;font:900 10px/1.25 system-ui;cursor:pointer
+    }
+    #v62EndingDev .v172QuickBtn small{display:block;margin-top:4px;opacity:.53;font-size:8px}
+    #v62EndingDev .v172Group{margin:12px 0 15px}
+    #v62EndingDev .v172GroupHead{
+      position:sticky;top:-18px;z-index:2;margin:0 0 7px;padding:7px 8px;border-radius:10px;
+      background:rgba(14,16,31,.94);backdrop-filter:blur(7px);font:1000 10px/1.25 system-ui;
+      letter-spacing:.03em;color:#dce7ff
+    }
+    #v62EndingDev .v172Grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+    #v62EndingDev .v172StageBtn{
+      border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.055);
+      color:#fff;padding:9px 9px;text-align:left;cursor:pointer;font:900 10px/1.25 system-ui;
+      min-height:49px
+    }
+    #v62EndingDev .v172StageBtn small{display:block;margin-top:4px;font:650 8px/1.25 system-ui;opacity:.48}
+    #v62EndingDev .v172StageBtn:hover,#v62EndingDev .v172StageBtn:active{background:rgba(255,255,255,.12)}
+    #v62EndingDev .v172Group.hidden,#v62EndingDev .v172StageBtn.hidden{display:none}
+    @media(max-width:520px){
+      #v62EndingDev .v172Grid,#v62EndingDev .v172Quick{grid-template-columns:1fr}
+      #v62EndingDev .v172StageBtn{min-height:44px}
+    }
+  `;
+
+  function installStyle(){
+    if(document.getElementById('v172-stage-dev-style'))return;
+    const st=document.createElement('style');
+    st.id='v172-stage-dev-style';
+    st.textContent=CSS;
+    document.head.appendChild(st);
+  }
+
+  function cleanName(s=''){return String(s).replace(/\s+/g,' ').trim();}
+  function routeApi(){return window.__v170RouteAPI;}
+  function debugApi(){return window.__inuboshiDebugAPI;}
+
+  function jumpStage(si,ti){
+    const api=routeApi();
+    const ok=api?.jumpStage?.(si,ti) ?? debugApi()?.jump?.(si,ti);
+    if(ok){
+      document.getElementById('v62EndingDev')?.classList.remove('on');
+      paused=false;
+    }
+  }
+
+  function quick(action){
+    const api=routeApi();
+    let ok=false;
+    if(action==='earendel')ok=!!api?.earendelReturn?.();
+    if(action==='returnMoon')ok=!!api?.moonReturn?.();
+    if(action==='returnEarth')ok=!!api?.earthReturn?.();
+    if(action==='forward')ok=!!api?.forwardHistory?.();
+    if(action==='birth')ok=!!api?.earthBirth?.();
+    if(action==='finalEarth')ok=!!api?.finalEarth?.();
+    if(ok){
+      document.getElementById('v62EndingDev')?.classList.remove('on');
+      paused=false;
+    }
+  }
+
+  function build(){
+    installStyle();
+    const dev=document.getElementById('v62EndingDev');
+    const card=dev?.querySelector('.v62DevCard');
+    if(!dev||!card||card.querySelector('.v172StageBlock'))return;
+
+    // Existing menu is no longer only endings.
+    const head=card.querySelector('.v62DevHead b');
+    const sub=card.querySelector('.v62DevSub');
+    if(head)head.textContent='🧪 DEBUG / STAGE MENU';
+    if(sub)sub.textContent='左下の隠し 🐾。エンディング確認＋好きなステージへ直接移動。';
+
+    const data=debugApi()?.list?.()||[];
+    const flat=data.flatMap(sys=>(sys.stages||[]));
+    const block=document.createElement('section');
+    block.className='v172StageBlock';
+    block.innerHTML=`
+      <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
+      <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
+      <div class="v172Quick">
+        <button class="v172QuickBtn" data-v172-quick="earendel">✨ エアレンデル帰還口<small>HOME WORMHOLE直前</small></button>
+        <button class="v172QuickBtn" data-v172-quick="returnMoon">🌙 帰還中の月<small>地球が見える帰り道</small></button>
+        <button class="v172QuickBtn" data-v172-quick="returnEarth">🌍 帰還直後の地球<small>このあと未来へ</small></button>
+        <button class="v172QuickBtn" data-v172-quick="forward">💫 宇宙史・年代順<small>ビッグバン → 再電離</small></button>
+        <button class="v172QuickBtn" data-v172-quick="birth">🌋 地球誕生<small>岩石・金属・水を集める</small></button>
+        <button class="v172QuickBtn" data-v172-quick="finalEarth">🌍 最後の地球<small>地球誕生後 → NOW</small></button>
+      </div>
+      <div class="v172Groups"></div>
+    `;
+
+    const groups=block.querySelector('.v172Groups');
+
+    data.forEach(sys=>{
+      if(!sys?.stages?.length)return;
+      const group=document.createElement('div');
+      group.className='v172Group';
+      group.dataset.search=cleanName(`${sys.name} ${sys.distance}`);
+      const title=document.createElement('div');
+      title.className='v172GroupHead';
+      title.textContent=cleanName(sys.name);
+      const grid=document.createElement('div');
+      grid.className='v172Grid';
+
+      sys.stages.forEach(st=>{
+        const b=document.createElement('button');
+        b.type='button';
+        b.className='v172StageBtn';
+        b.dataset.si=st.si;
+        b.dataset.ti=st.ti;
+        b.dataset.search=cleanName(`${sys.name} ${st.name} ${st.distance} ${st.desc} ${st.stageLabel||''}`).toLowerCase();
+        b.innerHTML=`${cleanName(st.name)}<small>${cleanName(st.stageLabel||st.distance||sys.distance||'')}</small>`;
+        b.addEventListener('click',()=>jumpStage(Number(b.dataset.si),Number(b.dataset.ti)));
+        grid.appendChild(b);
+      });
+
+      group.append(title,grid);
+      groups.appendChild(group);
+    });
+
+    block.querySelectorAll('[data-v172-quick]').forEach(b=>{
+      b.addEventListener('click',()=>quick(b.dataset.v172Quick));
+    });
+
+    const search=block.querySelector('.v172Search');
+    search?.addEventListener('input',()=>{
+      const q=cleanName(search.value).toLowerCase();
+      block.querySelectorAll('.v172Group').forEach(group=>{
+        let any=false;
+        group.querySelectorAll('.v172StageBtn').forEach(b=>{
+          const hit=!q||b.dataset.search.includes(q);
+          b.classList.toggle('hidden',!hit);
+          if(hit)any=true;
+        });
+        group.classList.toggle('hidden',!any);
+      });
+    });
+
+    // Put the all-stage area above the old note, so it is easy to find.
+    const note=card.querySelector('.v62DevNote');
+    if(note)card.insertBefore(block,note);
+    else card.appendChild(block);
+  }
+
+  // v170 creates the Earth-birth system asynchronously, so wait one turn
+  // before reading the debug list.
+  if(document.readyState==='loading'){
+    addEventListener('DOMContentLoaded',()=>setTimeout(build,25),{once:true});
+  }else{
+    setTimeout(build,25);
+  }
+
+  // Rebuild helper for debugging if systems are ever appended later.
+  window.__v172RebuildStageMenu=()=>{
+    document.querySelector('#v62EndingDev .v172StageBlock')?.remove();
+    build();
+  };
+})();
+
+
+/* === v174: recipe encyclopedia / detailed star + era explanations === */
+(function(){
+  const OBJECT_DETAIL={
+    '🌍 地球':{
+      about:'太陽から3番目を回る岩石惑星。表面の約7割を液体の海が覆い、現在わかっている中では生命が確認されている唯一の天体。',
+      point:'内部は鉄を多く含む核、その外側を岩石質のマントルと地殻が包む。レシピの割合は「地球全体」をつくる元素の目安。'
+    },
+    '🌙 月':{
+      about:'地球のまわりを回る唯一の天然衛星。大気がほとんどなく、表面には古い衝突の跡であるクレーターが長く残っている。',
+      point:'約45億年前、若い地球への巨大衝突で飛び散った物質から月ができたという巨大衝突説が有力。'
+    },
+    '🔴 火星':{
+      about:'鉄を含む鉱物が酸化して赤く見える岩石惑星。現在は寒く乾燥しているが、昔は川や湖があった証拠が見つかっている。',
+      point:'太陽系最大級の火山オリンポス山があり、地下や極域には水の氷もある。過去に生命が住める環境だったかが大きな研究テーマ。'
+    },
+    '🟠 木星':{
+      about:'太陽系最大の惑星。主に水素とヘリウムでできたガス惑星で、地球のような固い地表はない。',
+      point:'大赤斑は地球より大きい巨大嵐。強い重力と磁場をもち、多数の衛星を従えている。'
+    },
+    '🪐 土星':{
+      about:'巨大な環で有名なガス惑星。環は一枚の板ではなく、氷や岩石の無数の小粒が軌道を回っている。',
+      point:'平均密度は水より小さい。衛星タイタンには濃い大気があり、表面には液体メタンの湖がある。'
+    },
+    '🩵 天王星':{
+      about:'自転軸がほぼ横倒しになった氷惑星。大気中のメタンが赤い光を吸収するため青緑色に見える。',
+      point:'内部には水・アンモニア・メタンなどの成分が多いと考えられている。公転周期は約84年。'
+    },
+    '🔵 海王星':{
+      about:'太陽系で最も外側を回る主要惑星。太陽から非常に遠いのに、秒速数百m級の猛烈な風が吹く。',
+      point:'天王星より少し小さいが密度は高い。内部から出る熱が活発な天候を生む一因と考えられている。'
+    },
+    '☀️ 太陽':{
+      about:'太陽系の中心にある主系列星。中心で水素がヘリウムへ核融合し、そのエネルギーが光と熱として放たれている。',
+      point:'年齢は約46億年。今後はゆっくり明るくなり、約50億年後には赤色巨星へ進化する。'
+    },
+    '☿ 水星':{
+      about:'太陽に最も近く、太陽系で最も小さい惑星。惑星全体に対して金属核が非常に大きい。',
+      point:'大気がほぼないため昼夜の温度差が極端。太陽に近いのに、極域の永久影には水の氷が存在する。'
+    },
+    '♀ 金星':{
+      about:'大きさは地球に近いが、二酸化炭素の分厚い大気による強烈な温室効果で表面は約460℃になる。',
+      point:'太陽系で最も表面温度が高い惑星。地表の気圧は地球の約90倍で、雲には硫酸が含まれる。'
+    },
+    '⭐ シリウス':{
+      about:'地球から見た夜空で最も明るい恒星。実際はシリウスAと白色矮星シリウスBからなる連星系。',
+      point:'明るく見えるのは、もともと明るいことに加えて地球から8.6光年と比較的近いから。'
+    },
+    '💠 ベガ':{
+      about:'こと座で青白く輝く明るい恒星。高速で自転しているため、完全な球ではなく赤道方向にふくらんでいる。',
+      point:'七夕の織姫星として知られ、天文学では明るさを測る基準星として長く使われてきた。'
+    },
+    '🌟 ポラリス':{
+      about:'現在の北極星。地球の自転軸の延長方向に近いため、夜空のほぼ同じ場所に見える。',
+      point:'ケフェイド変光星で、明るさの変化周期から本来の明るさを推定できるため、宇宙の距離測定にも重要。'
+    },
+    '❤️ アンタレス':{
+      about:'さそり座で赤く輝く赤色超巨星。太陽よりはるかに大きく膨らみ、恒星進化の終盤にある。',
+      point:'表面は太陽より低温だが半径が巨大なので非常に明るい。将来は超新星爆発へ進む可能性がある。'
+    },
+    '🔴 ベテルギウス':{
+      about:'オリオン座の肩で赤く輝く赤色超巨星。表面が脈動し、明るさも不規則に変化する。',
+      point:'2019〜2020年に大きく暗くなった現象は、放出物質が冷えて塵になったことが主因と考えられている。'
+    },
+    '💙 R136a1':{
+      about:'大マゼラン雲の巨大星団R136にある、知られている中でも特に高質量・高光度なウォルフ・ライエ星。',
+      point:'太陽の100倍を大きく超える質量を持つと推定され、強烈な恒星風で自分の外層を大量に失っている。'
+    },
+    '✨ S Doradus':{
+      about:'大マゼラン雲にある高光度青色変光星。非常に明るく不安定で、長い時間をかけて明るさや温度が変化する。',
+      point:'「S Doradus型変光星」という分類名の由来になった代表的な天体。'
+    },
+    '⭐ M31-V1':{
+      about:'アンドロメダ銀河にあるケフェイド変光星。1920年代、アンドロメダが天の川の外にある別銀河だと示す重要な証拠になった。',
+      point:'ハッブルがこの星の周期を利用して距離を測ったことで、人類の「宇宙の大きさ」の見方が大きく変わった。'
+    },
+    '💫 AF Andromedae':{
+      about:'アンドロメダ銀河にある高光度青色変光星。非常に重く明るい星が不安定になる段階を見せる。',
+      point:'大質量星が外層を激しく失いながら進化していく過程を研究する対象のひとつ。'
+    },
+    '🟢 ロマーノ星 GR 290':{
+      about:'さんかく座銀河M33にある非常に大質量な変光星。高光度青色変光星からウォルフ・ライエ星へ変化している途中と考えられている。',
+      point:'人間の観測期間でもスペクトルの変化を追える珍しい星で、恒星進化をリアルタイムに近い形で研究できる。'
+    },
+    '🌠 M33 Var C':{
+      about:'さんかく座銀河M33にある高光度青色変光星。非常に明るく、温度や明るさが大きく変化する。',
+      point:'大質量星が外層を失いながら次の進化段階へ移る様子を調べるための重要な天体。'
+    },
+    '⭐ M51-DS1':{
+      about:'約3100万光年先の子持ち銀河M51で個別に追跡された非常に明るい恒星。これほど遠い銀河の「一つの星」を調べられること自体がすごい。',
+      point:'明るさの変化を追うことで、大質量星の周囲の塵や進化状態を調べる研究につながっている。'
+    },
+    '🎨 Warhol':{
+      about:'銀河団の重力レンズと、さらに星などによるマイクロレンズ効果で一時的に強く拡大されて見えた遠方の恒星。',
+      point:'本来なら暗すぎて見えない星でも、手前の巨大な重力が「天然の望遠鏡」として働くと観測できる。'
+    },
+    '💙 イカロス':{
+      about:'重力レンズで大きく拡大され、単独の恒星として観測された青色超巨星。発見当時、最も遠くで個別に見えた星として注目された。',
+      point:'銀河ではなく「一つの星」を数十億年前の宇宙で見られることを示し、その後の超遠方星研究への道を開いた。'
+    },
+    '🦋 モスラ':{
+      about:'JWSTで研究された非常に遠い重力レンズ天体。複数の巨大星を含む可能性があり、極端な拡大が起きている。',
+      point:'超遠方の星だけでなく、レンズ側にある暗い小質量構造を探る手がかりにもなる。'
+    },
+    '❤️ クイユル':{
+      about:'初期宇宙で重力レンズによって観測された、赤色超巨星級と考えられる非常に遠い個別星。',
+      point:'初期宇宙にも進化した巨大星が存在していたことを調べる材料になり、当時の恒星進化を知る手がかりになる。'
+    },
+    '🦖 ゴジラ':{
+      about:'重力レンズによって極端に増光して見える遠方の恒星候補。巨大な銀河団の重力が背景の光を大きく曲げている。',
+      point:'こうした天体は、初期宇宙の星と同時にレンズ天体の細かな質量分布も調べられる。'
+    },
+    '🔷 Abell 2744 LS1':{
+      about:'銀河団Abell 2744の強い重力レンズで拡大されて見える超遠方の個別星候補。',
+      point:'銀河団がつくる天然の望遠鏡を利用すると、通常なら銀河の光に埋もれる一つの星まで調べられる。'
+    },
+    '💠 MACS J0647 LS1':{
+      about:'赤方偏移約4.8の非常に遠い重力レンズ星候補。宇宙が現在よりはるかに若かった時代の星の光を見ている。',
+      point:'エアレンデルに近い時代の個別星を比べることで、初期宇宙でどんな大質量星が生まれたかを探れる。'
+    },
+    '✨ エアレンデル':{
+      about:'重力レンズで観測された最遠級の個別星。私たちが見ているのは、宇宙誕生から10億年以内だったころに出た光。',
+      point:'「129億年前の光を見る」ことと、犬星くんが129億年かけて移動することは別。ゲームではワームホールで距離をショートカットしている。'
+    }
+  };
+
+  const ERA_DETAIL={
+    '💫 ビッグバン':{
+      about:'宇宙が一点で爆発したというより、超高温・高密度だった宇宙そのものが膨張し始めた状態。',
+      point:'どこか一つの中心から外へ飛び散ったのではなく、空間そのものがどこでも広がっていくのが大事。',
+      next:'→ プランク時代'
+    },
+    '❓ プランク時代':{
+      about:'宇宙誕生直後の極端な領域。一般相対論と量子力学を同時に扱う「量子重力」が必要だが、完成した理論はまだない。',
+      point:'現在の物理学で説明をさかのぼる限界に近く、何が起きたかを断定できない。',
+      next:'→ 大統一時代'
+    },
+    '◼️ 大統一時代':{
+      about:'強い力・弱い力・電磁気力が、より一つにまとまった相互作用だった可能性が考えられている理論上の時代。',
+      point:'宇宙が冷えるにつれて、一つだった力が別々の力へ分かれていったという考えにつながる。',
+      next:'→ インフレーション'
+    },
+    '💥 インフレーション時代':{
+      about:'宇宙のごく初期に、空間そのものが一瞬で猛烈に膨張したとする考え。宇宙が大規模には均一に見える理由などを説明しやすい。',
+      point:'量子的な小さなゆらぎが引き伸ばされ、のちの銀河や大規模構造の「種」になったと考えられている。',
+      next:'→ 電弱時代'
+    },
+    '⚡ 電弱時代':{
+      about:'宇宙が冷えるにつれて、電磁気力と弱い力が別々の性質を持つようになっていった時代。',
+      point:'現在の基本的な力が、初期宇宙では今と同じ形で分かれていなかったことを示す重要な段階。',
+      next:'→ クォーク時代'
+    },
+    '🟣 クォーク時代':{
+      about:'陽子や中性子がまだ形になる前で、クォークやグルーオンなどが高温の中を自由に動いていた時代。',
+      point:'温度が下がるとクォークがまとまり、陽子や中性子ができ始める。',
+      next:'→ ハドロン時代'
+    },
+    '🔵 ハドロン時代':{
+      about:'クォークが結びつき、陽子や中性子などのハドロンができ始めた時代。',
+      point:'のちに原子核をつくる「材料」がここでそろい始める。まだ原子そのものは存在しない。',
+      next:'→ レプトン時代'
+    },
+    '🌀 レプトン時代':{
+      about:'電子やニュートリノなどのレプトンが大量に飛び交っていた時代。宇宙はまだ非常に熱い。',
+      point:'ニュートリノは物質とほとんど反応しないため、宇宙が冷える途中で他の物質から離れて自由に飛び始める。',
+      next:'→ 元素合成'
+    },
+    '⚛️ ビッグバン元素合成':{
+      about:'陽子と中性子が結びつき、水素・ヘリウムを中心とする軽い原子核が作られた短い時期。',
+      point:'現在の宇宙に水素とヘリウムが多い理由を説明する。炭素や鉄などは、もっと後に星の中で作られる。',
+      next:'→ 光子時代'
+    },
+    '✨ 光子時代':{
+      about:'光は大量に存在するが、自由電子に何度も散乱されるため、宇宙は霧のように不透明だった。',
+      point:'光があっても遠くまで一直線に進めない。透明になるには電子が原子核に捕まる必要がある。',
+      next:'→ 再結合'
+    },
+    '🌤️ 再結合時代（宇宙の晴れ上がり）':{
+      about:'温度が下がり、電子と原子核が結びついて中性の原子ができた。光が自由に遠くまで進めるようになり、宇宙が「晴れた」。',
+      point:'ここで自由になった光が、現在「宇宙背景放射」として観測されている。',
+      next:'→ 宇宙背景放射'
+    },
+    '📡 宇宙背景放射（CMB）':{
+      about:'宇宙が透明になったころに自由になった光。宇宙膨張で波長が引き伸ばされ、今はマイクロ波として全天から観測される。',
+      point:'温度のごく小さなムラには、後の銀河や銀河団につながる密度のゆらぎが記録されている。',
+      next:'→ 暗黒時代'
+    },
+    '🌑 暗黒時代':{
+      about:'宇宙は透明になったが、まだ恒星がほとんどなく、可視光で明るく輝く天体がない時代。',
+      point:'暗黒物質がつくる重力の井戸へガスが集まり、やがて最初の星が生まれる準備が進む。',
+      next:'→ 宇宙の夜明け'
+    },
+    '🌅 宇宙の夜明け':{
+      about:'最初の恒星や銀河が生まれ、暗かった宇宙に初めてまとまった光源が現れ始めた時代。',
+      point:'最初期の星は重い元素がほとんどない環境で生まれ、現在の星とは性質が違った可能性が高い。',
+      next:'→ 再電離時代'
+    },
+    '🔥 再電離時代':{
+      about:'最初の星や銀河などの強い紫外線が周囲の中性水素を再び電離し、宇宙全体のガスの状態を変えていった時代。',
+      point:'宇宙の夜明けから銀河が育つ時代への大きな転換点。エアレンデルの光も、この時代に近い初期宇宙から届いている。',
+      next:'→ 銀河が育つ宇宙へ'
+    }
+  };
+
+  function esc(v=''){
+    return String(v).replace(/[&<>"']/g,c=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    })[c]);
+  }
+
+  function appendDetail(){
+    const panel=document.getElementById('v162RecipePanel');
+    const body=panel?.querySelector('.v162RecipeBody');
+    if(!panel?.classList.contains('on')||!body)return;
+
+    body.querySelector('.v174Detail')?.remove();
+
+    const sys=systems[system];
+    const st=S();
+    const era=ERA_DETAIL[sys?.name||''];
+    const obj=OBJECT_DETAIL[st?.name||''];
+    const d=era||obj;
+    if(!d)return;
+
+    const distance=st?.distance||sys?.distance||'';
+    const html=`
+      <section class="v174Detail">
+        <div class="v174Kicker">📖 ${era?'この時代をもっと詳しく':'この天体をもっと詳しく'}</div>
+        <h3>${esc(st?.name||sys?.name||'')}</h3>
+        ${distance?`<div class="v174Meta">${era?'⏱️':'📍'} ${esc(distance)}</div>`:''}
+        <p>${esc(d.about)}</p>
+        <div class="v174Point"><b>💡 ここがポイント</b><span>${esc(d.point)}</span></div>
+        ${era&&d.next?`<div class="v174Next">${esc(d.next)}</div>`:''}
+      </section>`;
+    body.insertAdjacentHTML('beforeend',html);
+  }
+
+  function install(){
+    if(document.getElementById('v174RecipeDetailStyle'))return;
+    const st=document.createElement('style');
+    st.id='v174RecipeDetailStyle';
+    st.textContent=`
+      .v174Detail{
+        margin-top:18px;padding-top:17px;border-top:1px solid rgba(255,255,255,.11)
+      }
+      .v174Kicker{
+        margin-bottom:7px;color:#a9dfff;font:1000 9px/1 system-ui;letter-spacing:.08em
+      }
+      .v174Detail h3{
+        margin:0;font:1000 16px/1.25 system-ui;color:#fff
+      }
+      .v174Meta{
+        display:inline-block;margin-top:8px;padding:5px 8px;border-radius:999px;
+        background:rgba(255,255,255,.06);color:rgba(255,255,255,.58);
+        font:800 8.5px/1 system-ui
+      }
+      .v174Detail p{
+        margin:11px 0 0;color:rgba(255,255,255,.80);font:750 10.5px/1.75 system-ui
+      }
+      .v174Point{
+        display:flex;flex-direction:column;gap:6px;margin-top:11px;padding:11px 12px;
+        border-radius:13px;background:rgba(111,208,255,.065);
+        border:1px solid rgba(137,218,255,.13)
+      }
+      .v174Point b{color:#bdeaff;font:950 9px/1.2 system-ui}
+      .v174Point span{color:rgba(255,255,255,.76);font:720 9.5px/1.65 system-ui}
+      .v174Next{
+        margin-top:9px;text-align:right;color:rgba(255,255,255,.48);
+        font:850 8.5px/1.3 system-ui
+      }
+      @media(max-width:560px){
+        .v174Detail p{font-size:10px}
+      }
+    `;
+    document.head.appendChild(st);
+
+    const btn=document.getElementById('v162RecipeBtn');
+    const panel=document.getElementById('v162RecipePanel');
+
+    // v168が成分レシピを描いた直後に、図鑑説明を追加する。
+    btn?.addEventListener('click',()=>setTimeout(appendDetail,45));
+    if(panel){
+      new MutationObserver(()=>{
+        if(panel.classList.contains('on'))setTimeout(appendDetail,50);
+      }).observe(panel,{attributes:true,attributeFilter:['class']});
+    }
+  }
+
+  if(document.readyState==='loading')addEventListener('DOMContentLoaded',install,{once:true});
+  else setTimeout(install,0);
+
+  window.__v174RecipeDetail={
+    refresh:appendDetail,
+    objects:()=>Object.keys(OBJECT_DETAIL),
+    eras:()=>Object.keys(ERA_DETAIL)
   };
 })();
 
