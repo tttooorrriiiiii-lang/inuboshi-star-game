@@ -920,18 +920,23 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 #v162RecipeBtn.attention{animation:v162RecipeAttention .72s ease-in-out 3}
 #v162RecipeBtn{
-  min-width:192px!important;min-height:52px!important;padding:7px 13px!important;
+  width:164px!important;min-width:164px!important;max-width:164px!important;
+  min-height:50px!important;padding:7px 11px!important;
   border-color:rgba(143,220,255,.48)!important;
   background:linear-gradient(135deg,rgba(16,37,65,.94),rgba(39,22,67,.92))!important;
   box-shadow:0 0 0 1px rgba(255,255,255,.05),0 8px 26px rgba(0,0,0,.32),0 0 22px rgba(111,205,255,.16)!important;
   text-align:left!important;line-height:1.05!important
 }
 #v162RecipeBtn b{display:block;color:#fff;font:1000 11px/1.1 system-ui}
-#v162RecipeBtn small{display:block;margin-top:5px;color:#bfe9ff;font:800 7.5px/1.25 system-ui;white-space:nowrap}
+#v162RecipeBtn small{display:block;margin-top:5px;color:#bfe9ff;font:800 7.2px/1.25 system-ui;white-space:normal}
 #v162RecipeBtn .v242RecipeArrow{float:right;color:#ffe79c;font-size:12px;margin-left:8px}
 @media(max-width:560px){
-  #v162RecipeBtn{min-width:176px!important;min-height:48px!important;padding:6px 10px!important;right:7px!important}
-  #v162RecipeBtn small{font-size:6.9px}
+  #v162RecipeBtn{
+    width:148px!important;min-width:148px!important;max-width:148px!important;
+    min-height:46px!important;padding:6px 9px!important;right:7px!important
+  }
+  #v162RecipeBtn b{font-size:10.5px!important}
+  #v162RecipeBtn small{font-size:6.7px!important;line-height:1.22!important}
 }
 
 @keyframes v162RecipeAttention{
@@ -15900,15 +15905,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v242';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v242</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v243';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v243</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v242</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v243</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16463,7 +16468,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v242';
+window.INUBOSHI_GAME_VERSION='v243';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -20253,6 +20258,20 @@ drawGround=function(){
   color:rgba(255,255,255,.50);
   font:700 10px/1.2 system-ui;
 }
+
+#v150JumpList{padding-bottom:12px}
+#v150JumpList .v150JumpGroup{
+  display:flex;align-items:center;gap:8px;
+  margin:14px 4px 6px;padding:7px 9px;
+  border-radius:10px;background:rgba(255,255,255,.055);
+  color:#dceaff;font:1000 10px/1.2 system-ui
+}
+#v150JumpList .v150JumpGroup span{flex:1}
+#v150JumpList .v150JumpGroup small{
+  padding:3px 6px;border-radius:999px;background:rgba(126,239,255,.10);
+  color:#bff8ff;font:900 8px/1 system-ui
+}
+
 #v150JumpEmpty{
   display:none;
   padding:26px 12px 30px;
@@ -20271,7 +20290,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v242</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v243</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">直接移動 → ホワイトホール出口まで遊べる</small></button>
@@ -20302,49 +20321,67 @@ drawGround=function(){
   function build(){
     list.innerHTML='';
     rows=[];
-    const data=api.list();
-    const canonicalOrigin=new Set([
+    let data=[];
+    try{ data=api.list()||[]; }catch(e){
+      console.error('[SECRET MENU LIST]',e);
+      data=[];
+    }
+
+    // v243: systems の内部プロパティに直接依存せず、
+    // debug API が返す名前だけで分類。将来の差し替えでもメニューが空になりにくい。
+    const ORIGIN=new Set([
       '🌑 暗黒時代','🌅 宇宙の夜明け','📡 宇宙背景放射（CMB）',
       '⚛️ ビッグバン元素合成','🟣 粒子の宇宙','💫 ビッグバン'
     ]);
+    const FUTURE=new Set([
+      '⏩ 太陽が明るくなる未来','🔴 赤色巨星の太陽','⚪ 太陽の死（白色矮星）',
+      '🌌 星形成の終わり','🔴 最後の恒星たち','🕳️ ブラックホール時代','🌑 暗い宇宙'
+    ]);
+    const HYP=new Set([
+      '🔁 ビッグバウンス','♻️ 循環宇宙','🫧 永遠のインフレーション','◯ 無境界仮説',
+      '🥶 熱的死／ビッグフリーズ','💥 ビッグリップ','🔻 ビッグクランチ','⚠️ 真空崩壊'
+    ]);
+    const HISTORY_HINTS=[
+      '地球誕生','原始地球','冥王代','太古代','原生代','古生代','中生代','新生代',
+      '生命','海洋','大気','酸素','全球凍結','恐竜','カンブリア','地球形成'
+    ];
+    const SPECIAL_NAMES=new Set(['🦋 モスラ','🦖 ゴジラ','🐾 犬の星','⚫ ブラックホール']);
+
+    function categoryFor(sys){
+      const name=cleanName(sys.name);
+      if(sys.blackHole||sys.secret||sys.dream||SPECIAL_NAMES.has(name))return '🧩 隠し・特殊';
+      if(ORIGIN.has(name))return '🌌 宇宙の始まり';
+      if(FUTURE.has(name))return '🔮 未来・宇宙の終わり';
+      if(HYP.has(name))return '🧪 仮説';
+      if(name==='☀️ 太陽系・近くの星')return '🌍 地球・太陽系';
+      if(HISTORY_HINTS.some(k=>name.includes(k)))return '🌍 地球の歴史';
+      return '🌟 星ステージ';
+    }
+
+    // 通常ルートから外したものだけ隠す。その他は必ず何かのカテゴリに出す。
+    function shouldHide(sys){
+      const name=cleanName(sys.name);
+      return name==='⏩ 太陽が明るくなる未来' || name==='🌌 星形成の終わり';
+    }
+
     const categoryOrder=[
       '🌍 地球・太陽系','🌟 星ステージ','🌌 宇宙の始まり',
       '🌍 地球の歴史','🔮 未来・宇宙の終わり','🧪 仮説','🧩 隠し・特殊'
     ];
-    const heads=new Map();
-    function categoryFor(sys){
-      const raw=systems[sys.si]||{};
-      if(sys.blackHole||raw.name==='⚫ ブラックホール'||raw.secret||raw.dream||raw.hiddenStar)return '🧩 隠し・特殊';
-      if(raw.hypothesis||raw.endHypothesis)return '🧪 仮説';
-      if(raw.v177Formation||raw.v170EarthBirth||raw.v177EarthHistory)return '🌍 地球の歴史';
-      if(raw.futureEra)return '🔮 未来・宇宙の終わり';
-      if(raw.epoch)return '🌌 宇宙の始まり';
-      if(raw.name==='☀️ 太陽系・近くの星')return '🌍 地球・太陽系';
-      return '🌟 星ステージ';
-    }
-    function ensureHead(cat){
-      if(heads.has(cat))return heads.get(cat);
-      const group=document.createElement('div');
-      group.className='v150JumpGroup';
-      group.textContent=cat;
-      group.dataset.category=cat;
-      heads.set(cat,group);
-      return group;
-    }
+
+    let totalRows=0;
 
     categoryOrder.forEach(cat=>{
-      const matching=data.filter(sys=>{
-        const raw=systems[sys.si]||{};
-        if(raw.epoch&&!canonicalOrigin.has(raw.name))return false;
-        if(raw.futureEra&&[1,4].includes(raw.futureStep||0))return false;
-        return categoryFor(sys)===cat;
-      });
+      const matching=data.filter(sys=>!shouldHide(sys)&&categoryFor(sys)===cat&&sys.stages?.length);
       if(!matching.length)return;
-      const head=ensureHead(cat);
-      list.appendChild(head);
+
+      const group=document.createElement('div');
+      group.className='v150JumpGroup';
+      group.dataset.category=cat;
+      group.innerHTML=`<span>${cat}</span><small>${matching.reduce((n,s)=>n+(s.stages?.length||0),0)}</small>`;
+      list.appendChild(group);
 
       matching.forEach(sys=>{
-        const raw=systems[sys.si]||{};
         sys.stages.forEach(st=>{
           const row=document.createElement('button');
           row.type='button';
@@ -20355,10 +20392,18 @@ drawGround=function(){
           const n=document.createElement('span');
           n.className='v150JumpName';
           let displayName=cleanName(st.name||sys.name);
-          if(raw.futureEra){
-            const label=({2:'🔥 灼熱の地球',3:'🥶 地球の氷河期',5:'🌑 星のない地球',6:'🕳️ ブラックホール時代',7:'🌑 暗い宇宙'})[raw.futureStep];
-            if(label)displayName=label;
-          }
+
+          // 未来編は今の画面上の呼び名に統一
+          const sysName=cleanName(sys.name);
+          const futureLabel={
+            '🔴 赤色巨星の太陽':'🔥 灼熱の地球',
+            '⚪ 太陽の死（白色矮星）':'🥶 地球の氷河期',
+            '🔴 最後の恒星たち':'🌑 星のない地球',
+            '🕳️ ブラックホール時代':'🕳️ ブラックホール時代',
+            '🌑 暗い宇宙':'🌑 暗い宇宙'
+          }[sysName];
+          if(futureLabel)displayName=futureLabel;
+
           n.textContent=(st.stageLabel?`${st.stageLabel}｜`:'')+displayName;
 
           const d=document.createElement('span');
@@ -20367,25 +20412,51 @@ drawGround=function(){
 
           row.append(n,d);
           row.dataset.search=(
-            cat+' '+cleanName(sys.name)+' '+displayName+' '+
+            cat+' '+sysName+' '+displayName+' '+
             cleanName(st.distance||sys.distance||'')+' '+cleanName(st.desc||'')
           ).toLowerCase();
 
           row.addEventListener('click',()=>{
-            const isBH=sys.blackHole||raw.name==='⚫ ブラックホール';
+            const isBH=!!sys.blackHole||sysName==='⚫ ブラックホール';
             if(isBH){
-              const ok=window.__v242EnterBlackHole?.() ?? window.__v217GoBlackHole?.();
+              let ok=false;
+              try{ok=!!(window.__v242EnterBlackHole?.()||window.__v217GoBlackHole?.()||window.__v170RouteAPI?.blackHole?.());}
+              catch(e){console.error(e)}
               if(ok)close(false);
             }else{
-              api.jump(st.si,st.ti);
-              close(false);
+              const ok=api.jump(st.si,st.ti);
+              if(ok!==false)close(false);
             }
           });
+
           list.appendChild(row);
-          rows.push({row,group:head});
+          rows.push({row,group});
+          totalRows++;
         });
       });
     });
+
+    // APIが読めたのに分類ミスで0件になる事故を防ぐフォールバック
+    if(totalRows===0 && data.length){
+      const group=document.createElement('div');
+      group.className='v150JumpGroup';
+      group.dataset.category='ALL';
+      group.textContent='🌌 全ステージ';
+      list.appendChild(group);
+      data.forEach(sys=>(sys.stages||[]).forEach(st=>{
+        const row=document.createElement('button');
+        row.type='button'; row.className='v150JumpRow';
+        row.dataset.si=String(st.si); row.dataset.ti=String(st.ti);
+        const n=document.createElement('span'); n.className='v150JumpName';
+        n.textContent=cleanName(st.name||sys.name);
+        const d=document.createElement('span'); d.className='v150JumpDist';
+        d.textContent=cleanName(st.distance||sys.distance||'');
+        row.append(n,d);
+        row.dataset.search=(cleanName(sys.name)+' '+cleanName(st.name)+' '+cleanName(st.distance||'')).toLowerCase();
+        row.addEventListener('click',()=>{api.jump(st.si,st.ti);close(false);});
+        list.appendChild(row); rows.push({row,group});
+      }));
+    }
   }
 
   function open(){
@@ -20662,11 +20733,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v242';
+  window.INUBOSHI_GAME_VERSION='v243';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v242<small>BLACK HOLE FIX + MENU CLEANUP + RECIPE CTA / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v243<small>SECRET MENU RESTORE + RECIPE NARROW / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
