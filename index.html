@@ -15096,14 +15096,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー';
-    if(sub)sub.textContent='帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v211';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v211</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v211</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15653,7 +15654,7 @@ const V204={
   radioEl:null,
   wormEl:null
 };
-window.INUBOSHI_GAME_VERSION='v210';
+window.INUBOSHI_GAME_VERSION='v211';
 
 const V204_SIMPLE_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -19556,15 +19557,15 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v210';
+  window.INUBOSHI_GAME_VERSION='v211';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v210<small>EARTH EXACT FOREGROUND + EARENDEL VISIBLE ITEMS / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v211<small>VERSION IN MENU HEADER / 2026-09-05</small>';devCard.prepend(el);
     }
     const jumpCard=document.querySelector('#v150JumpPanel .v150JumpCard');
     if(jumpCard&&!document.getElementById('v204JumpVersion')){
-      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v210';
+      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v211';
       const input=jumpCard.querySelector('#v150JumpSearch');if(input)jumpCard.insertBefore(el,input);else jumpCard.prepend(el);
     }
   }
