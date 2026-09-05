@@ -6285,6 +6285,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 })();
 
 
+/* === v179: real star thumbnails / physical traits / name origins === */
 /* === v178: canonical crunch loop / ice-age return / era matter / sorted debug === */
 /* === v177: no knockback / Big Bang rescue / expanded cosmic-to-Earth history === */
 /* === v176: white-screen fix / V170 scope-safe portal === */
@@ -11234,18 +11235,314 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
   };
 
+
+  // ----------------------------------------------------------
+  // v179: star encyclopedia — physical traits, name origins,
+  // and real observation thumbnails where a useful image exists.
+  // ----------------------------------------------------------
+  const V179_STAR_INFO={
+    '⭐ シリウス':{
+      about:'地球から見える恒星で最も明るいシリウスAと、地球ほどの大きさしかない白色矮星シリウスBの2重星。2つは約50年で互いを回る。',
+      facts:[['星系','2重星'],['A','青白い主系列星'],['B','白色矮星'],['Bの重力','非常に強い']],
+      point:'シリウスBは地球サイズなのに質量は太陽とほぼ同じ。小さく押しつぶされたため、表面重力はとてつもなく強い。',
+      origin:'古代ギリシャ語 Seirios に由来し、「焼き焦がすもの」「輝くもの」といった意味で説明される。夏の暑さと結びつけられた「犬の星」。',
+      photo:{
+        id:'sirius',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2005/12/STScI-01EVT7ZJ6D77V1MAV8F65NSFE7.tif?w=480',
+        page:'https://science.nasa.gov/asset/hubble/the-dog-star-sirius-and-its-tiny-companion/',
+        label:'Hubble観測画像｜AとB',
+        credit:'NASA / ESA / Hubble'
+      }
+    },
+    '💠 ベガ':{
+      about:'太陽より高温の青白い主系列星。ものすごい速さで自転しているため球ではなく赤道方向にふくらみ、極と赤道で表面温度も違う。',
+      facts:[['種類','A型主系列星'],['自転','非常に高速'],['形','赤道がふくらむ'],['見え方','ほぼ極側から見る']],
+      point:'高速自転のせいで「同じ星の表面なのに場所によって温度が違う」。地球からは自転軸の極に近い方向を見ている。',
+      origin:'アラビア語 an-nasr al-wāqiʿ に由来する名前で、「降りる／襲いかかる鷲」のような意味をもつ。'
+    },
+    '🌟 ポラリス':{
+      about:'実は1個の星ではなく、ポラリスA・すぐ近くのAb・遠くのBからなる3重星系。主星Aは膨らんだ超巨星で、明るさや温度、直径が周期的に変わるケフェイド変光星。',
+      facts:[['星系','3重星'],['主星','ケフェイド変光星'],['脈動','約4日周期'],['位置','天の北極の近く']],
+      point:'「北極星＝1つの静かな星」に見えるけど、実体は3つの星のシステム。主星そのものも脈打つように変化している。',
+      origin:'Polaris はラテン語で「極の／極に関する」という意味。地球の北の自転軸方向に近く見えることから北極星の名になった。',
+      photo:{
+        id:'polaris',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2006/01/STScI-01EVT7SM7ZDZC81VZR32DR8XCM.jpg?crop=faces%2Cfocalpoint&fit=clip&h=480&w=600',
+        page:'https://science.nasa.gov/asset/hubble/hubble-images-polariss-companion/',
+        label:'Hubble観測画像｜3重星系',
+        credit:'NASA / ESA / Hubble'
+      }
+    },
+    '❤️ アンタレス':{
+      about:'寿命の後半にある赤色超巨星。現在の質量は太陽の十数倍級なのに直径は太陽の数百倍まで膨らみ、外側には非常に広く薄い大気が広がる。',
+      facts:[['種類','赤色超巨星'],['直径','太陽の約700倍級'],['表面','比較的低温'],['表面重力','巨大なので弱い']],
+      point:'「重い星＝表面重力も必ず強い」ではない例。アンタレスは非常に重いが、あまりに巨大に膨らんでいるため表面の重力は弱い。',
+      origin:'ギリシャ語 Anti-Ares、「アレス（ローマ神話の火星）のライバル」に由来。赤い色が火星と張り合うように見えた。',
+      photo:{
+        id:'antares',
+        src:'https://cdn.eso.org/images/screen/eso1726a.jpg',
+        page:'https://www.eso.org/public/news/eso1726/',
+        label:'ESO/VLTI｜表面・大気の観測画像',
+        credit:'ESO / K. Ohnaka'
+      }
+    },
+    '🔴 ベテルギウス':{
+      about:'オリオン座の赤色超巨星。太陽系の中心に置けば外層が木星軌道近くまで達するほど巨大で、表面は対流・脈動・物質放出で大きく変化する。',
+      facts:[['種類','赤色超巨星'],['大きさ','木星軌道級'],['変化','脈動・物質放出'],['伴星','Siwarhaを確認']],
+      point:'巨大なのに表面重力は弱く、外層のガスを宇宙へ放出しやすい。2025年には予測されていた近い伴星も観測された。',
+      origin:'アラビア語で「アル＝ジャウザーの手」を意味する語に由来するとされる。アル＝ジャウザーは古いアラビアの星空でオリオンに対応する人物。',
+      photo:{
+        id:'betelgeuse',
+        src:'https://science.nasa.gov/wp-content/uploads/2023/06/betelgeuse-location-and-size.png',
+        page:'https://science.nasa.gov/image-detail/betelgeuse-location-and-size/',
+        label:'Hubble直接撮像｜大きさ比較',
+        credit:'NASA / ESA / Hubble'
+      }
+    },
+    '💙 R136a1':{
+      about:'大マゼラン雲のR136星団中心にある、非常に高温で高質量なWNh型の星。太陽の100倍を大きく超える質量級で、強烈な紫外線と恒星風を放つ。',
+      facts:[['種類','WNh / WR型'],['質量','100太陽質量を大きく超える'],['温度','非常に高温'],['恒星風','極めて強い']],
+      point:'「大きい」だけでなく、とにかく高温・高光度・高質量。自分自身の強烈な恒星風で大量の物質を宇宙へ失っている。',
+      origin:'R136 は大マゼラン雲の星を記録したRadcliffe Observatoryのカタログ番号。R136aが複数星に分解され、その中の成分1が R136a1。',
+      photo:{
+        id:'r136a1',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2016/03/STScI-01EVVH0Z1XVJ2T61FQ5XRYV9HK.tif?w=480',
+        page:'https://science.nasa.gov/asset/hubble/star-cluster-r136-2/',
+        label:'Hubble観測画像｜R136星団',
+        credit:'NASA / ESA / Hubble',
+        note:'※R136a1単体のポートレートではなく、星団内で見た画像'
+      }
+    },
+    '✨ S Doradus':{
+      about:'非常に明るい高光度青色変光星（LBV）。星の外層が不安定で、明るく見える時には半径が大きくなって表面温度が下がり、暗い時にはより小さく高温になる。',
+      facts:[['種類','LBV'],['変化','半径・温度が大変化'],['恒星風','強い'],['役割','S Dor型の代表星']],
+      point:'「明るさが変わる＝出すエネルギーが単純に増減」ではなく、半径と温度の変化で見える光の配分が変わるタイプ。',
+      origin:'変光星の命名規則による名前。Dorado（かじき座）で初期に登録された変光星の順番を表す「S」＋ Doradus。'
+    },
+    '⭐ M31-V1':{
+      about:'アンドロメダ銀河にあるケフェイド変光星。星全体が周期的に膨張・収縮し、それに合わせて半径・温度・明るさが規則的に変わる。',
+      facts:[['種類','ケフェイド変光星'],['変化','周期的に脈動'],['半径','膨張と収縮'],['場所','アンドロメダ銀河']],
+      point:'ケフェイドは「星そのものが呼吸するように脈動する」星。一定の周期で明るくなったり暗くなったりする。',
+      origin:'M31 はアンドロメダ銀河のMessier番号。V1 はその銀河で記録された Variable 1（変光星1番）というカタログ名。',
+      photo:{
+        id:'m31v1',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2025/01/STScI-01JH0YT8XVS9CCRY3PG6N0XZT2.png?crop=faces%2Cfocalpoint&fit=clip&h=520&w=1340',
+        page:'https://science.nasa.gov/asset/hubble/m31-cepheid-variable-star-v1/',
+        label:'Hubble観測画像｜V1の位置と変光',
+        credit:'NASA / ESA / Hubble'
+      }
+    },
+    '💫 AF Andromedae':{
+      about:'アンドロメダ銀河にある高光度青色変光星（LBV）。非常に明るい大質量星で、強い恒星風をもち、活動状態によって半径や表面温度が大きく変化する。',
+      facts:[['種類','LBV'],['質量','大質量星'],['恒星風','強い'],['変化','温度・半径・明るさ']],
+      point:'安定した丸い恒星というより、外層を激しく揺らしながら質量を失っている進化後半の星。',
+      origin:'AF は単語の略ではなく変光星の登録順を表す記号。Andromedae は「アンドロメダ座の」という意味。'
+    },
+    '🟢 ロマーノ星 GR 290':{
+      about:'M33にある非常に高温の大質量変光星。LBVらしい大きな変化と、窒素の強いウォルフ・ライエ星に近い性質を両方もち、星の状態により半径と温度が大きく変わる。',
+      facts:[['種類','LBV→WNの遷移型'],['温度','約2〜3万K級'],['半径','数十太陽半径級'],['恒星風','非常に強い']],
+      point:'大質量星がLBVからウォルフ・ライエ星へ移っていく途中を見せる珍しい存在。明るい時と暗い時で「星の見た目のサイズ」も変わる。',
+      origin:'発見・研究した天文学者 Giuliano Romano にちなみ「Romano’s Star」と呼ばれる。GR 290 は彼の変光星リストの番号。'
+    },
+    '🌠 M33 Var C':{
+      about:'M33にある高光度青色変光星（LBV）。外層が膨らむ時は表面がやや低温になり、縮む時は高温になるなど、大質量星特有の大きな状態変化を起こす。',
+      facts:[['種類','LBV'],['変化','大きな増光・減光'],['外層','膨張・収縮'],['恒星風','強い']],
+      point:'数十年単位の大きな変化も見せる不安定な巨大星。星が外層を失いながら進化する段階にいる。',
+      origin:'M33 はさんかく座銀河のMessier番号。Var C はその銀河で古くから追跡された明るい変光天体の「Variable C」。'
+    },
+    '⭐ M51-DS1':{
+      about:'M51にある低温で非常に明るい大質量超巨星。表面温度は数千K級で大きく膨らみ、周囲へ大量の物質を放出して自分で作った塵に隠れることがある。',
+      facts:[['種類','低温の超巨星'],['温度','約3700〜4700K級'],['質量','数十太陽質量級'],['特徴','激しい質量放出']],
+      point:'一度ほとんど見えなくなるほど暗くなったが、再び明るくなった。巨大星が放出した塵が星を覆った可能性が高い。',
+      origin:'M51 は子持ち銀河のMessier番号。DS は Dimming Star（暗くなる星）、1 はその候補1番という調査上の名前。',
+    },
+    '🎨 Warhol':{
+      about:'青く高温で非常に明るい大質量星級と考えられている遠方星。詳しい質量や半径はまだ不確かだが、高温のO型星やウォルフ・ライエ星級の可能性が研究されている。',
+      facts:[['色','青い・高温'],['種類','大質量星級の候補'],['質量・半径','まだ不確か'],['明るさ','非常に高光度']],
+      point:'超遠方なので「回転速度や表面重力まで測れている星」ではない。分かっている物理量と、まだ分からない物理量を分けて見るのが大事。',
+      origin:'愛称 Warhol はポップアート作家アンディ・ウォーホルにちなむ。正式なカタログ名とは別のニックネーム。'
+    },
+    '💙 イカロス':{
+      about:'太陽の約2倍の表面温度をもつと推定される青色超巨星。高温で青白く、半径も太陽よりはるかに大きい進化した大質量星。',
+      facts:[['種類','青色超巨星'],['温度','太陽の約2倍'],['色','青白い'],['半径','太陽より非常に大きい']],
+      point:'大きく膨らんだ超巨星なので、質量は大きくても表面重力はコンパクトな星ほど強くない。',
+      origin:'ギリシャ神話で太陽へ近づきすぎた「イカロス」にちなむ愛称。正式名は MACS J1149+2223 Lensed Star 1。',
+      photo:{
+        id:'icarus',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2018/04/STScI-01EVT0V68E9BFQB1SPR5WZJFP7.tif?w=480',
+        page:'https://science.nasa.gov/asset/hubble/icarus-macs-j11492223-lensed-star-1/',
+        label:'Hubble観測画像｜Icarusの位置',
+        credit:'NASA / ESA / Hubble'
+      }
+    },
+    '🦋 モスラ':{
+      about:'単独星ではなく、複数の巨大星を含む星系の可能性がある超遠方天体。色の異なる高温成分・低温成分を含む可能性があり、非常に明るい大質量星系と考えられている。',
+      facts:[['正体','星系の可能性'],['星','巨大星を含む'],['温度','複数成分の可能性'],['物理量','まだ不確か']],
+      point:'遠すぎるため1個の星の輪郭を撮っているわけではない。点光源の色や明るさから「中にどんな星がいるか」を推定している。',
+      origin:'日本映画の怪獣「モスラ」にちなむ愛称。非常に明るく、極端に拡大された「怪物級」の天体という連想から付けられた。',
+      photo:{
+        id:'mothra',
+        src:'https://svs.gsfc.nasa.gov/vis/a030000/a031200/a031287/STScI-01HDHHM95A69F03ZD7NRAGBT3C-mothra_print.jpg',
+        page:'https://science.nasa.gov/missions/webb/nasas-webb-hubble-combine-to-create-most-colorful-view-of-universe/',
+        label:'Webb＋Hubble観測画像｜Mothraの位置',
+        credit:'NASA / ESA / CSA / STScI'
+      }
+    },
+    '❤️ クイユル':{
+      about:'赤く低温で大きく膨らんだ赤色巨星。赤外線で強く輝くタイプで、太陽のような主系列星より半径が大きく、表面重力は弱い。',
+      facts:[['種類','赤色巨星'],['色','赤い・低温'],['半径','大きく膨張'],['表面重力','弱い']],
+      point:'超遠方で見つかった星なのに、青い巨大星ではなく「赤く冷たい巨星」という点が特徴。赤外線観測と相性がいい。',
+      origin:'Quyllur（クイユル）はケチュア語でそのまま「星」という意味。'
+    },
+    '🦖 ゴジラ':{
+      about:'非常に明るい大質量変光星の候補で、LBVの長いアウトバースト状態にある可能性が高い。高温で、強い恒星風と激しい質量放出を起こす怪物級の星。',
+      facts:[['種類','LBV級の候補'],['温度','高温'],['光度','極端に高い'],['質量放出','非常に強い']],
+      point:'安定して光る普通の星ではなく、大質量星が進化後半で外層を激しく放出している状態の可能性がある。',
+      origin:'日本映画の怪獣「ゴジラ」にちなむ愛称。桁外れに明るい「monster star」の性格から名付けられた。'
+    },
+    '🔷 Abell 2744 LS1':{
+      about:'宇宙初期に近い時代の非常に明るい個別星候補。高温の大質量星級と考えられるが、質量・半径・自転・表面重力など細かな物理量はまだよく分かっていない。',
+      facts:[['種類','大質量星級の候補'],['光度','非常に高い'],['自転','未測定'],['表面重力','未確定']],
+      point:'遠い星ほど「何でも分かる」わけではない。色・明るさ・スペクトルから絞れる性質と、まだ測れない性質がある。',
+      origin:'Abell 2744 は手前にある銀河団のカタログ名。LS1 は Lensed Star 1（レンズで見える星1番）という識別名。'
+    },
+    '💠 MACS J0647 LS1':{
+      about:'宇宙が非常に若かった時代に存在した高光度の恒星候補。大質量・高温の星または星系と考えられるが、半径・自転速度・表面重力などはまだ不確か。',
+      facts:[['種類','高光度星候補'],['時代','宇宙初期'],['自転','未測定'],['質量・半径','不確か']],
+      point:'この距離では「星の表面」を見るのではなく、わずかな色と明るさから物理的な姿を推定している。',
+      origin:'MACS J0647 は銀河団サーベイのカタログ名と空の座標に由来。LS1 は Lensed Star 1 の略。'
+    },
+    '✨ エアレンデル':{
+      about:'非常に高温で明るい大質量B型星。表面温度は太陽の2倍を超え、光度は太陽の約100万倍。色には、より冷たい伴星がいる可能性を示すヒントもある。',
+      facts:[['種類','大質量B型星'],['温度','太陽の2倍超'],['光度','太陽の約100万倍'],['伴星','低温の伴星の可能性']],
+      point:'最遠級だから「正体が何も分からない星」ではない。輪郭は見えなくても、色から高温・超高光度という性質まで分かってきた。',
+      origin:'Earendel は古英語で「morning star（明けの明星）」を意味する語。命名者はトールキン作品のエアレンディルへの連想も込めて選んだ。',
+      photo:{
+        id:'earendel',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/webb/science/2023/08/STScI-01H6C9QS1EHF094BXCFG24CVHS.png?crop=faces%2Cfocalpoint&fit=clip&h=480&w=944',
+        page:'https://science.nasa.gov/asset/webb/sunrise-arc-zoom-in-nircam-image/',
+        label:'Webb観測画像｜Earendelの位置',
+        credit:'NASA / ESA / CSA / Webb'
+      }
+    }
+  };
+
+  function v179Esc(v=''){
+    return String(v).replace(/[&<>"']/g,c=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    })[c]);
+  }
+
+  function v179PhotoHTML(photo){
+    if(!photo)return '';
+    return `
+      <div class="v179PhotoCard" data-v179-photo-card="${v179Esc(photo.id)}">
+        <a class="v179PhotoLink" href="${v179Esc(photo.page)}" target="_blank" rel="noopener noreferrer">
+          <img class="v179PhotoImg" loading="lazy" decoding="async"
+            data-v179-id="${v179Esc(photo.id)}"
+            data-v179-src="${v179Esc(photo.src)}"
+            alt="${v179Esc(photo.label)}">
+          <div class="v179PhotoFallback">📷 画像が読めない時はここから元の観測ページへ</div>
+        </a>
+        <div class="v179PhotoMeta">
+          <b>📷 ${v179Esc(photo.label)}</b>
+          <span>${v179Esc(photo.credit||'')}</span>
+          ${photo.note?`<small>${v179Esc(photo.note)}</small>`:''}
+          <a href="${v179Esc(photo.page)}" target="_blank" rel="noopener noreferrer">🔭 元の観測ページ</a>
+        </div>
+      </div>`;
+  }
+
+  function v179FactsHTML(facts=[]){
+    if(!facts.length)return '';
+    return `<div class="v179Facts">`+facts.map(([k,v])=>
+      `<div class="v179Fact"><small>${v179Esc(k)}</small><b>${v179Esc(v)}</b></div>`
+    ).join('')+`</div>`;
+  }
+
+  function v179HydratePhotos(root=document){
+    root.querySelectorAll?.('.v179PhotoImg').forEach(img=>{
+      if(img.dataset.v179Ready==='1')return;
+      img.dataset.v179Ready='1';
+
+      const id=img.dataset.v179Id;
+      const remote=img.dataset.v179Src;
+      const cacheKey=`inuboshi_v179_photo_${id}`;
+      const card=img.closest('.v179PhotoCard');
+      const fallback=card?.querySelector('.v179PhotoFallback');
+
+      let cached='';
+      try{cached=localStorage.getItem(cacheKey)||''}catch(e){}
+
+      const showFallback=()=>{
+        img.style.display='none';
+        if(fallback)fallback.style.display='grid';
+      };
+      const showImage=()=>{
+        img.style.display='block';
+        if(fallback)fallback.style.display='none';
+      };
+
+      img.addEventListener('error',()=>{
+        // If a cached copy failed too, try the current official URL once.
+        if(img.src.startsWith('data:')&&remote){
+          img.src=remote;
+          return;
+        }
+        showFallback();
+      },{once:false});
+
+      img.addEventListener('load',()=>{
+        showImage();
+
+        // Best-effort local cache. Some official servers allow CORS and some do not.
+        // If CORS is blocked the remote image still displays and the source link remains.
+        if(cached||!remote)return;
+        fetch(remote,{mode:'cors',cache:'force-cache'})
+          .then(r=>r.ok?r.blob():Promise.reject(new Error('image fetch')))
+          .then(blob=>{
+            if(!blob.type.startsWith('image/')||blob.size>650000)return;
+            const fr=new FileReader();
+            fr.onload=()=>{
+              try{
+                const data=String(fr.result||'');
+                if(data.startsWith('data:image/'))localStorage.setItem(cacheKey,data);
+              }catch(e){}
+            };
+            fr.readAsDataURL(blob);
+          })
+          .catch(()=>{});
+      },{once:false});
+
+      img.src=cached||remote;
+    });
+  }
+
+
   function v175DetailHTML(isEra){
-    const d=isEra?V175_ERA_DETAIL[systems[system]?.name]:V175_OBJECT_DETAIL[S()?.name];
+    const base=isEra?V175_ERA_DETAIL[systems[system]?.name]:V175_OBJECT_DETAIL[S()?.name];
+    const star=!isEra?V179_STAR_INFO[S()?.name]:null;
+    const d=star?{...(base||{}),...star}:base;
     if(!d)return '';
-    const title=isEra?'📖 この時代をもっと詳しく':'📖 この天体をもっと詳しく';
+
+    const title=isEra?'📖 この時代をもっと詳しく':star?'⭐ この星をもっと詳しく':'📖 この天体をもっと詳しく';
     const meta=S()?.distance||systems[system]?.distance||'';
+
     return `
       <section class="v175RecipeDetail">
         <div class="v175RecipeKicker">${title}</div>
         <h3>${S()?.name||systems[system]?.name||''}</h3>
         ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
+        ${star?v179PhotoHTML(star.photo):''}
+        ${star?`<div class="v179SectionLabel">⭐ 星の特徴</div>`:''}
         <p>${d.about||''}</p>
+        ${star?v179FactsHTML(star.facts):''}
         <div class="v175RecipePoint"><b>💡 ここがポイント</b><span>${d.point||''}</span></div>
+        ${star&&d.origin?`
+          <div class="v179NameOrigin">
+            <b>🏷️ 名前の由来</b>
+            <span>${d.origin}</span>
+          </div>`:''}
         ${isEra&&d.next?`<div class="v175RecipeNext">${d.next}</div>`:''}
       </section>`;
   }
@@ -11286,6 +11583,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         nr.rows.map(r=>recipeRow(r[0],r[1],r[2])).join('')+
         `<div class="v162RecipeNote">${nr.note}</div>`+
         v175DetailHTML(false);
+      setTimeout(()=>v179HydratePhotos(body),0);
       return;
     }
 
@@ -11308,6 +11606,24 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v175RecipePoint{display:flex;flex-direction:column;gap:6px;margin-top:11px;padding:11px 12px;border-radius:13px;background:rgba(111,208,255,.065);border:1px solid rgba(137,218,255,.13)}
       .v175RecipePoint b{color:#bdeaff;font:950 9px/1.2 system-ui}.v175RecipePoint span{color:rgba(255,255,255,.76);font:720 9.5px/1.65 system-ui}
       .v175RecipeNext{margin-top:9px;text-align:right;color:rgba(255,255,255,.48);font:850 8.5px/1.3 system-ui}
+      .v179PhotoCard{margin-top:12px;border:1px solid rgba(255,255,255,.11);border-radius:15px;overflow:hidden;background:rgba(0,0,0,.18)}
+      .v179PhotoLink{display:block;position:relative;text-decoration:none;color:#fff;background:#030611}
+      .v179PhotoImg{display:block;width:100%;height:132px;object-fit:cover;background:#030611}
+      .v179PhotoFallback{display:none;place-items:center;min-height:86px;padding:16px;text-align:center;color:rgba(255,255,255,.65);font:850 9px/1.5 system-ui}
+      .v179PhotoMeta{display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;padding:8px 10px}
+      .v179PhotoMeta b{font:950 8.5px/1.25 system-ui;color:#fff}
+      .v179PhotoMeta span{font:750 7.5px/1.25 system-ui;color:rgba(255,255,255,.46)}
+      .v179PhotoMeta small{width:100%;font:700 7.5px/1.35 system-ui;color:rgba(255,255,255,.42)}
+      .v179PhotoMeta a{margin-left:auto;color:#aee8ff;text-decoration:none;font:900 8px/1.2 system-ui}
+      .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
+      .v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
+      .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
+      .v179Fact small{display:block;margin-bottom:4px;color:rgba(255,255,255,.42);font:800 7.5px/1 system-ui}
+      .v179Fact b{display:block;color:#fff;font:900 9px/1.3 system-ui}
+      .v179NameOrigin{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:11px 12px;border-radius:13px;background:rgba(255,210,125,.06);border:1px solid rgba(255,218,150,.13)}
+      .v179NameOrigin b{color:#ffe0a8;font:950 9px/1.2 system-ui}
+      .v179NameOrigin span{color:rgba(255,255,255,.77);font:720 9.5px/1.65 system-ui}
+      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}}
     `;
     document.head.appendChild(st);
 
