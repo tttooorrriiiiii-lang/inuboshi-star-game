@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v189</title>
+<title>犬星くん GALAXY TOUR v190</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -12775,38 +12775,122 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '✨ エアレンデル':{size:42,light:92,spin:0}
   };
 
-  function v189MetricViz(kind,name=''){
+  function v190MetricLevel(kind,name=''){
     const v=V189_METRIC_VIZ[name]||{};
-    const level=Number.isFinite(v[kind])?Math.max(0,Math.min(100,v[kind])):0;
+    const raw=v[kind];
+    if(!Number.isFinite(raw))return null;
+    if(kind==='spin' && raw===0 && !V189_STAR_SPIN[name]?.known)return null;
+    return Math.max(0,Math.min(100,raw));
+  }
+
+  function v190MetricGrade(kind,name='',data=null){
+    const level=v190MetricLevel(kind,name);
+    if(kind==='spin')return data?.main||'不明';
+    if(level==null)return '不明';
     if(kind==='size'){
-      const obj=6+Math.round(level*0.22);
-      return `<div class="v189Viz v189SizeViz ${level?'' :'unknown'}">
-        <div class="v189SizeWrap">
-          <span class="v189SizeSun"></span>
-          <span class="v189SizeObj" style="width:${obj}px;height:${obj}px"></span>
-        </div>
-        <div class="v189VizCap">☀️と比べた大きさのイメージ</div>
-      </div>`;
+      if(level<=8)return '極小';
+      if(level<=16)return 'ふつう';
+      if(level<=30)return 'やや大きい';
+      if(level<=55)return '大きい';
+      if(level<=82)return '巨大';
+      return '超巨大';
     }
-    if(kind==='light'){
-      return `<div class="v189Viz v189LightViz ${level?'' :'unknown'}">
-        <div class="v189LightTrack"><i style="width:${Math.max(8,level)}%"></i></div>
-        <div class="v189LightScale"><span>ひかえめ</span><span>まぶしい</span></div>
-      </div>`;
+    if(level<=10)return 'ひかえめ';
+    if(level<=24)return '明るい';
+    if(level<=48)return 'かなり明るい';
+    if(level<=78)return '超明るい';
+    return 'まぶしい';
+  }
+
+  function v190GaugeScale(kind){
+    if(kind==='size')return ['小さい','ふつう','超巨大'];
+    if(kind==='light')return ['ひかえめ','明るい','まぶしい'];
+    return ['ゆっくり','ふつう','超高速'];
+  }
+
+  function v190ReadableSize(text=''){
+    let t=String(text||'').trim();
+    if(!t)return '';
+    if(t==='半径 1 太陽')return '太陽と同じくらいの大きさ';
+    t=t.replace(/^A星 /,'A星は ');
+    t=t.replace(/^主星 半径 /,'主星は ');
+    t=t.replace(/^半径 /,'');
+    t=t.replace(/約?([0-9,\.]+(?:〜[0-9,\.]+)?)(?:太陽)(?:半径)?(?:級)?/g,'太陽の約$1倍');
+    t=t.replace(/1,000〜1,400太陽/g,'太陽の1,000〜1,400倍');
+    t=t.replace(/数十〜100太陽級\?/g,'太陽の数十〜100倍くらい');
+    t=t.replace(/数十〜100太陽級/g,'太陽の数十〜100倍くらい');
+    t=t.replace(/数十〜数百太陽/g,'太陽の数十〜数百倍くらい');
+    t=t.replace(/数十太陽半径級/g,'太陽の数十倍くらい');
+    t=t.replace(/数十太陽級/g,'太陽の数十倍くらい');
+    t=t.replace(/数百〜1,000太陽級/g,'太陽の数百〜1,000倍くらい');
+    t=t.replace(/数百太陽級\?/g,'太陽の数百倍くらい');
+    t=t.replace(/数百太陽級/g,'太陽の数百倍くらい');
+    t=t.replace(/太陽級/g,'太陽くらい');
+    if(/^主星は /.test(t) || /^A星は /.test(t) || /^太陽/.test(t))return t;
+    return t.startsWith('直径')?t:`${t}`;
+  }
+
+  function v190ReadableLight(text=''){
+    let t=String(text||'').trim();
+    if(!t)return '';
+    if(t==='1 太陽光度')return '太陽と同じくらい明るい';
+    if(/太陽光度/.test(t)){
+      let prefix='';
+      if(/^系全体で /.test(t)){
+        prefix='系全体では ';
+        t=t.replace(/^系全体で /,'');
+      }else if(/^A星 /.test(t)){
+        prefix='A星は ';
+        t=t.replace(/^A星 /,'');
+      }else if(/^主星 /.test(t)){
+        prefix='主星は ';
+        t=t.replace(/^主星 /,'');
+      }
+      t=t.replace(/太陽光度級\?/g,'倍くらい明るい');
+      t=t.replace(/太陽光度級/g,'倍くらい明るい');
+      t=t.replace(/太陽光度\?/g,'倍明るい');
+      t=t.replace(/太陽光度/g,'倍明るい');
+      return prefix + '太陽の' + t;
     }
-    return `<div class="v189Viz v189SpinViz ${level?'' :'unknown'}">
-      <div class="v189SpinTrack"><i style="width:${Math.max(8,level||12)}%"></i></div>
-      <div class="v189SpinScale"><span>🐢</span><span>🌀</span></div>
+    return t;
+  }
+
+  function v190SpinDetail(data){
+    const t=String(data?.sub||'').trim();
+    if(!t)return '';
+    if(/^(約|[0-9]|十|数)/.test(t) && !/回転/.test(t))return `1回転は${t}`;
+    return t;
+  }
+
+  function v190MetricDetail(kind,data,name=''){
+    if(!data)return {main:'',sub:''};
+    if(kind==='size')return {main:v190ReadableSize(data.main),sub:data.sub||''};
+    if(kind==='light')return {main:v190ReadableLight(data.main),sub:data.sub||''};
+    return {main:v190SpinDetail(data),sub:data.known?'':'※ 詳しい自転周期はまだ不確かなこともある'};
+  }
+
+  function v190MetricGauge(kind,name=''){
+    const level=v190MetricLevel(kind,name);
+    const fill=level==null?18:Math.max(10,level);
+    const scale=v190GaugeScale(kind);
+    return `<div class="v190Gauge ${kind} ${level==null?'unknown':''}">
+      <div class="v190GaugeTrack"><i style="width:${fill}%"></i><span class="v190GaugeDot" style="left:calc(${fill}% - 7px)"></span></div>
+      <div class="v190GaugeScale"><span>${scale[0]}</span><span>${scale[1]}</span><span>${scale[2]}</span></div>
     </div>`;
   }
 
   function v189MetricCard(kind,icon,label,data,name=''){
     if(!data)return '';
-    return `<div class="v188MetricCard v189MetricCard ${kind}">
+    const grade=v190MetricGrade(kind,name,data);
+    const detail=v190MetricDetail(kind,data,name);
+    return `<div class="v188MetricCard v190MetricCard ${kind}">
       <div class="v188MetricLabel">${icon} ${label}</div>
-      ${v189MetricViz(kind,name)}
-      <strong>${v179Esc(data.main||'不明')}</strong>
-      ${data.sub?`<small>${v179Esc(data.sub)}</small>`:''}
+      <strong class="v190MetricGrade">${v179Esc(grade||'不明')}</strong>
+      ${v190MetricGauge(kind,name)}
+      <div class="v190MetricDetailBox">
+        ${detail.main?`<b>${v179Esc(detail.main)}</b>`:''}
+        ${detail.sub?`<small>${v179Esc(detail.sub)}</small>`:''}
+      </div>
     </div>`;
   }
 
@@ -12818,7 +12902,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       v189MetricCard('size','📏','大きさ',x?.size,name)+
       v189MetricCard('light','💡','明るさ',x?.light,name)+
       v189MetricCard('spin','🌀','自転',spin,name)+
-      `</div><div class="v189MetricNote">※ 図は見やすさ重視のイメージ図。厳密な縮尺や等倍表示ではないよ。</div>`;
+      `</div><div class="v189MetricNote">※ 図は見やすさ重視のイメージ図。まず感覚でつかんで、その下の詳細で確かめてね。</div>`;
   }
 
   function v175DetailHTML(isEra){
@@ -12937,14 +13021,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v186StarContext{margin:0 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(111,163,255,.09),rgba(187,142,255,.07));border:1px solid rgba(151,190,255,.16)}
       .v186ContextRow{display:flex;align-items:flex-start;gap:9px;padding:3px 0}.v186ContextRow span{flex:0 0 auto;color:#bfe1ff;font:900 9px/1.35 system-ui}.v186ContextRow b{margin-left:auto;max-width:72%;color:#f4f8ff;font:900 9.5px/1.45 system-ui;text-align:right}.v186StarContext small{display:block;margin-top:6px;padding-top:7px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.52);font:700 8.3px/1.5 system-ui}
       .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
-      .v188MetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}.v188MetricCard{padding:10px 8px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(136,216,255,.038));border:1px solid rgba(149,220,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column;gap:6px;min-width:0}.v188MetricLabel{color:#bfefff;font:950 8px/1.2 system-ui;letter-spacing:.05em}.v188MetricCard strong{display:block;color:#fff;font:1000 9.4px/1.34 system-ui;word-break:keep-all}.v188MetricCard small{display:block;color:rgba(255,255,255,.62);font:800 7.1px/1.35 system-ui}.v189Viz{padding:7px 6px;border-radius:10px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}.v189Viz.unknown{opacity:.72}.v189VizCap{margin-top:4px;color:rgba(255,255,255,.5);font:800 6.6px/1.25 system-ui;text-align:center}.v189SizeWrap{height:34px;display:flex;align-items:flex-end;justify-content:center;gap:10px}.v189SizeSun,.v189SizeObj{display:inline-block;border-radius:50%}.v189SizeSun{width:10px;height:10px;background:radial-gradient(circle,#fff4b5 0,#ffd54a 55%,#ff9b2f 100%);box-shadow:0 0 10px rgba(255,214,90,.4)}.v189SizeObj{background:radial-gradient(circle,#eefbff 0,#8ce7ff 60%,#729dff 100%);box-shadow:0 0 12px rgba(134,228,255,.28)}.v189LightTrack,.v189SpinTrack{height:12px;border-radius:999px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}.v189LightTrack i,.v189SpinTrack i{display:block;height:100%;border-radius:999px}.v189LightTrack i{background:linear-gradient(90deg,#fff3a0,#ffd257,#ff96dc)}.v189SpinTrack i{background:linear-gradient(90deg,#8fe7ff,#74a8ff,#d895ff)}.v189LightScale,.v189SpinScale{margin-top:4px;display:flex;justify-content:space-between;color:rgba(255,255,255,.5);font:800 6.6px/1 system-ui}.v189MetricNote{margin-top:6px;color:rgba(255,255,255,.54);font:800 7px/1.4 system-ui;text-align:center}.v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
+      .v188MetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}.v188MetricCard{padding:10px 8px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(136,216,255,.038));border:1px solid rgba(149,220,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column;gap:6px;min-width:0}.v188MetricLabel{color:#bfefff;font:950 8px/1.2 system-ui;letter-spacing:.05em}.v190MetricGrade{display:block;color:#fff;font:1000 11px/1.2 system-ui;letter-spacing:.03em;word-break:keep-all}.v190Gauge{padding:7px 6px;border-radius:10px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}.v190GaugeTrack{height:13px;border-radius:999px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}.v190GaugeTrack i{display:block;height:100%;border-radius:999px}.v190GaugeTrack .v190GaugeDot{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:0 0 9px rgba(255,255,255,.55)}.v190Gauge.size i{background:linear-gradient(90deg,#9fe7ff,#79beff,#bd8eff)}.v190Gauge.light i{background:linear-gradient(90deg,#fff3a0,#ffd257,#ff96dc)}.v190Gauge.spin i{background:linear-gradient(90deg,#8fe7ff,#74a8ff,#d895ff)}.v190GaugeScale{margin-top:4px;display:flex;justify-content:space-between;color:rgba(255,255,255,.5);font:800 6.6px/1 system-ui}.v190Gauge.unknown{opacity:.76}.v190MetricDetailBox{display:flex;flex-direction:column;gap:4px}.v190MetricDetailBox b{display:block;color:#fff;font:950 8.3px/1.34 system-ui}.v190MetricDetailBox small{display:block;color:rgba(255,255,255,.62);font:800 7px/1.35 system-ui}.v189MetricNote{margin-top:6px;color:rgba(255,255,255,.54);font:800 7px/1.4 system-ui;text-align:center}.v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
       .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
       .v179Fact small{display:block;margin-bottom:4px;color:rgba(255,255,255,.42);font:800 7.5px/1 system-ui}
       .v179Fact b{display:block;color:#fff;font:900 9px/1.3 system-ui}
       .v179NameOrigin{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:11px 12px;border-radius:13px;background:rgba(255,210,125,.06);border:1px solid rgba(255,218,150,.13)}
       .v179NameOrigin b{color:#ffe0a8;font:950 9px/1.2 system-ui}
       .v179NameOrigin span{color:rgba(255,255,255,.77);font:720 9.5px/1.65 system-ui}
-      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}.v188MetricGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.v188MetricCard{padding:8px 6px}.v188MetricCard strong{font-size:8px}.v188MetricCard small{font-size:6.5px}.v189SizeWrap{height:30px}.v189Viz{padding:6px 5px}}
+      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}.v188MetricGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.v188MetricCard{padding:8px 6px}.v190MetricGrade{font-size:9.2px}.v190MetricDetailBox b{font-size:7.6px}.v190MetricDetailBox small{font-size:6.3px}.v190Gauge{padding:6px 5px}}
     `;
     document.head.appendChild(st);
 
