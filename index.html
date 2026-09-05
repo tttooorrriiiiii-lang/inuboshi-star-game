@@ -15069,14 +15069,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
     if(head)head.textContent='🐾 隠しステージメニュー｜v214';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v214</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v215</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v214</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v215</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15615,19 +15615,22 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽しいな♪',1700),550);requestAnimationFrame(frame);
 
 
-/* === v204 CORE-SCOPE FIX: these hooks must live inside the main game IIFE === */
-const V204={
+/* === v215 STABILITY CONTROLLER: consolidated v204-v214 runtime fixes === */
+const V215={
   radioX:980,
   wormX:1680,
   radioDone:false,
   signalActive:false,
   futureWarping:false,
   radioEl:null,
-  wormEl:null
+  wormEl:null,
+  lastStageKey:'',
+  lastCountKey:'',
+  lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v214';
+window.INUBOSHI_GAME_VERSION='v215';
 
-const V204_SIMPLE_STAR_COPY={
+const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
   '⭐ シリウス':'地球の夜空で、いちばん明るく見える星。おおいぬ座の「犬の星」。',
   '🐶 プロキオン':'こいぬ座でいちばん明るい星。シリウスより少し先に空へ昇る。',
@@ -15650,512 +15653,11 @@ const V204_SIMPLE_STAR_COPY={
   '✨ エアレンデル':'宇宙誕生から10億年以内に存在した、最も遠い個別星。'
 };
 for(const sys of systems){
-  if(V204_SIMPLE_STAR_COPY[sys?.name])sys.desc=V204_SIMPLE_STAR_COPY[sys.name];
-  for(const st of (sys?.stages||[]))if(V204_SIMPLE_STAR_COPY[st?.name])st.desc=V204_SIMPLE_STAR_COPY[st.name];
+  if(V215_STAR_COPY[sys?.name])sys.desc=V215_STAR_COPY[sys.name];
+  for(const st of (sys?.stages||[]))if(V215_STAR_COPY[st?.name])st.desc=V215_STAR_COPY[st.name];
 }
 
-function v204IsEarendel(){return S()?.name==='✨ エアレンデル';}
-function v204FutureStep(){return systems[system]?.futureEra?(systems[system].futureStep||0):0;}
-function v204FutureEarth(){const n=v204FutureStep();return n>=1&&n<=3;}
-function v204AnyMaterialStage(){return !!(systems[system]?.futureEra||systems[system]?.epoch);}
-
-function v204InstallWorldUI(){
-  if(!V204.radioEl){
-    V204.radioEl=document.createElement('div');
-    V204.radioEl.id='v204EarRadio';
-    V204.radioEl.innerHTML='<div class="v204RadioEmoji">📻</div><div class="v204RadioTag">地球から SOS</div>';
-    wrap.appendChild(V204.radioEl);
-  }
-  if(!V204.wormEl){
-    V204.wormEl=document.createElement('div');
-    V204.wormEl.id='v204EarWorm';
-    V204.wormEl.innerHTML='<div class="v204WormCore"></div><div class="v204WormTag">🌀 救助ワームホール</div>';
-    wrap.appendChild(V204.wormEl);
-  }
-}
-function v204WorldPos(el,wx,wy,on=true){
-  if(!el)return;
-  const sx=wx-camera;
-  const visible=on&&sx>-110&&sx<W+110;
-  el.classList.toggle('on',visible);
-  if(!visible)return;
-  el.style.left=((sx/Math.max(1,W))*100)+'%';
-  el.style.top=((wy/Math.max(1,H))*100)+'%';
-}
-function v204RenderWorldUI(){
-  v204InstallWorldUI();
-  if(!v204IsEarendel()){
-    V204.radioEl?.classList.remove('on');
-    V204.wormEl?.classList.remove('on');
-    return;
-  }
-  const gy=groundY();
-  v204WorldPos(V204.radioEl,V204.radioX,gy-70,!V204.radioDone);
-  v204WorldPos(V204.wormEl,V204.wormX,gy-105,V204.radioDone&&!V204.signalActive);
-}
-function v204ShowEarthSOS(){
-  if(V204.radioDone||V204.signalActive||!v204IsEarendel())return;
-  V204.radioDone=true;V204.signalActive=true;paused=true;
-  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">EARTH RESCUE SIGNAL</div><div class="v63RadioNoise">ザー……ザー……　こちら地球……</div><div class="v63RadioVoice">「犬星くん、聞こえる？」<br>「救助ワームホールを開いた！」<br>「太陽と地球の未来へ急いで！」</div><div class="v63RadioMeta">SOURCE : EARTH</div></div>';
-  v63RadioScene.classList.remove('heard','reply');
-  v63RadioScene.classList.add('on','contact');
-  missionEl.textContent='📻 地球から救助信号！';
-  eventEl.textContent='EARTH RESCUE SIGNAL';
-  setTimeout(()=>v63RadioScene.classList.add('heard'),350);
-  setTimeout(()=>{
-    v63RadioScene.classList.remove('on','heard','reply','contact');
-    V204.signalActive=false;paused=false;
-    showToast('📻 地球からのSOS！ 前方に救助ワームホール！',1800);
-  },2550);
-}
-function v204WarpFuture(){
-  if(V204.futureWarping||V204.signalActive)return;
-  const target=systems.findIndex(s=>s?.futureEra&&s.futureStep===1);
-  if(target<0)return;
-  V204.futureWarping=true;paused=true;
-  trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spin';
-  transTitle.innerHTML='🌀 EARTH RESCUE WORMHOLE';
-  nextEl.textContent='☀️ 太陽と地球の未来へ';
-  subEl.textContent='EARENDEL → FUTURE SUN';
-  setTimeout(()=>{
-    system=target;stage=0;camera=0;p.x=115;p.vy=0;
-    stageStart();paused=false;syncHUD();
-    trans.style.display='none';warpDog.className='';V204.futureWarping=false;
-    showToast('☀️ 明るくなる太陽の未来へ到着！',1700);
-  },1400);
-}
-
-function v204MaterialData(){
-  const txt=document.querySelector('#v169MaterialInfo b')?.textContent?.trim()||'';
-  const m=txt.match(/^(\S+)\s+(.+?)\s+(\d+)\s*\/\s*(\d+)$/);
-  if(!m)return null;
-  const label=m[2];
-  let emoji=m[1];
-  if(label.includes('高温プラズマ'))emoji='🔥';
-  else if(label.includes('太陽光子'))emoji='☀️';
-  else if(label.includes('鉱物'))emoji='🪨';
-  else if(label.includes('電子'))emoji='⚡';
-  else if(label.includes('光子'))emoji='✨';
-  else if(label.includes('放射'))emoji='☢️';
-  else if(label.includes('水素')||label.includes('ヘリウム'))emoji='☁️';
-  else if(label.includes('原子核'))emoji='⚛️';
-  else if(label.includes('ニュートリノ'))emoji='🌀';
-  else if(label.includes('陽子')||label.includes('中性子'))emoji='🔵';
-  else if(label.includes('クォーク'))emoji='🟣';
-  else if(label.includes('真空'))emoji='💫';
-  else if(label.includes('量子'))emoji='❓';
-  return {emoji,label,have:+m[3],need:+m[4]};
-}
-function v204SyncControlsAndCounts(){
-  wrap.classList.add('v204ThreeControls');
-  for(const el of [pointsEl,foodEl,alienHitEl])if(el){el.style.setProperty('display','flex','important');el.style.setProperty('visibility','visible','important');el.style.setProperty('opacity','1','important');}
-  for(const el of [specialBtn,laserBtn,jumpBtn])if(el)el.style.setProperty('display','flex','important');
-  if(bigBtn)bigBtn.style.setProperty('display','none','important');
-  if(cosmicBtn)cosmicBtn.style.setProperty('display','none','important');
-  pointsEl.textContent=`⭐ ${points}`;
-  foodEl.textContent=`🦴 ${food}`;
-  const mat=v204MaterialData();
-  if(v204AnyMaterialStage()&&mat){
-    alienHitEl.textContent=`${mat.emoji} ${mat.have}/${mat.need}`;
-    alienHitEl.title=`${mat.label} ${mat.have}/${mat.need}`;
-  }else{
-    alienHitEl.textContent=`👽 ${cosmicCharge}`;
-    alienHitEl.title='';
-  }
-}
-
-function v204FutureInfo(step){
-  return {
-    1:{title:'☀️ 明るくなる太陽',time:'20億年後',desc:'太陽は年を取るほど少しずつ明るくなる。数十億年後には地球の海を保てないほど日差しが強くなり、今の住みやすい地球は終わっていく。'},
-    2:{title:'🔴 太陽の巨大化（赤色巨星）',time:'50億年後',desc:'太陽は燃料を使い切るころ、外側が大きくふくらんで赤色巨星になる。巨大化した太陽は内側の太陽系を大きく変える。'},
-    3:{title:'⚪ 太陽の死（白色矮星）',time:'60億年後',desc:'太陽は外側のガスを宇宙へ放出し、小さく高密度な白色矮星だけが残る。長い時間をかけて静かに冷えていく。'}
-  }[step]||null;
-}
-function v204DrawFutureCity(step){
-  if(step<1||step>4)return;
-  const gy=groundY(),t=performance.now()/1000;
-  const back=['','rgba(39,55,72,.86)','rgba(59,27,25,.90)','rgba(38,17,20,.94)','rgba(27,35,49,.90)'][step];
-  const front=['','rgba(14,24,35,.98)','rgba(35,14,15,.99)','rgba(20,8,11,.99)','rgba(14,20,30,.98)'][step];
-  const win=['','rgba(255,237,166,.76)','rgba(255,161,91,.58)','rgba(255,111,73,.34)','rgba(205,230,255,.25)'][step];
-  ctx.save();
-  // distant skyline
-  const off1=(camera*.10)%104;
-  for(let i=-1;i<Math.ceil(W/104)+2;i++){
-    const x=i*104-off1,w=58+(i&1)*16;
-    let h=120+(Math.abs(i)%5)*29+(step===1?25:0);
-    if(step===3&&i%3===0)h*=.62;
-    const y=gy-h;
-    ctx.fillStyle=back;ctx.globalAlpha=.92;ctx.fillRect(x,y,w,h);
-    ctx.fillStyle=win;ctx.globalAlpha=.6;
-    for(let yy=y+12;yy<gy-12;yy+=19)for(let xx=x+9;xx<x+w-7;xx+=14){if(step>=3&&(Math.floor(xx+yy+i)%3===0))continue;ctx.fillRect(xx,yy,5,7)}
-  }
-  // near skyline: intentionally large so the city is unmistakable on mobile.
-  const off2=(camera*.22)%128;
-  for(let i=-1;i<Math.ceil(W/128)+2;i++){
-    const x=i*128-off2,w=64+(Math.abs(i)%3)*18;
-    let h=155+(Math.abs(i+2)%5)*34;
-    if(step===3&&i%3===1)h*=.58;
-    if(step===4)h*=.82;
-    const y=gy-h;
-    ctx.globalAlpha=1;ctx.fillStyle=front;
-    if(step>=2&&i%4===1){
-      ctx.beginPath();ctx.moveTo(x,gy);ctx.lineTo(x+7,y+25);ctx.lineTo(x+w*.40,y-10);ctx.lineTo(x+w*.78,y+18);ctx.lineTo(x+w,gy);ctx.closePath();ctx.fill();
-    }else ctx.fillRect(x,y,w,h);
-    ctx.fillStyle=win;
-    for(let yy=y+15;yy<gy-15;yy+=22)for(let xx=x+10;xx<x+w-8;xx+=16){if(step===3&&(Math.floor((xx+yy)/10)+i)%2===0)continue;if(step===4&&(Math.floor((xx+yy)/10)+i)%3!==0)continue;ctx.fillRect(xx,yy,6,8)}
-    if(step>=2){
-      ctx.globalAlpha=step===3?.34:.20;ctx.fillStyle=step===4?'rgba(185,215,255,.13)':'rgba(255,135,84,.25)';
-      ctx.beginPath();ctx.ellipse(x+w*.5,y-20-Math.sin(t+i)*5,28,13,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
-    }
-  }
-  ctx.restore();ctx.globalAlpha=1;
-}
-
-const v204PrevDrawBackground=drawBackground;
-drawBackground=function(){
-  v204PrevDrawBackground();
-  if(v204FutureEarth())v204DrawFutureCity(v204FutureStep());
-};
-
-const v204PrevSyncHUD=syncHUD;
-syncHUD=function(){
-  v204PrevSyncHUD();
-  v204SyncControlsAndCounts();
-  astroInfo.classList.remove('v204EarHud');
-  // v212: Moon, planets and ALL ordinary stars (including Earendel) keep the same v155 card structure.
-  // Only the special future-Earth chapter needs a custom card.
-  if(v204FutureEarth()){
-    const n=v204FutureStep(),info=v204FutureInfo(n);
-    if(info){
-      locationEl.textContent=`FUTURE ${String(n).padStart(2,'0')} · ${info.title}`;
-      astroInfo.innerHTML=`<b>${info.title}</b><br>${info.desc}<span class="distanceBig">⏩ 未来 ${info.time}</span><span class="distanceHint">🌌 宇宙誕生から ${info.age}<br>☀️ 太陽と地球の未来 ${n} / 4</span>`;
-    }
-  }
-};
-
-const v204PrevStageStart=stageStart;
-stageStart=function(){
-  const out=v204PrevStageStart();
-  V204.radioDone=false;V204.signalActive=false;V204.futureWarping=false;
-  try{V169.pickups=[];V169.hazards=[];V169.pops=[];}catch(e){}
-  if(v204IsEarendel()){
-    wormholeActive=false;blackHoleActive=false;
-    // v212: no custom bubbles or duplicate pickups — keep makeWorld()/drawGood()/drawAlien()/drawMorph() exactly as normal stages.
-    showToast('📻 ずっと先にトランシーバーがある。',1500);
-  }
-  setTimeout(()=>syncHUD(),0);
-  return out;
-};
-
-const v204PrevUpdate=update;
-update=function(now,dt){
-  if(v204IsEarendel()||v204FutureEarth()){
-    try{V169.pickups=[];V169.hazards=[];}catch(e){}
-  }
-  if(!paused&&v204IsEarendel()){
-    wormholeActive=false;blackHoleActive=false;satellites=[];
-    const cx=p.x+p.w*.5;
-    if(!V204.radioDone&&cx>=V204.radioX-55){v204ShowEarthSOS();v204RenderWorldUI();return;}
-    if(V204.radioDone&&!V204.signalActive&&!V204.futureWarping&&cx>=V204.wormX-55){v204WarpFuture();v204RenderWorldUI();return;}
-  }
-  v204PrevUpdate(now,dt);
-  v204SyncControlsAndCounts();
-  if(v204IsEarendel()||v204FutureEarth())syncHUD();
-};
-
-v204InstallWorldUI();
-(function v204OverlayLoop(){v204SyncControlsAndCounts();v204RenderWorldUI();requestAnimationFrame(v204OverlayLoop)})();
-setTimeout(()=>{v204SyncControlsAndCounts();syncHUD();},0);
-
-
-/* === v205: earth-like future buildings / plain Earendel pickups / later simpler radio === */
-V204.radioX=980;
-V204.wormX=1680;
-
-v204ShowEarthSOS=function(){
-  if(V204.radioDone||V204.signalActive||!v204IsEarendel())return;
-  V204.radioDone=true;V204.signalActive=true;paused=true;
-  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">EARTH SOS</div><div class="v63RadioVoice">地球が危ない…戻ってきて。</div><div class="v63RadioMeta">SOURCE : EARTH</div></div>';
-  v63RadioScene.classList.remove('heard','reply');
-  v63RadioScene.classList.add('on','contact');
-  missionEl.textContent='📻 地球が危ない…戻ってきて';
-  eventEl.textContent='EARTH SOS';
-  setTimeout(()=>v63RadioScene.classList.add('heard'),250);
-  setTimeout(()=>{
-    v63RadioScene.classList.remove('on','heard','reply','contact');
-    V204.signalActive=false;paused=false;
-    showToast('📻 地球が危ない…戻ってきて',1500);
-  },1850);
-};
-
-v204DrawFutureCity=function(step){
-  if(step<1||step>4)return;
-  const gy=groundY();
-  ctx.save();
-  ctx.globalAlpha=1;
-  for(let i=0;i<11;i++){
-    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
-    let bh=90+(i%4)*28;
-    if(step===1) bh+=0;
-    if(step===2) bh+=16;
-    if(step===3 && i%3===0) bh*=.72;
-    if(step===4) bh*=.88;
-    const y=gy-bh-30;
-    ctx.fillStyle=i%2?'#aab5c1':'#8f9dad';
-    if(step===3&&i%4===1){
-      ctx.beginPath();
-      ctx.moveTo(x,gy-30);ctx.lineTo(x+6,y+22);ctx.lineTo(x+34,y-8);ctx.lineTo(x+68,y+10);ctx.lineTo(x+85,gy-30);
-      ctx.closePath();ctx.fill();
-    }else{
-      ctx.fillRect(x,y,85,bh);
-    }
-    ctx.fillStyle='rgba(255,244,170,.78)';
-    for(let r=0;r<4;r++)for(let c=0;c<3;c++){
-      if(step===3 && (r+c+i)%4===0)continue;
-      if(step===4 && (r+c+i)%2===0)continue;
-      ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
-    }
-  }
-  ctx.restore();
-};
-
-const v205PrevDrawPickup=drawPickup;
-drawPickup=function(o,now){
-  if(v204IsEarendel()){
-    if(o.got)return;
-    const sx=o.x-camera, sy=o.y+Math.sin(now/280+o.phase)*7;
-    if(sx<-50||sx>W+50)return;
-    ctx.save();
-    ctx.textAlign='center';ctx.textBaseline='middle';
-    const sym=o.symbol||'';
-    if(sym==='⭐'){
-      ctx.translate(sx,sy);
-      ctx.shadowColor='#ffe45a';ctx.shadowBlur=18;ctx.fillStyle='#ffd84d';
-      ctx.beginPath();
-      for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?18:8,px=Math.cos(a)*rr,py=Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}
-      ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-    }else if(sym==='🦴'){
-      ctx.font='34px system-ui';ctx.shadowColor='#ffd65a';ctx.shadowBlur=18;ctx.fillText('🦴',sx,sy+2);
-    }else if(sym==='❓'){
-      ctx.translate(sx,sy);ctx.rotate(Math.sin(performance.now()/220)*.18);
-      ctx.shadowColor='#64f5ff';ctx.shadowBlur=24;ctx.fillStyle='rgba(60,20,90,.82)';ctx.strokeStyle='#fff';ctx.lineWidth=2;
-      ctx.beginPath();ctx.arc(0,0,27,0,Math.PI*2);ctx.fill();ctx.stroke();
-      ctx.font='30px system-ui';ctx.fillStyle='#fff';ctx.fillText('❓',0,1);
-    }else{
-      ctx.font=(sym.length>1?'900 18px system-ui':'1000 30px system-ui');
-      ctx.fillStyle='#eef6ff';ctx.shadowColor='#d8ebff';ctx.shadowBlur=16;ctx.fillText(sym,sx,sy);
-    }
-    ctx.restore();
-    return;
-  }
-  v205PrevDrawPickup(o,now);
-};
-/* === /v205 === */
-
-
-/* === v206: exact Earth skyline + hide odd cosmic overlays on Earendel/future1-4 === */
-v204DrawFutureCity=function(step){
-  if(step<1||step>4)return;
-  const gy=groundY();
-  ctx.save();
-  for(let i=0;i<11;i++){
-    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
-    const bh=90+(i%4)*28;
-    ctx.fillStyle=i%2?'#aab5c1':'#8f9dad';
-    ctx.fillRect(x,gy-bh-30,85,bh);
-    ctx.fillStyle='rgba(255,244,170,.78)';
-    for(let r=0;r<4;r++)for(let c=0;c<3;c++)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
-  }
-  ctx.restore();
-};
-
-const v206PrevDrawCosmic=drawCosmic;
-drawCosmic=function(){
-  if(v204IsEarendel()||v204FutureEarth())return;
-  v206PrevDrawCosmic();
-};
-
-const v206PrevSyncHUD=syncHUD;
-syncHUD=function(){
-  v206PrevSyncHUD();
-  if(v204FutureEarth()){
-    eventEl.textContent='☀️ 地球から、太陽と地球の終わりを見る';
-  }
-};
-/* === /v206 === */
-
-
-/* === v207: earth-style skyline exactly reused in future, and clear stray cosmic pickups === */
-function v207DrawEarthSkyline(){
-  const gy=groundY();
-  ctx.save();
-  const backColors=['#9ea7b3','#b1b8c2','#8f99a5','#aab2bc','#959faa'];
-  const frontColors=['#6f7b88','#7b8795','#66727f','#778391','#6b7784'];
-  const win='rgba(255,244,170,.78)';
-  const offBack=(camera*.12)%110;
-  for(let i=-1;i<Math.ceil(W/110)+2;i++){
-    const x=i*110-offBack;
-    const w=[54,66,58,74,62][Math.abs(i)%5];
-    const h=[128,172,146,194,158][Math.abs(i+1)%5];
-    const y=gy-h-30;
-    ctx.fillStyle=backColors[Math.abs(i)%backColors.length];
-    ctx.fillRect(x,y,w,h);
-    ctx.fillStyle=win;
-    for(let yy=y+14;yy<gy-18;yy+=22){
-      for(let xx=x+10;xx<x+w-10;xx+=16)ctx.fillRect(xx,yy,7,8);
-    }
-  }
-  const offFront=(camera*.22)%126;
-  for(let i=-1;i<Math.ceil(W/126)+2;i++){
-    const x=i*126-offFront;
-    const w=[76,84,68,88,72][Math.abs(i)%5];
-    const h=[212,168,248,186,226][Math.abs(i+2)%5];
-    const y=gy-h-30;
-    ctx.fillStyle=frontColors[Math.abs(i)%frontColors.length];
-    ctx.fillRect(x,y,w,h);
-    ctx.fillStyle=win;
-    for(let yy=y+18;yy<gy-20;yy+=24){
-      for(let xx=x+12;xx<x+w-12;xx+=20)ctx.fillRect(xx,yy,8,10);
-    }
-  }
-  ctx.restore();
-}
-
-v204DrawFutureCity=function(step){
-  if(step<1||step>4)return;
-  v207DrawEarthSkyline();
-};
-
-const v207PrevStageStart=stageStart;
-stageStart=function(){
-  const out=v207PrevStageStart();
-  if(v204IsEarendel()||v204FutureEarth()){
-    try{V169.pickups=[];V169.hazards=[];V169.pops=[];}catch(e){}
-    const dock=document.getElementById('v169CosmicDock');
-    if(dock)dock.classList.remove('on');
-  }
-  return out;
-};
-
-const v207PrevDrawCosmic=drawCosmic;
-drawCosmic=function(){
-  if(v204IsEarendel()||v204FutureEarth())return;
-  v207PrevDrawCosmic();
-};
-
-const v207PrevUpdate=update;
-update=function(now,dt){
-  if(v204IsEarendel()||v204FutureEarth()){
-    try{V169.pickups=[];V169.hazards=[];}catch(e){}
-  }
-  v207PrevUpdate(now,dt);
-};
-/* === /v207 === */
-
-
-/* === v208: future stages redraw with the exact same Earth city+trees block === */
-function v208DrawExactEarthForeground(){
-  const gy=groundY();
-  ctx.save();
-  for(let i=0;i<11;i++){
-    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
-    const bh=90+(i%4)*28;
-    ctx.fillStyle=i%2?'#10182b':'#172038';
-    ctx.fillRect(x,gy-bh-30,85,bh);
-    ctx.fillStyle='rgba(255,221,126,.72)';
-    for(let r=0;r<4;r++) for(let c=0;c<3;c++) ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
-  }
-  for(let i=0;i<9;i++){
-    const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
-    ctx.fillStyle='#261b18';
-    ctx.fillRect(x,gy-64,10,64);
-    ctx.fillStyle=i%2?'#173d32':'#1d4938';
-    ctx.beginPath();
-    ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-const v208PrevBg=drawBackground;
-drawBackground=function(){
-  v208PrevBg();
-  if(v204FutureEarth())v208DrawExactEarthForeground();
-};
-
-v204DrawFutureCity=function(step){
-  if(step<1||step>4)return;
-  /* disable alternate future-city renderer; the exact Earth block is now drawn in drawBackground */
-};
-/* === /v208 === */
-
-/* === v209: final exact Earth skyline/tree override for future 1-4 === */
-function v209DrawExactEarthBlock(){
-  const gy=groundY();
-  ctx.save();
-  for(let i=0;i<11;i++){
-    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
-    const bh=90+(i%4)*28;
-    ctx.fillStyle=i%2?'#10182b':'#172038';
-    ctx.fillRect(x,gy-bh-30,85,bh);
-    ctx.fillStyle='rgba(255,221,126,.72)';
-    for(let r=0;r<4;r++)for(let c=0;c<3;c++)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
-  }
-  for(let i=0;i<9;i++){
-    const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
-    ctx.fillStyle='#261b18';
-    ctx.fillRect(x,gy-64,10,64);
-    ctx.fillStyle=i%2?'#173d32':'#1d4938';
-    ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill();
-  }
-  ctx.restore();
-}
-const v209PrevBg=drawBackground;
-drawBackground=function(){
-  v209PrevBg();
-  if(v204FutureEarth())v209DrawExactEarthBlock();
-};
-/* === /v209 === */
-
-/* === v210: draw exact Earth foreground on future stages, after backgrounds === */
-function v210DrawEarthForegroundExact(){
-  const gy=groundY();
-  ctx.save();
-  // Exact same geometry as the present-Earth block; use the night-Earth colors seen in the opening stage.
-  for(let i=0;i<11;i++){
-    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
-    const bh=90+(i%4)*28;
-    ctx.fillStyle=i%2?'#3a4657':'#2d3848';
-    ctx.fillRect(x,gy-bh-30,85,bh);
-    ctx.fillStyle='rgba(255,236,150,.88)';
-    for(let r=0;r<4;r++)for(let c=0;c<3;c++)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
-  }
-  for(let i=0;i<9;i++){
-    const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
-    ctx.fillStyle='#261b18';
-    ctx.fillRect(x,gy-64,10,64);
-    ctx.fillStyle=i%2?'#375b46':'#4f7d58';
-    ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill();
-  }
-  ctx.restore();
-}
-v204DrawFutureCity=function(step){ if(step<1||step>4)return; /* disabled: exact earth foreground is drawn in drawGround */ };
-const v210PrevGround=drawGround;
-drawGround=function(){
-  v210PrevGround();
-  if(v204FutureEarth())v210DrawEarthForegroundExact();
-};
-/* === /v210 === */
-
-
-
-
-
-
-
-
-/* === v213 FINAL HUD + CITY === */
-const V213_FUTURE={
+const V215_FUTURE={
   1:{title:'☀️ 明るくなる太陽',time:'20億年後',group:'☀️ 太陽と地球の未来',local:1,total:3,desc:'太陽は年を取るほど少しずつ明るくなる。数十億年後には地球の海を保てないほど日差しが強くなり、今の住みやすい地球は終わっていく。'},
   2:{title:'🔴 太陽の巨大化（赤色巨星）',time:'50億年後',group:'☀️ 太陽と地球の未来',local:2,total:3,desc:'太陽は燃料を使い切るころ、外側が大きくふくらんで赤色巨星になる。巨大化した太陽は内側の太陽系を大きく変える。'},
   3:{title:'⚪ 太陽の死（白色矮星）',time:'60億年後',group:'☀️ 太陽と地球の未来',local:3,total:3,desc:'太陽は外側のガスを宇宙へ放出し、小さく高密度な白色矮星だけが残る。その後は長い時間をかけて冷えていく。'},
@@ -16164,24 +15666,128 @@ const V213_FUTURE={
   6:{title:'🕳️ ブラックホール時代',time:'1正年後',group:'🌌 宇宙全体の未来',local:3,total:4,desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。'},
   7:{title:'🌑 暗い宇宙',time:'1グーゴル年後',group:'🌌 宇宙全体の未来',local:4,total:4,desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。'}
 };
-function v213GravityLine(st){
+
+function v215IsEarendel(){return S()?.name==='✨ エアレンデル';}
+function v215FutureStep(){return systems[system]?.futureEra?(systems[system].futureStep||0):0;}
+function v215FutureEarth(){const n=v215FutureStep();return n>=1&&n<=3;}
+function v215StageKey(){return `${system}|${stage}|${S()?.name||''}`;}
+
+function v215InstallWorldUI(){
+  if(!V215.radioEl){
+    V215.radioEl=document.createElement('div');
+    V215.radioEl.id='v204EarRadio';
+    V215.radioEl.innerHTML='<div class="v204RadioEmoji">📻</div><div class="v204RadioTag">地球から SOS</div>';
+    wrap.appendChild(V215.radioEl);
+  }
+  if(!V215.wormEl){
+    V215.wormEl=document.createElement('div');
+    V215.wormEl.id='v204EarWorm';
+    V215.wormEl.innerHTML='<div class="v204WormCore"></div><div class="v204WormTag">🌀 救助ワームホール</div>';
+    wrap.appendChild(V215.wormEl);
+  }
+}
+function v215WorldPos(el,wx,wy,on=true){
+  if(!el)return;
+  const sx=wx-camera,visible=on&&sx>-110&&sx<W+110;
+  el.classList.toggle('on',visible);
+  if(!visible)return;
+  el.style.left=((sx/Math.max(1,W))*100)+'%';
+  el.style.top=((wy/Math.max(1,H))*100)+'%';
+}
+function v215RenderWorldUI(){
+  v215InstallWorldUI();
+  if(!v215IsEarendel()){
+    V215.radioEl?.classList.remove('on');
+    V215.wormEl?.classList.remove('on');
+    return;
+  }
+  const gy=groundY();
+  v215WorldPos(V215.radioEl,V215.radioX,gy-70,!V215.radioDone);
+  v215WorldPos(V215.wormEl,V215.wormX,gy-105,V215.radioDone&&!V215.signalActive);
+}
+function v215ShowEarthSOS(){
+  if(V215.radioDone||V215.signalActive||!v215IsEarendel())return;
+  V215.radioDone=true;V215.signalActive=true;paused=true;
+  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">EARTH SOS</div><div class="v63RadioVoice">地球が危ない…戻ってきて。</div><div class="v63RadioMeta">SOURCE : EARTH</div></div>';
+  v63RadioScene.classList.remove('heard','reply');
+  v63RadioScene.classList.add('on','contact');
+  missionEl.textContent='📻 地球が危ない…戻ってきて';
+  eventEl.textContent='EARTH SOS';
+  setTimeout(()=>v63RadioScene.classList.add('heard'),250);
+  setTimeout(()=>{
+    v63RadioScene.classList.remove('on','heard','reply','contact');
+    V215.signalActive=false;paused=false;
+    showToast('📻 地球が危ない…戻ってきて',1500);
+  },1850);
+}
+function v215WarpFuture(){
+  if(V215.futureWarping||V215.signalActive)return;
+  const target=systems.findIndex(s=>s?.futureEra&&s.futureStep===1);
+  if(target<0)return;
+  V215.futureWarping=true;paused=true;
+  trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spin';
+  transTitle.innerHTML='🌀 EARTH RESCUE WORMHOLE';
+  nextEl.textContent='☀️ 太陽と地球の未来へ';
+  subEl.textContent='EARENDEL → FUTURE SUN';
+  setTimeout(()=>{
+    system=target;stage=0;camera=0;p.x=115;p.vy=0;
+    stageStart();paused=false;syncHUD();
+    trans.style.display='none';warpDog.className='';V215.futureWarping=false;
+    showToast('☀️ 明るくなる太陽の未来へ到着！',1700);
+  },1400);
+}
+
+function v215MaterialEmoji(label='',fallback='✨'){
+  if(label.includes('高温プラズマ'))return '🔥';
+  if(label.includes('太陽光子'))return '☀️';
+  if(label.includes('鉱物'))return '🪨';
+  if(label.includes('電子'))return '⚡';
+  if(label.includes('放射'))return '☢️';
+  if(label.includes('光子'))return '✨';
+  if(label.includes('水素')||label.includes('ヘリウム'))return '☁️';
+  if(label.includes('原子核'))return '⚛️';
+  if(label.includes('ニュートリノ'))return '🌀';
+  if(label.includes('クォーク'))return '🟣';
+  return fallback||'✨';
+}
+function v215SyncControlsAndCounts(force=false){
+  wrap.classList.add('v204ThreeControls');
+  for(const el of [specialBtn,laserBtn,jumpBtn])if(el&&el.style.display==='none')el.style.setProperty('display','flex','important');
+  if(bigBtn&&bigBtn.style.display!=='none')bigBtn.style.setProperty('display','none','important');
+  if(cosmicBtn&&cosmicBtn.style.display!=='none')cosmicBtn.style.setProperty('display','none','important');
+  for(const el of [pointsEl,foodEl,alienHitEl])if(el){el.style.setProperty('display','flex','important');el.style.setProperty('visibility','visible','important');}
+
+  let third=`👽 ${cosmicCharge}`;
+  const mat=window.__v169MaterialAPI?.state?.();
+  if(systems[system]?.futureEra&&mat?.cfg){
+    const em=v215MaterialEmoji(mat.cfg.mat,mat.cfg.symbol);
+    third=`${em} ${mat.charge}/${mat.cfg.need}`;
+  }
+  const key=`${points}|${food}|${third}`;
+  if(!force&&key===V215.lastCountKey)return;
+  V215.lastCountKey=key;
+  pointsEl.textContent=`⭐ ${points}`;
+  foodEl.textContent=`🦴 ${food}`;
+  alienHitEl.textContent=third;
+}
+
+function v215GravityLine(st){
   const g=Number.isFinite(st?.gravity)?Number(st.gravity).toFixed(2):'—';
   const j=Number.isFinite(st?.jump)?Number(st.jump).toFixed(1):'—';
   return `🧲 重力 ${g}　⬆️ ジャンプ ${j}`;
 }
-function v213FutureHud(){
+function v215FutureHud(){
   const sys=systems[system],st=S();
   if(!sys?.futureEra||!st)return false;
-  const n=sys.futureStep||0,f=V213_FUTURE[n];if(!f)return false;
-  st.name=f.title;st.desc=f.desc;st.distance=f.time;
-  locationEl.textContent=`FUTURE ${String(n).padStart(2,'0')} · ${f.title}`;
+  const f=V215_FUTURE[sys.futureStep||0];if(!f)return false;
+  locationEl.textContent=`FUTURE ${String(sys.futureStep).padStart(2,'0')} · ${f.title}`;
   astroInfo.innerHTML=`<b>${f.title}</b><br>${f.desc}`+
     `<br><span class="distanceBig"><span class="distLead">⏩ 現在から</span><span class="distValue">${f.time}</span></span>`+
-    `<span class="distanceHint">${f.group} ${f.local} / ${f.total}<br>${v213GravityLine(st)}</span>`;
-  missionEl.textContent=n<=3?'☀️ 地球から、太陽と地球の未来を見る':'🌌 星が消えた後の宇宙をたどる';
+    `<span class="distanceHint">${f.group} ${f.local} / ${f.total}<br>${v215GravityLine(st)}</span>`;
+  missionEl.textContent=(sys.futureStep||0)<=3?'☀️ 地球から、太陽と地球の未来を見る':'🌌 星が消えた後の宇宙をたどる';
   return true;
 }
-function v213OrdinaryHud(){
+function v215OrdinaryHud(){
   const st=S(),sys=systems[system];if(!st||!sys)return false;
   if(system===0&&stage===0)return false;
   if(sys.futureEra||sys.epoch||sys.hypothesis||sys.endHypothesis||sys.v177EarthHistory||sys.v177Formation||sys.v170EarthBirth||sys.secret||sys.dream||sys.endless)return false;
@@ -16190,17 +15796,16 @@ function v213OrdinaryHud(){
   const ear=st.name==='✨ エアレンデル';
   const dist=ear?'約129億光年':(typeof v60Distance==='function'?v60Distance():(st.distance||sys.distance||''));
   const type=st.v155Type?`<br><span style="opacity:.72;font-size:.86em">種類｜${st.v155Type}</span>`:'';
+  const desc=ear?V215_STAR_COPY['✨ エアレンデル']:(st.desc||sys.desc||'');
   locationEl.textContent=`${st.name} · ${dist}`;
-  astroInfo.innerHTML=`<b>${st.name}</b><br>${st.desc||sys.desc||''}${type}`+
+  astroInfo.innerHTML=`<b>${st.name}</b><br>${desc}${type}`+
     `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span>`+
-    `<span class="distanceHint">${v213GravityLine(st)}</span>`;
+    `<span class="distanceHint">${v215GravityLine(st)}</span>`;
   return true;
 }
-const v213PrevSync=syncHUD;
-syncHUD=function(force){v213PrevSync(force);if(v213FutureHud())return;v213OrdinaryHud();};
 
-function v213DrawEarthNightCity(){
-  if(!v204FutureEarth())return;
+function v215DrawFutureCity(){
+  if(!v215FutureEarth())return;
   const gy=groundY();ctx.save();ctx.globalAlpha=1;
   for(let i=0;i<11;i++){
     const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90,bh=90+(i%4)*28;
@@ -16215,11 +15820,57 @@ function v213DrawEarthNightCity(){
   }
   ctx.restore();
 }
-const v213PrevBg=drawBackground;
-drawBackground=function(){v213PrevBg();v213DrawEarthNightCity();};
-/* === /v213 FINAL === */
 
-/* === /v204 CORE-SCOPE FIX === */
+/* One wrapper per hot function. No recursive v205-v214 wrapper chain. */
+const v215BaseSyncHUD=syncHUD;
+syncHUD=function(force){
+  v215BaseSyncHUD(force);
+  v215SyncControlsAndCounts(!!force);
+  if(v215FutureHud())return;
+  v215OrdinaryHud();
+};
+
+const v215BaseStageStart=stageStart;
+stageStart=function(){
+  const beforeKey=V215.lastStageKey;
+  const out=v215BaseStageStart();
+  const nowKey=v215StageKey();
+  if(nowKey!==beforeKey){
+    V215.lastStageKey=nowKey;
+    V215.lastHudKey='';
+    V215.lastCountKey='';
+    if(v215IsEarendel()){
+      V215.radioDone=false;V215.signalActive=false;V215.futureWarping=false;
+      wormholeActive=false;blackHoleActive=false;
+      showToast('📻 ずっと先にトランシーバーがある。',1500);
+    }
+  }
+  v215SyncControlsAndCounts(true);
+  setTimeout(()=>syncHUD(true),0);
+  return out;
+};
+
+const v215BaseUpdate=update;
+update=function(now,dt){
+  if(!paused&&v215IsEarendel()){
+    wormholeActive=false;blackHoleActive=false;satellites=[];
+    const cx=p.x+p.w*.5;
+    if(!V215.radioDone&&cx>=V215.radioX-55){v215ShowEarthSOS();v215RenderWorldUI();return;}
+    if(V215.radioDone&&!V215.signalActive&&!V215.futureWarping&&cx>=V215.wormX-55){v215WarpFuture();v215RenderWorldUI();return;}
+  }
+  v215BaseUpdate(now,dt);
+  v215SyncControlsAndCounts(false);
+  v215RenderWorldUI();
+};
+
+const v215BaseBg=drawBackground;
+drawBackground=function(){v215BaseBg();v215DrawFutureCity();};
+
+v215InstallWorldUI();
+v215SyncControlsAndCounts(true);
+setTimeout(()=>syncHUD(true),0);
+/* === /v215 STABILITY CONTROLLER === */
+
 
 })();
 </script>
@@ -19232,10 +18883,9 @@ drawBackground=function(){v213PrevBg();v213DrawEarthNightCity();};
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v214</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v215</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
-    <div style="margin:0 14px 9px;padding:7px 10px;border:1px solid rgba(126,239,255,.28);border-radius:10px;background:rgba(86,231,255,.07);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v214</div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
     <input id="v150JumpSearch" type="search" autocomplete="off" placeholder="月、エアレンデル、ブラックホール…">
     <div id="v150JumpList"></div>
@@ -19582,11 +19232,11 @@ drawBackground=function(){v213PrevBg();v213DrawEarthNightCity();};
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v214';
+  window.INUBOSHI_GAME_VERSION='v215';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v214<small>BLACK HOLE ROUTE FIX / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v215<small>STABILITY PASS / CONSOLIDATED RUNTIME / 2026-09-05</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
