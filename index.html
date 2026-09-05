@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v188</title>
+<title>犬星くん GALAXY TOUR v189</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -12707,10 +12707,104 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
   };
 
-  function v188MiniMetric(icon,label,data){
+  const V189_STAR_SPIN={
+    '☀️ 太陽':{main:'ゆっくり',sub:'赤道で約25日',known:true},
+    '⭐ シリウス':{main:'やや高速',sub:'A星は約5日',known:true},
+    '🐶 プロキオン':{main:'ややゆっくり',sub:'十数日〜数十日級',known:false},
+    '🐶 ゴメイサ':{main:'かなり高速',sub:'Be星らしく高速回転',known:false},
+    '🐕 アダーラ':{main:'高速',sub:'B型星らしく速い',known:false},
+    '🐕 ミルザム':{main:'高速',sub:'B型星らしく速い',known:false},
+    '🐕 ウェズン':{main:'ゆっくり',sub:'進化した超巨星',known:false},
+    '🐕 アルドラ':{main:'高速',sub:'青色超巨星',known:false},
+    '💠 ベガ':{main:'超高速',sub:'約12.5時間',known:true},
+    '🌟 ポラリス':{main:'ゆっくり',sub:'脈動が主役の星',known:false},
+    '❤️ アンタレス':{main:'かなりゆっくり',sub:'巨大化してゆっくり回る',known:false},
+    '🔴 ベテルギウス':{main:'かなりゆっくり',sub:'年単位級の超低速と推定',known:false},
+    '❓ タビーの星':{main:'ふつう',sub:'主系列星として中くらい',known:false},
+    '🐕 VYおおいぬ座星':{main:'かなりゆっくり',sub:'巨大な赤色極超巨星',known:false},
+    '💥 イータ・カリーナ':{main:'複雑で不明',sub:'連星相互作用で単純比較しづらい',known:false},
+    '🧲 SGR 1806-20':{main:'超高速',sub:'約7.5秒',known:true},
+    '💙 R136a1':{main:'不明',sub:'超大質量で詳しい自転は不確か',known:false},
+    '✨ S Doradus':{main:'不明',sub:'変動が大きく単純比較しづらい',known:false},
+    '⭐ M31-V1':{main:'ゆっくり',sub:'脈動で大きさも変わる',known:false},
+    '💫 AF Andromedae':{main:'不明',sub:'詳しい自転は未確定',known:false},
+    '🟢 ロマーノ星 GR 290':{main:'不明',sub:'遷移段階で未確定',known:false},
+    '🌠 M33 Var C':{main:'不明',sub:'詳しい自転は未確定',known:false},
+    '⭐ M51-DS1':{main:'不明',sub:'遠方候補なので未確定',known:false},
+    '🎨 Warhol':{main:'不明',sub:'超遠方で測定困難',known:false},
+    '💙 イカロス':{main:'不明',sub:'超遠方で測定困難',known:false},
+    '🦋 モスラ':{main:'不明',sub:'単独星かも未確定',known:false},
+    '❤️ クイユル':{main:'不明',sub:'超遠方で測定困難',known:false},
+    '🦖 ゴジラ':{main:'不明',sub:'正体に不確定さあり',known:false},
+    '🔷 Abell 2744 LS1':{main:'不明',sub:'超遠方で測定困難',known:false},
+    '💠 MACS J0647 LS1':{main:'不明',sub:'超遠方で測定困難',known:false},
+    '✨ エアレンデル':{main:'不明',sub:'伴星の可能性もあり未確定',known:false}
+  };
+
+  const V189_METRIC_VIZ={
+    '☀️ 太陽':{size:12,light:12,spin:28},
+    '⭐ シリウス':{size:16,light:22,spin:58},
+    '🐶 プロキオン':{size:18,light:16,spin:34},
+    '🐶 ゴメイサ':{size:20,light:34,spin:88},
+    '🐕 アダーラ':{size:28,light:62,spin:74},
+    '🐕 ミルザム':{size:24,light:56,spin:70},
+    '🐕 ウェズン':{size:56,light:72,spin:22},
+    '🐕 アルドラ':{size:34,light:84,spin:68},
+    '💠 ベガ':{size:18,light:26,spin:96},
+    '🌟 ポラリス':{size:40,light:48,spin:18},
+    '❤️ アンタレス':{size:82,light:74,spin:12},
+    '🔴 ベテルギウス':{size:84,light:78,spin:10},
+    '❓ タビーの星':{size:15,light:14,spin:46},
+    '🐕 VYおおいぬ座星':{size:100,light:88,spin:8},
+    '💥 イータ・カリーナ':{size:38,light:94,spin:18},
+    '🧲 SGR 1806-20':{size:4,light:98,spin:100},
+    '💙 R136a1':{size:36,light:100,spin:0},
+    '✨ S Doradus':{size:58,light:90,spin:0},
+    '⭐ M31-V1':{size:38,light:58,spin:24},
+    '💫 AF Andromedae':{size:55,light:92,spin:0},
+    '🟢 ロマーノ星 GR 290':{size:46,light:84,spin:0},
+    '🌠 M33 Var C':{size:54,light:88,spin:0},
+    '⭐ M51-DS1':{size:82,light:74,spin:0},
+    '🎨 Warhol':{size:38,light:86,spin:0},
+    '💙 イカロス':{size:52,light:90,spin:0},
+    '🦋 モスラ':{size:48,light:88,spin:0},
+    '❤️ クイユル':{size:74,light:72,spin:0},
+    '🦖 ゴジラ':{size:56,light:94,spin:0},
+    '🔷 Abell 2744 LS1':{size:38,light:88,spin:0},
+    '💠 MACS J0647 LS1':{size:38,light:88,spin:0},
+    '✨ エアレンデル':{size:42,light:92,spin:0}
+  };
+
+  function v189MetricViz(kind,name=''){
+    const v=V189_METRIC_VIZ[name]||{};
+    const level=Number.isFinite(v[kind])?Math.max(0,Math.min(100,v[kind])):0;
+    if(kind==='size'){
+      const obj=6+Math.round(level*0.22);
+      return `<div class="v189Viz v189SizeViz ${level?'' :'unknown'}">
+        <div class="v189SizeWrap">
+          <span class="v189SizeSun"></span>
+          <span class="v189SizeObj" style="width:${obj}px;height:${obj}px"></span>
+        </div>
+        <div class="v189VizCap">☀️と比べた大きさのイメージ</div>
+      </div>`;
+    }
+    if(kind==='light'){
+      return `<div class="v189Viz v189LightViz ${level?'' :'unknown'}">
+        <div class="v189LightTrack"><i style="width:${Math.max(8,level)}%"></i></div>
+        <div class="v189LightScale"><span>ひかえめ</span><span>まぶしい</span></div>
+      </div>`;
+    }
+    return `<div class="v189Viz v189SpinViz ${level?'' :'unknown'}">
+      <div class="v189SpinTrack"><i style="width:${Math.max(8,level||12)}%"></i></div>
+      <div class="v189SpinScale"><span>🐢</span><span>🌀</span></div>
+    </div>`;
+  }
+
+  function v189MetricCard(kind,icon,label,data,name=''){
     if(!data)return '';
-    return `<div class="v188MetricCard">
+    return `<div class="v188MetricCard v189MetricCard ${kind}">
       <div class="v188MetricLabel">${icon} ${label}</div>
+      ${v189MetricViz(kind,name)}
       <strong>${v179Esc(data.main||'不明')}</strong>
       ${data.sub?`<small>${v179Esc(data.sub)}</small>`:''}
     </div>`;
@@ -12718,12 +12812,13 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function v188MetricsHTML(name=''){
     const x=V188_STAR_METRICS[name];
-    if(!x)return '';
+    const spin=V189_STAR_SPIN[name];
+    if(!x && !spin)return '';
     return `<div class="v188MetricGrid">`+
-      v188MiniMetric('📏','大きさ',x.size)+
-      v188MiniMetric('⚖️','質量',x.mass)+
-      v188MiniMetric('💡','明るさ',x.light)+
-      `</div>`;
+      v189MetricCard('size','📏','大きさ',x?.size,name)+
+      v189MetricCard('light','💡','明るさ',x?.light,name)+
+      v189MetricCard('spin','🌀','自転',spin,name)+
+      `</div><div class="v189MetricNote">※ 図は見やすさ重視のイメージ図。厳密な縮尺や等倍表示ではないよ。</div>`;
   }
 
   function v175DetailHTML(isEra){
@@ -12842,14 +12937,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v186StarContext{margin:0 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(111,163,255,.09),rgba(187,142,255,.07));border:1px solid rgba(151,190,255,.16)}
       .v186ContextRow{display:flex;align-items:flex-start;gap:9px;padding:3px 0}.v186ContextRow span{flex:0 0 auto;color:#bfe1ff;font:900 9px/1.35 system-ui}.v186ContextRow b{margin-left:auto;max-width:72%;color:#f4f8ff;font:900 9.5px/1.45 system-ui;text-align:right}.v186StarContext small{display:block;margin-top:6px;padding-top:7px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.52);font:700 8.3px/1.5 system-ui}
       .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
-      .v188MetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}.v188MetricCard{padding:10px 8px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(136,216,255,.038));border:1px solid rgba(149,220,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column;gap:5px;min-width:0}.v188MetricLabel{color:#bfefff;font:950 8px/1.2 system-ui;letter-spacing:.05em}.v188MetricCard strong{display:block;color:#fff;font:1000 9.5px/1.34 system-ui;word-break:keep-all}.v188MetricCard small{display:block;color:rgba(255,255,255,.62);font:800 7.2px/1.35 system-ui}.v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
+      .v188MetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}.v188MetricCard{padding:10px 8px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(136,216,255,.038));border:1px solid rgba(149,220,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column;gap:6px;min-width:0}.v188MetricLabel{color:#bfefff;font:950 8px/1.2 system-ui;letter-spacing:.05em}.v188MetricCard strong{display:block;color:#fff;font:1000 9.4px/1.34 system-ui;word-break:keep-all}.v188MetricCard small{display:block;color:rgba(255,255,255,.62);font:800 7.1px/1.35 system-ui}.v189Viz{padding:7px 6px;border-radius:10px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}.v189Viz.unknown{opacity:.72}.v189VizCap{margin-top:4px;color:rgba(255,255,255,.5);font:800 6.6px/1.25 system-ui;text-align:center}.v189SizeWrap{height:34px;display:flex;align-items:flex-end;justify-content:center;gap:10px}.v189SizeSun,.v189SizeObj{display:inline-block;border-radius:50%}.v189SizeSun{width:10px;height:10px;background:radial-gradient(circle,#fff4b5 0,#ffd54a 55%,#ff9b2f 100%);box-shadow:0 0 10px rgba(255,214,90,.4)}.v189SizeObj{background:radial-gradient(circle,#eefbff 0,#8ce7ff 60%,#729dff 100%);box-shadow:0 0 12px rgba(134,228,255,.28)}.v189LightTrack,.v189SpinTrack{height:12px;border-radius:999px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}.v189LightTrack i,.v189SpinTrack i{display:block;height:100%;border-radius:999px}.v189LightTrack i{background:linear-gradient(90deg,#fff3a0,#ffd257,#ff96dc)}.v189SpinTrack i{background:linear-gradient(90deg,#8fe7ff,#74a8ff,#d895ff)}.v189LightScale,.v189SpinScale{margin-top:4px;display:flex;justify-content:space-between;color:rgba(255,255,255,.5);font:800 6.6px/1 system-ui}.v189MetricNote{margin-top:6px;color:rgba(255,255,255,.54);font:800 7px/1.4 system-ui;text-align:center}.v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
       .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
       .v179Fact small{display:block;margin-bottom:4px;color:rgba(255,255,255,.42);font:800 7.5px/1 system-ui}
       .v179Fact b{display:block;color:#fff;font:900 9px/1.3 system-ui}
       .v179NameOrigin{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:11px 12px;border-radius:13px;background:rgba(255,210,125,.06);border:1px solid rgba(255,218,150,.13)}
       .v179NameOrigin b{color:#ffe0a8;font:950 9px/1.2 system-ui}
       .v179NameOrigin span{color:rgba(255,255,255,.77);font:720 9.5px/1.65 system-ui}
-      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}.v188MetricGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.v188MetricCard{padding:8px 6px}.v188MetricCard strong{font-size:8.2px}.v188MetricCard small{font-size:6.7px}}
+      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}.v188MetricGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.v188MetricCard{padding:8px 6px}.v188MetricCard strong{font-size:8px}.v188MetricCard small{font-size:6.5px}.v189SizeWrap{height:30px}.v189Viz{padding:6px 5px}}
     `;
     document.head.appendChild(st);
 
