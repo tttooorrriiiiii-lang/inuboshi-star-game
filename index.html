@@ -1006,6 +1006,40 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v216-recipe-visual-style">
+/* v216: intuitive size + brightness visuals */
+.v216SizeViz,.v216LightViz{
+  min-height:76px;border-radius:11px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:7px 5px;overflow:hidden
+}
+.v216SizeCompare{height:58px;width:100%;display:flex;align-items:flex-end;justify-content:space-around;gap:6px}
+.v216SunRef,.v216SizeOrb{display:block;border-radius:50%;flex:0 0 auto}
+.v216SunRef{width:22px;height:22px;background:radial-gradient(circle at 34% 30%,#fff7c6,#ffd35d 55%,#c98d22);box-shadow:0 0 12px rgba(255,213,86,.38)}
+.v216SizeOrb{width:var(--orb);height:var(--orb);max-width:66px;max-height:66px;background:radial-gradient(circle at 32% 28%,#f7fbff,#9fdcff 45%,#8174df 100%);box-shadow:0 0 14px rgba(145,203,255,.38);border:1px solid rgba(255,255,255,.72)}
+.v216SizeViz.unknown .v216SizeOrb{opacity:.3;filter:grayscale(1)}
+.v216SizeLabels{width:100%;display:flex;justify-content:space-around;color:rgba(255,255,255,.46);font:800 6.2px/1 system-ui;margin-top:3px}
+
+.v216LightViz{position:relative;min-height:82px}
+.v216Bulb{position:relative;width:52px;height:58px;display:flex;justify-content:center;align-items:flex-start}
+.v216BulbGlass{display:block;width:38px;height:38px;border-radius:50%;border:2px solid rgba(255,255,255,.72);background:rgba(78,83,96,.48);box-shadow:0 0 2px rgba(255,255,255,.2)}
+.v216BulbBase{position:absolute;top:35px;width:22px;height:14px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#d5d8de,#6b707a);border:1px solid rgba(255,255,255,.5)}
+.v216LightViz.mid .v216BulbGlass{background:rgba(235,195,89,.68);box-shadow:0 0 var(--glow) rgba(255,211,91,.55),inset 0 0 13px rgba(255,243,183,.56)}
+.v216LightViz.bright .v216BulbGlass{background:rgba(255,221,74,var(--bulb-alpha));border-color:#fff4af;box-shadow:0 0 var(--glow) rgba(255,218,71,.96),0 0 calc(var(--glow) + 12px) rgba(255,190,47,.55),inset 0 0 14px rgba(255,255,225,.9)}
+.v216LightViz.dim .v216BulbGlass{background:rgba(57,61,72,.86);border-color:rgba(185,191,205,.55);box-shadow:0 0 5px rgba(110,120,145,.16)}
+.v216LightViz.unknown{opacity:.72}
+.v216LightScale{width:100%;display:flex;justify-content:space-between;color:rgba(255,255,255,.46);font:800 6.2px/1 system-ui;margin-top:1px;padding:0 5px}
+
+@media(max-width:560px){
+  .v216SizeViz,.v216LightViz{min-height:68px;padding:5px 3px}
+  .v216SizeCompare{height:50px}
+  .v216SunRef{width:19px;height:19px}
+  .v216SizeOrb{max-width:58px;max-height:58px}
+  .v216Bulb{transform:scale(.9);height:52px}
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -12834,7 +12868,31 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     return {main:v190SpinDetail(data),sub:data.known?'':'※ 詳しい自転周期はまだ不確かなこともある'};
   }
 
+  function v216SizeVisual(name=''){
+    const level=v190MetricLevel('size',name);
+    if(level==null)return `<div class="v216SizeViz unknown"><div class="v216SizeOrb" style="--orb:28px"></div><small>大きさ不明</small></div>`;
+    const diameter=Math.round(16+level*.5);
+    return `<div class="v216SizeViz" aria-label="大きさイメージ">
+      <div class="v216SizeCompare"><span class="v216SunRef" title="太陽の目安"></span><span class="v216SizeOrb" style="--orb:${diameter}px"></span></div>
+      <div class="v216SizeLabels"><span>太陽の目安</span><span>この星</span></div>
+    </div>`;
+  }
+
+  function v216LightVisual(name=''){
+    const level=v190MetricLevel('light',name);
+    const lv=level==null?18:level;
+    const cls=level==null?'unknown':lv<=10?'dim':lv<=48?'mid':'bright';
+    const glow=Math.round(4+lv*.24);
+    const alpha=(.18+lv*.0075).toFixed(2);
+    return `<div class="v216LightViz ${cls}" style="--glow:${glow}px;--bulb-alpha:${alpha}" aria-label="明るさイメージ">
+      <div class="v216Bulb"><span class="v216BulbGlass"></span><span class="v216BulbBase"></span></div>
+      <div class="v216LightScale"><span>暗い</span><span>普通</span><span>明るい</span></div>
+    </div>`;
+  }
+
   function v190MetricGauge(kind,name=''){
+    if(kind==='size')return v216SizeVisual(name);
+    if(kind==='light')return v216LightVisual(name);
     const level=v190MetricLevel(kind,name);
     const fill=level==null?18:Math.max(10,level);
     const scale=v190GaugeScale(kind);
@@ -15019,7 +15077,52 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   function routeApi(){return window.__v170RouteAPI;}
   function debugApi(){return window.__inuboshiDebugAPI;}
 
+  function v216GoBlackHoleDirect(){
+    const si=systems.findIndex(s=>s?.theme==='blackhole'||s?.name==='⚫ ブラックホール');
+    if(si<0)return false;
+
+    // First ask the canonical route controller to switch its internal phase.
+    try{routeApi()?.blackHole?.();}catch(e){}
+
+    // Then enforce the actual game state here. This prevents the hidden-menu
+    // jump from being cancelled by an old route wrapper or a paused overlay.
+    try{v86ClearRide?.();}catch(e){}
+    try{v94SatellitePending=false;}catch(e){}
+    try{satellites=[];}catch(e){}
+    try{alienRideUntil=0;}catch(e){}
+    try{wormholeActive=false;blackHoleActive=false;}catch(e){}
+    try{whiteHoleTriggered=false;blackHoleVisited=true;}catch(e){}
+
+    system=si;stage=0;camera=0;paused=false;
+    p.x=105;p.vy=0;
+    try{p.y=Math.max(34,groundY()-p.h);}catch(e){}
+
+    [reward,comm,trans,gameOverEl,criticalEl].forEach(el=>{
+      if(!el)return;
+      try{el.classList?.remove('on');}catch(e){}
+      if(el===trans){el.style.display='none';el.style.background='';}
+    });
+
+    stageStart();
+    camera=0;p.x=105;p.vy=0;
+    try{p.y=Math.max(34,groundY()-p.h);}catch(e){}
+    syncHUD(true);
+    showToast('⚫ ブラックホール内部へ！',1000);
+    return system===si&&S()?.name==='🕳️ ブラックホール内部';
+  }
+  window.__v216GoBlackHole=v216GoBlackHoleDirect;
+  window.__v216State=()=>({system:systems[system]?.name||'',stage:S()?.name||'',index:system,paused});
+
   function jumpStage(si,ti){
+    const sys=systems[si];
+    if(sys?.theme==='blackhole'||sys?.name==='⚫ ブラックホール'){
+      const ok=v216GoBlackHoleDirect();
+      if(ok){
+        document.getElementById('v62EndingDev')?.classList.remove('on');
+        paused=false;
+      }
+      return;
+    }
     const api=routeApi();
     const ok=api?.jumpStage?.(si,ti) ?? debugApi()?.jump?.(si,ti);
     if(ok){
@@ -15039,7 +15142,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(action==='birth')ok=!!api?.earthBirth?.();
     if(action==='earthHistory')ok=!!api?.earthHistory?.();
     if(action==='finalEarth')ok=!!api?.finalEarth?.();
-    if(action==='blackhole')ok=!!api?.blackHole?.();
+    if(action==='blackhole')ok=!!v216GoBlackHoleDirect();
     if(action?.startsWith('future')){
       const step=Number(action.replace('future',''));
       const si=systems.findIndex(x=>x?.futureEra&&x.futureStep===step);
@@ -15068,15 +15171,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v214';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v215</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v216';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v216</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v215</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v216</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15628,7 +15731,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v215';
+window.INUBOSHI_GAME_VERSION='v216';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -18883,7 +18986,7 @@ setTimeout(()=>syncHUD(true),0);
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v215</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v216</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -18948,8 +19051,8 @@ setTimeout(()=>syncHUD(true),0);
         ).toLowerCase();
 
         row.addEventListener('click',()=>{
-          const isBH=cleanName(sys.name)==='⚫ ブラックホール';
-          if(isBH&&window.__v170RouteAPI?.blackHole)window.__v170RouteAPI.blackHole();
+          const isBH=sys?.theme==='blackhole'||cleanName(sys.name)==='⚫ ブラックホール';
+          if(isBH&&window.__v216GoBlackHole)window.__v216GoBlackHole();
           else api.jump(st.si,st.ti);
           close(false);
         });
@@ -18998,7 +19101,7 @@ setTimeout(()=>syncHUD(true),0);
     open();
   });
   document.getElementById('v214BlackHoleDirect')?.addEventListener('click',()=>{
-    const ok=window.__v170RouteAPI?.blackHole?.();
+    const ok=window.__v216GoBlackHole?.() ?? window.__v170RouteAPI?.blackHole?.();
     if(ok)close(false);
   });
   closeBtn.addEventListener('click',()=>close(true));
@@ -19232,7 +19335,7 @@ setTimeout(()=>syncHUD(true),0);
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v215';
+  window.INUBOSHI_GAME_VERSION='v216';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
