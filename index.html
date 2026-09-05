@@ -1100,6 +1100,29 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 @media(max-width:430px){.v229StarProfile{gap:6px}.v229ProfileCard{padding:9px 7px;border-radius:12px}.v229ProfileCard strong{font-size:10px}.v229ProfileCard small{font-size:7px}.v230MagStep i,.v230MultiViz .orb,.v230FateViz .node{width:14px;height:14px;font-size:9px}.v230MagStep b{font-size:5.5px}.v231BurstWrap{width:30px;height:30px}.v231BurstCore{width:20px;height:20px;font-size:12px}.v231BurstRay{height:9px;margin-top:-15px}}
 </style>
 
+
+<style id="v237-constellation-style">
+.v237ConstellationCard{
+  margin:0 0 11px;padding:10px 11px 9px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(64,103,173,.12),rgba(141,90,190,.08));
+  border:1px solid rgba(155,193,255,.16);overflow:hidden
+}
+.v237ConstellationHead{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.v237ConstellationHead b{color:#dbeaff;font:1000 9.5px/1.2 system-ui}
+.v237ConstellationHead span{margin-left:auto;color:rgba(255,255,255,.46);font:800 7px/1.2 system-ui}
+.v237ConstellationSvg{display:block;width:100%;height:94px;border-radius:11px;background:
+  radial-gradient(circle at 20% 18%,rgba(118,167,255,.10),transparent 32%),
+  radial-gradient(circle at 78% 72%,rgba(202,135,255,.08),transparent 34%),
+  rgba(2,6,18,.76)}
+.v237ConstLine{stroke:rgba(178,211,255,.42);stroke-width:1.35;fill:none;stroke-linecap:round}
+.v237ConstStar{fill:#f7fbff;filter:drop-shadow(0 0 3px rgba(218,236,255,.7))}
+.v237ConstStar.dim{fill:#b9c8e8;opacity:.72}
+.v237ConstStar.key{fill:#fff1a8;stroke:#fff8d7;stroke-width:1.2;filter:drop-shadow(0 0 6px rgba(255,230,128,.95))}
+.v237ConstLabel{fill:#fff1b8;font:900 7px/1 system-ui}
+.v237ConstCaption{margin-top:6px;color:rgba(255,255,255,.55);font:700 7.5px/1.4 system-ui}
+@media(max-width:560px){.v237ConstellationSvg{height:84px}.v237ConstLabel{font-size:6.5px}}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -1259,7 +1282,7 @@ name:'😈 アルゴル',distance:'地球から約93光年',desc:'ペルセウ�
 {name:'😈 アルゴル',distance:'約93光年',desc:'「悪魔の星」とも呼ばれる、食変光星の代表格',goodColor:'#dfe8ff',sky:['#050613','#20264f'],ground:'#7078a4',ground2:'#34395d',planet:'#eef1ff',event:'ECLIPSE PULSE',eventText:'😈 食変光！ 星の明るさが周期的に下がる！',gravity:.50,jump:17.4}
 ]},
 {
-name:'🌾 スピカ',distance:'地球から約250光年',desc:'おとめ座の一等星。青白く強く輝く、非常に近い連星の組み合わせ',theme:'milky',stages:[
+name:'🌾 スピカ',distance:'地球から約250光年',desc:'おとめ座の1等星。青白く強く輝く、非常に近い連星の組み合わせ',theme:'milky',stages:[
 {name:'🌾 スピカ',distance:'約250光年',desc:'春の代表星。互いに近すぎる青白い連星系',goodColor:'#d7f1ff',sky:['#030816','#16416e'],ground:'#6184a3',ground2:'#304a63',planet:'#e7f6ff',event:'TIDAL TWIN',eventText:'💫 近接連星！ 2つの星の光がきらめく！',gravity:.49,jump:17.5}
 ]},
 {
@@ -1271,7 +1294,7 @@ name:'❓ タビーの星',distance:'地球から約1,470光年',desc:'Keplerが
 {name:'❓ タビーの星',distance:'約1,470光年',desc:'原因不明の大きな減光を繰り返した「謎の星」。塵が有力候補',goodColor:'#fff0b8',sky:['#050713','#22263f'],ground:'#726b56',ground2:'#322e27',planet:'#fff0c7',event:'MYSTERY DIMMING',eventText:'❓ 星の光が突然20%近く暗くなる！',gravity:.50,jump:17.4}
 ]},
 {
-name:'🦢 デネブ',distance:'地球から約1,400〜2,600光年',desc:'はくちょう座の一等星。夏の大三角の一角だが、他の2星よりずっと遠い超巨星',theme:'cloud',stages:[
+name:'🦢 デネブ',distance:'地球から約1,400〜2,600光年',desc:'はくちょう座の1等星。夏の大三角の一角だが、他の2星よりずっと遠い超巨星',theme:'cloud',stages:[
 {name:'🦢 デネブ',distance:'約1,400〜2,600光年',desc:'夏の大三角の一角。とても遠いのに目立つ青白い超巨星',goodColor:'#eef8ff',sky:['#040915','#1b3d5f'],ground:'#7d91a5',ground2:'#415263',planet:'#f8fbff',event:'DISTANT BEACON',eventText:'🦢 超遠方の灯台星！ 遠いのに強く輝く！',gravity:.34,jump:17.6}
 ]},
 {
@@ -1839,7 +1862,7 @@ function wormholeMilestoneEffect(count){
  else if(count===2){transTitle.innerHTML='🦅 ALTAIR';nextEl.textContent='七夕の彦星として有名な高速自転星へ。';subEl.textContent='WORMHOLE 2';showToast('🦅 アルタイル！ いぬかいぼしの別名もあるで。',1950)}
  else if(count===3){transTitle.innerHTML='😈 ALGOL';nextEl.textContent='周期的に暗くなる、悪魔の星へ。';subEl.textContent='WORMHOLE 3';showToast('😈 アルゴル！ 食変光星の代表格や。',1950)}
  else if(count===4){transTitle.innerHTML='🕰️ METHUSELAH';nextEl.textContent='宇宙でも最古級の古い星へ。';subEl.textContent='WORMHOLE 4';showToast('🕰️ メトシェラ星！ 太古の宇宙の名残やで。',1900)}
- else if(count===5){transTitle.innerHTML='🌾 SPICA';nextEl.textContent='春を代表する、青白い近接連星へ。';subEl.textContent='WORMHOLE 5';showToast('🌾 スピカ！ おとめ座の青白い一等星。',1950)}
+ else if(count===5){transTitle.innerHTML='🌾 SPICA';nextEl.textContent='春を代表する、青白い近接連星へ。';subEl.textContent='WORMHOLE 5';showToast('🌾 スピカ！ おとめ座の青白い1等星。',1950)}
  else if(count===6){transTitle.innerHTML='❓ TABBY’S STAR';nextEl.textContent='突然暗くなる、謎の星へ。';subEl.textContent='WORMHOLE 6';showToast('❓ タビーの星！ 光が突然ごっそり減る…',1900)}
  else if(count===7){transTitle.innerHTML='🦢 DENEB';nextEl.textContent='夏の大三角でいちばん遠い超巨星へ。';subEl.textContent='WORMHOLE 7';showToast('🦢 デネブ！ 遠いのにめっちゃ目立つ。',2000)}
  else if(count===8){transTitle.innerHTML='🐕 VY CANIS MAJORIS';nextEl.textContent='太陽系サイズ級にふくらんだ赤い犬星の怪物へ。';subEl.textContent='DOG STAR 2';showToast('🐕 VYおおいぬ座星！ 巨大ガス噴出に注意！',2000)}
@@ -6572,8 +6595,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       type:'白く輝く主系列星'
     },
     '🌾 スピカ':{
-      about:'おとめ座の一等星で、実体は高温の青白い2つの星からなる近接連星。互いが近すぎて、形や光が重力で影響を受ける。',
-      facts:[['種類','高温の近接連星'],['明るさ','春の一等星'],['色','青白い'],['位置','おとめ座']],
+      about:'おとめ座の1等星で、実体は高温の青白い2つの星からなる近接連星。互いが近すぎて、形や光が重力で影響を受ける。',
+      facts:[['種類','高温の近接連星'],['明るさ','春の1等星'],['色','青白い'],['位置','おとめ座']],
       point:'1個の星に見えるのに、実際はかなり近い2つの星の組み合わせ。見た目以上にダイナミックな系。',
       origin:'Spica はラテン語で「麦の穂」。おとめ座の手にある穂を表す名前として伝わった。'
     },
@@ -6614,8 +6637,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       type:'A型白色超巨星'
     },
     '🦢 デネブ':{
-      about:'はくちょう座の尾にあたる一等星で、A型白色超巨星として知られる。夏の大三角の一角だが、ベガやアルタイルよりずっと遠い。',
-      facts:[['種類','A型白色超巨星'],['距離','約1,400〜2,600光年級'],['特徴','遠いのに一等星'],['位置','夏の大三角']],
+      about:'はくちょう座の尾にあたる1等星で、A型白色超巨星として知られる。夏の大三角の一角だが、ベガやアルタイルよりずっと遠い。',
+      facts:[['種類','A型白色超巨星'],['距離','約1,400〜2,600光年級'],['特徴','遠いのに1等星'],['位置','夏の大三角']],
       point:'空ではすぐ近くに見える星どうしでも、実際の距離は全然ちがう。その代表例としてデネブは教材向き。',
       origin:'Deneb はアラビア語 dhanab（尾）に由来し、「はくちょうの尾」を意味する。'
     },
@@ -11446,7 +11469,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       point:'明るく見えるのは、もともと明るいことに加えて地球から8.6光年と比較的近いから。'
     },
     '🦅 アルタイル':{
-      about:'わし座の一等星で、七夕の彦星として有名な近い恒星。非常に高速で回っているため、完全な球ではなく赤道方向にふくらんでいる。',
+      about:'わし座の1等星で、七夕の彦星として有名な近い恒星。非常に高速で回っているため、完全な球ではなく赤道方向にふくらんでいる。',
       point:'昔の日本では「いぬかいぼし」とも呼ばれた。ベガ・デネブと並ぶ夏の大三角の一角やけど、デネブほど遠くはない。'
     },
     '😈 アルゴル':{
@@ -11454,7 +11477,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       point:'「暗くなる不吉な星」として昔から目立っていたが、今では連星が隠し合う物理現象だとわかっている。'
     },
     '🌾 スピカ':{
-      about:'おとめ座の一等星で、青白く高温の2つの星からなる近接連星。春の夜空でよく目立つ。',
+      about:'おとめ座の1等星で、青白く高温の2つの星からなる近接連星。春の夜空でよく目立つ。',
       point:'1個の強い光に見えるけど、実際はかなり近い2星のコンビ。重力の影響でふつうの連星より関係が濃い。'
     },
     '💠 ベガ':{
@@ -11478,7 +11501,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       point:'宇宙人の巨大構造物説まで話題になったが、現在は波長によって暗くなり方が違うことなどから、不均一な塵が光を遮る説明が有力。それでも細かな仕組みは研究対象。'
     },
     '🦢 デネブ':{
-      about:'はくちょう座の一等星で、A型白色超巨星として知られる。夏の大三角の一角だが、ベガやアルタイルよりずっと遠い。',
+      about:'はくちょう座の1等星で、A型白色超巨星として知られる。夏の大三角の一角だが、ベガやアルタイルよりずっと遠い。',
       point:'空で同じ三角形に見えても、実際の奥行きはかなりバラバラ。そのギャップをわかりやすく感じられる代表星。'
     },
     '🐕 VYおおいぬ座星':{
@@ -11790,7 +11813,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   const V179_STAR_INFO={
     '🦅 アルタイル':{
-      about:'わし座の一等星で、七夕の彦星として有名なA型主系列星。非常に高速で自転しているため、赤道方向にふくらんだ扁平な形をしている。',
+      about:'わし座の1等星で、七夕の彦星として有名なA型主系列星。非常に高速で自転しているため、赤道方向にふくらんだ扁平な形をしている。',
       facts:[['種類','A型主系列星'],['別名','彦星'],['自転','約9時間級'],['昔の呼び名','いぬかいぼし']],
       point:'同じ夏の大三角でも、ベガと並んで近い側の星。しかも自転がとても速く、形まで少しつぶれているのが個性。',
       origin:'Altair はアラビア語 al-nasr al-tā’ir に由来し、「飛ぶ鷲」の意味。日本では七夕の彦星として親しまれる。'
@@ -12103,14 +12126,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   Object.assign(V179_STAR_INFO,{
     '🌾 スピカ':{
-      about:'おとめ座の一等星で、実体は高温の青白い2つの星からなる近接連星。互いが近すぎて、形や光が重力で影響を受ける。',
-      facts:[['種類','高温の近接連星'],['明るさ','春の一等星'],['色','青白い'],['位置','おとめ座']],
+      about:'おとめ座の1等星で、実体は高温の青白い2つの星からなる近接連星。互いが近すぎて、形や光が重力で影響を受ける。',
+      facts:[['種類','高温の近接連星'],['明るさ','春の1等星'],['色','青白い'],['位置','おとめ座']],
       point:'1個の星に見えるのに、実際はかなり近い2つの星の組み合わせ。見た目以上にダイナミックな系。',
       origin:'Spica はラテン語で「麦の穂」。おとめ座の手にある穂を表す名前として伝わった。'
     },
     '🦢 デネブ':{
-      about:'はくちょう座の尾にあたる一等星で、A型白色超巨星として知られる。夏の大三角の一角だが、ベガやアルタイルよりずっと遠い。',
-      facts:[['種類','A型白色超巨星'],['距離','約1,400〜2,600光年級'],['特徴','遠いのに一等星'],['位置','夏の大三角']],
+      about:'はくちょう座の尾にあたる1等星で、A型白色超巨星として知られる。夏の大三角の一角だが、ベガやアルタイルよりずっと遠い。',
+      facts:[['種類','A型白色超巨星'],['距離','約1,400〜2,600光年級'],['特徴','遠いのに1等星'],['位置','夏の大三角']],
       point:'空ではすぐ近くに見える星どうしでも、実際の距離は全然ちがう。その代表例としてデネブは教材向き。',
       origin:'Deneb はアラビア語 dhanab（尾）に由来し、「はくちょうの尾」を意味する。'
     }
@@ -12840,17 +12863,17 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '😈 アルゴル':{mag:'約2.1〜3.4等',magSub:'食のたびに暗くなる',multi:'3重星系',multiSub:'近接2星＋遠い伴星',fate:'白色矮星中心の系へ',fateSub:'通常の超新星候補ではない',fateClass:'calm'},
     '🕰️ メトシェラ星':{mag:'約7.2等',magSub:'肉眼ではかなり厳しい',multi:'1個星扱い',multiSub:'確実な近接伴星は未確認',fate:'白色矮星へ',fateSub:'低質量なので超新星にはならない',fateClass:'calm'},
     '🐶 ゴメイサ':{mag:'約2.9等',magSub:'肉眼で見える',multi:'1個星扱い',multiSub:'近接伴星は未確定',fate:'白色矮星の可能性大',fateSub:'質量次第で進化には幅あり',fateClass:'unknown'},
-    '🐕 アダーラ':{mag:'約1.5等',magSub:'かなり明るい一等星',multi:'2重星系',multiSub:'伴星が知られている',fate:'超新星候補',fateSub:'大質量星｜爆発時期は不明',fateClass:'supernova'},
+    '🐕 アダーラ':{mag:'約1.5等',magSub:'かなり明るい1等星',multi:'2重星系',multiSub:'伴星が知られている',fate:'超新星候補',fateSub:'大質量星｜爆発時期は不明',fateClass:'supernova'},
     '🐕 ミルザム':{mag:'約2.0等',magSub:'肉眼で明るい',multi:'1個星扱い',multiSub:'確実な近接伴星は未確定',fate:'超新星候補',fateSub:'大質量星｜時期は不明',fateClass:'supernova'},
     '🐕 ウェズン':{mag:'約1.8等',magSub:'肉眼で明るい',multi:'1個星扱い',multiSub:'伴星は未確定',fate:'超新星候補',fateSub:'黄色超巨星｜寿命後半',fateClass:'supernova'},
     '🐕 アルドラ':{mag:'約2.4等',magSub:'肉眼で見える',multi:'1個星扱い',multiSub:'伴星は未確定',fate:'超新星候補',fateSub:'青色超巨星｜時期は不明',fateClass:'supernova'},
     '💠 ベガ':{mag:'約0.03等',magSub:'明るさの基準に使われた星',multi:'1個星',multiSub:'近接伴星は確認されていない',fate:'白色矮星へ',fateSub:'超新星にはならない見込み',fateClass:'calm'},
-    '🌾 スピカ':{mag:'約1.0等',magSub:'春の代表的な一等星',multi:'2重星',multiSub:'かなり接近した連星',fate:'超新星候補',fateSub:'主星は大質量｜時期は不明',fateClass:'supernova'},
+    '🌾 スピカ':{mag:'約1.0等',magSub:'春の代表的な1等星',multi:'2重星',multiSub:'かなり接近した連星',fate:'超新星候補',fateSub:'主星は大質量｜時期は不明',fateClass:'supernova'},
     '🌟 ポラリス':{mag:'約2.0等',magSub:'少し変光する',multi:'3重星系',multiSub:'A・Ab・B',fate:'白色矮星へ',fateSub:'主星は超新星質量には届かない見込み',fateClass:'calm'},
-    '❤️ アンタレス':{mag:'約0.6〜1.6等',magSub:'変光する赤い一等星',multi:'2重星',multiSub:'青白い伴星Bがいる',fate:'🚨 超新星候補',fateSub:'寿命終盤｜いつ爆発するかは不明',fateClass:'supernova'},
+    '❤️ アンタレス':{mag:'約0.6〜1.6等',magSub:'変光する赤い1等星',multi:'2重星',multiSub:'青白い伴星Bがいる',fate:'🚨 超新星候補',fateSub:'寿命終盤｜いつ爆発するかは不明',fateClass:'supernova'},
     '🔴 ベテルギウス':{mag:'約0〜1.6等',magSub:'大きく明るさが変わる',multi:'伴星あり',multiSub:'近い伴星 Siwarha が確認された',fate:'🚨 超新星候補',fateSub:'終盤だが「間近」と断定はできない',fateClass:'supernova'},
     '❓ タビーの星':{mag:'約11.7等',magSub:'肉眼では見えない',multi:'広い2重星候補',multiSub:'遠い赤色矮星伴星があると考えられる',fate:'白色矮星へ',fateSub:'超新星にはならない見込み',fateClass:'calm'},
-    '🦢 デネブ':{mag:'約1.25等',magSub:'とても遠いのに一等星',multi:'1個星扱い',multiSub:'確実な近接伴星は未確認',fate:'🚨 超新星候補',fateSub:'白色超巨星｜爆発時期は不明',fateClass:'supernova'},
+    '🦢 デネブ':{mag:'約1.25等',magSub:'とても遠いのに1等星',multi:'1個星扱い',multiSub:'確実な近接伴星は未確認',fate:'🚨 超新星候補',fateSub:'白色超巨星｜爆発時期は不明',fateClass:'supernova'},
     '🐕 VYおおいぬ座星':{mag:'約6.5〜9等',magSub:'変光＋塵で暗さが変わる',multi:'1個星扱い',multiSub:'確実な伴星は未確認',fate:'🚨 超新星候補',fateSub:'赤色極超巨星｜寿命最終盤級',fateClass:'supernova'},
     '💥 イータ・カリーナ':{mag:'現在 約4〜5等級',magSub:'巨大噴火時は−1等級級まで増光',multi:'2重星',multiSub:'超大質量の連星系',fate:'🚨 超新星候補',fateSub:'非常に大質量｜時期は予測できない',fateClass:'supernova'},
     '🪐 Stephenson 2-18':{mag:'肉眼では見えない',magSub:'塵に隠れ、赤外線で目立つ',multi:'不明',multiSub:'伴星の有無は確定していない',fate:'超新星候補',fateSub:'大質量なら核崩壊型へ｜推定幅あり',fateClass:'supernova'},
@@ -12890,10 +12913,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
     const a=tier(lo), b=tier(hi);
     if(a===7) return {main:'肉眼では見えない',detail:`詳しく ${s}`,range:[],visible:false};
-    const labels=['','一','二','三','四','五','六'];
+    const labels=['','1','2','3','4','5','6'];
     let main='';
     if(b===7){
-      main = a===6 ? '六等星前後' : `${labels[a]}〜六等星`;
+      main = a===6 ? '6等星前後' : `${labels[a]}〜6等星`;
     }else{
       main = a===b ? `${labels[a]}等星` : `${labels[a]}〜${labels[b]}等星`;
     }
@@ -12974,6 +12997,57 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <strong>${v179Esc(fate.main||'不明')}</strong>
         <small>${v179Esc(fate.detail||'')}</small>
       </div>
+    </div>`;
+  }
+
+
+  // v237: 星が「どの星座のどこにいるか」を簡略図で見せる。
+  // 配置は学習用の模式図。正確な星図・角距離ではなく、星座の形をつかむための図。
+  const V237_CONSTELLATIONS={
+    '🌾 スピカ':{title:'♍ おとめ座',key:'スピカ',pts:[[14,48],[29,38],[45,44],[58,32],[73,39],[87,28],[58,58],[47,72],[70,70]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[2,6],[6,7],[6,8]],keyIndex:8},
+    '⭐ シリウス':{title:'🐕 おおいぬ座',key:'シリウス',pts:[[18,25],[32,39],[46,34],[58,47],[70,61],[83,69],[54,67],[35,61],[25,77]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],keyIndex:0},
+    '🐕 VYおおいぬ座星':{title:'🐕 おおいぬ座',key:'VY CMa',pts:[[18,25],[32,39],[46,34],[58,47],[70,61],[83,69],[54,67],[35,61],[25,77]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],keyIndex:6},
+    '🐕 アダーラ':{title:'🐕 おおいぬ座',key:'アダーラ',pts:[[18,25],[32,39],[46,34],[58,47],[70,61],[83,69],[54,67],[35,61],[25,77]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],keyIndex:5},
+    '🐕 ミルザム':{title:'🐕 おおいぬ座',key:'ミルザム',pts:[[18,25],[32,39],[46,34],[58,47],[70,61],[83,69],[54,67],[35,61],[25,77]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],keyIndex:1},
+    '🐕 ウェズン':{title:'🐕 おおいぬ座',key:'ウェズン',pts:[[18,25],[32,39],[46,34],[58,47],[70,61],[83,69],[54,67],[35,61],[25,77]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],keyIndex:4},
+    '🐕 アルドラ':{title:'🐕 おおいぬ座',key:'アルドラ',pts:[[18,25],[32,39],[46,34],[58,47],[70,61],[83,69],[54,67],[35,61],[25,77]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[3,6],[6,7],[7,8]],keyIndex:8},
+    '🐶 プロキオン':{title:'🐶 こいぬ座',key:'プロキオン',pts:[[28,38],[72,57]],lines:[[0,1]],keyIndex:0},
+    '🐶 ゴメイサ':{title:'🐶 こいぬ座',key:'ゴメイサ',pts:[[28,38],[72,57]],lines:[[0,1]],keyIndex:1},
+    '🦅 アルタイル':{title:'🦅 わし座',key:'アルタイル',pts:[[13,48],[30,42],[48,50],[67,39],[85,31],[51,69]],lines:[[0,1],[1,2],[2,3],[3,4],[2,5]],keyIndex:2},
+    '😈 アルゴル':{title:'✨ ペルセウス座',key:'アルゴル',pts:[[17,23],[31,36],[46,46],[58,35],[71,44],[84,58],[45,66],[31,78]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[2,6],[6,7]],keyIndex:4},
+    '💠 ベガ':{title:'🎵 こと座',key:'ベガ',pts:[[30,23],[48,42],[66,37],[72,67],[44,72]],lines:[[0,1],[1,2],[2,3],[3,4],[4,1]],keyIndex:0},
+    '🌟 ポラリス':{title:'🧭 こぐま座',key:'ポラリス',pts:[[16,27],[32,37],[47,48],[58,60],[72,56],[84,68],[69,77]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3]],keyIndex:0},
+    '❤️ アンタレス':{title:'♏ さそり座',key:'アンタレス',pts:[[13,23],[27,31],[39,42],[50,52],[61,59],[72,65],[83,57],[88,43],[80,32]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,8]],keyIndex:3},
+    '🔴 ベテルギウス':{title:'🏹 オリオン座',key:'ベテルギウス',pts:[[25,20],[72,25],[40,45],[51,48],[62,51],[29,76],[72,77]],lines:[[0,2],[2,3],[3,4],[4,1],[2,5],[4,6],[0,1],[5,6]],keyIndex:0},
+    '❓ タビーの星':{title:'🦢 はくちょう座',key:'タビーの星',pts:[[18,48],[38,48],[56,47],[75,47],[89,46],[55,23],[56,72]],lines:[[0,1],[1,2],[2,3],[3,4],[2,5],[2,6]],keyIndex:3},
+    '🦢 デネブ':{title:'🦢 はくちょう座',key:'デネブ',pts:[[18,48],[38,48],[56,47],[75,47],[89,46],[55,23],[56,72]],lines:[[0,1],[1,2],[2,3],[3,4],[2,5],[2,6]],keyIndex:5},
+    '💥 イータ・カリーナ':{title:'⛵ りゅうこつ座',key:'イータ・カリーナ',pts:[[14,61],[28,50],[43,55],[57,42],[73,47],[88,30],[68,69],[49,73]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[4,6],[6,7],[7,2]],keyIndex:3},
+    '🕰️ メトシェラ星':{title:'♎ てんびん座',key:'メトシェラ星',pts:[[24,32],[47,40],[70,29],[60,64],[36,68]],lines:[[0,1],[1,2],[1,3],[3,4],[4,0]],keyIndex:4},
+    '💙 R136a1':{title:'🐟 かじき座',key:'R136a1',pts:[[16,50],[31,37],[49,42],[67,31],[83,43],[70,63],[48,69],[28,63]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0]],keyIndex:5},
+    '✨ S Doradus':{title:'🐟 かじき座',key:'S Doradus',pts:[[16,50],[31,37],[49,42],[67,31],[83,43],[70,63],[48,69],[28,63]],lines:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7],[7,0]],keyIndex:3}
+  };
+
+  function v237ConstellationHTML(name=''){
+    const c=V237_CONSTELLATIONS[name];
+    if(!c)return '';
+    const lines=(c.lines||[]).map(([a,b])=>{
+      const p1=c.pts[a],p2=c.pts[b];
+      return `<line class="v237ConstLine" x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}"></line>`;
+    }).join('');
+    const stars=(c.pts||[]).map((p,i)=>{
+      const key=i===c.keyIndex;
+      const r=key?2.8:(i%3===0?1.8:1.4);
+      return `<circle class="v237ConstStar ${key?'key':'dim'}" cx="${p[0]}" cy="${p[1]}" r="${r}"></circle>`;
+    }).join('');
+    const kp=c.pts[c.keyIndex]||[50,50];
+    const lx=Math.min(82,Math.max(8,kp[0]+4)), ly=Math.min(86,Math.max(10,kp[1]-5));
+    return `<div class="v237ConstellationCard">
+      <div class="v237ConstellationHead"><b>✨ 星座の中では</b><span>簡略図</span></div>
+      <svg class="v237ConstellationSvg" viewBox="0 0 100 94" role="img" aria-label="${v179Esc(c.title)}の簡略図">
+        ${lines}${stars}
+        <text class="v237ConstLabel" x="${lx}" y="${ly}">${v179Esc(c.key)}</text>
+      </svg>
+      <div class="v237ConstCaption"><b>${v179Esc(c.title)}</b> の中で、黄色く光っている点がこの星。</div>
     </div>`;
   }
 
@@ -13078,7 +13152,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🦢 デネブ':{
       size:{main:'半径 約200太陽',sub:'巨大な白色超巨星'},
       mass:{main:'約15〜20太陽質量級',sub:'大質量星'},
-      light:{main:'約20万太陽光度級',sub:'とても遠いのに一等星'}
+      light:{main:'約20万太陽光度級',sub:'とても遠いのに1等星'}
     },
     '🐕 VYおおいぬ座星':{
       size:{main:'半径 約1,000〜1,400太陽',sub:'木星〜土星軌道級'},
@@ -13438,7 +13512,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🦅 アルタイル':{title:'🎋 彦星で有名な高速自転星',chips:['七夕','いぬかいぼし'],text:'七夕の彦星として有名。昔の日本では「いぬかいぼし」とも呼ばれたことがある。'},
     '😈 アルゴル':{title:'😈 悪魔の星',chips:['食変光星','周期的に暗くなる'],text:'星どうしが隠し合うことで、はっきり周期的に暗くなる有名スター。'},
     '💠 ベガ':{title:'🌀 超高速で回る星',chips:['高速自転','七夕の織姫星'],text:'自転が速すぎて赤道がふくらみ、表面温度まで場所で変わる。'},
-    '🌾 スピカ':{title:'🌾 春の代表一等星',chips:['おとめ座','近接連星'],text:'青白い2つの星がかなり近く回る、春の夜空の代表格。'},
+    '🌾 スピカ':{title:'🌾 春の代表1等星',chips:['おとめ座','近接連星'],text:'青白い2つの星がかなり近く回る、春の夜空の代表格。'},
     '🌟 ポラリス':{title:'🧭 北極星として有名',chips:['3重星','道しるべ'],text:'北を示す目印として有名やけど、実は静かな1個星ではなく3重星系。'},
     '🔴 ベテルギウス':{title:'💥 爆発候補として有名',chips:['超巨星','終盤'],text:'いつか超新星になる有力候補としてよく話題になる、寿命後半の赤い巨星。'},
     '❓ タビーの星':{title:'❓ 謎の減光で有名',chips:['最大約20%減光','原因研究中'],text:'見た目はわりと普通の星やのに、光だけが妙に消える不思議系。'},
@@ -13489,6 +13563,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         ${!isEra?v229ProfileHTML(objectName):''}
         ${!isEra?v184TempHTML(objectName):''}
         ${!isEra?v186StarContextHTML(objectName):''}
+        ${!isEra?v237ConstellationHTML(objectName):''}
         ${photo?v179PhotoHTML(photo,objectName):''}
         ${star?`<div class="v179SectionLabel">⭐ 星の特徴</div>`:''}
         <p>${d.about||''}</p>
@@ -15703,15 +15778,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v236';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v236</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v237';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v237</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v236</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v237</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16266,7 +16341,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v236';
+window.INUBOSHI_GAME_VERSION='v237';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -20074,7 +20149,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v236</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v237</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -20423,11 +20498,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v236';
+  window.INUBOSHI_GAME_VERSION='v237';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v236<small>FUTURE EARTH BONES ONLY + STRONGER PURPLE BH / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v237<small>NUMERIC MAGNITUDE + CONSTELLATION GRAPHICS / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
