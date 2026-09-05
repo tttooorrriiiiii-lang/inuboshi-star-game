@@ -1036,16 +1036,28 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 
 .v217SpinViz{min-height:82px;border-radius:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:7px 5px;overflow:hidden}
 .v217SpinStage{position:relative;width:72px;height:58px;display:grid;place-items:center}
+.v217SpinStage:before{content:'';position:absolute;width:54px;height:54px;border-radius:50%;border:1px solid rgba(128,202,255,.20);transform:scaleX(.52) rotate(58deg)}
 .v217SpinOrb{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#f9fdff,#83cfff 47%,#6457ba);box-shadow:0 0 12px rgba(111,199,255,.45);z-index:2}
-.v217SpinRing{position:absolute;width:58px;height:25px;border:2px solid rgba(164,225,255,.78);border-left-color:transparent;border-radius:50%;transform:rotate(-12deg);animation:v217SpinRing var(--spin-dur) linear infinite;box-shadow:0 0 8px rgba(131,208,255,.25)}
-.v217SpinArrow{position:absolute;right:3px;top:18px;font-size:13px;filter:drop-shadow(0 0 5px rgba(255,255,255,.65));animation:v217SpinPulse .7s ease-in-out infinite alternate}
+.v217SpinRing{position:absolute;width:58px;height:25px;border:2px solid rgba(164,225,255,.82);border-radius:50%;transform:rotate(-12deg);animation:v217SpinRing var(--spin-dur) linear infinite;box-shadow:0 0 8px rgba(131,208,255,.25)}
 .v217SpinViz.slow .v217SpinRing{opacity:.45}
 .v217SpinViz.fast .v217SpinRing{border-width:3px;box-shadow:0 0 12px rgba(151,210,255,.6)}
-.v217SpinViz.ultra .v217SpinRing{border-color:#fff;border-left-color:transparent;box-shadow:0 0 14px #fff,0 0 24px rgba(139,187,255,.65)}
+.v217SpinViz.ultra .v217SpinRing{border-color:#fff;box-shadow:0 0 14px #fff,0 0 24px rgba(139,187,255,.65)}
 .v217SpinViz.unknown{opacity:.55}
 .v217SpinScale{width:100%;display:flex;justify-content:space-between;color:rgba(255,255,255,.46);font:800 6.2px/1 system-ui;margin-top:1px;padding:0 5px}
-@keyframes v217SpinRing{to{transform:rotate(348deg)}}
-@keyframes v217SpinPulse{to{transform:translateX(2px)}}
+@keyframes v217SpinRing{0%{transform:rotate(-12deg)}100%{transform:rotate(348deg)}}
+
+.v219DistanceCard{margin:10px 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(125,192,255,.09),rgba(255,224,133,.06));border:1px solid rgba(170,222,255,.18)}
+.v219DistanceHead{display:flex;align-items:center;gap:8px}.v219DistanceHead span{color:#bfe6ff;font:900 9px/1.2 system-ui}.v219DistanceHead b{margin-left:auto;color:#fff4c7;font:1000 10px/1.2 system-ui;text-align:right}
+.v219DistanceTrack{position:relative;height:46px;margin-top:9px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.v219DistanceLine{position:absolute;left:11px;right:11px;top:22px;height:3px;border-radius:999px;background:linear-gradient(90deg,rgba(122,222,255,.95),rgba(170,203,255,.92),rgba(255,219,120,.94),rgba(255,171,196,.95))}
+.v219DistanceTick{position:absolute;top:14px;width:2px;height:18px;background:rgba(255,255,255,.2)}
+.v219DistanceMarker{position:absolute;top:6px;transform:translateX(-50%);display:grid;justify-items:center;gap:1px}
+.v219DistanceMarker i{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:rgba(11,14,33,.92);border:1px solid rgba(255,255,255,.18);box-shadow:0 0 10px rgba(255,255,255,.14);font-style:normal;font-size:10px}
+.v219DistanceMarker b{font:900 6.4px/1 system-ui;color:#fff;white-space:nowrap}
+.v219DistanceMarker.me i{background:linear-gradient(180deg,#2a355d,#11182d);border-color:rgba(255,243,171,.65);box-shadow:0 0 14px rgba(255,231,154,.28)}
+.v219DistanceMarker.farthest i{background:linear-gradient(180deg,#45317a,#15112f);border-color:rgba(201,176,255,.65);box-shadow:0 0 14px rgba(205,170,255,.28)}
+.v219DistanceScale{display:flex;justify-content:space-between;margin-top:5px;color:rgba(255,255,255,.47);font:800 6.6px/1.25 system-ui;gap:8px}
+.v219DistanceNote{display:block;margin-top:7px;color:rgba(255,255,255,.6);font:760 7.5px/1.45 system-ui}
 
 @media(max-width:560px){
   .v217SizeViz,.v217LightViz,.v217SpinViz{min-height:68px;padding:5px 3px}
@@ -11657,6 +11669,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   };
 
   const V179_STAR_INFO={
+    '🕰️ メトシェラ星':{
+      about:'HD 140283 として知られる、宇宙でも最古級と考えられる古い準巨星。重い元素が少なく、初期宇宙に近い化学組成を残している。',
+      facts:[['別名','HD 140283'],['年齢','約120〜140億歳級'],['特徴','金属が少ない'],['位置','銀河ハロー']],
+      point:'ただ古いだけやなく、「宇宙が若かったころの材料」を今も残しているのが価値。星の年齢測定そのものの限界を考える手がかりにもなる。',
+      origin:'通称 Methuselah star は、旧約聖書で長寿の象徴とされるメトシェラにちなんだ呼び名。'
+    },
     '⭐ シリウス':{
       about:'地球から見える恒星で最も明るいシリウスAと、地球ほどの大きさしかない白色矮星シリウスBの2重星。2つは約50年で互いを回る。',
       facts:[['星系','2重星'],['A','青白い主系列星'],['B','白色矮星'],['Bの重力','非常に強い']],
@@ -12539,11 +12557,71 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     </div>`;
   }
 
+  function v219ParseLightYears(text=''){
+    const raw=String(text||'');
+    if(!raw.includes('光年'))return null;
+    const cleaned=raw.replace(/地球から|約|ほど|先|規模|級|\s+/g,'').replace(/,/g,'');
+    const core=cleaned.split('光年')[0];
+    if(!core)return null;
+    const parts=core.split(/〜|\-|–|―/).map(s=>s.trim()).filter(Boolean);
+    function partToNum(s){
+      const m=s.match(/([0-9]+(?:\.[0-9]+)?)(兆|億|万)?/);
+      if(!m)return null;
+      const n=parseFloat(m[1]);
+      const mult=m[2]==='兆'?1e12:m[2]==='億'?1e8:m[2]==='万'?1e4:1;
+      return n*mult;
+    }
+    const nums=parts.map(partToNum).filter(v=>Number.isFinite(v));
+    if(!nums.length)return null;
+    return nums.reduce((a,b)=>a+b,0)/nums.length;
+  }
+
+  function v219DistanceZone(ly){
+    if(!Number.isFinite(ly))return '距離の段階はまだ不明';
+    if(ly<=100)return '太陽の近所';
+    if(ly<=100000)return '天の川銀河の中';
+    if(ly<=5000000)return '近くの別銀河';
+    if(ly<=1000000000)return 'かなり遠い銀河';
+    return '宇宙初期クラス';
+  }
+
+  function v219DistanceHTML(name=''){
+    const raw=(S()?.distance||systems[system]?.distance||'').trim();
+    if(!raw || !name)return '';
+    const ly=v219ParseLightYears(raw);
+    if(!Number.isFinite(ly))return '';
+    const farRaw=(systems.find?.(s=>s?.name==='✨ エアレンデル')?.distance)||'約129億光年';
+    const farLy=v219ParseLightYears(farRaw)||12900000000;
+    const safe=Math.max(0,Math.min(1,Math.log10(ly+1)/Math.log10(farLy+1)));
+    const baseLeft=8, spanPct=84;
+    const pos=(baseLeft + safe*spanPct).toFixed(1)+'%';
+    const currentIcon=name==='✨ エアレンデル'?'✨':'⭐';
+    const currentLabel=name==='✨ エアレンデル'?'いまここ':'この星';
+    const note=name==='✨ エアレンデル'
+      ? 'この星が、いまゲーム内でいちばん遠い個別星。'
+      : '右端のエアレンデルが、いまゲーム内でいちばん遠い個別星。';
+    return `<div class="v219DistanceCard">
+      <div class="v219DistanceHead"><span>📍 距離</span><b>${v179Esc(raw)}</b></div>
+      <div class="v219DistanceTrack" aria-label="地球からの距離イメージ図">
+        <div class="v219DistanceLine"></div>
+        <span class="v219DistanceTick" style="left:8%"></span>
+        <span class="v219DistanceTick" style="left:50%"></span>
+        <span class="v219DistanceTick" style="left:92%"></span>
+        <span class="v219DistanceMarker earth" style="left:8%"><i>🌍</i><b>地球</b></span>
+        <span class="v219DistanceMarker me" style="left:${pos}"><i>${currentIcon}</i><b>${currentLabel}</b></span>
+        <span class="v219DistanceMarker farthest" style="left:92%"><i>✨</i><b>エアレンデル</b></span>
+      </div>
+      <div class="v219DistanceScale"><span>近い</span><span>${v179Esc(v219DistanceZone(ly))}</span><span>最遠</span></div>
+      <small class="v219DistanceNote">${note} 図は差が分かりやすいように対数スケールで並べているよ。</small>
+    </div>`;
+  }
+
   function v186StarContextHTML(name=''){
     const x=V186_STAR_CONTEXT[name];
     if(!x)return '';
     return `${v187LifeHTML(name,x)}
       ${v188MetricsHTML(name)}
+      ${v219DistanceHTML(name)}
       <div class="v186StarContext">
         <div class="v186ContextRow"><span>🌌 所属</span><b>${v179Esc(x.home)}</b></div>
       </div>`;
@@ -12897,7 +12975,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   function v217LightVisual(name=''){
     const level=v190MetricLevel('light',name);
     const lv=level==null?0:level;
-    // v218: use exactly the same thresholds as the text grade so a star can never
+    // v219: use exactly the same thresholds as the text grade so a star can never
     // say "明るい" while showing a dark/off bulb.
     let cls='unknown',grade='不明';
     if(level!=null){
@@ -12915,12 +12993,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function v217SpinVisual(name=''){
     const level=v190MetricLevel('spin',name);
-    if(level==null)return `<div class="v217SpinViz unknown"><div class="v217SpinStage"><span class="v217SpinOrb"></span><span class="v217SpinRing" style="--spin-dur:6s"></span><span class="v217SpinArrow">↻</span></div><div class="v217SpinScale"><span>遅い</span><span>普通</span><span>速い</span></div></div>`;
+    if(level==null)return `<div class="v217SpinViz unknown"><div class="v217SpinStage"><span class="v217SpinOrb"></span><span class="v217SpinRing" style="--spin-dur:6s"></span></div><div class="v217SpinScale"><span>遅い</span><span>普通</span><span>速い</span></div></div>`;
     const lv=Math.max(0,Math.min(100,level));
     const cls=lv>=85?'ultra':lv>=55?'fast':lv<=25?'slow':'mid';
     const dur=(5.4-(lv/100)*4.8).toFixed(2)+'s';
     return `<div class="v217SpinViz ${cls}" aria-label="自転速度イメージ">
-      <div class="v217SpinStage"><span class="v217SpinOrb"></span><span class="v217SpinRing" style="--spin-dur:${dur}"></span><span class="v217SpinArrow">↻</span></div>
+      <div class="v217SpinStage"><span class="v217SpinOrb"></span><span class="v217SpinRing" style="--spin-dur:${dur}"></span></div>
       <div class="v217SpinScale"><span>遅い</span><span>普通</span><span>速い</span></div>
     </div>`;
   }
@@ -15227,15 +15305,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v218';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v218</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v219';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v219</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v218</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v219</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15787,7 +15865,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v218';
+window.INUBOSHI_GAME_VERSION='v219';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -19042,7 +19120,7 @@ setTimeout(()=>syncHUD(true),0);
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v218</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v219</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -19391,11 +19469,11 @@ setTimeout(()=>syncHUD(true),0);
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v218';
+  window.INUBOSHI_GAME_VERSION='v219';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v215<small>STABILITY PASS / CONSOLIDATED RUNTIME / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v219<small>DISTANCE VIS + SPIN ICON FIX / 2026-09-05</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
