@@ -1123,6 +1123,21 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 @media(max-width:560px){.v237ConstellationSvg{height:84px}.v237ConstLabel{font-size:6.5px}}
 </style>
 
+
+<style id="v238-one-line-style">
+.v238OneLineLabel{
+  display:flex;align-items:center;gap:6px;margin:0 0 7px;
+  color:#ffe89d;font:1000 8px/1.2 system-ui;letter-spacing:.02em
+}
+.v238OneLineLabel:after{
+  content:"";height:1px;flex:1;background:linear-gradient(90deg,rgba(255,232,157,.32),transparent)
+}
+.v191Spotlight.v238OneLine{
+  border-color:rgba(255,220,112,.22)!important;
+  background:linear-gradient(135deg,rgba(255,207,80,.08),rgba(111,97,202,.07))!important
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -13532,10 +13547,28 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '✨ エアレンデル':{title:'🏆 最も遠い個別星',chips:['宇宙初期','超遠方'],text:'宇宙誕生から10億年以内に存在した、最も遠い個別星。重力レンズで1個の星として見つかった。'}
   };
 
+  const V238_STAR_ONE_LINE={
+    '☀️ 太陽':{title:'☀️ いちばん身近な恒星',chips:['太陽系の中心','地球の命綱'],text:'地球の昼も気温も生命も支えている、私たちに最も近い恒星。'},
+    '🐶 プロキオン':{title:'🐶 白色矮星と組む近所の犬星',chips:['こいぬ座','2重星'],text:'明るい主星Aのそばに、すでに一生を終えた白色矮星Bがいる。'},
+    '🐶 ゴメイサ':{title:'🌀 高速回転する青白い犬星',chips:['こいぬ座','Be星'],text:'高速自転と周囲のガス円盤が特徴の、青白い犬系スター。'},
+    '🐕 アダーラ':{title:'🔥 おおいぬ座の超高温巨星',chips:['青色巨星','大質量'],text:'表面温度が高く、本来の明るさも非常に強い大質量星。'},
+    '🐕 ミルザム':{title:'📣 シリウスの先触れ星',chips:['おおいぬ座','青色巨星'],text:'シリウスより少し先に昇ることから「先触れ」の意味を持つ星。'},
+    '🐕 ウェズン':{title:'🟡 巨大な黄色超巨星',chips:['おおいぬ座','寿命後半'],text:'太陽とは桁違いに膨らんだ、進化の進んだ黄色超巨星。'},
+    '🐕 アルドラ':{title:'💙 遠くても明るい青色超巨星',chips:['おおいぬ座','超高光度'],text:'かなり遠いのに肉眼で見えるほど、本来の光が強い星。'},
+    '❤️ アンタレス':{title:'❤️ さそりの心臓の赤色超巨星',chips:['さそり座','超新星爆発'],text:'赤く巨大で、将来は超新星爆発すると考えられている代表的な大質量星。'},
+    '💫 AF Andromedae':{title:'💫 アンドロメダ銀河の暴れ変光星',chips:['LBV','大質量星'],text:'明るさや状態を大きく変える、高光度青色変光星のひとつ。'},
+    '🟢 ロマーノ星 GR 290':{title:'🟢 温度まで大きく変わる大質量星',chips:['M33','変光星'],text:'明るさだけでなくスペクトルや温度も変わる、進化途中の不安定な星。'},
+    '🌠 M33 Var C':{title:'🌠 M33の大質量変光スター',chips:['LBV候補','M33'],text:'さんかく座銀河M33にある、非常に明るく変化の大きい星。'},
+    '❤️ クイユル':{title:'❤️ JWSTで見えた赤い超遠方星',chips:['重力レンズ','超遠方'],text:'重力レンズとJWSTによって見えるようになった、遠い宇宙の赤い星候補。'},
+    '🔷 Abell 2744 LS1':{title:'🔷 銀河団レンズで見えた超遠方星',chips:['Abell 2744','重力レンズ'],text:'手前の銀河団の重力で光を拡大され、個別星として見えてきた超遠方天体。'},
+    '💠 MACS J0647 LS1':{title:'💠 JWST級の超遠方星候補',chips:['重力レンズ','初期宇宙'],text:'非常に遠い銀河の中から、重力レンズで強調されて見える星／星系候補。'}
+  };
+
   function v191SpotlightHTML(name=''){
-    const x=V191_STAR_SPOTLIGHT[name];
+    const x=V191_STAR_SPOTLIGHT[name]||V238_STAR_ONE_LINE[name];
     if(!x)return '';
-    return `<div class="v191Spotlight">
+    return `<div class="v238OneLineLabel">⚡ この星を一言でいうと？</div>
+    <div class="v191Spotlight v238OneLine">
       <div class="v191SpotlightTitle">${v179Esc(x.title)}</div>
       ${x.chips?.length?`<div class="v191SpotlightChips">${x.chips.map(c=>`<span>${v179Esc(c)}</span>`).join('')}</div>`:''}
       ${x.text?`<div class="v191SpotlightText">${v179Esc(x.text)}</div>`:''}
@@ -15778,15 +15811,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v237';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v237</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v238';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v238</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v237</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v238</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16341,7 +16374,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v237';
+window.INUBOSHI_GAME_VERSION='v238';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -20149,7 +20182,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v237</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v238</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -20498,11 +20531,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v237';
+  window.INUBOSHI_GAME_VERSION='v238';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v237<small>NUMERIC MAGNITUDE + CONSTELLATION GRAPHICS / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v238<small>ONE-LINE STAR IDENTITY / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
