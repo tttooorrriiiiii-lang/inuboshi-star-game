@@ -1026,9 +1026,10 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 .v217BulbGlass{display:block;width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.62);background:#363a44;box-shadow:0 0 3px rgba(255,255,255,.14)}
 .v217BulbBase{position:absolute;top:37px;width:22px;height:14px;border-radius:3px 3px 7px 7px;background:linear-gradient(180deg,#d5d8de,#626773);border:1px solid rgba(255,255,255,.48)}
 .v217LightViz.dim .v217BulbGlass{background:#252932;border-color:#666d7c;box-shadow:0 0 4px rgba(98,108,130,.18)}
-.v217LightViz.mid .v217BulbGlass{background:#d99f3f;border-color:#f5c56c;box-shadow:0 0 10px rgba(216,157,58,.42),inset 0 0 10px rgba(255,223,146,.38)}
-.v217LightViz.bright .v217BulbGlass{background:#ffe25a;border-color:#fff3a5;box-shadow:0 0 18px rgba(255,225,80,.95),0 0 30px rgba(255,184,45,.50),inset 0 0 13px rgba(255,255,220,.92)}
-.v217LightViz.ultra .v217BulbGlass{background:#fff;border-color:#fff;box-shadow:0 0 18px #fff,0 0 34px rgba(255,255,255,.95),0 0 52px rgba(218,238,255,.72),inset 0 0 10px #fff}
+.v217LightViz.mid .v217BulbGlass{background:#ffd55a;border-color:#fff0a0;box-shadow:0 0 15px rgba(255,211,72,.78),0 0 25px rgba(255,177,40,.36),inset 0 0 12px rgba(255,250,204,.76)}
+.v217LightViz.bright .v217BulbGlass{background:#fff2a8;border-color:#fffbdc;box-shadow:0 0 20px rgba(255,240,150,.98),0 0 34px rgba(255,210,78,.72),inset 0 0 14px rgba(255,255,245,.96)}
+.v217LightViz.ultra .v217BulbGlass{background:#fff;border-color:#fff;box-shadow:0 0 22px #fff,0 0 42px rgba(255,255,255,1),0 0 62px rgba(225,242,255,.88),inset 0 0 12px #fff}
+.v217LightViz.dazzling .v217BulbGlass{background:#fff;border-color:#fff;box-shadow:0 0 25px #fff,0 0 48px #fff,0 0 76px rgba(210,235,255,.95),0 0 94px rgba(255,255,255,.58),inset 0 0 14px #fff}
 .v217LightViz.ultra .v217Bulb{filter:drop-shadow(0 0 12px rgba(255,255,255,.9))}
 .v217LightViz.unknown{opacity:.64}
 .v217LightScale{width:100%;display:flex;justify-content:space-between;color:rgba(255,255,255,.46);font:800 6.2px/1 system-ui;margin-top:1px;padding:0 5px}
@@ -12895,12 +12896,20 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function v217LightVisual(name=''){
     const level=v190MetricLevel('light',name);
-    const lv=level==null?18:level;
-    const cls=level==null?'unknown':lv<=18?'dim':lv<=55?'mid':lv<90?'bright':'ultra';
-    const grade=level==null?'不明':lv>=90?'超明るい':lv>=56?'明るい':lv>=19?'普通':'暗い';
+    const lv=level==null?0:level;
+    // v218: use exactly the same thresholds as the text grade so a star can never
+    // say "明るい" while showing a dark/off bulb.
+    let cls='unknown',grade='不明';
+    if(level!=null){
+      if(lv<=10){cls='dim';grade='ひかえめ';}
+      else if(lv<=24){cls='mid';grade='明るい';}
+      else if(lv<=48){cls='bright';grade='かなり明るい';}
+      else if(lv<=78){cls='ultra';grade='超明るい';}
+      else {cls='ultra dazzling';grade='まぶしい';}
+    }
     return `<div class="v217LightViz ${cls}" aria-label="明るさイメージ ${grade}">
       <div class="v217Bulb"><span class="v217BulbGlass"></span><span class="v217BulbBase"></span></div>
-      <div class="v217LightScale"><span>暗い</span><span>普通</span><span>超明るい</span></div>
+      <div class="v217LightScale"><span>ひかえめ</span><span>明るい</span><span>超明るい</span></div>
     </div>`;
   }
 
@@ -15218,15 +15227,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v217';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v217</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v218';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v218</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v217</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v218</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15778,7 +15787,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v217';
+window.INUBOSHI_GAME_VERSION='v218';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -19033,7 +19042,7 @@ setTimeout(()=>syncHUD(true),0);
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v217</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v218</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -19382,7 +19391,7 @@ setTimeout(()=>syncHUD(true),0);
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v217';
+  window.INUBOSHI_GAME_VERSION='v218';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
