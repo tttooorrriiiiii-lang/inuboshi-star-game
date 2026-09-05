@@ -15647,7 +15647,7 @@ const V204={
   radioEl:null,
   wormEl:null
 };
-window.INUBOSHI_GAME_VERSION='v206';
+window.INUBOSHI_GAME_VERSION='v208';
 
 const V204_SIMPLE_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -16015,6 +16015,113 @@ syncHUD=function(){
   }
 };
 /* === /v206 === */
+
+
+/* === v207: earth-style skyline exactly reused in future, and clear stray cosmic pickups === */
+function v207DrawEarthSkyline(){
+  const gy=groundY();
+  ctx.save();
+  const backColors=['#9ea7b3','#b1b8c2','#8f99a5','#aab2bc','#959faa'];
+  const frontColors=['#6f7b88','#7b8795','#66727f','#778391','#6b7784'];
+  const win='rgba(255,244,170,.78)';
+  const offBack=(camera*.12)%110;
+  for(let i=-1;i<Math.ceil(W/110)+2;i++){
+    const x=i*110-offBack;
+    const w=[54,66,58,74,62][Math.abs(i)%5];
+    const h=[128,172,146,194,158][Math.abs(i+1)%5];
+    const y=gy-h-30;
+    ctx.fillStyle=backColors[Math.abs(i)%backColors.length];
+    ctx.fillRect(x,y,w,h);
+    ctx.fillStyle=win;
+    for(let yy=y+14;yy<gy-18;yy+=22){
+      for(let xx=x+10;xx<x+w-10;xx+=16)ctx.fillRect(xx,yy,7,8);
+    }
+  }
+  const offFront=(camera*.22)%126;
+  for(let i=-1;i<Math.ceil(W/126)+2;i++){
+    const x=i*126-offFront;
+    const w=[76,84,68,88,72][Math.abs(i)%5];
+    const h=[212,168,248,186,226][Math.abs(i+2)%5];
+    const y=gy-h-30;
+    ctx.fillStyle=frontColors[Math.abs(i)%frontColors.length];
+    ctx.fillRect(x,y,w,h);
+    ctx.fillStyle=win;
+    for(let yy=y+18;yy<gy-20;yy+=24){
+      for(let xx=x+12;xx<x+w-12;xx+=20)ctx.fillRect(xx,yy,8,10);
+    }
+  }
+  ctx.restore();
+}
+
+v204DrawFutureCity=function(step){
+  if(step<1||step>4)return;
+  v207DrawEarthSkyline();
+};
+
+const v207PrevStageStart=stageStart;
+stageStart=function(){
+  const out=v207PrevStageStart();
+  if(v204IsEarendel()||v204FutureEarth()){
+    try{V169.pickups=[];V169.hazards=[];V169.pops=[];}catch(e){}
+    const dock=document.getElementById('v169CosmicDock');
+    if(dock)dock.classList.remove('on');
+  }
+  return out;
+};
+
+const v207PrevDrawCosmic=drawCosmic;
+drawCosmic=function(){
+  if(v204IsEarendel()||v204FutureEarth())return;
+  v207PrevDrawCosmic();
+};
+
+const v207PrevUpdate=update;
+update=function(now,dt){
+  if(v204IsEarendel()||v204FutureEarth()){
+    try{V169.pickups=[];V169.hazards=[];}catch(e){}
+  }
+  v207PrevUpdate(now,dt);
+};
+/* === /v207 === */
+
+
+/* === v208: future stages redraw with the exact same Earth city+trees block === */
+function v208DrawExactEarthForeground(){
+  const gy=groundY();
+  ctx.save();
+  for(let i=0;i<11;i++){
+    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
+    const bh=90+(i%4)*28;
+    ctx.fillStyle=i%2?'#9aa7b6':'#7d8c9e';
+    ctx.fillRect(x,gy-bh-30,85,bh);
+    ctx.fillStyle='rgba(255,244,170,.72)';
+    for(let r=0;r<4;r++) for(let c=0;c<3;c++) ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
+  }
+  for(let i=0;i<9;i++){
+    const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
+    ctx.fillStyle='#6f4a2d';
+    ctx.fillRect(x,gy-64,10,64);
+    ctx.fillStyle=i%2?'#58a765':'#6cb56b';
+    ctx.beginPath();
+    ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+const v208PrevBg=drawBackground;
+drawBackground=function(){
+  v208PrevBg();
+  if(v204FutureEarth())v208DrawExactEarthForeground();
+};
+
+v204DrawFutureCity=function(step){
+  if(step<1||step>4)return;
+  /* disable alternate future-city renderer; the exact Earth block is now drawn in drawBackground */
+};
+/* === /v208 === */
+
+
 
 
 /* === /v204 CORE-SCOPE FIX === */
@@ -19372,15 +19479,15 @@ syncHUD=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v206';
+  window.INUBOSHI_GAME_VERSION='v208';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v206<small>EARTH SKYLINE MATCH / CLEAN FUTURE / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v208<small>FUTURE USES EXACT EARTH BUILDINGS+TREES / 2026-09-05</small>';devCard.prepend(el);
     }
     const jumpCard=document.querySelector('#v150JumpPanel .v150JumpCard');
     if(jumpCard&&!document.getElementById('v204JumpVersion')){
-      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v206';
+      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v208';
       const input=jumpCard.querySelector('#v150JumpSearch');if(input)jumpCard.insertBefore(el,input);else jumpCard.prepend(el);
     }
   }
