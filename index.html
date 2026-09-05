@@ -15639,15 +15639,15 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
 
 /* === v204 CORE-SCOPE FIX: these hooks must live inside the main game IIFE === */
 const V204={
-  radioX:330,
-  wormX:1150,
+  radioX:980,
+  wormX:1680,
   radioDone:false,
   signalActive:false,
   futureWarping:false,
   radioEl:null,
   wormEl:null
 };
-window.INUBOSHI_GAME_VERSION='v204';
+window.INUBOSHI_GAME_VERSION='v205';
 
 const V204_SIMPLE_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -15876,7 +15876,7 @@ stageStart=function(){
     aliens.push({x:350,y:groundY()-105,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
     morphs.push({x:730,y:groundY()-150,r:26,got:false,dog:'🦮'});
     aliens.push({x:820,y:groundY()-150,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
-    showToast('📻 前方にトランシーバー。地球からの信号？',1900);
+    showToast('📻 ずっと先にトランシーバーがある。',1500);
   }
   setTimeout(()=>syncHUD(),0);
   return out;
@@ -15898,6 +15898,92 @@ update=function(now,dt){
 v204InstallWorldUI();
 (function v204OverlayLoop(){v204SyncControlsAndCounts();v204RenderWorldUI();requestAnimationFrame(v204OverlayLoop)})();
 setTimeout(()=>{v204SyncControlsAndCounts();syncHUD();},0);
+
+
+/* === v205: earth-like future buildings / plain Earendel pickups / later simpler radio === */
+V204.radioX=980;
+V204.wormX=1680;
+
+v204ShowEarthSOS=function(){
+  if(V204.radioDone||V204.signalActive||!v204IsEarendel())return;
+  V204.radioDone=true;V204.signalActive=true;paused=true;
+  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">EARTH SOS</div><div class="v63RadioVoice">地球が危ない…戻ってきて。</div><div class="v63RadioMeta">SOURCE : EARTH</div></div>';
+  v63RadioScene.classList.remove('heard','reply');
+  v63RadioScene.classList.add('on','contact');
+  missionEl.textContent='📻 地球が危ない…戻ってきて';
+  eventEl.textContent='EARTH SOS';
+  setTimeout(()=>v63RadioScene.classList.add('heard'),250);
+  setTimeout(()=>{
+    v63RadioScene.classList.remove('on','heard','reply','contact');
+    V204.signalActive=false;paused=false;
+    showToast('📻 地球が危ない…戻ってきて',1500);
+  },1850);
+};
+
+v204DrawFutureCity=function(step){
+  if(step<1||step>4)return;
+  const gy=groundY();
+  ctx.save();
+  ctx.globalAlpha=1;
+  for(let i=0;i<11;i++){
+    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
+    let bh=90+(i%4)*28;
+    if(step===1) bh+=0;
+    if(step===2) bh+=16;
+    if(step===3 && i%3===0) bh*=.72;
+    if(step===4) bh*=.88;
+    const y=gy-bh-30;
+    ctx.fillStyle=i%2?'#aab5c1':'#8f9dad';
+    if(step===3&&i%4===1){
+      ctx.beginPath();
+      ctx.moveTo(x,gy-30);ctx.lineTo(x+6,y+22);ctx.lineTo(x+34,y-8);ctx.lineTo(x+68,y+10);ctx.lineTo(x+85,gy-30);
+      ctx.closePath();ctx.fill();
+    }else{
+      ctx.fillRect(x,y,85,bh);
+    }
+    ctx.fillStyle='rgba(255,244,170,.78)';
+    for(let r=0;r<4;r++)for(let c=0;c<3;c++){
+      if(step===3 && (r+c+i)%4===0)continue;
+      if(step===4 && (r+c+i)%2===0)continue;
+      ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
+    }
+  }
+  ctx.restore();
+};
+
+const v205PrevDrawPickup=drawPickup;
+drawPickup=function(o,now){
+  if(v204IsEarendel()){
+    if(o.got)return;
+    const sx=o.x-camera, sy=o.y+Math.sin(now/280+o.phase)*7;
+    if(sx<-50||sx>W+50)return;
+    ctx.save();
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    const sym=o.symbol||'';
+    if(sym==='⭐'){
+      ctx.translate(sx,sy);
+      ctx.shadowColor='#ffe45a';ctx.shadowBlur=18;ctx.fillStyle='#ffd84d';
+      ctx.beginPath();
+      for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?18:8,px=Math.cos(a)*rr,py=Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}
+      ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    }else if(sym==='🦴'){
+      ctx.font='34px system-ui';ctx.shadowColor='#ffd65a';ctx.shadowBlur=18;ctx.fillText('🦴',sx,sy+2);
+    }else if(sym==='❓'){
+      ctx.translate(sx,sy);ctx.rotate(Math.sin(performance.now()/220)*.18);
+      ctx.shadowColor='#64f5ff';ctx.shadowBlur=24;ctx.fillStyle='rgba(60,20,90,.82)';ctx.strokeStyle='#fff';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(0,0,27,0,Math.PI*2);ctx.fill();ctx.stroke();
+      ctx.font='30px system-ui';ctx.fillStyle='#fff';ctx.fillText('❓',0,1);
+    }else{
+      ctx.font=(sym.length>1?'900 18px system-ui':'1000 30px system-ui');
+      ctx.fillStyle='#eef6ff';ctx.shadowColor='#d8ebff';ctx.shadowBlur=16;ctx.fillText(sym,sx,sy);
+    }
+    ctx.restore();
+    return;
+  }
+  v205PrevDrawPickup(o,now);
+};
+/* === /v205 === */
+
 /* === /v204 CORE-SCOPE FIX === */
 
 })();
@@ -19253,15 +19339,15 @@ setTimeout(()=>{v204SyncControlsAndCounts();syncHUD();},0);
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v204';
+  window.INUBOSHI_GAME_VERSION='v205';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v204<small>CORE RUNTIME FIX / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v205<small>EARTH BUILDINGS / EARENDEL PICKUPS / RADIO TUNE / 2026-09-05</small>';devCard.prepend(el);
     }
     const jumpCard=document.querySelector('#v150JumpPanel .v150JumpCard');
     if(jumpCard&&!document.getElementById('v204JumpVersion')){
-      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v204';
+      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v205';
       const input=jumpCard.querySelector('#v150JumpSearch');if(input)jumpCard.insertBefore(el,input);else jumpCard.prepend(el);
     }
   }
