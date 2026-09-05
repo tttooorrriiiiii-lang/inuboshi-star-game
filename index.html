@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v181</title>
+<title>犬星くん GALAXY TOUR v184</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -1152,6 +1152,22 @@ const systems=[
 {name:'🌟 ポラリス',distance:'約430光年',desc:'恒星・現在の北極星',goodColor:'#fff5c4',sky:['#050817','#26365b'],ground:'#8e93a7',ground2:'#4d5266',planet:'#fff4b5',event:'STAR SHOWER',eventText:'北極星の光が降り注ぐ！',gravity:.47,jump:17.5}
 ]},
 {
+name:'❓ タビーの星',distance:'地球から約1,470光年',desc:'Keplerが最大約20%もの異常な減光を観測した、謎の多いF型主系列星',theme:'milky',stages:[
+{name:'❓ タビーの星',distance:'約1,470光年',desc:'原因不明の大きな減光を繰り返した「謎の星」。塵が有力候補',goodColor:'#fff0b8',sky:['#050713','#22263f'],ground:'#726b56',ground2:'#322e27',planet:'#fff0c7',event:'MYSTERY DIMMING',eventText:'❓ 星の光が突然20%近く暗くなる！',gravity:.50,jump:17.4}
+]},
+{
+name:'🐕 VYおおいぬ座星',distance:'地球から約5,000光年',desc:'太陽の位置に置けば木星〜土星軌道の間まで届くほど膨らんだ赤色極超巨星',theme:'cloud',stages:[
+{name:'🐕 VYおおいぬ座星',distance:'約5,000光年',desc:'巨大なガスと塵を何度も噴き出す、最大級の赤色極超巨星',goodColor:'#ff9a72',sky:['#160604','#59190d'],ground:'#8c5140',ground2:'#44271f',planet:'#ff7858',event:'HYPERGIANT EJECTION',eventText:'🌋 巨大なガス塊が星の外へ噴き飛ぶ！',gravity:.22,jump:17.8}
+]},
+{
+name:'💥 イータ・カリーナ',distance:'地球から約7,500光年',desc:'19世紀に巨大噴火を起こし、太陽10個分以上の物質を吹き飛ばした超大質量の連星系',theme:'cloud',stages:[
+{name:'💥 イータ・カリーナ',distance:'約7,500光年',desc:'巨大噴火を起こしながら生き残った、極端に不安定な大質量連星系',goodColor:'#ffb3e8',sky:['#10030d','#4b1738'],ground:'#725166',ground2:'#2f1f2b',planet:'#ffd6f3',event:'GREAT ERUPTION',eventText:'💥 19世紀級の大噴火！ ガスと塵が双極方向へ吹き出す',gravity:.34,jump:17.6}
+]},
+{
+name:'🧲 SGR 1806-20',distance:'地球から約5万光年',desc:'約10¹⁵ガウス級の超強磁場を持つマグネター。2004年の巨大フレアは地球の上層大気まで乱した',theme:'blackhole',stages:[
+{name:'🧲 SGR 1806-20',distance:'約5万光年',desc:'直径わずか数十km級なのに、銀河最強クラスの磁場とガンマ線フレアを放つ中性子星',goodColor:'#bda8ff',sky:['#02020a','#190d35'],ground:'#3c3152',ground2:'#16101f',planet:'#bca7ff',event:'MAGNETAR FLARE',eventText:'🧲⚡ 超強磁場！ 巨大ガンマ線フレアが走る！',gravity:.85,jump:16.2}
+]},
+{
 name:'💙 R136a1',distance:'地球から約16.3万光年',desc:'知られている中でも特に大質量・高光度なウォルフ・ライエ星',theme:'cloud',stages:[
 {name:'💙 R136a1',distance:'約16.3万光年',desc:'非常に重く明るいウォルフ・ライエ星',goodColor:'#9de9ff',sky:['#04101a','#124a69'],ground:'#3c7180',ground2:'#1d3745',planet:'#a7efff',event:'COSMIC GAS',eventText:'青白い恒星風が吹き荒れる！',gravity:.70,jump:17.2}
 ]},
@@ -1315,9 +1331,9 @@ const wormholeEnabled=()=>wormholeActive&&!(system===0&&stage===0)&&system!==BLA
 const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const rankByName={
 '☀️ 太陽系・近くの星':0,
-'💙 R136a1':1,'✨ S Doradus':2,'⭐ M31-V1':3,'💫 AF Andromedae':4,'🟢 ロマーノ星 GR 290':5,'🌠 M33 Var C':6,'⭐ M51-DS1':7,'🎨 Warhol':8,
-'💙 イカロス':9,'🦋 モスラ':10,'❤️ クイユル':11,'🦖 ゴジラ':12,'🔷 Abell 2744 LS1':13,'💠 MACS J0647 LS1':14,'✨ エアレンデル':15,
-'🔥 再電離時代':16,'🌅 宇宙の夜明け':17,'🌑 暗黒時代':18,'🌤️ 再結合時代（宇宙の晴れ上がり）':19,'📡 宇宙背景放射（CMB）':20,'✨ 光子時代':21,'⚛️ ビッグバン元素合成':22,'🌀 レプトン時代':23,'🔵 ハドロン時代':24,'🟣 クォーク時代':25,'⚡ 電弱時代':26,'💥 インフレーション時代':27,'◼️ 大統一時代':28,'❓ プランク時代':29,'💫 ビッグバン':30,'🔁 ビッグバウンス':31,'♻️ 循環宇宙':32,'🫧 永遠のインフレーション':33,'◯ 無境界仮説':34,'⏩ 太陽が明るくなる未来':40,'🔴 赤色巨星の太陽':41,'⚪ 白色矮星の太陽':42,'🌌 星形成の終わり':43,'🔴 最後の恒星たち':44,'🕳️ ブラックホール時代':45,'🌑 暗い宇宙':46,'🥶 熱的死／ビッグフリーズ':47,'💥 ビッグリップ':48,'🔻 ビッグクランチ':49,'⚠️ 真空崩壊':50,'🐾 犬の星':60
+'❓ タビーの星':1,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
+'💙 イカロス':13,'🦋 モスラ':14,'❤️ クイユル':15,'🦖 ゴジラ':16,'🔷 Abell 2744 LS1':17,'💠 MACS J0647 LS1':18,'✨ エアレンデル':19,
+'🔥 再電離時代':20,'🌅 宇宙の夜明け':21,'🌑 暗黒時代':22,'🌤️ 再結合時代（宇宙の晴れ上がり）':23,'📡 宇宙背景放射（CMB）':24,'✨ 光子時代':25,'⚛️ ビッグバン元素合成':26,'🌀 レプトン時代':27,'🔵 ハドロン時代':28,'🟣 クォーク時代':29,'⚡ 電弱時代':30,'💥 インフレーション時代':31,'◼️ 大統一時代':32,'❓ プランク時代':33,'💫 ビッグバン':34,'🔁 ビッグバウンス':35,'♻️ 循環宇宙':36,'🫧 永遠のインフレーション':37,'◯ 無境界仮説':38,'⏩ 太陽が明るくなる未来':40,'🔴 赤色巨星の太陽':41,'⚪ 白色矮星の太陽':42,'🌌 星形成の終わり':43,'🔴 最後の恒星たち':44,'🕳️ ブラックホール時代':45,'🌑 暗い宇宙':46,'🥶 熱的死／ビッグフリーズ':47,'💥 ビッグリップ':48,'🔻 ビッグクランチ':49,'⚠️ 真空崩壊':50,'🐾 犬の星':60
 };
 const systemDistanceRank=systems.map(s=>s.secret?99:s.name==='⚫ ブラックホール'?98:(rankByName[s.name]??0));
 const S=()=>systems[system].stages[stage],groundY=()=>H-120,playerRect=()=>({x:p.x,y:p.y,w:p.w,h:p.h}),itemRect=i=>({x:i.x-i.r,y:i.y-i.r,w:i.r*2,h:i.r*2}),rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
@@ -1695,27 +1711,23 @@ function homeEnding(){returnFromDogStar=true;system=0;stage=0;stageStart()}
 
 function wormholeMilestoneEffect(count){
  if(count===1){
-   showToast('🌀 最初のワームホール。宇宙の深部へ。',1900)
+   transTitle.innerHTML='❓ TABBY’S STAR';nextEl.textContent='突然暗くなる、謎の星へ。';subEl.textContent='WORMHOLE 1';showToast('❓ タビーの星！ 光が突然ごっそり減る…',1900)
+ }else if(count===2){
+   transTitle.innerHTML='🐕 VY CANIS MAJORIS';nextEl.textContent='太陽系サイズ級にふくらんだ赤い怪物へ。';subEl.textContent='WORMHOLE 2';showToast('🐕 VYおおいぬ座星！ 巨大ガス噴出に注意！',2000)
  }else if(count===3){
-   transTitle.innerHTML='🌌 GALAXY SCALE';
-   nextEl.textContent='銀河が、ただの光の島に見えてくる。';
-   subEl.textContent='WORMHOLE 3';
-   showToast('🌌 ここから先は銀河間空間。',2100)
+   transTitle.innerHTML='💥 ETA CARINAE';nextEl.textContent='巨大噴火を生き残った超大質量連星へ。';subEl.textContent='WORMHOLE 3';showToast('💥 イータ・カリーナ！ 大噴火の残骸が広がる。',2000)
+ }else if(count===4){
+   transTitle.innerHTML='🧲 MAGNETAR';nextEl.textContent='銀河最強クラスの磁場を持つ中性子星へ。';subEl.textContent='WORMHOLE 4';showToast('🧲 SGR 1806-20！ 磁場とガンマ線が桁違い！',2100)
  }else if(count===5){
-   transTitle.innerHTML='✨ EARENDEL';
-   nextEl.textContent='129億年前の光へ。';
-   subEl.textContent='WORMHOLE 5';
-   showToast('✨ 地球はるか彼方。エアレンデル級の遠方へ。',2200)
- }else if(count===6){
-   transTitle.innerHTML='🧭 OBSERVABLE EDGE';
-   nextEl.textContent='星が減り、宇宙の歴史そのものへ。';
-   subEl.textContent='WORMHOLE 6';
-   showToast('🧭 観測の限界が近い。',2200)
+   transTitle.innerHTML='💙 R136a1';nextEl.textContent='太陽100個分超級の大質量星へ。';subEl.textContent='WORMHOLE 5';showToast('💙 R136a1！ 超高温・超大質量の怪物星。',2100)
  }else if(count===7){
-   transTitle.innerHTML='🌑 FRONTIER';
-   nextEl.textContent='光の届かない場所へ。';
-   subEl.textContent='WORMHOLE 7';
-   showToast('🌑 観測可能宇宙の、その先へ。',2300)
+   transTitle.innerHTML='🌌 ANDROMEDA SCALE';nextEl.textContent='天の川を離れ、別銀河の星へ。';subEl.textContent='WORMHOLE 7';showToast('🌌 アンドロメダ銀河の星まで来た。',2100)
+ }else if(count===9){
+   transTitle.innerHTML='💙 ICARUS';nextEl.textContent='重力レンズで見える超遠方の個別星へ。';subEl.textContent='WORMHOLE 9';showToast('💙 イカロス級の遠方へ。',2200)
+ }else if(count===10){
+   transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='129億年前の光へ。';subEl.textContent='WORMHOLE 10';showToast('✨ エアレンデル。最遠級の個別星へ。',2200)
+ }else if(count===11){
+   transTitle.innerHTML='🌑 COSMIC HISTORY';nextEl.textContent='星のない宇宙の歴史へ。';subEl.textContent='WORMHOLE 11';showToast('🌑 ここから先は宇宙史。',2200)
  }
 }
 
@@ -1729,13 +1741,8 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
     deepWarpCount++;
     wormholeMilestoneEffect(deepWarpCount);
     const milestones=[
-      '💙 R136a1',
-      '⭐ M31-V1',
-      '⭐ M51-DS1',
-      '💙 イカロス',
-      '✨ エアレンデル',
-      '🌑 暗黒時代',
-      '❓ プランク時代'
+      '❓ タビーの星','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🧲 SGR 1806-20','💙 R136a1',
+      '✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル','🌑 暗黒時代','❓ プランク時代'
     ];
     const targetName=milestones[Math.min(deepWarpCount-1,milestones.length-1)];
     const nextSystem=systems.findIndex(s=>s.name===targetName);
@@ -2977,6 +2984,7 @@ for(let i=0;i<systems.length;i++)systemDistanceRank[i]=systems[i].secret?99:syst
 const v60DistanceByStage={
  '🌍 地球':'0 km','🌙 月':'約38.4万 km','♀ 金星':'約4,100万 km','🔴 火星':'約5,500万 km','☿ 水星':'約7,700万 km','☀️ 太陽':'約1.50億 km','🟠 木星':'約5.9億 km','🪐 土星':'約12億 km','🩵 天王星':'約26億 km','🔵 海王星':'約43億 km',
  '⭐ シリウス':'約8.6 光年','💠 ベガ':'約25 光年','🌟 ポラリス':'約430 光年','❤️ アンタレス':'約550 光年','🔴 ベテルギウス':'約640 光年',
+ '❓ タビーの星':'約1,470 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🧲 SGR 1806-20':'約5万 光年',
  '🌸 花吹雪星':'ゲーム内 約129億 光年','🌝 ムーンフェイス':'約38.4万 km（秘密領域）'
 };
 function v60FormatDistance(raw){
@@ -6330,6 +6338,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🌟 ポラリス':'約0.1G（推定表面重力）',
     '❤️ アンタレス':'地球より非常に小さい（超巨星・推定幅大）',
     '🔴 ベテルギウス':'地球より非常に小さい（超巨星・推定幅大）',
+    '❓ タビーの星':'約16G級（F型主系列星・概算）',
+    '🐕 VYおおいぬ座星':'地球より非常に小さい（極超巨星）',
+    '💥 イータ・カリーナ':'正確な表面重力は推定困難（連星・強い質量放出）',
+    '🧲 SGR 1806-20':'約10¹¹G級（中性子星）',
     '💙 R136a1':'約4.6G（推定表面重力）'
   };
 
@@ -6337,7 +6349,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🌍 地球':.56,'🌙 月':.25,'🔴 火星':.38,'🟠 木星':.88,'🪐 土星':.56,
     '🩵 天王星':.54,'🔵 海王星':.62,'☀️ 太陽':.95,'☿ 水星':.38,'♀ 金星':.55,
     '⭐ シリウス':.82,'💠 ベガ':.74,'🌟 ポラリス':.28,'❤️ アンタレス':.22,'🔴 ベテルギウス':.22,
-    '💙 R136a1':.70,'✨ S Doradus':.32,'⭐ M31-V1':.30,'💫 AF Andromedae':.34,
+    '❓ タビーの星':.66,'🐕 VYおおいぬ座星':.20,'💥 イータ・カリーナ':.34,'🧲 SGR 1806-20':.88,'💙 R136a1':.70,'✨ S Doradus':.32,'⭐ M31-V1':.30,'💫 AF Andromedae':.34,
     '🟢 ロマーノ星 GR 290':.58,'🌠 M33 Var C':.33,'⭐ M51-DS1':.45,'🎨 Warhol':.46,
     '💙 イカロス':.48,'🦋 モスラ':.42,'❤️ クイユル':.30,'🦖 ゴジラ':.45,
     '🔷 Abell 2744 LS1':.47,'💠 MACS J0647 LS1':.46,'✨ エアレンデル':.45
@@ -6424,6 +6436,22 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🔴 ベテルギウス':{
       simple:'オリオン座で赤く輝く、巨大で不安定な星',
       type:'赤色超巨星'
+    },
+    '❓ タビーの星':{
+      simple:'理由が完全には分からない大減光を起こす、普通そうで普通じゃない星',
+      type:'F型主系列星／謎の変光天体'
+    },
+    '🐕 VYおおいぬ座星':{
+      simple:'太陽系サイズ級まで膨らみ、巨大なガス塊を何度も吹き飛ばす極超巨星',
+      type:'赤色極超巨星'
+    },
+    '💥 イータ・カリーナ':{
+      simple:'巨大噴火を起こしても生き残った、超大質量の不安定な連星系',
+      type:'高光度青色変光星を含む大質量連星系'
+    },
+    '🧲 SGR 1806-20':{
+      simple:'星の死骸なのに、銀河最強級の磁場とガンマ線を放つ超高密度天体',
+      type:'マグネター（中性子星）'
     },
     '💙 R136a1':{
       simple:'とても重くて明るい、桁外れに巨大な星',
@@ -6602,6 +6630,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🔴 ベテルギウス':{desc:'オリオン座で赤く輝く、巨大で不安定な超巨星',type:'赤色超巨星'},
 
     // 遠方の星
+    '❓ タビーの星':{desc:'Keplerが最大約20%の異常な減光を観測した謎のF型星',type:'F型主系列星／変光天体'},
+    '🐕 VYおおいぬ座星':{desc:'木星〜土星軌道級まで膨らむ最大級の赤色極超巨星',type:'赤色極超巨星'},
+    '💥 イータ・カリーナ':{desc:'19世紀の巨大噴火で大量の物質を吹き飛ばしても生き残った超大質量連星系',type:'高光度青色変光星を含む大質量連星系'},
+    '🧲 SGR 1806-20':{desc:'超強磁場と巨大ガンマ線フレアを持つ中性子星',type:'マグネター'},
     '💙 R136a1':{desc:'太陽の100倍超も重い、怪物級の巨大な大質量星',type:'ウォルフ・ライエ星'},
     '✨ S Doradus':{desc:'明るさが大きく変わる、不安定で巨大な青い星',type:'高光度青色変光星'},
     '⭐ M31-V1':{desc:'宇宙の距離測定を大きく進めた重要な変光星',type:'ケフェイド変光星'},
@@ -8899,13 +8931,19 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     return !!(sys?.epoch || sys?.futureEra || sys?.endHypothesis || sys?.hypothesis);
   }
 
-  function canSpawnComponents(){
+  function componentRouteKind(){
     const sys=systems[system];
-    if(!sys)return false;
-    if(system===0&&stage===0)return false;
-    if(system===BLACK_HOLE_SYSTEM)return false;
-    if(sys.secret||sys.dream||sys.endless||sys.hypothesis||sys.endHypothesis||sys.futureEra)return false;
-    return true;
+    if(!sys)return '';
+    if(system===0&&stage===0)return '';
+    if(system===BLACK_HOLE_SYSTEM)return '';
+    if(sys.secret||sys.dream||sys.endless)return '';
+    if(sys.epoch)return 'origin';
+    if(sys.futureEra||sys.endHypothesis)return 'future';
+    return '';
+  }
+
+  function canSpawnComponents(){
+    return !!componentRouteKind();
   }
 
   function currentEraDominant(){
@@ -8984,25 +9022,33 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function weightedTypesForStage(){
     const n=systems[system]?.name||'';
-    if(systems[system]?.epoch){
+    const route=componentRouteKind();
+    if(route==='origin'){
       const d=currentEraDominant().name;
-      if(d==='放射')return ['radiation','radiation','baryon','darkmatter'];
-      return ['darkmatter','baryon','baryon','radiation'];
+      if(d==='放射')return ['radiation','radiation','radiation','baryon','darkmatter'];
+      return ['darkmatter','darkmatter','baryon','baryon','radiation'];
     }
-    // 通常の宇宙ステージは4種類を均等気味に。
-    return ['baryon','darkmatter','radiation','darkenergy'];
+    if(route==='future'){
+      if(/ビッグリップ|暗い宇宙|ブラックホール|熱的死/.test(n))return ['darkenergy','darkenergy','darkmatter','radiation','radiation'];
+      if(/ビッグクランチ/.test(n))return ['darkmatter','baryon','radiation','darkenergy','darkmatter'];
+      if(/真空崩壊/.test(n))return ['radiation','radiation','darkenergy','darkmatter','baryon'];
+      return ['darkenergy','darkmatter','radiation','radiation','darkmatter'];
+    }
+    return [];
   }
 
   function spawnComponents(){
     V162.components=[];
-    if(!canSpawnComponents())return;
+    const route=componentRouteKind();
+    if(!route)return;
     const pool=weightedTypesForStage();
-    const count=systems[system]?.epoch?2:3;
-    const maxX=systems[system]?.epoch?Math.min(2500,worldLength-350):worldLength-450;
+    if(!pool.length)return;
+    const count=route==='origin'?7:6;
+    const maxX=route==='origin'?Math.min(2500,worldLength-350):Math.max(1400,worldLength-380);
     for(let i=0;i<count;i++){
       const key=pool[Math.floor(rand(i,system*7+stage*13)*pool.length)];
-      const x=520+(i+1)*(maxX-520)/(count+1)+rand(i,system+29)*160;
-      const y=105+rand(i,stage+47)*Math.max(120,groundY()-260);
+      const x=500+(i+1)*(maxX-500)/(count+1)+rand(i,system+29)*190;
+      const y=90+rand(i,stage+47)*Math.max(150,groundY()-250);
       V162.components.push({key,x,y,r:19,got:false,phase:rand(i,91)*Math.PI*2});
     }
   }
@@ -9420,6 +9466,22 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🔴 ベテルギウス':{
       desc:'オリオン座で赤く輝く、巨大で不安定な超巨星',
       type:'赤色超巨星',distance:'640 光年',gravity:'重力傾向｜かなり弱い',jump:'🔼🔼'
+    },
+    '❓ タビーの星':{
+      desc:'最大約20%もの異常な減光で有名になった謎の星',
+      type:'F型主系列星',distance:'1,470 光年',gravity:'約16G級（概算）',jump:'↔️'
+    },
+    '🐕 VYおおいぬ座星':{
+      desc:'太陽の位置に置けば木星〜土星軌道の間まで届くほど巨大な極超巨星',
+      type:'赤色極超巨星',distance:'5,000 光年',gravity:'重力傾向｜非常に弱い',jump:'🔼🔼'
+    },
+    '💥 イータ・カリーナ':{
+      desc:'巨大噴火を起こし、双極の星雲を作った超大質量の連星系',
+      type:'高光度青色変光星を含む大質量連星系',distance:'7,500 光年',gravity:'推定困難',jump:'🔼'
+    },
+    '🧲 SGR 1806-20':{
+      desc:'超強磁場と巨大ガンマ線フレアを放つ、直径数十km級の中性子星',
+      type:'マグネター',distance:'約5万 光年',gravity:'約10¹¹G級',jump:'🔽🔽'
     },
     '💙 R136a1':{
       desc:'太陽の100倍超も重い、怪物級の大質量星',
@@ -10963,7 +11025,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     redSupergiant:[['水素',62,'#9fe6ff'],['ヘリウム',36,'#d8bfff'],['重い元素',2,'#ffd28f']],
     blueSupergiant:[['水素',65,'#9fe6ff'],['ヘリウム',33,'#d8bfff'],['重い元素',2,'#ffd28f']],
     lbv:[['水素',55,'#9fe6ff'],['ヘリウム',43,'#d8bfff'],['重い元素',2,'#ffd28f']],
-    wr:[['水素',40,'#9fe6ff'],['ヘリウム',58,'#d8bfff'],['重い元素',2,'#ffd28f']]
+    wr:[['水素',40,'#9fe6ff'],['ヘリウム',58,'#d8bfff'],['重い元素',2,'#ffd28f']],
+    neutronStar:[['中性子が主役の超高密度物質',94,'#c4b4ff'],['陽子・電子など',5,'#9fdfff'],['超強磁場・表面プラズマ',1,'#ffe98c']]
   };
 
   function recipeForStage(){
@@ -10980,14 +11043,16 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(n==='☀️ 太陽')return {kind:'star',rows:RC.sun,note:'太陽の質量で見た主成分の目安'};
 
     const type=(S()?.v155Type||'')+' '+(S()?.desc||'');
+    if(n==='🧲 SGR 1806-20')return {kind:'star',rows:RC.neutronStar,note:'中性子星内部は通常の原子ではない超高密度状態。割合はイメージ表示'};
     if(n==='💙 R136a1'||n==='🟢 ロマーノ星 GR 290')return {kind:'star',rows:RC.wr,note:'進化した大質量星としての主成分イメージ'};
+    if(n==='💥 イータ・カリーナ')return {kind:'star',rows:RC.lbv,note:'高光度青色変光星を含む超大質量連星系としての主成分イメージ'};
     if(type.includes('高光度青色変光星'))return {kind:'star',rows:RC.lbv,note:'高光度青色変光星としての主成分イメージ'};
     if(type.includes('ケフェイド'))return {kind:'star',rows:RC.cepheid,note:'ケフェイド変光星としての主成分イメージ'};
-    if(type.includes('赤色超巨星'))return {kind:'star',rows:RC.redSupergiant,note:'赤色超巨星としての主成分イメージ'};
+    if(type.includes('赤色超巨星')||type.includes('赤色極超巨星')||n==='🐕 VYおおいぬ座星')return {kind:'star',rows:RC.redSupergiant,note:'赤く大きく膨らんだ巨大星としての主成分イメージ'};
     if(type.includes('青色超巨星')||n==='✨ エアレンデル')return {kind:'star',rows:RC.blueSupergiant,note:'青い大質量星としての主成分イメージ'};
 
     // Other named stars / distant candidates.
-    if((S()?.v155Type||'').includes('星') || /シリウス|ベガ|ポラリス|M31|M33|M51|Warhol|イカロス|モスラ|クイユル|ゴジラ|Abell|MACS/.test(n)){
+    if((S()?.v155Type||'').includes('星') || /シリウス|ベガ|ポラリス|タビー|VYおおいぬ座|M31|M33|M51|Warhol|イカロス|モスラ|クイユル|ゴジラ|Abell|MACS/.test(n)){
       return {kind:'star',rows:RC.normalStar,note:'星の種類から見た主成分の目安'};
     }
     return null;
@@ -11025,6 +11090,163 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         ['🔵 暗黒エネルギー','まだ目立たない',8,'#73d8ff']
       ]
     };
+  }
+
+  const V182_SPECIAL_RECIPES={
+    '⏩ 太陽が明るくなる未来':{
+      title:'🌍 未来の地球レシピ',
+      note:'割合ではなく、この時代で目立つ要素のイメージ',
+      qualitative:[
+        ['☀️ 太陽放射','どんどん強まる',86,'#ffd77e'],
+        ['💧 海と大気','失われ始める',52,'#8fdfff'],
+        ['🪨 岩石地表','残る主役',74,'#c9b8a0'],
+        ['🔵 暗黒エネルギー','背景として続く',18,'#73d8ff']
+      ]
+    },
+    '🔴 赤色巨星の太陽':{
+      title:'🌍 未来の地球レシピ',
+      note:'太陽の進化で内側の太陽系が激変する段階',
+      qualitative:[
+        ['🔴 膨張した太陽','圧倒的な主役',94,'#ff9d76'],
+        ['🌡️ 高温ガス','内側の惑星を包む',78,'#ffc18f'],
+        ['🪨 岩石の残骸','生き残りは不確実',26,'#bda08f'],
+        ['🔵 暗黒エネルギー','宇宙背景として存在',18,'#73d8ff']
+      ]
+    },
+    '⚪ 白色矮星の太陽':{
+      title:'🌌 未来の宇宙レシピ',
+      note:'外層を失ったあとの太陽系イメージ',
+      qualitative:[
+        ['⚪ 白色矮星','残された中心核',72,'#e9f7ff'],
+        ['🪨 冷える惑星・残骸','静かに回る',58,'#c9cfd9'],
+        ['❄️ 失われた熱','だんだん増える印象',46,'#bfe6ff'],
+        ['🔵 暗黒エネルギー','長期的には支配的',26,'#73d8ff']
+      ]
+    },
+    '🌌 星形成の終わり':{
+      title:'🌌 未来の宇宙レシピ',
+      note:'新しい星の材料が減っていく超長期未来',
+      qualitative:[
+        ['🔵 暗黒エネルギー','宇宙膨張の主役',84,'#73d8ff'],
+        ['⭐ 既存の恒星','まだ残る',60,'#ffd98d'],
+        ['☁️ 星間ガス','かなり減る',28,'#cde7ff'],
+        ['🟣 暗黒物質','構造の骨組みとして残る',54,'#b99cff']
+      ]
+    },
+    '🔴 最後の恒星たち':{
+      title:'🌌 未来の宇宙レシピ',
+      note:'長寿命の小さな星が最後の光源になる時代',
+      qualitative:[
+        ['🔵 暗黒エネルギー','宇宙スケールでは主役',88,'#73d8ff'],
+        ['🔴 赤色矮星','最後まで残る光',64,'#ff9a8c'],
+        ['🟣 暗黒物質','骨組みとして残る',52,'#b99cff'],
+        ['✨ 放射','ごく弱く漂う',22,'#ffe88a']
+      ]
+    },
+    '🕳️ ブラックホール時代':{
+      title:'🌌 未来の宇宙レシピ',
+      note:'恒星が減ったあと、ブラックホールが目立つ遠未来',
+      qualitative:[
+        ['🕳️ ブラックホール','目立つ天体',86,'#a998ff'],
+        ['🔵 暗黒エネルギー','宇宙膨張の主役',90,'#73d8ff'],
+        ['✨ ホーキング放射','非常に弱い',18,'#ffe88a'],
+        ['🟣 暗黒物質','大構造に残る',42,'#b99cff']
+      ]
+    },
+    '🌑 暗い宇宙':{
+      title:'🌌 未来の宇宙レシピ',
+      note:'ほとんどの光源が消えた後の極端な遠未来イメージ',
+      qualitative:[
+        ['🔵 暗黒エネルギー','ほぼ唯一の主役',96,'#73d8ff'],
+        ['✨ 残留放射','ごくわずか',14,'#ffe88a'],
+        ['🟣 暗黒物質','骨組みだけが残るかもしれない',28,'#b99cff'],
+        ['⚪ 低エネルギー粒子','希薄に漂う',20,'#dbeaff']
+      ]
+    },
+    '🥶 熱的死／ビッグフリーズ':{
+      title:'🌌 終焉レシピ',
+      note:'差がなくなり、仕事に使えるエネルギーがほぼ消えるシナリオ',
+      qualitative:[
+        ['🔵 暗黒エネルギー','膨張を支え続ける',92,'#73d8ff'],
+        ['🥶 低温化','全体の流れ',82,'#bcd9ff'],
+        ['✨ 残留放射','ごく弱い',16,'#ffe88a'],
+        ['🟣 暗黒物質','構造の名残',26,'#b99cff']
+      ]
+    },
+    '💥 ビッグリップ':{
+      title:'🌌 終焉レシピ',
+      note:'暗黒エネルギーが強すぎる場合の引き裂きシナリオ',
+      qualitative:[
+        ['🔵 暴走する暗黒エネルギー','圧倒的主役',98,'#73d8ff'],
+        ['💥 構造の分解','銀河・星・原子まで影響',84,'#ff9be8'],
+        ['✨ 放射','壊れた先で漂う',30,'#ffe88a'],
+        ['🟣 暗黒物質','束縛を保てなくなる',18,'#b99cff']
+      ]
+    },
+    '🔻 ビッグクランチ':{
+      title:'🌌 終焉レシピ',
+      note:'宇宙膨張が逆転し、全体が再収縮するシナリオ',
+      qualitative:[
+        ['🟡 ふつうの物質','再び詰まっていく',72,'#ffd16f'],
+        ['🟣 暗黒物質','重力側に働く',62,'#b99cff'],
+        ['✨ 高温放射','収縮で増す',66,'#ffe88a'],
+        ['🔵 暗黒エネルギー','主役ではなくなる想定',18,'#73d8ff']
+      ]
+    },
+    '⚠️ 真空崩壊':{
+      title:'🌌 終焉レシピ',
+      note:'真空の状態そのものが切り替わる量子論的シナリオ',
+      qualitative:[
+        ['⚠️ 真空の泡','広がる主役',90,'#b7ffcf'],
+        ['✨ 放射・崩壊エネルギー','境界で生じうる',58,'#ffe88a'],
+        ['🟡 ふつうの物質','法則ごと巻き込まれる',22,'#ffd16f'],
+        ['🔵 暗黒エネルギー','新しい真空に依存',34,'#73d8ff']
+      ]
+    },
+    '🔁 ビッグバウンス':{
+      title:'🌀 起源仮説レシピ',
+      note:'観測で確定していない「宇宙の前」の考え方',
+      qualitative:[
+        ['🌀 量子重力','つぶれ切るのを防ぐ',84,'#9fe9ff'],
+        ['🔻 収縮宇宙','前の段階',68,'#ffd59a'],
+        ['✨ 高エネルギー放射','バウンス後に満ちる',62,'#ffe88a'],
+        ['🟣 構造の種','次の宇宙へ引き継ぐかも',28,'#b99cff']
+      ]
+    },
+    '♻️ 循環宇宙':{
+      title:'🌀 起源仮説レシピ',
+      note:'膨張と収縮が何度も続くとする仮説',
+      qualitative:[
+        ['♻️ 周期運動','世界観の主役',88,'#f2b4ff'],
+        ['🔻 収縮期','前サイクルの終わり',64,'#ffcf9d'],
+        ['💥 高温再加熱','次の始まりをつくる',60,'#ffe88a'],
+        ['🟣 構造の名残','条件次第で受け継ぐ',26,'#b99cff']
+      ]
+    },
+    '🫧 永遠のインフレーション':{
+      title:'🌀 起源仮説レシピ',
+      note:'膨張する時空から泡宇宙が生まれるという考え',
+      qualitative:[
+        ['🫧 インフレーション真空','背景の主役',92,'#b5a8ff'],
+        ['🌌 ポケット宇宙','泡のように生まれる',72,'#d6c9ff'],
+        ['✨ 再加熱','泡の内部で起こる',56,'#ffe88a'],
+        ['❓ 最初の起源問題','まだ未解決',42,'#dce7ff']
+      ]
+    },
+    '◯ 無境界仮説':{
+      title:'🌀 起源仮説レシピ',
+      note:'「前」を通常の時間として置かない量子宇宙論',
+      qualitative:[
+        ['◯ 滑らかな時空','境界を置かない',90,'#fff2c6'],
+        ['🌀 量子ゆらぎ','宇宙の種になる',56,'#d9c8ff'],
+        ['⏱️ 普通の時間','始まりでは定義しにくい',30,'#d8eaff'],
+        ['❓ 観測検証','まだ難しい',38,'#d7f0ff']
+      ]
+    }
+  };
+
+  function specialRecipeForSystem(){
+    return V182_SPECIAL_RECIPES[systems[system]?.name]||null;
   }
 
   function recipeRow(label,val,color,valueText){
@@ -11095,6 +11317,22 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🔴 ベテルギウス':{
       about:'オリオン座の肩で赤く輝く赤色超巨星。表面が脈動し、明るさも不規則に変化する。',
       point:'2019〜2020年に大きく暗くなった現象は、放出物質が冷えて塵になったことが主因と考えられている。'
+    },
+    '❓ タビーの星':{
+      about:'KIC 8462852、Boyajian’s Starとも呼ばれるF型主系列星。Keplerが数日の間に最大約20%も暗くなる異常な減光を見つけ、「なぜこんなに光が消える？」と世界中で話題になった。',
+      point:'宇宙人の巨大構造物説まで話題になったが、現在は波長によって暗くなり方が違うことなどから、不均一な塵が光を遮る説明が有力。それでも細かな仕組みは研究対象。'
+    },
+    '🐕 VYおおいぬ座星':{
+      about:'おおいぬ座にある約5,000光年先の赤色極超巨星。太陽の位置に置けば表面は木星と土星の軌道の間あたりまで届くほど巨大で、周囲には自分が吹き飛ばした巨大なガスと塵の雲が広がる。',
+      point:'「大きいだけ」ではなく、表面の巨大対流や局所的な噴出で大量の物質を失っている。NASAはベテルギウスよりさらに極端な例として研究している。'
+    },
+    '💥 イータ・カリーナ':{
+      about:'りゅうこつ座にある約7,500光年先の超大質量連星系。主星は非常に明るく不安定な高光度青色変光星で、1840年代の「大噴火」では太陽10個分以上の物質を宇宙へ放出した。',
+      point:'普通なら星の最期を連想するほど激しい噴火だったのに、イータ・カリーナは生き残った。吹き飛ばしたガスと塵は、現在「ホムンクルス星雲」という2つの大きなローブとして見える。'
+    },
+    '🧲 SGR 1806-20':{
+      about:'いて座方向、約5万光年先にあるマグネター。超新星爆発のあとに残った中性子星で、直径は数十km級しかないのに、表面磁場は約10¹⁵ガウス級という桁外れの強さ。',
+      point:'2004年12月の巨大フレアは0.1秒ほどの猛烈なガンマ線閃光を放ち、遠く離れた地球の上層大気まで乱した。小ささと破壊力のギャップが宇宙でもトップ級。'
     },
     '💙 R136a1':{
       about:'大マゼラン雲の巨大星団R136にある、知られている中でも特に高質量・高光度なウォルフ・ライエ星。',
@@ -11233,6 +11471,73 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       about:'最初の星や銀河などの強い紫外線が周囲の中性水素を再び電離し、宇宙全体のガスの状態を変えていった時代。',
       point:'宇宙の夜明けから銀河が育つ時代への大きな転換点。エアレンデルの光も、この時代に近い初期宇宙から届いている。',
       next:'→ 銀河が育つ宇宙へ'
+    },
+    '⏩ 太陽が明るくなる未来':{
+      about:'主系列星の太陽は今後も少しずつ明るくなり続ける。数億〜10億年規模では地球の気候や海に大きな影響が出て、生命に厳しい環境へ向かうと考えられている。',
+      point:'これは「太陽が突然爆発する」話ではなく、主系列星として安定に見える間にもゆっくり光度が増していく未来。地球の海の蒸発や温室化が大きな転換点になる。',
+      next:'→ 赤色巨星の太陽'
+    },
+    '🔴 赤色巨星の太陽':{
+      about:'約50億年後、太陽は中心の水素を使い果たして外層を大きく膨らませ、赤色巨星へ進化する。水星や金星はのみ込まれ、地球の運命も非常に厳しい。',
+      point:'赤く巨大になるのは表面温度がやや下がる一方で半径が極端に大きくなるから。未来の地球は残ったとしても、今のような海や大気は保てない。',
+      next:'→ 白色矮星の太陽'
+    },
+    '⚪ 白色矮星の太陽':{
+      about:'赤色巨星の後、太陽は外層を宇宙へ捨て、中心核だけが高密度の白色矮星として残る。明るさは小さくなり、長い時間をかけて冷えていく。',
+      point:'白色矮星は地球ほどの大きさしかないのに太陽に近い質量を持つ高密度天体。太陽系は「明るい中心」ではなく、冷えゆく残骸の周りを回る世界になる。',
+      next:'→ 星形成の終わり'
+    },
+    '🌌 星形成の終わり':{
+      about:'宇宙の超長期未来では、星を作るガスがほぼ使い尽くされ、新しい恒星がほとんど生まれなくなると考えられる。宇宙は「星を作る時代」の終盤へ入る。',
+      point:'未来の宇宙では、新しく何かが生まれるより、すでにある星が老いて消えていく流れが主役になる。暗黒エネルギーの影響で銀河同士はさらに遠ざかる。',
+      next:'→ 最後の恒星たち'
+    },
+    '🔴 最後の恒星たち':{
+      about:'長寿命の赤色矮星のような低質量星が、宇宙最後の恒星として長く残ると考えられている。明るい大きな星はすでにほとんど姿を消している。',
+      point:'「最後まで生き残るのは小さな星」。燃料をゆっくり使う赤色矮星は非常に長寿命で、未来の宇宙の最後の灯りになりうる。',
+      next:'→ ブラックホール時代'
+    },
+    '🕳️ ブラックホール時代':{
+      about:'恒星の時代が終わると、ブラックホールが宇宙で目立つ天体になると考えられる。さらに極端な長時間ではホーキング放射で少しずつ蒸発する可能性がある。',
+      point:'ブラックホールは「永遠に残る穴」かもしれないように見えるが、量子効果を考えると非常にゆっくりエネルギーを失う可能性がある。',
+      next:'→ 暗い宇宙'
+    },
+    '🌑 暗い宇宙':{
+      about:'ほとんどの光源が消え、ブラックホールまでなくなった極端な遠未来では、宇宙は冷たく暗く希薄な状態へ近づくとイメージされる。',
+      point:'この段階では「星」や「銀河」を主役として語る宇宙ではなくなり、残るのはごく低エネルギーの粒子や放射、そして空間の膨張そのものかもしれない。',
+      next:'→ 4つの終焉仮説'
+    },
+    '🥶 熱的死／ビッグフリーズ':{
+      about:'膨張が続く宇宙では、温度や密度の差がならされ、仕事に使えるエネルギー差がほとんどなくなる「熱的死」に近づくというシナリオが考えられている。',
+      point:'「全部が凍る」というより、何かを動かすための差がなくなることが核心。最も標準的な遠未来シナリオのひとつ。'
+    },
+    '💥 ビッグリップ':{
+      about:'暗黒エネルギーが特別な性質を持つと、宇宙膨張の加速がどんどん強まり、最後には銀河・恒星・惑星、さらには原子スケールの結びつきまで引き裂かれる可能性がある。',
+      point:'現在の観測で確定した未来ではないが、「膨張の加速」が極端に進んだ場合の終焉像。何がいつ壊れるかを順に計算する研究もある。'
+    },
+    '🔻 ビッグクランチ':{
+      about:'宇宙膨張が将来どこかで止まり、やがて全体が再び収縮へ向かうという古典的シナリオ。密度が高まるにつれて宇宙全体が高温高密度へ戻っていく。',
+      point:'現在の加速膨張をそのまま見ると有力ではないが、宇宙定数やダークエネルギーの性質が違えば再収縮の可能性を考える余地がある。'
+    },
+    '⚠️ 真空崩壊':{
+      about:'今の宇宙の真空が本当の最低状態ではなく準安定なら、より低いエネルギーの真空の泡がどこかで生まれ、光速に近い速さで広がる可能性がある。',
+      point:'怖い終末話というより、量子場理論から出てくる原理的可能性。もし起これば、粒子や力の性質そのものが変わり、今の物理法則は保たれない。'
+    },
+    '🔁 ビッグバウンス':{
+      about:'ビッグバンの前に収縮する宇宙があり、極限でつぶれ切る代わりに量子重力効果で反発し、今の膨張宇宙が始まったと考える仮説。',
+      point:'特異点を「何も言えない点」で終わらせず、前の宇宙から今の宇宙へつながる絵を与えようとする考え方。'
+    },
+    '♻️ 循環宇宙':{
+      about:'宇宙が一度きりではなく、膨張と収縮、あるいはそれに似たサイクルを繰り返しているとする仮説。ビッグバンを周期の一部として捉える。',
+      point:'「始まりは一度だけ」という見方を外し、宇宙史を長い反復としてとらえる発想。前の周期の情報がどこまで次へ伝わるかは理論ごとに違う。'
+    },
+    '🫧 永遠のインフレーション':{
+      about:'インフレーションが全体としては終わらず続き、その中で膨張が終わった領域が泡のように個々の宇宙として生まれるとする仮説。',
+      point:'私たちの宇宙はその泡の一つかもしれない、というマルチバース的イメージにつながる。ただし直接観測で確かめるのは非常に難しい。'
+    },
+    '◯ 無境界仮説':{
+      about:'宇宙の始まりを、普通の時間で「その前」を置ける境界としてではなく、滑らかな量子状態として表す仮説。ビッグバン以前を普通の時間として考えない。',
+      point:'地球の北極より北を通常は問えないのに近く、「0秒より前」を無理に時間として延ばさない発想。始まりそのものの捉え方を変える。'
     }
   };
 
@@ -11392,6 +11697,54 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         credit:'NASA / ESA / Hubble'
       }
     },
+    '❓ タビーの星':{
+      about:'F3型に近い主系列星で、星そのものは太陽より少し大きく高温。ところがKepler観測で、通常の惑星通過では説明しにくい最大約20%もの不規則な減光が見つかった。',
+      facts:[['種類','F型主系列星'],['減光','最大約20%'],['特徴','不規則・非周期的'],['有力説明','周囲の塵']],
+      point:'星本体はかなり普通なのに「光の消え方」だけが異常。奇妙さの原因が星そのものではなく、周囲を横切る物質にある可能性が高いのが面白い。',
+      origin:'Tabby’s Star は発見研究を主導した天文学者 Tabetha Boyajian の愛称「Tabby」に由来。正式なカタログ名は KIC 8462852。',
+      photo:{
+        id:'tabby-nasa-illustration',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/psd/photojournal/pia/pia22/pia22081/PIA22081.jpg?crop=faces%2Cfocalpoint&fit=clip&h=1440&w=2560',
+        page:'https://science.nasa.gov/photojournal/tabbys-star-illustration/',
+        label:'NASA解説図｜タビーの星と周囲の塵',
+        credit:'NASA / JPL-Caltech',
+        note:'※実写の恒星表面ではなく、減光を起こす塵の仮説を示したNASA公式イラスト'
+      }
+    },
+    '🐕 VYおおいぬ座星':{
+      about:'約5,000光年先の赤色極超巨星。最大級に膨らんだ恒星のひとつで、巨大な表面活動によってガスと塵を局所的に何度も噴き出している。',
+      facts:[['種類','赤色極超巨星'],['距離','約5,000光年'],['大きさ','木星〜土星軌道級'],['特徴','巨大な物質噴出']],
+      point:'太陽の場所に置くと、星の外縁が木星と土星の軌道の間あたりまで達するほど巨大。周囲に見える複雑な星雲は、この星自身が捨てた物質。',
+      origin:'VY は変光星の命名規則による記号。Canis Majoris はラテン語で「おおいぬ座の」という意味。犬星ゲームには名前からして入りたがっている星。',
+      photo:{
+        id:'vy-cma-hubble',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2021/03/STScI-01EZWFVA3KPYP5H1REQ7SQQMYM.tif?w=2000',
+        page:'https://science.nasa.gov/asset/hubble/vy-cma/',
+        label:'Hubble観測画像｜VY CMa周囲の巨大噴出物',
+        credit:'NASA / ESA / R. Humphreys',
+        note:'※星本体の輪郭よりも、周囲へ吹き飛ばしたガスと塵が大きく写っている'
+      }
+    },
+    '💥 イータ・カリーナ':{
+      about:'約7,500光年先にある超大質量の連星系。主星は高光度青色変光星（LBV）で、相手の大質量星と非常に細長い軌道で回り、双方の猛烈な恒星風が衝突して強いX線も生む。',
+      facts:[['正体','超大質量の連星系'],['主星','高光度青色変光星'],['大噴火','1840年代'],['放出物質','太陽10個分以上']],
+      point:'1840年代には一時、全天で2番目級に明るく見えるほど増光。超新星ではなかったのに大量の物質を吹き飛ばし、その残骸が巨大な双極星雲になっている。',
+      origin:'η（イータ）はギリシャ文字で、バイエル符号「Eta Carinae」は「りゅうこつ座のη星」という意味。Carina はラテン語で船の「竜骨」を表す。',
+      photo:{
+        id:'eta-carinae-hubble-2019',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/hubble/releases/2019/07/STScI-01EVSVHN0N2N556CZ4T02215X4.tif?w=2000',
+        page:'https://science.nasa.gov/asset/hubble/eta-carinae-observations-in-uv-light-uncover-magnesium-embedded-in-warm-gas/',
+        label:'Hubble観測画像｜イータ・カリーナとホムンクルス星雲',
+        credit:'NASA / ESA / N. Smith / J. Morse',
+        note:'※中央の連星そのものだけでなく、19世紀の巨大噴火で放出されたガスと塵も写っている'
+      }
+    },
+    '🧲 SGR 1806-20':{
+      about:'星が超新星爆発したあとに残った中性子星の一種「マグネター」。直径はわずか数十km級なのに、表面には約10¹⁵ガウス級の超強磁場がある。',
+      facts:[['種類','マグネター'],['直径','約20〜30km級'],['磁場','約10¹⁵ガウス級'],['2004年','巨大ガンマ線フレア']],
+      point:'2004年の巨大フレアは、約5万光年離れているのに地球の電離層へ影響した。もし月くらい近ければ物質の分子配列にまで影響しうるほどの磁場。',
+      origin:'SGR は Soft Gamma Repeater（軟ガンマ線リピーター）の略。1806-20 は空の位置を表すカタログ名で、固有名ではない。'
+    },
     '💙 R136a1':{
       about:'大マゼラン雲のR136星団中心にある、非常に高温で高質量なWNh型の星。太陽の100倍を大きく超える質量級で、強烈な紫外線と恒星風を放つ。',
       facts:[['種類','WNh / WR型'],['質量','100太陽質量を大きく超える'],['温度','非常に高温'],['恒星風','極めて強い']],
@@ -11542,6 +11895,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🌟 ポラリス':'Polaris star',
     '❤️ アンタレス':'Antares star',
     '🔴 ベテルギウス':'Betelgeuse star',
+    '❓ タビーの星':"Tabby's Star KIC 8462852",
+    '🐕 VYおおいぬ座星':'VY Canis Majoris',
+    '💥 イータ・カリーナ':'Eta Carinae',
+    '🧲 SGR 1806-20':'SGR 1806-20 magnetar',
     '💙 R136a1':'R136a1 star',
     '✨ S Doradus':'S Doradus star',
     '⭐ M31-V1':'M31 V1 Cepheid',
@@ -11816,6 +12173,50 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   }
 
 
+  // v184: 天体レシピの温度。天体ごとに「表面・昼夜・雲頂」など意味を分ける。
+  const V184_TEMP_INFO={
+    '🌍 地球':{main:'平均 約15℃',sub:'地域・季節で大きく変化'},
+    '🌙 月':{main:'昼 約127℃ / 夜 約−173℃',sub:'大気がほぼないので昼夜差が極端'},
+    '🔴 火星':{main:'平均 約−65℃',sub:'場所によって20℃台〜約−153℃まで'},
+    '🟠 木星':{main:'約−110℃',sub:'固い地表はない｜地球の海面気圧に相当する高度'},
+    '🪐 土星':{main:'約−140℃',sub:'固い地表はない｜1気圧相当の高度'},
+    '🩵 天王星':{main:'約−195℃',sub:'1気圧相当の大気温度'},
+    '🔵 海王星':{main:'約−200℃',sub:'1気圧相当の大気温度'},
+    '☀️ 太陽':{main:'表面 約5,500℃',sub:'中心は約1,500万℃'},
+    '☿ 水星':{main:'昼 約430℃ / 夜 約−180℃',sub:'ほぼ大気がなく熱を保てない'},
+    '♀ 金星':{main:'平均 約464℃',sub:'厚いCO₂大気の温室効果で太陽系の惑星で最も高温'},
+    '⭐ シリウス':{main:'シリウスA 表面 約9,700℃',sub:'青白いA型星｜伴星Bは白色矮星'},
+    '💠 ベガ':{main:'表面 約9,300℃',sub:'高速自転のため極と赤道で温度差がある'},
+    '🌟 ポラリス':{main:'表面 約5,700℃級',sub:'ケフェイド脈動で温度も周期変化'},
+    '❤️ アンタレス':{main:'表面 約3,400℃級',sub:'赤色超巨星なので太陽より低温だが巨大'},
+    '🔴 ベテルギウス':{main:'表面 約3,300℃',sub:'太陽より低温でも、巨大なので非常に明るい'},
+    '❓ タビーの星':{main:'表面 約6,500℃',sub:'有効温度 約6,750KのF型星'},
+    '🐕 VYおおいぬ座星':{main:'表面 約3,200℃',sub:'約3,490Kの赤色極超巨星'},
+    '💥 イータ・カリーナ':{main:'主星 約1〜2万℃級',sub:'不安定な連星で状態により推定幅が大きい'},
+    '🧲 SGR 1806-20':{main:'表面 約1,000万℃級',sub:'普通の恒星ではなく、超高温のマグネター'},
+    '💙 R136a1':{main:'表面 約4.5万℃級',sub:'非常に高温なWNh型大質量星'},
+    '✨ S Doradus':{main:'約8,000〜2.5万℃級',sub:'LBVの変光に伴い大きく変わる'},
+    '⭐ M31-V1':{main:'約5,000〜6,000℃級',sub:'ケフェイド脈動で温度が周期変化'},
+    '💫 AF Andromedae':{main:'約1〜3万℃級',sub:'LBVのため状態により大きく変化'},
+    '🟢 ロマーノ星 GR 290':{main:'約2〜3万℃級',sub:'非常に高温な大質量変光星'},
+    '🌠 M33 Var C':{main:'約8,000〜2万℃級',sub:'LBVの状態により温度が変わる'},
+    '⭐ M51-DS1':{main:'約3,400〜4,400℃',sub:'低温で大きく膨らんだ超巨星'},
+    '🎨 Warhol':{main:'温度は未確定',sub:'青い大質量星候補で、詳細な物理量はまだ不確か'},
+    '💙 イカロス':{main:'表面 約1.1万℃級',sub:'青色超巨星で太陽よりかなり高温'},
+    '🦋 モスラ':{main:'単一温度なし',sub:'複数の巨大星を含む星系候補'},
+    '❤️ クイユル':{main:'推定 約3,000〜4,000℃級',sub:'赤色巨星／超巨星候補'},
+    '🦖 ゴジラ':{main:'温度はまだ未確定',sub:'重力レンズで見える遠方星候補'},
+    '🔷 Abell 2744 LS1':{main:'温度はまだ未確定',sub:'超遠方の個別星候補'},
+    '💠 MACS J0647 LS1':{main:'温度はまだ未確定',sub:'宇宙初期の大質量星候補'},
+    '✨ エアレンデル':{main:'推定 1万℃超級',sub:'B型の高温大質量星候補'}
+  };
+
+  function v184TempHTML(name=''){
+    const t=V184_TEMP_INFO[name];
+    if(!t)return '';
+    return `<div class="v184TempCard"><div><span>🌡️ 温度</span><b>${t.main}</b></div>${t.sub?`<small>${t.sub}</small>`:''}</div>`;
+  }
+
   function v175DetailHTML(isEra){
     const base=isEra?V175_ERA_DETAIL[systems[system]?.name]:V175_OBJECT_DETAIL[S()?.name];
     const star=!isEra?V179_STAR_INFO[S()?.name]:null;
@@ -11825,7 +12226,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const bodyPhoto=!isEra?V180_BODY_PHOTOS[S()?.name]:null;
     const objectName=S()?.name||systems[system]?.name||'';
     const photo=star?.photo||bodyPhoto||(!isEra&&star?v181AutoPhotoFor(objectName):null)||null;
-    const title=isEra?'📖 この時代をもっと詳しく':star?'⭐ この星をもっと詳しく':'📖 この天体をもっと詳しく';
+    const title=isEra?((systems[system]?.hypothesis||systems[system]?.endHypothesis)?'📖 この仮説をもっと詳しく':'📖 この時代をもっと詳しく'):star?'⭐ この星をもっと詳しく':'📖 この天体をもっと詳しく';
     const meta=S()?.distance||systems[system]?.distance||'';
 
     return `
@@ -11833,6 +12234,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <div class="v175RecipeKicker">${title}</div>
         <h3>${S()?.name||systems[system]?.name||''}</h3>
         ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
+        ${!isEra?v184TempHTML(objectName):''}
         ${photo?v179PhotoHTML(photo,objectName):''}
         ${star?`<div class="v179SectionLabel">⭐ 星の特徴</div>`:''}
         <p>${d.about||''}</p>
@@ -11856,19 +12258,21 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(!body||!head||!sub||!btn)return;
 
     const er=eraRecipe();
+    const sr=specialRecipeForSystem();
     const nr=recipeForStage();
-    const special=!!(systems[system]?.hypothesis||systems[system]?.endHypothesis||systems[system]?.futureEra||system===BLACK_HOLE_SYSTEM);
-    btn.classList.toggle('v168RecipeOff',special);
+    const hideBtn=!!(system===BLACK_HOLE_SYSTEM||systems[system]?.dream||systems[system]?.secret);
+    btn.classList.toggle('v168RecipeOff',hideBtn);
 
-    if(er){
+    if(er||sr){
+      const recipe=er||sr;
       btn.textContent='🌌 時代レシピ';
-      head.textContent=er.title;
+      head.textContent=recipe.title;
       sub.textContent=systems[system]?.name||'宇宙史';
       body.innerHTML=
         `<div class="v162EraDominant"><b>${systems[system]?.name}</b> の主役は時代とともに変わる</div>`+
         `<div class="v162RecipeSub">この時代の存在感</div>`+
-        er.qualitative.map(r=>recipeRow(r[0],r[2],r[3],r[1])).join('')+
-        `<div class="v162RecipeNote">${er.note}</div>`+
+        recipe.qualitative.map(r=>recipeRow(r[0],r[2],r[3],r[1])).join('')+
+        `<div class="v162RecipeNote">${recipe.note}</div>`+
         v175DetailHTML(true);
       return;
     }
@@ -11917,6 +12321,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v179PhotoMeta a{margin-left:auto;color:#aee8ff;text-decoration:none;font:900 8px/1.2 system-ui}
       .v179PhotoCard:before{content:'REAL OBSERVATION';position:absolute;z-index:2;margin:7px;padding:4px 7px;border-radius:999px;background:rgba(0,0,0,.58);color:#fff;font:900 6.5px/1 system-ui;letter-spacing:.08em;pointer-events:none}
       .v181AutoPhoto .v179PhotoFallback{display:grid;background:radial-gradient(circle at 32% 28%,rgba(86,231,255,.10),transparent 38%),radial-gradient(circle at 72% 70%,rgba(255,79,216,.09),transparent 42%),#030611}
+      .v184TempCard{margin:10px 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(255,139,91,.10),rgba(114,217,255,.08));border:1px solid rgba(255,186,135,.18)}
+      .v184TempCard>div{display:flex;align-items:center;gap:8px}.v184TempCard span{color:#ffd4ad;font:900 9px/1.2 system-ui}.v184TempCard b{margin-left:auto;color:#fff4d9;font:1000 11px/1.2 system-ui;text-align:right}.v184TempCard small{display:block;margin-top:6px;color:rgba(255,255,255,.56);font:700 8.5px/1.45 system-ui}
       .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
       .v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
       .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
@@ -13958,7 +14364,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       '📡 宇宙背景放射（CMB）','🌑 暗黒時代','🌅 宇宙の夜明け','🔥 再電離時代'
     ];
     const distantOrder=[
-      '💙 R136a1','✨ S Doradus','⭐ M31-V1','💫 AF Andromedae','🟢 ロマーノ星 GR 290',
+      '❓ タビーの星','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','💫 AF Andromedae','🟢 ロマーノ星 GR 290',
       '🌠 M33 Var C','⭐ M51-DS1','🎨 Warhol','💙 イカロス','🦋 モスラ','❤️ クイユル',
       '🦖 ゴジラ','🔷 Abell 2744 LS1','💠 MACS J0647 LS1','✨ エアレンデル'
     ];
@@ -17756,6 +18162,6 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
   </div>
 </div>
 
-<!-- v181: 星レシピ写真・全件表示フォールバック追加 -->
+<!-- v184: タビー/VY/SGR追加 + 天体レシピ温度表示 -->
 </body>
 </html>
