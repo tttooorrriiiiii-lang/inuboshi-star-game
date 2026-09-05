@@ -15255,10 +15255,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   function returnIce(){return phase()==='returnEarth'&&system===0&&stage===0}
   function future(){return !!sys().futureEra}
   function starEra(){
-    // v209: Earendel and early-future stages should use the ordinary star-stage visuals,
-    // not the extra matter bubbles/atom overlays from v178.
-    if(oldEarth()||formation()||birth())return true;
-    return false;
+    if(earendel()||oldEarth()||formation()||birth())return true;
+    return future()&&(sys().futureStep||0)<=6;
   }
 
   function key(){
@@ -15327,9 +15325,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     else if(birth())starCount=5;
     else if(oldEarth())starCount=5;
     else if(future()){
-      const c={1:7,2:6,3:5,4:4,5:2,6:1};
-      starCount=c[sys().futureStep]||0;
-    }else if(earendel())starCount=4;
+      const stepNo=sys().futureStep||0;
+      if(stepNo>=5){
+        const c={5:2,6:1};
+        starCount=c[stepNo]||0;
+      }else{
+        starCount=0;
+      }
+    }else if(earendel())starCount=0;
 
     const maxX=earendel()?2450:(future()?Math.max(850,{1:2250,2:2100,3:1650,4:1950,5:1750,6:1550}[sys().futureStep]||1200):690);
     for(let i=0;i<starCount;i++){
@@ -15339,13 +15342,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       });
     }
 
-    // Earendel deliberately has only a few familiar things.
+    // v210: Earendel visible pickups are supplied by the ordinary stage layer instead.
     if(earendel()){
-      V178.pickups.push(
-        {kind:'bone',icon:'🦴',x:780,y:gy-88,got:false},
-        {kind:'alien',icon:'👽',x:1460,y:gy-132,got:false},
-        {kind:'bone',icon:'🦴',x:2060,y:gy-72,got:false}
-      );
+      /* no v178 pickup overlays here */
     }
 
     // Atomic / molecular layer: visual matter appropriate to the era.
@@ -15369,6 +15368,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function pickupUpdate(){
     ensureSpawn();
+    if(earendel() || (future() && (sys().futureStep||0)<=4))return;
     const cx=p.x+p.w*.5,cy=p.y+p.h*.5;
     for(const o of V178.pickups){
       if(o.got)continue;
@@ -15392,6 +15392,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function drawMatter(){
     ensureSpawn();
+    if(earendel() || (future() && (sys().futureStep||0)<=4))return;
     const now=performance.now()/1000;
     ctx.save();
 
@@ -15652,7 +15653,7 @@ const V204={
   radioEl:null,
   wormEl:null
 };
-window.INUBOSHI_GAME_VERSION='v209';
+window.INUBOSHI_GAME_VERSION='v210';
 
 const V204_SIMPLE_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -15872,16 +15873,25 @@ const v204PrevStageStart=stageStart;
 stageStart=function(){
   const out=v204PrevStageStart();
   V204.radioDone=false;V204.signalActive=false;V204.futureWarping=false;
+  try{V169.pickups=[];V169.hazards=[];V169.pops=[];}catch(e){}
   if(v204IsEarendel()){
     wormholeActive=false;blackHoleActive=false;
-    // Guaranteed early objects using the exact same draw/collision types as ordinary star stages.
-    items.push({x:245,y:groundY()-72,r:16,got:false,color:S().goodColor});
-    items.push({x:305,y:groundY()-52,r:18,got:false,color:'#ffd65a',food:true});
-    morphs.push({x:270,y:groundY()-120,r:26,got:false,dog:'🐩'});
-    aliens.push({x:350,y:groundY()-105,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
-    morphs.push({x:730,y:groundY()-150,r:26,got:false,dog:'🦮'});
-    aliens.push({x:820,y:groundY()-150,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
+    const gy=groundY();
+    const starXs=[240,520,820,1120,1510,1900,2280];
+    const boneXs=[360,980,1760,2140];
+    const alienXs=[690,1380,2050];
+    starXs.forEach((x,i)=>items.push({x,y:gy-70-(i%3)*52,r:16,got:false,color:S().goodColor}));
+    boneXs.forEach((x,i)=>items.push({x,y:gy-62-(i%2)*60,r:18,got:false,color:'#ffd65a',food:true}));
+    alienXs.forEach((x,i)=>aliens.push({x,y:gy-108-(i%2)*44,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0}));
+    morphs.push({x:1240,y:gy-138,r:26,got:false,dog:'🐩'});
+    morphs.push({x:1680,y:gy-158,r:26,got:false,dog:'🦮'});
     showToast('📻 ずっと先にトランシーバーがある。',1500);
+  }else if(v204FutureEarth()){
+    const gy=groundY();
+    const starXs=[320,760,1180,1540,1910,2280];
+    starXs.forEach((x,i)=>items.push({x,y:gy-68-(i%3)*54,r:16,got:false,color:S().goodColor}));
+    items.push({x:560,y:gy-58,r:18,got:false,color:'#ffd65a',food:true});
+    items.push({x:1360,y:gy-118,r:18,got:false,color:'#ffd65a',food:true});
   }
   setTimeout(()=>syncHUD(),0);
   return out;
@@ -15889,6 +15899,9 @@ stageStart=function(){
 
 const v204PrevUpdate=update;
 update=function(now,dt){
+  if(v204IsEarendel()||v204FutureEarth()){
+    try{V169.pickups=[];V169.hazards=[];}catch(e){}
+  }
   if(!paused&&v204IsEarendel()){
     wormholeActive=false;blackHoleActive=false;satellites=[];
     const cx=p.x+p.w*.5;
@@ -16153,6 +16166,36 @@ drawBackground=function(){
   if(v204FutureEarth())v209DrawExactEarthBlock();
 };
 /* === /v209 === */
+
+/* === v210: draw exact Earth foreground on future stages, after backgrounds === */
+function v210DrawEarthForegroundExact(){
+  const gy=groundY();
+  ctx.save();
+  for(let i=0;i<11;i++){
+    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
+    const bh=90+(i%4)*28;
+    ctx.fillStyle=i%2?'#9aa7b6':'#7d8c9e';
+    ctx.fillRect(x,gy-bh-30,85,bh);
+    ctx.fillStyle='rgba(255,244,170,.72)';
+    for(let r=0;r<4;r++)for(let c=0;c<3;c++)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
+  }
+  for(let i=0;i<9;i++){
+    const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
+    ctx.fillStyle='#6f4a2d';
+    ctx.fillRect(x,gy-64,10,64);
+    ctx.fillStyle=i%2?'#58a765':'#6cb56b';
+    ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+}
+v204DrawFutureCity=function(step){ if(step<1||step>4)return; /* disabled: exact earth foreground is drawn in drawGround */ };
+const v210PrevGround=drawGround;
+drawGround=function(){
+  v210PrevGround();
+  if(v204FutureEarth())v210DrawEarthForegroundExact();
+};
+/* === /v210 === */
+
 
 
 
@@ -19513,15 +19556,15 @@ drawBackground=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v209';
+  window.INUBOSHI_GAME_VERSION='v210';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v209<small>EARTH MATCH + EARENDEL/FUTURE CLEANUP / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v210<small>EARTH EXACT FOREGROUND + EARENDEL VISIBLE ITEMS / 2026-09-05</small>';devCard.prepend(el);
     }
     const jumpCard=document.querySelector('#v150JumpPanel .v150JumpCard');
     if(jumpCard&&!document.getElementById('v204JumpVersion')){
-      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v209';
+      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v210';
       const input=jumpCard.querySelector('#v150JumpSearch');if(input)jumpCard.insertBefore(el,input);else jumpCard.prepend(el);
     }
   }
