@@ -1068,6 +1068,52 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v229-star-profile-style">
+.v229StarProfile{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
+  margin:10px 0 12px;
+}
+.v229ProfileCard{
+  min-width:0;padding:10px 9px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.11);
+  background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.v229ProfileLabel{
+  margin-bottom:6px;font:900 9px/1.15 system-ui;letter-spacing:.03em;
+  color:rgba(235,245,255,.65);
+}
+.v229ProfileCard strong{
+  display:block;color:#fff;font:1000 12px/1.25 system-ui;
+  overflow-wrap:anywhere;
+}
+.v229ProfileCard small{
+  display:block;margin-top:5px;color:rgba(231,240,255,.58);
+  font:700 8px/1.35 system-ui;
+}
+.v229ProfileCard.fate.supernova{
+  border-color:rgba(255,129,93,.28);
+  background:linear-gradient(180deg,rgba(255,91,58,.10),rgba(255,255,255,.03));
+}
+.v229ProfileCard.fate.remnant{
+  border-color:rgba(158,205,255,.26);
+  background:linear-gradient(180deg,rgba(100,169,255,.09),rgba(255,255,255,.03));
+}
+.v229ProfileCard.fate.calm{
+  border-color:rgba(166,244,205,.20);
+}
+.v229ProfileCard.fate.unknown{
+  border-color:rgba(205,183,255,.22);
+}
+@media(max-width:430px){
+  .v229StarProfile{gap:6px}
+  .v229ProfileCard{padding:9px 7px;border-radius:12px}
+  .v229ProfileCard strong{font-size:10px}
+  .v229ProfileCard small{font-size:7px}
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -12785,6 +12831,71 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     </div>`;
   }
 
+
+  // v229: 「何等星？」「何重星？」「最後どうなる？」を星レシピ上部へ。
+  // 超遠方星は重力レンズ増光や観測波長で等級が変わりやすいため、無理に1つの数値へ固定しない。
+  const V229_STAR_PROFILE={
+    '☀️ 太陽':{mag:'−26.7等',magSub:'地球から見た圧倒的な明るさ',multi:'1個星',multiSub:'太陽は単独星',fate:'白色矮星へ',fateSub:'超新星にはならない',fateClass:'calm'},
+    '⭐ シリウス':{mag:'−1.46等',magSub:'夜空で最も明るい恒星',multi:'2重星',multiSub:'シリウスA＋白色矮星B',fate:'2星とも白色矮星へ',fateSub:'Aも超新星にはならない見込み',fateClass:'calm'},
+    '🐶 プロキオン':{mag:'約0.34等',magSub:'肉眼でかなり明るい',multi:'2重星',multiSub:'主星A＋白色矮星B',fate:'白色矮星へ',fateSub:'超新星にはならない見込み',fateClass:'calm'},
+    '🦅 アルタイル':{mag:'約0.77等',magSub:'夏の大三角の一角',multi:'1個星',multiSub:'近接伴星は確認されていない',fate:'白色矮星へ',fateSub:'超新星にはならない見込み',fateClass:'calm'},
+    '😈 アルゴル':{mag:'約2.1〜3.4等',magSub:'食のたびに暗くなる',multi:'3重星系',multiSub:'近接2星＋遠い伴星',fate:'白色矮星中心の系へ',fateSub:'通常の超新星候補ではない',fateClass:'calm'},
+    '🕰️ メトシェラ星':{mag:'約7.2等',magSub:'肉眼ではかなり厳しい',multi:'1個星扱い',multiSub:'確実な近接伴星は未確認',fate:'白色矮星へ',fateSub:'低質量なので超新星にはならない',fateClass:'calm'},
+    '🐶 ゴメイサ':{mag:'約2.9等',magSub:'肉眼で見える',multi:'1個星扱い',multiSub:'近接伴星は未確定',fate:'白色矮星の可能性大',fateSub:'質量次第で進化には幅あり',fateClass:'unknown'},
+    '🐕 アダーラ':{mag:'約1.5等',magSub:'かなり明るい一等星',multi:'2重星系',multiSub:'伴星が知られている',fate:'超新星候補',fateSub:'大質量星｜爆発時期は不明',fateClass:'supernova'},
+    '🐕 ミルザム':{mag:'約2.0等',magSub:'肉眼で明るい',multi:'1個星扱い',multiSub:'確実な近接伴星は未確定',fate:'超新星候補',fateSub:'大質量星｜時期は不明',fateClass:'supernova'},
+    '🐕 ウェズン':{mag:'約1.8等',magSub:'肉眼で明るい',multi:'1個星扱い',multiSub:'伴星は未確定',fate:'超新星候補',fateSub:'黄色超巨星｜寿命後半',fateClass:'supernova'},
+    '🐕 アルドラ':{mag:'約2.4等',magSub:'肉眼で見える',multi:'1個星扱い',multiSub:'伴星は未確定',fate:'超新星候補',fateSub:'青色超巨星｜時期は不明',fateClass:'supernova'},
+    '💠 ベガ':{mag:'約0.03等',magSub:'明るさの基準に使われた星',multi:'1個星',multiSub:'近接伴星は確認されていない',fate:'白色矮星へ',fateSub:'超新星にはならない見込み',fateClass:'calm'},
+    '🌾 スピカ':{mag:'約1.0等',magSub:'春の代表的な一等星',multi:'2重星',multiSub:'かなり接近した連星',fate:'超新星候補',fateSub:'主星は大質量｜時期は不明',fateClass:'supernova'},
+    '🌟 ポラリス':{mag:'約2.0等',magSub:'少し変光する',multi:'3重星系',multiSub:'A・Ab・B',fate:'白色矮星へ',fateSub:'主星は超新星質量には届かない見込み',fateClass:'calm'},
+    '❤️ アンタレス':{mag:'約0.6〜1.6等',magSub:'変光する赤い一等星',multi:'2重星',multiSub:'青白い伴星Bがいる',fate:'🚨 超新星候補',fateSub:'寿命終盤｜いつ爆発するかは不明',fateClass:'supernova'},
+    '🔴 ベテルギウス':{mag:'約0〜1.6等',magSub:'大きく明るさが変わる',multi:'伴星あり',multiSub:'近い伴星 Siwarha が確認された',fate:'🚨 超新星候補',fateSub:'終盤だが「間近」と断定はできない',fateClass:'supernova'},
+    '❓ タビーの星':{mag:'約11.7等',magSub:'肉眼では見えない',multi:'広い2重星候補',multiSub:'遠い赤色矮星伴星があると考えられる',fate:'白色矮星へ',fateSub:'超新星にはならない見込み',fateClass:'calm'},
+    '🦢 デネブ':{mag:'約1.25等',magSub:'とても遠いのに一等星',multi:'1個星扱い',multiSub:'確実な近接伴星は未確認',fate:'🚨 超新星候補',fateSub:'白色超巨星｜爆発時期は不明',fateClass:'supernova'},
+    '🐕 VYおおいぬ座星':{mag:'約6.5〜9等',magSub:'変光＋塵で暗さが変わる',multi:'1個星扱い',multiSub:'確実な伴星は未確認',fate:'🚨 超新星候補',fateSub:'赤色極超巨星｜寿命最終盤級',fateClass:'supernova'},
+    '💥 イータ・カリーナ':{mag:'現在 約4〜5等級',magSub:'巨大噴火時は−1等級級まで増光',multi:'2重星',multiSub:'超大質量の連星系',fate:'🚨 超新星候補',fateSub:'非常に大質量｜時期は予測できない',fateClass:'supernova'},
+    '🪐 Stephenson 2-18':{mag:'肉眼では見えない',magSub:'塵に隠れ、赤外線で目立つ',multi:'不明',multiSub:'伴星の有無は確定していない',fate:'超新星候補',fateSub:'大質量なら核崩壊型へ｜推定幅あり',fateClass:'supernova'},
+    '🧲 SGR 1806-20':{mag:'可視光では極暗い',magSub:'X線・γ線・赤外線が主役',multi:'星の残骸1個',multiSub:'マグネター',fate:'💀 すでに爆発後',fateSub:'超新星後に残った中性子星',fateClass:'remnant'},
+    '💙 R136a1':{mag:'約13等級',magSub:'肉眼では見えない',multi:'1個星扱い',multiSub:'近接伴星は未確定',fate:'🚨 超新星級の最期候補',fateSub:'超大質量｜ブラックホール化も候補',fateClass:'supernova'},
+    '✨ S Doradus':{mag:'約8〜11等級',magSub:'大きく変光する',multi:'1個星扱い',multiSub:'確実な近接伴星は未確定',fate:'🚨 超新星候補',fateSub:'LBV｜大質量星の進化後半',fateClass:'supernova'},
+    '⭐ M31-V1':{mag:'約18〜19等級',magSub:'大型望遠鏡が必要',multi:'1個星扱い',multiSub:'ケフェイド変光星',fate:'白色矮星へ',fateSub:'通常の核崩壊超新星にはならない見込み',fateClass:'calm'},
+    '💫 AF Andromedae':{mag:'肉眼不可',magSub:'アンドロメダ銀河のLBV',multi:'不明',multiSub:'近接伴星は確定していない',fate:'超新星候補',fateSub:'大質量LBV｜時期は不明',fateClass:'supernova'},
+    '🟢 ロマーノ星 GR 290':{mag:'肉眼不可',magSub:'M33の大質量変光星',multi:'不明',multiSub:'伴星は未確定',fate:'超新星候補',fateSub:'WR段階へ進む大質量星',fateClass:'supernova'},
+    '🌠 M33 Var C':{mag:'肉眼不可',magSub:'M33の高光度変光星',multi:'不明',multiSub:'伴星は未確定',fate:'超新星候補',fateSub:'大質量LBV｜時期は不明',fateClass:'supernova'},
+    '⭐ M51-DS1':{mag:'肉眼不可',magSub:'Hubble級で追跡する遠方星',multi:'不明',multiSub:'単独星か星系か未確定',fate:'超新星候補の可能性',fateSub:'大質量超巨星なら核崩壊型へ',fateClass:'unknown'},
+    '🎨 Warhol':{mag:'肉眼不可',magSub:'重力レンズ増光で検出',multi:'不明',multiSub:'遠すぎて伴星は未確定',fate:'超新星候補の可能性',fateSub:'大質量星なら短命｜物理量に幅',fateClass:'unknown'},
+    '💙 イカロス':{mag:'肉眼不可',magSub:'重力レンズで約28等級級まで増光',multi:'不明',multiSub:'単独星として観測・伴星未確定',fate:'超新星候補',fateSub:'青色超巨星｜観測した姿は過去のもの',fateClass:'supernova'},
+    '🦋 モスラ':{mag:'肉眼不可',magSub:'JWST＋重力レンズで検出',multi:'複数星候補',multiSub:'2つ以上の巨大星の可能性',fate:'構成星は超新星候補',fateSub:'大質量星系なら短命',fateClass:'unknown'},
+    '❤️ クイユル':{mag:'肉眼不可',magSub:'JWST＋重力レンズ級',multi:'不明',multiSub:'単独星か伴星ありか未確定',fate:'超新星候補の可能性',fateSub:'赤色超巨星級なら寿命後半',fateClass:'unknown'},
+    '🦖 ゴジラ':{mag:'肉眼不可',magSub:'重力レンズで極端に増光',multi:'不明',multiSub:'正体そのものに不確定さあり',fate:'超新星候補の可能性',fateSub:'大質量星なら短命',fateClass:'unknown'},
+    '🔷 Abell 2744 LS1':{mag:'肉眼不可',magSub:'銀河団レンズ＋大型望遠鏡',multi:'不明',multiSub:'伴星は判別できていない',fate:'不明',fateSub:'大質量星なら超新星候補',fateClass:'unknown'},
+    '💠 MACS J0647 LS1':{mag:'肉眼不可',magSub:'重力レンズ＋JWST級',multi:'星／星系候補',multiSub:'単独か複数か未確定',fate:'不明',fateSub:'大質量星なら短命・超新星候補',fateClass:'unknown'},
+    '✨ エアレンデル':{mag:'肉眼不可',magSub:'約27等級級｜重力レンズ＋JWST',multi:'伴星候補あり',multiSub:'単独星か2星系かまだ不確か',fate:'超新星級の最期候補',fateSub:'当時の大質量星ならすでに寿命を終えた可能性が高い',fateClass:'supernova'}
+  };
+
+  function v229ProfileHTML(name=''){
+    const x=V229_STAR_PROFILE[name];
+    if(!x)return '';
+    return `<div class="v229StarProfile" aria-label="星の基本プロフィール">
+      <div class="v229ProfileCard magnitude">
+        <div class="v229ProfileLabel">👀 何等星？</div>
+        <strong>${v179Esc(x.mag||'不明')}</strong>
+        <small>${v179Esc(x.magSub||'')}</small>
+      </div>
+      <div class="v229ProfileCard multiplicity">
+        <div class="v229ProfileLabel">👥 何重星？</div>
+        <strong>${v179Esc(x.multi||'不明')}</strong>
+        <small>${v179Esc(x.multiSub||'')}</small>
+      </div>
+      <div class="v229ProfileCard fate ${v179Esc(x.fateClass||'unknown')}">
+        <div class="v229ProfileLabel">💥 最後どうなる？</div>
+        <strong>${v179Esc(x.fate||'不明')}</strong>
+        <small>${v179Esc(x.fateSub||'')}</small>
+      </div>
+    </div>`;
+  }
+
   function v186StarContextHTML(name=''){
     const x=V186_STAR_CONTEXT[name];
     if(!x)return '';
@@ -13294,6 +13405,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <h3>${S()?.name||systems[system]?.name||''}</h3>
         ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
         ${!isEra?v191SpotlightHTML(objectName):''}
+        ${!isEra?v229ProfileHTML(objectName):''}
         ${!isEra?v184TempHTML(objectName):''}
         ${!isEra?v186StarContextHTML(objectName):''}
         ${photo?v179PhotoHTML(photo,objectName):''}
@@ -15510,15 +15622,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v228';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v228</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v229';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v229</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v228</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v229</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16073,7 +16185,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v228';
+window.INUBOSHI_GAME_VERSION='v229';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -19769,7 +19881,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v228</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v229</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -20118,11 +20230,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v228';
+  window.INUBOSHI_GAME_VERSION='v229';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v223<small>DISTANCE VIS + SPIN ICON FIX / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v229<small>STAR PROFILE: MAGNITUDE + MULTIPLICITY + FATE / 2026-09-05</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
