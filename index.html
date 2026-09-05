@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v187</title>
+<title>犬星くん GALAXY TOUR v188</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -12542,9 +12542,188 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const x=V186_STAR_CONTEXT[name];
     if(!x)return '';
     return `${v187LifeHTML(name,x)}
+      ${v188MetricsHTML(name)}
       <div class="v186StarContext">
         <div class="v186ContextRow"><span>🌌 所属</span><b>${v179Esc(x.home)}</b></div>
       </div>`;
+  }
+
+  // v188: 大きさ・質量・明るさを横並びカードで表示
+  const V188_STAR_METRICS={
+    '☀️ 太陽':{
+      size:{main:'半径 1 太陽',sub:'直径 約139万km'},
+      mass:{main:'1 太陽質量',sub:'基準になる星'},
+      light:{main:'1 太陽光度',sub:'地球を照らす基準光'}
+    },
+    '⭐ シリウス':{
+      size:{main:'A星 半径 約1.7太陽',sub:'伴星Bは地球サイズ級'},
+      mass:{main:'A星 約2.0太陽質量',sub:'Bは約1太陽質量'},
+      light:{main:'A星 約25太陽光度',sub:'夜空で最も明るい恒星'}
+    },
+    '🐶 プロキオン':{
+      size:{main:'A星 半径 約2太陽',sub:'伴星Bは白色矮星'},
+      mass:{main:'A星 約1.5太陽質量',sub:'連星系'},
+      light:{main:'A星 約7太陽光度',sub:'白黄色に明るい'}
+    },
+    '🐶 ゴメイサ':{
+      size:{main:'半径 約3〜4太陽',sub:'高速回転でやや扁平'},
+      mass:{main:'約3太陽質量',sub:'B型Be星'},
+      light:{main:'約200太陽光度',sub:'青白く強く光る'}
+    },
+    '🐕 アダーラ':{
+      size:{main:'半径 約13太陽',sub:'青色巨星'},
+      mass:{main:'約12太陽質量',sub:'大質量星'},
+      light:{main:'約4万太陽光度',sub:'紫外線も強い'}
+    },
+    '🐕 ミルザム':{
+      size:{main:'半径 約10太陽',sub:'青色巨星'},
+      mass:{main:'約12太陽質量',sub:'大質量B型星'},
+      light:{main:'約3万〜4万太陽光度',sub:'犬星の先触れ'}
+    },
+    '🐕 ウェズン':{
+      size:{main:'半径 約200太陽',sub:'巨大な黄色超巨星'},
+      mass:{main:'約10〜15太陽質量',sub:'進化した大質量星'},
+      light:{main:'約5万太陽光度級',sub:'遠くても明るい'}
+    },
+    '🐕 アルドラ':{
+      size:{main:'半径 約30〜40太陽',sub:'青色超巨星'},
+      mass:{main:'約20太陽質量',sub:'かなり重い'},
+      light:{main:'約10万太陽光度',sub:'おおいぬ座の明るい星'}
+    },
+    '💠 ベガ':{
+      size:{main:'半径 約2.4太陽',sub:'高速自転で赤道がふくらむ'},
+      mass:{main:'約2.1太陽質量',sub:'A型主系列星'},
+      light:{main:'約40太陽光度',sub:'青白く明るい'}
+    },
+    '🌟 ポラリス':{
+      size:{main:'主星 半径 約40〜50太陽',sub:'ケフェイド変光星'},
+      mass:{main:'主星 約5太陽質量',sub:'3重星系'},
+      light:{main:'主星 約2,000太陽光度級',sub:'周期で変化'}
+    },
+    '❤️ アンタレス':{
+      size:{main:'半径 約700太陽',sub:'木星軌道級の赤色超巨星'},
+      mass:{main:'約12太陽質量',sub:'大きいが表面重力は弱い'},
+      light:{main:'約7万太陽光度級',sub:'赤く非常に明るい'}
+    },
+    '🔴 ベテルギウス':{
+      size:{main:'半径 約700太陽級',sub:'木星軌道近くまで届く'},
+      mass:{main:'約15〜20太陽質量',sub:'赤色超巨星'},
+      light:{main:'約10万太陽光度級',sub:'脈動で変動'}
+    },
+    '❓ タビーの星':{
+      size:{main:'半径 約1.6太陽',sub:'F型主系列星'},
+      mass:{main:'約1.4太陽質量',sub:'太陽よりやや重い'},
+      light:{main:'約5太陽光度',sub:'減光の奇妙さが主役'}
+    },
+    '🐕 VYおおいぬ座星':{
+      size:{main:'半径 約1,000〜1,400太陽',sub:'木星〜土星軌道級'},
+      mass:{main:'約15〜20太陽質量',sub:'赤色極超巨星'},
+      light:{main:'約20万〜30万太陽光度',sub:'巨大噴出物も明るい'}
+    },
+    '💥 イータ・カリーナ':{
+      size:{main:'主星 半径 数十〜100太陽級',sub:'連星相互作用で変動'},
+      mass:{main:'主星 約90 + 伴星 約30',sub:'超大質量連星系'},
+      light:{main:'系全体で数百万太陽光度',sub:'大噴火でさらに目立つ'}
+    },
+    '🧲 SGR 1806-20':{
+      size:{main:'半径 約10km',sub:'星の残骸として極小'},
+      mass:{main:'約1.4太陽質量',sub:'中性子星／マグネター'},
+      light:{main:'可視光よりX線・γ線で超高輝度',sub:'巨大フレアが主役'}
+    },
+    '💙 R136a1':{
+      size:{main:'半径 約30〜40太陽',sub:'怪物級の大質量星'},
+      mass:{main:'約170〜230太陽質量',sub:'既知でも最大級'},
+      light:{main:'約500万〜800万太陽光度',sub:'超高光度'}
+    },
+    '✨ S Doradus':{
+      size:{main:'半径 数十〜数百太陽',sub:'明るい時と暗い時で変化'},
+      mass:{main:'約40〜50太陽質量級',sub:'LBV代表星'},
+      light:{main:'約100万太陽光度級',sub:'不安定に変化'}
+    },
+    '⭐ M31-V1':{
+      size:{main:'半径 数十太陽',sub:'脈動で膨張・収縮'},
+      mass:{main:'約5太陽質量級',sub:'ケフェイド変光星'},
+      light:{main:'数千〜数万太陽光度',sub:'周期的に変わる'}
+    },
+    '💫 AF Andromedae':{
+      size:{main:'半径 数十〜100太陽級',sub:'状態で大きく変わる'},
+      mass:{main:'数十太陽質量級',sub:'LBV'},
+      light:{main:'約100万太陽光度級',sub:'非常に明るい'}
+    },
+    '🟢 ロマーノ星 GR 290':{
+      size:{main:'半径 数十太陽級',sub:'遷移で変化'},
+      mass:{main:'数十太陽質量級',sub:'LBV→WR遷移'},
+      light:{main:'数十万〜100万太陽光度級',sub:'強い恒星風'}
+    },
+    '🌠 M33 Var C':{
+      size:{main:'半径 数十〜100太陽級',sub:'外層が大きく変化'},
+      mass:{main:'数十太陽質量級',sub:'LBV'},
+      light:{main:'約100万太陽光度級',sub:'大きな増光・減光'}
+    },
+    '⭐ M51-DS1':{
+      size:{main:'半径 数百〜1,000太陽級',sub:'低温の超巨星候補'},
+      mass:{main:'数十太陽質量級',sub:'推定'},
+      light:{main:'約10万太陽光度級',sub:'塵に隠れることがある'}
+    },
+    '🎨 Warhol':{
+      size:{main:'数十太陽半径級？',sub:'超遠方で不確か'},
+      mass:{main:'数十太陽質量級？',sub:'候補はO型〜WR級'},
+      light:{main:'数十万〜100万太陽光度級？',sub:'重力レンズで見える'}
+    },
+    '💙 イカロス':{
+      size:{main:'半径 数十〜100太陽級',sub:'青色超巨星'},
+      mass:{main:'数十太陽質量級',sub:'大質量星'},
+      light:{main:'数十万〜100万太陽光度級',sub:'一時的に大増光'}
+    },
+    '🦋 モスラ':{
+      size:{main:'複数の巨大星かも',sub:'単独星とは限らない'},
+      mass:{main:'星ごとに異なる',sub:'星系候補'},
+      light:{main:'合計で非常に高光度',sub:'複数成分の可能性'}
+    },
+    '❤️ クイユル':{
+      size:{main:'半径 数百太陽級？',sub:'赤色巨星／超巨星候補'},
+      mass:{main:'数〜十数太陽質量級？',sub:'推定'},
+      light:{main:'数万〜10万太陽光度級？',sub:'赤外線で目立つ'}
+    },
+    '🦖 ゴジラ':{
+      size:{main:'半径 数十〜100太陽級？',sub:'LBV級候補'},
+      mass:{main:'数十太陽質量級？',sub:'怪物級の可能性'},
+      light:{main:'100万太陽光度級？',sub:'極端に明るい'}
+    },
+    '🔷 Abell 2744 LS1':{
+      size:{main:'まだ不明',sub:'超遠方の個別星候補'},
+      mass:{main:'大質量星級の可能性',sub:'詳しい値は未確定'},
+      light:{main:'非常に高光度',sub:'重力レンズで観測'}
+    },
+    '💠 MACS J0647 LS1':{
+      size:{main:'まだ不明',sub:'宇宙初期の星候補'},
+      mass:{main:'大質量星または星系？',sub:'未確定'},
+      light:{main:'非常に高光度',sub:'レンズ効果で見える'}
+    },
+    '✨ エアレンデル':{
+      size:{main:'半径 数十太陽級？',sub:'B型大質量星候補'},
+      mass:{main:'数十太陽質量級',sub:'伴星の可能性もある'},
+      light:{main:'約100万太陽光度',sub:'最遠級の個別星'}
+    }
+  };
+
+  function v188MiniMetric(icon,label,data){
+    if(!data)return '';
+    return `<div class="v188MetricCard">
+      <div class="v188MetricLabel">${icon} ${label}</div>
+      <strong>${v179Esc(data.main||'不明')}</strong>
+      ${data.sub?`<small>${v179Esc(data.sub)}</small>`:''}
+    </div>`;
+  }
+
+  function v188MetricsHTML(name=''){
+    const x=V188_STAR_METRICS[name];
+    if(!x)return '';
+    return `<div class="v188MetricGrid">`+
+      v188MiniMetric('📏','大きさ',x.size)+
+      v188MiniMetric('⚖️','質量',x.mass)+
+      v188MiniMetric('💡','明るさ',x.light)+
+      `</div>`;
   }
 
   function v175DetailHTML(isEra){
@@ -12663,14 +12842,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v186StarContext{margin:0 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(111,163,255,.09),rgba(187,142,255,.07));border:1px solid rgba(151,190,255,.16)}
       .v186ContextRow{display:flex;align-items:flex-start;gap:9px;padding:3px 0}.v186ContextRow span{flex:0 0 auto;color:#bfe1ff;font:900 9px/1.35 system-ui}.v186ContextRow b{margin-left:auto;max-width:72%;color:#f4f8ff;font:900 9.5px/1.45 system-ui;text-align:right}.v186StarContext small{display:block;margin-top:6px;padding-top:7px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.52);font:700 8.3px/1.5 system-ui}
       .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
-      .v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
+      .v188MetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}.v188MetricCard{padding:10px 8px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(136,216,255,.038));border:1px solid rgba(149,220,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column;gap:5px;min-width:0}.v188MetricLabel{color:#bfefff;font:950 8px/1.2 system-ui;letter-spacing:.05em}.v188MetricCard strong{display:block;color:#fff;font:1000 9.5px/1.34 system-ui;word-break:keep-all}.v188MetricCard small{display:block;color:rgba(255,255,255,.62);font:800 7.2px/1.35 system-ui}.v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
       .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
       .v179Fact small{display:block;margin-bottom:4px;color:rgba(255,255,255,.42);font:800 7.5px/1 system-ui}
       .v179Fact b{display:block;color:#fff;font:900 9px/1.3 system-ui}
       .v179NameOrigin{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:11px 12px;border-radius:13px;background:rgba(255,210,125,.06);border:1px solid rgba(255,218,150,.13)}
       .v179NameOrigin b{color:#ffe0a8;font:950 9px/1.2 system-ui}
       .v179NameOrigin span{color:rgba(255,255,255,.77);font:720 9.5px/1.65 system-ui}
-      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}}
+      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}.v188MetricGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.v188MetricCard{padding:8px 6px}.v188MetricCard strong{font-size:8.2px}.v188MetricCard small{font-size:6.7px}}
     `;
     document.head.appendChild(st);
 
