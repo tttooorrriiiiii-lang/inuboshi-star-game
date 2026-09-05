@@ -13546,8 +13546,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   function syncUI(){
     ensureUI();
     const c=cfg(),dock=document.getElementById('v169CosmicDock'),btn=document.getElementById('v169AbilityBtn');
-    wrap.classList.toggle('v169CosmicMode',!!c);
-    dock?.classList.toggle('on',!!c);
+    const plainFuture=!!systems[system]?.futureEra && (systems[system]?.futureStep||0)<=4;
+    wrap.classList.toggle('v169CosmicMode',!!c && !plainFuture);
+    dock?.classList.toggle('on',!!c && !plainFuture);
     if(!c||!dock||!btn)return;
 
     const info=document.getElementById('v169MaterialInfo');
@@ -13575,6 +13576,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     V169.lastProgressX=p.x;V169.lastProgressAt=performance.now();
     const c=cfg();
     if(!c){syncUI();return;}
+    const plainFuture=!!systems[system]?.futureEra && (systems[system]?.futureStep||0)<=4;
+    if(plainFuture){syncUI();return;}
 
     const len=stageLen(),seed=hash(stageKey());
     // Ensure there are enough pickups even in the 305px Big Bang stage.
@@ -15252,8 +15255,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   function returnIce(){return phase()==='returnEarth'&&system===0&&stage===0}
   function future(){return !!sys().futureEra}
   function starEra(){
-    if(earendel()||oldEarth()||formation()||birth())return true;
-    return future()&&(sys().futureStep||0)<=6;
+    // v209: Earendel and early-future stages should use the ordinary star-stage visuals,
+    // not the extra matter bubbles/atom overlays from v178.
+    if(oldEarth()||formation()||birth())return true;
+    return false;
   }
 
   function key(){
@@ -15467,8 +15472,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       ctx.restore();
     }
 
-    // Future stages: reinforce particles/materials visually.
-    if(future()){
+    // Future stages: reinforce particles/materials visually. (disabled in v209)
+    if(false&&future()){
       const step=sys().futureStep||1;
       const icons={
         1:['γ','☀️','H','He'],2:['p⁺','e⁻','γ','He'],3:['Fe','Si','O','🔥'],
@@ -15647,7 +15652,7 @@ const V204={
   radioEl:null,
   wormEl:null
 };
-window.INUBOSHI_GAME_VERSION='v208';
+window.INUBOSHI_GAME_VERSION='v209';
 
 const V204_SIMPLE_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -16120,6 +16125,35 @@ v204DrawFutureCity=function(step){
   /* disable alternate future-city renderer; the exact Earth block is now drawn in drawBackground */
 };
 /* === /v208 === */
+
+/* === v209: final exact Earth skyline/tree override for future 1-4 === */
+function v209DrawExactEarthBlock(){
+  const gy=groundY();
+  ctx.save();
+  for(let i=0;i<11;i++){
+    const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
+    const bh=90+(i%4)*28;
+    ctx.fillStyle=i%2?'#9aa7b6':'#7d8c9e';
+    ctx.fillRect(x,gy-bh-30,85,bh);
+    ctx.fillStyle='rgba(255,244,170,.72)';
+    for(let r=0;r<4;r++)for(let c=0;c<3;c++)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
+  }
+  for(let i=0;i<9;i++){
+    const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
+    ctx.fillStyle='#6f4a2d';
+    ctx.fillRect(x,gy-64,10,64);
+    ctx.fillStyle=i%2?'#58a765':'#6cb56b';
+    ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+}
+const v209PrevBg=drawBackground;
+drawBackground=function(){
+  v209PrevBg();
+  if(v204FutureEarth())v209DrawExactEarthBlock();
+};
+/* === /v209 === */
+
 
 
 
@@ -19479,15 +19513,15 @@ v204DrawFutureCity=function(step){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v208';
+  window.INUBOSHI_GAME_VERSION='v209';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v208<small>FUTURE USES EXACT EARTH BUILDINGS+TREES / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v209<small>EARTH MATCH + EARENDEL/FUTURE CLEANUP / 2026-09-05</small>';devCard.prepend(el);
     }
     const jumpCard=document.querySelector('#v150JumpPanel .v150JumpCard');
     if(jumpCard&&!document.getElementById('v204JumpVersion')){
-      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v208';
+      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v209';
       const input=jumpCard.querySelector('#v150JumpSearch');if(input)jumpCard.insertBefore(el,input);else jumpCard.prepend(el);
     }
   }
