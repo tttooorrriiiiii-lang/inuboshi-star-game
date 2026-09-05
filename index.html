@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v193</title>
+<title>犬星くん GALAXY TOUR v203</title>
 <!-- v198: エアレンデル右上説明を2行固定 / 古いHUD説明の上書きを除去 -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -19805,6 +19805,50 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
   }else{
     setTimeout(()=>{ syncButtonsAndCounters(); syncHUD(true); },0);
   }
+})();
+</script>
+
+
+<style id="v203-version-style">
+#v203GameVersion{
+  margin:8px 0 12px;padding:9px 12px;border-radius:12px;
+  border:1px solid rgba(111,229,255,.35);
+  background:linear-gradient(90deg,rgba(86,231,255,.10),rgba(255,79,216,.08));
+  color:#fff;font:1000 12px/1.2 system-ui;letter-spacing:.08em;
+  text-align:center;box-shadow:0 0 16px rgba(86,231,255,.10)
+}
+#v203GameVersion small{display:block;margin-top:4px;font:800 8px/1.25 system-ui;opacity:.58;letter-spacing:.04em}
+#v203JumpVersion{
+  margin:0 0 10px;padding:7px 10px;border-radius:10px;
+  background:rgba(86,231,255,.08);border:1px solid rgba(86,231,255,.18);
+  color:#dffaff;text-align:center;font:1000 10px/1.2 system-ui;letter-spacing:.08em
+}
+</style>
+<script id="v203-version-script">
+(function(){
+  window.INUBOSHI_GAME_VERSION='v203';
+  function install(){
+    const devCard=document.querySelector('#v62EndingDev .v62DevCard');
+    if(devCard&&!document.getElementById('v203GameVersion')){
+      const ver=document.createElement('div');
+      ver.id='v203GameVersion';
+      ver.innerHTML='GAME VERSION　v203<small>2026-09-05 BUILD</small>';
+      const sub=devCard.querySelector('.v62DevSub');
+      if(sub)sub.insertAdjacentElement('afterend',ver);
+      else devCard.prepend(ver);
+    }
+    const jumpCard=document.getElementById('v150JumpCard');
+    if(jumpCard&&!document.getElementById('v203JumpVersion')){
+      const ver=document.createElement('div');
+      ver.id='v203JumpVersion';
+      ver.textContent='GAME VERSION　v203';
+      const head=jumpCard.querySelector('#v150JumpHead');
+      if(head)head.insertAdjacentElement('afterend',ver);
+      else jumpCard.prepend(ver);
+    }
+  }
+  if(document.readyState==='loading')addEventListener('DOMContentLoaded',()=>{install();setTimeout(install,100)},{once:true});
+  else{install();setTimeout(install,100)}
 })();
 </script>
 
