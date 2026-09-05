@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v184</title>
+<title>犬星くん GALAXY TOUR v186</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -1152,8 +1152,32 @@ const systems=[
 {name:'🌟 ポラリス',distance:'約430光年',desc:'恒星・現在の北極星',goodColor:'#fff5c4',sky:['#050817','#26365b'],ground:'#8e93a7',ground2:'#4d5266',planet:'#fff4b5',event:'STAR SHOWER',eventText:'北極星の光が降り注ぐ！',gravity:.47,jump:17.5}
 ]},
 {
+name:'🐶 プロキオン',distance:'地球から約11.5光年',desc:'こいぬ座で最も明るい星。「犬の前」を意味する名前を持つ連星系',theme:'milky',dogStar:true,stages:[
+{name:'🐶 プロキオン',distance:'約11.5光年',desc:'こいぬ座の主星。白黄色の主星と白色矮星の連星系',goodColor:'#fff1b8',sky:['#040814','#19314e'],ground:'#736d58',ground2:'#342f27',planet:'#fff1c2',event:'DOG STAR BONUS',eventText:'🐶🦴 犬星ボーナス！ 骨がいっぱい、犬もときどき出現！',gravity:.50,jump:17.4}
+]},
+{
+name:'🐶 ゴメイサ',distance:'地球から約162光年',desc:'こいぬ座の青白いB型星。高速回転するBe星として知られる',theme:'milky',dogStar:true,stages:[
+{name:'🐶 ゴメイサ',distance:'約162光年',desc:'こいぬ座の青白い高速回転星',goodColor:'#cbe9ff',sky:['#020716','#15355b'],ground:'#62788e',ground2:'#2e3b49',planet:'#d7efff',event:'DOG STAR BONUS',eventText:'🐕🦴 青白い犬星！ 骨の流星と犬たちが走る！',gravity:.48,jump:17.5}
+]},
+{
+name:'🐕 アダーラ',distance:'地球から約430光年',desc:'おおいぬ座の明るい青色巨星。太陽よりはるかに高温で明るい',theme:'milky',dogStar:true,stages:[
+{name:'🐕 アダーラ',distance:'約430光年',desc:'おおいぬ座の高温な青色巨星',goodColor:'#bde5ff',sky:['#020613','#123150'],ground:'#5a7185',ground2:'#293844',planet:'#ccecff',event:'DOG STAR BONUS',eventText:'🦮🦴 おおいぬ座ボーナス！ 骨が大量発生！',gravity:.56,jump:17.3}
+]},
+{
+name:'🐕 ミルザム',distance:'地球から約500光年',desc:'おおいぬ座の青色巨星。「先触れ」と呼ばれる明るい星',theme:'milky',dogStar:true,stages:[
+{name:'🐕 ミルザム',distance:'約500光年',desc:'おおいぬ座の高温な青色巨星',goodColor:'#b8ddff',sky:['#030613','#142c4a'],ground:'#5f7183',ground2:'#2b3541',planet:'#c7e7ff',event:'DOG STAR BONUS',eventText:'🐕‍🦺🦴 犬星の先触れ！ 骨が次々出てくる！',gravity:.58,jump:17.2}
+]},
+{
 name:'❓ タビーの星',distance:'地球から約1,470光年',desc:'Keplerが最大約20%もの異常な減光を観測した、謎の多いF型主系列星',theme:'milky',stages:[
 {name:'❓ タビーの星',distance:'約1,470光年',desc:'原因不明の大きな減光を繰り返した「謎の星」。塵が有力候補',goodColor:'#fff0b8',sky:['#050713','#22263f'],ground:'#726b56',ground2:'#322e27',planet:'#fff0c7',event:'MYSTERY DIMMING',eventText:'❓ 星の光が突然20%近く暗くなる！',gravity:.50,jump:17.4}
+]},
+{
+name:'🐕 ウェズン',distance:'地球から約1,600光年',desc:'おおいぬ座の黄色超巨星。太陽より桁違いに大きく明るい',theme:'cloud',dogStar:true,stages:[
+{name:'🐕 ウェズン',distance:'約1,600光年',desc:'おおいぬ座の巨大な黄色超巨星',goodColor:'#ffe5a1',sky:['#0a0704','#493319'],ground:'#806d4a',ground2:'#3c3021',planet:'#ffe6a8',event:'DOG STAR BONUS',eventText:'🐕🦴 巨大な犬星！ 骨ボーナスゾーン！',gravity:.25,jump:17.8}
+]},
+{
+name:'🐕 アルドラ',distance:'地球から約2,000光年',desc:'おおいぬ座の青白い超巨星。非常に明るい大質量星',theme:'cloud',dogStar:true,stages:[
+{name:'🐕 アルドラ',distance:'約2,000光年',desc:'おおいぬ座の青白い超巨星',goodColor:'#d9ecff',sky:['#02040d','#14253e'],ground:'#697689',ground2:'#2e3744',planet:'#e2f1ff',event:'DOG STAR BONUS',eventText:'🐩🦴 遠い犬星！ 骨と犬たちがいっぱい！',gravity:.30,jump:17.7}
 ]},
 {
 name:'🐕 VYおおいぬ座星',distance:'地球から約5,000光年',desc:'太陽の位置に置けば木星〜土星軌道の間まで届くほど膨らんだ赤色極超巨星',theme:'cloud',stages:[
@@ -1331,12 +1355,15 @@ const wormholeEnabled=()=>wormholeActive&&!(system===0&&stage===0)&&system!==BLA
 const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
 const rankByName={
 '☀️ 太陽系・近くの星':0,
-'❓ タビーの星':1,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
+'🐶 プロキオン':0.10,'🐶 ゴメイサ':0.20,'🐕 アダーラ':0.30,'🐕 ミルザム':0.40,
+'❓ タビーの星':1,'🐕 ウェズン':1.20,'🐕 アルドラ':1.40,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
 '💙 イカロス':13,'🦋 モスラ':14,'❤️ クイユル':15,'🦖 ゴジラ':16,'🔷 Abell 2744 LS1':17,'💠 MACS J0647 LS1':18,'✨ エアレンデル':19,
 '🔥 再電離時代':20,'🌅 宇宙の夜明け':21,'🌑 暗黒時代':22,'🌤️ 再結合時代（宇宙の晴れ上がり）':23,'📡 宇宙背景放射（CMB）':24,'✨ 光子時代':25,'⚛️ ビッグバン元素合成':26,'🌀 レプトン時代':27,'🔵 ハドロン時代':28,'🟣 クォーク時代':29,'⚡ 電弱時代':30,'💥 インフレーション時代':31,'◼️ 大統一時代':32,'❓ プランク時代':33,'💫 ビッグバン':34,'🔁 ビッグバウンス':35,'♻️ 循環宇宙':36,'🫧 永遠のインフレーション':37,'◯ 無境界仮説':38,'⏩ 太陽が明るくなる未来':40,'🔴 赤色巨星の太陽':41,'⚪ 白色矮星の太陽':42,'🌌 星形成の終わり':43,'🔴 最後の恒星たち':44,'🕳️ ブラックホール時代':45,'🌑 暗い宇宙':46,'🥶 熱的死／ビッグフリーズ':47,'💥 ビッグリップ':48,'🔻 ビッグクランチ':49,'⚠️ 真空崩壊':50,'🐾 犬の星':60
 };
 const systemDistanceRank=systems.map(s=>s.secret?99:s.name==='⚫ ブラックホール'?98:(rankByName[s.name]??0));
 const S=()=>systems[system].stages[stage],groundY=()=>H-120,playerRect=()=>({x:p.x,y:p.y,w:p.w,h:p.h}),itemRect=i=>({x:i.x-i.r,y:i.y-i.r,w:i.r*2,h:i.r*2}),rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
+const DOG_STAR_NAMES=new Set(['⭐ シリウス','🐶 プロキオン','🐶 ゴメイサ','🐕 アダーラ','🐕 ミルザム','🐕 ウェズン','🐕 アルドラ','🐕 VYおおいぬ座星']);
+const isDogStarStage=()=>DOG_STAR_NAMES.has(S()?.name)||!!systems[system]?.dogStar;
 const maxHp=()=>Math.min(8,3+Math.floor(companionCount/2));
 function showToast(t,ms=1000){
  const arrivalText=window.v139ArrivalToastText||'';
@@ -1378,7 +1405,7 @@ function syncHUD(){
 function levelCheck(){ /* レベル制は表示・成長とも使わない */ }
 function makeWorld(){
  const s=S();items=[];hazards=[];aliens=[];morphs=[];swarm=[];shootingStars=[];gasClouds=[];secretPickups=[];satellites=[];bosses=[];earthWalkers=[];fallingStars=[];boneShots=[];
- const isSun=s.name.includes('太陽'),isMars=s.name.includes('火星'),isEarth=system===0&&stage===0,isMoon=s.name.includes('月'),isDream=!!systems[system].dream;
+ const isSun=s.name.includes('太陽'),isMars=s.name.includes('火星'),isEarth=system===0&&stage===0,isMoon=s.name.includes('月'),isDream=!!systems[system].dream,isDogStar=isDogStarStage();
  if(isEarth){
    // v99: 地球は「骨を追って散歩」がちゃんと遊びになるくらい増量。
    for(let i=0;i<50;i++){
@@ -1403,8 +1430,14 @@ function makeWorld(){
    return;
  }
  let x=220;for(let i=0;i<(system===BLACK_HOLE_SYSTEM?58:(isDream?88:44));i++){x+=38+Math.random()*(system===BLACK_HOLE_SYSTEM?56:80);items.push({x,y:groundY()-70-Math.random()*175,r:13+Math.random()*5,got:false,color:s.goodColor})}
- for(let i=0;i<(isDream?20:5);i++)items.push({x:420+i*(isDream?220:570)+Math.random()*100,y:groundY()-80-Math.random()*100,r:18,got:false,color:'#ffd65a',food:true,inert:system===BLACK_HOLE_SYSTEM});
- let bandScale=isMoon?1.05:isMars?4.6:isSun?2.8:isDream?.55:2.75;
+ const boneCount=isDogStar?26:(isDream?20:5);
+ for(let i=0;i<boneCount;i++)items.push({x:330+i*(isDogStar?118:(isDream?220:570))+Math.random()*95,y:groundY()-58-Math.random()*(isDogStar?145:100),r:18,got:false,color:'#ffd65a',food:true,inert:system===BLACK_HOLE_SYSTEM});
+ if(isDogStar){
+   const dogs=['🐕','🐩','🦮','🐕‍🦺'];
+   const dogCount=5+Math.floor(Math.random()*4);
+   for(let i=0;i<dogCount;i++)earthWalkers.push({x:520+i*(360+Math.random()*170)+Math.random()*160,kind:'dog',emoji:dogs[(i+Math.floor(Math.random()*dogs.length))%dogs.length],v:.12+Math.random()*.22,phase:Math.random()*6.2});
+ }
+ let bandScale=isMoon?1.05:isMars?4.6:isSun?2.8:isDream?.55:isDogStar?1.35:2.75;
  const hazardBands=[{a:700,b:1250,n:1},{a:1250,b:1900,n:2},{a:1900,b:2500,n:3},{a:2500,b:3050,n:4},{a:3050,b:3450,n:5}];
  if(system!==BLACK_HOLE_SYSTEM&&!isDream)for(const band of hazardBands)for(let i=0;i<Math.max(0,Math.round(band.n*bandScale));i++){const hy=20+Math.random()*Math.max(140,H*.42);hazards.push({x:band.a+Math.random()*(band.b-band.a),y:hy,w:46,h:46,got:false,symbol:'☄️',diagonal:true,vx:-1.25-Math.random()*.7,vy:1.0+Math.random()*.65})}
  if(isSun&&system!==BLACK_HOLE_SYSTEM){for(let i=0;i<42;i++){const hx=620+Math.random()*2750;const hy=10+Math.random()*Math.max(160,H*.48);hazards.push({x:hx,y:hy,w:48,h:52,got:false,symbol:'🔥',diagonal:true,vx:-.75-Math.random()*.9,vy:1.1+Math.random()*1.35})}}
@@ -1425,7 +1458,7 @@ function stageStart(){
  blackHoleY=Math.max(145,Math.min(groundY()-145,H*(.34+Math.random()*.20)));
  nextCosmic=430+Math.floor(Math.random()*220);nextSwarm=430+Math.floor(Math.random()*220);
  nextSatellite=360+Math.floor(Math.random()*300);
- makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast(returnFromDogStar?'🌍 地球に帰ってきた。':'🐕 いつもの散歩道。',1600);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 地球の光は129億年ぶん遠い…',2300);if(systems[system].endless)showToast('♾️ 広がりつづける宇宙。どこまで続くんだろう…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
+ makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast(returnFromDogStar?'🌍 地球に帰ってきた。':'🐕 いつもの散歩道。',1600);if(isDogStarStage())showToast('🐶🦴 犬星ボーナス！ 骨どっさり＆犬がときどき出る！',1900);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 地球の光は129億年ぶん遠い…',2300);if(systems[system].endless)showToast('♾️ 広がりつづける宇宙。どこまで続くんだろう…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
 }
 function maybeLore(){if(paused||p.x<nextLoreAt)return;const rank=systemDistanceRank[system]??0;const s=systems[system];let msg='';if(s.dream)msg=['🐾 ここでは星も犬の夢を見ている。','🌈 ふわふわした犬たちが宇宙を漂っている。','🦴 骨の形の光がゆっくり流れていく。'][Math.floor(Math.random()*3)];else if(s.endless)msg=['🌑 光が消えた。地球の気配も、もうない。','🐾 暗闇の中に、光る足跡がまぎれている。','… ワン …　遠くから何か聞こえた。'][Math.floor(Math.random()*3)];else if(s.postEarendel)msg=['🫥 星より古い光の中を進んでいる。','📡 ここまで来ると、通信も記憶みたいにかすれる。','🌌 宇宙の歴史そのものを横切っている。'][Math.floor(Math.random()*3)];else if(rank>=10)msg=['✨ 地球の光はもう見えない。','🌌 遠すぎて、帰り道の感覚まで薄れていく。','💫 ワープするたび宇宙の色が変わる。'][Math.floor(Math.random()*3)];else if(rank>=6)msg=['🪐 もう太陽系は点のように遠い。','🌠 銀河がただの光の粒になっていく。','🔭 ここからは宇宙が歴史に見える。'][Math.floor(Math.random()*3)];else if(rank>=1)msg=['🌍 地球はまだ遠くない。でも確実に離れている。','🌙 もう気軽には帰れない距離だ。','🛰️ 通信ノイズに地球の気配がまざる。'][Math.floor(Math.random()*3)];if(msg)showToast(msg,1700);nextLoreAt+=780+Math.random()*360}
 
@@ -1710,25 +1743,21 @@ function rocketToMoon(){if(paused||rocketLaunched)return;rocketLaunched=true;pau
 function homeEnding(){returnFromDogStar=true;system=0;stage=0;stageStart()}
 
 function wormholeMilestoneEffect(count){
- if(count===1){
-   transTitle.innerHTML='❓ TABBY’S STAR';nextEl.textContent='突然暗くなる、謎の星へ。';subEl.textContent='WORMHOLE 1';showToast('❓ タビーの星！ 光が突然ごっそり減る…',1900)
- }else if(count===2){
-   transTitle.innerHTML='🐕 VY CANIS MAJORIS';nextEl.textContent='太陽系サイズ級にふくらんだ赤い怪物へ。';subEl.textContent='WORMHOLE 2';showToast('🐕 VYおおいぬ座星！ 巨大ガス噴出に注意！',2000)
- }else if(count===3){
-   transTitle.innerHTML='💥 ETA CARINAE';nextEl.textContent='巨大噴火を生き残った超大質量連星へ。';subEl.textContent='WORMHOLE 3';showToast('💥 イータ・カリーナ！ 大噴火の残骸が広がる。',2000)
- }else if(count===4){
-   transTitle.innerHTML='🧲 MAGNETAR';nextEl.textContent='銀河最強クラスの磁場を持つ中性子星へ。';subEl.textContent='WORMHOLE 4';showToast('🧲 SGR 1806-20！ 磁場とガンマ線が桁違い！',2100)
- }else if(count===5){
-   transTitle.innerHTML='💙 R136a1';nextEl.textContent='太陽100個分超級の大質量星へ。';subEl.textContent='WORMHOLE 5';showToast('💙 R136a1！ 超高温・超大質量の怪物星。',2100)
- }else if(count===7){
-   transTitle.innerHTML='🌌 ANDROMEDA SCALE';nextEl.textContent='天の川を離れ、別銀河の星へ。';subEl.textContent='WORMHOLE 7';showToast('🌌 アンドロメダ銀河の星まで来た。',2100)
- }else if(count===9){
-   transTitle.innerHTML='💙 ICARUS';nextEl.textContent='重力レンズで見える超遠方の個別星へ。';subEl.textContent='WORMHOLE 9';showToast('💙 イカロス級の遠方へ。',2200)
- }else if(count===10){
-   transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='129億年前の光へ。';subEl.textContent='WORMHOLE 10';showToast('✨ エアレンデル。最遠級の個別星へ。',2200)
- }else if(count===11){
-   transTitle.innerHTML='🌑 COSMIC HISTORY';nextEl.textContent='星のない宇宙の歴史へ。';subEl.textContent='WORMHOLE 11';showToast('🌑 ここから先は宇宙史。',2200)
- }
+ if(count===1){transTitle.innerHTML='🐶 PROCYON';nextEl.textContent='こいぬ座の主星へ。骨の気配がする…！';subEl.textContent='DOG STAR 1';showToast('🐶 プロキオン！ 犬星ボーナス開始！',1900)}
+ else if(count===2){transTitle.innerHTML='🐶 GOMEISA';nextEl.textContent='青白く回る、こいぬ座の星へ。';subEl.textContent='DOG STAR 2';showToast('🐶 ゴメイサ！ 骨がいっぱい！',1900)}
+ else if(count===3){transTitle.innerHTML='🐕 ADHARA';nextEl.textContent='おおいぬ座の青い巨星へ。';subEl.textContent='DOG STAR 3';showToast('🐕 アダーラ！ 犬たちも出てきた！',1900)}
+ else if(count===4){transTitle.innerHTML='🐕 MIRZAM';nextEl.textContent='犬星の「先触れ」と呼ばれる星へ。';subEl.textContent='DOG STAR 4';showToast('🐕 ミルザム！ 骨ボーナス継続！',1900)}
+ else if(count===5){transTitle.innerHTML='❓ TABBY’S STAR';nextEl.textContent='突然暗くなる、謎の星へ。';subEl.textContent='WORMHOLE 5';showToast('❓ タビーの星！ 光が突然ごっそり減る…',1900)}
+ else if(count===6){transTitle.innerHTML='🐕 WEZEN';nextEl.textContent='巨大な黄色の犬星へ。';subEl.textContent='DOG STAR 5';showToast('🐕 ウェズン！ また骨だらけ！',1900)}
+ else if(count===7){transTitle.innerHTML='🐕 ALUDRA';nextEl.textContent='青白い超巨星の犬星へ。';subEl.textContent='DOG STAR 6';showToast('🐕 アルドラ！ 犬星チェーン終盤！',1900)}
+ else if(count===8){transTitle.innerHTML='🐕 VY CANIS MAJORIS';nextEl.textContent='太陽系サイズ級にふくらんだ赤い犬星の怪物へ。';subEl.textContent='DOG STAR 7';showToast('🐕 VYおおいぬ座星！ 巨大ガス噴出に注意！',2000)}
+ else if(count===9){transTitle.innerHTML='💥 ETA CARINAE';nextEl.textContent='巨大噴火を生き残った超大質量連星へ。';subEl.textContent='WORMHOLE 9';showToast('💥 イータ・カリーナ！ 大噴火の残骸が広がる。',2000)}
+ else if(count===10){transTitle.innerHTML='🧲 MAGNETAR';nextEl.textContent='銀河最強クラスの磁場を持つ中性子星へ。';subEl.textContent='WORMHOLE 10';showToast('🧲 SGR 1806-20！ 磁場とガンマ線が桁違い！',2100)}
+ else if(count===11){transTitle.innerHTML='💙 R136a1';nextEl.textContent='太陽100個分超級の大質量星へ。';subEl.textContent='WORMHOLE 11';showToast('💙 R136a1！ 超高温・超大質量の怪物星。',2100)}
+ else if(count===13){transTitle.innerHTML='🌌 ANDROMEDA SCALE';nextEl.textContent='天の川を離れ、別銀河の星へ。';subEl.textContent='WORMHOLE 13';showToast('🌌 アンドロメダ銀河の星まで来た。',2100)}
+ else if(count===15){transTitle.innerHTML='💙 ICARUS';nextEl.textContent='重力レンズで見える超遠方の個別星へ。';subEl.textContent='WORMHOLE 15';showToast('💙 イカロス級の遠方へ。',2200)}
+ else if(count===16){transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='129億年前の光へ。';subEl.textContent='WORMHOLE 16';showToast('✨ エアレンデル。最遠級の個別星へ。',2200)}
+ else if(count===17){transTitle.innerHTML='🌑 COSMIC HISTORY';nextEl.textContent='星のない宇宙の歴史へ。';subEl.textContent='WORMHOLE 17';showToast('🌑 ここから先は宇宙史。',2200)}
 }
 
 function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 WORMHOLE!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 宇宙のもっと奥へ！';subEl.textContent=black?'SPAGHETTIFICATION':`WORMHOLE ${deepWarpCount+1}`;
@@ -1741,8 +1770,8 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
     deepWarpCount++;
     wormholeMilestoneEffect(deepWarpCount);
     const milestones=[
-      '❓ タビーの星','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🧲 SGR 1806-20','💙 R136a1',
-      '✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル','🌑 暗黒時代','❓ プランク時代'
+      '🐶 プロキオン','🐶 ゴメイサ','🐕 アダーラ','🐕 ミルザム','❓ タビーの星','🐕 ウェズン','🐕 アルドラ','🐕 VYおおいぬ座星',
+      '💥 イータ・カリーナ','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル','🌑 暗黒時代','❓ プランク時代'
     ];
     const targetName=milestones[Math.min(deepWarpCount-1,milestones.length-1)];
     const nextSystem=systems.findIndex(s=>s.name===targetName);
@@ -2014,7 +2043,7 @@ for(let i=0;i<9;i++){
 ctx.restore();ctx.globalAlpha=1
 }
 function drawCosmic(){ctx.save();for(const g of gasClouds){const rg=ctx.createRadialGradient(g.x,g.y,0,g.x,g.y,g.r);rg.addColorStop(0,g.color+'66');rg.addColorStop(.45,g.color+'2a');rg.addColorStop(1,'transparent');ctx.globalAlpha=.55;ctx.fillStyle=rg;ctx.beginPath();ctx.arc(g.x,g.y,g.r,0,Math.PI*2);ctx.fill()}ctx.lineCap='round';for(const st of shootingStars){ctx.globalAlpha=st.a;ctx.strokeStyle='#fff';ctx.shadowColor=S().goodColor;ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(st.x,st.y);ctx.lineTo(st.x+st.len,st.y-st.len*.35);ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(st.x,st.y,2.4,0,Math.PI*2);ctx.fill()}ctx.restore();ctx.globalAlpha=1}
-function drawEarthWalkers(){if(!(system===0&&stage===0))return;ctx.save();for(const w of earthWalkers){const sx=w.x-camera;if(sx<-80||sx>W+80)continue;ctx.font=w.kind==='dog'?'34px system-ui':'30px system-ui';ctx.globalAlpha=.95;ctx.fillText(w.emoji,sx,groundY()-8)}ctx.restore()}
+function drawEarthWalkers(){if(!(system===0&&stage===0)&&!isDogStarStage())return;ctx.save();for(const w of earthWalkers){const sx=w.x-camera;if(sx<-80||sx>W+80)continue;const bob=isDogStarStage()?Math.sin(performance.now()/260+(w.phase||0))*5:0;ctx.font=w.kind==='dog'?'34px system-ui':'30px system-ui';ctx.globalAlpha=.95;ctx.fillText(w.emoji,sx,groundY()-8+bob)}ctx.restore()}
 function drawPortal(){
 const gy=groundY();
 if(system===0&&stage===0){const sx=rocketX-camera;if(sx>-160&&sx<W+160){ctx.save();ctx.shadowColor='#fff';ctx.shadowBlur=20;if(returnFromDogStar){ctx.font='88px system-ui';ctx.fillText('🏠',sx-44,gy-18)}else{ctx.font='92px system-ui';ctx.fillText('🚀',sx-42,gy-18);ctx.font='900 12px system-ui';ctx.fillStyle='#243047';ctx.fillText('月へ出発',sx-28,gy-112)}ctx.restore()}return;}
@@ -2983,8 +3012,8 @@ for(let i=0;i<systems.length;i++)systemDistanceRank[i]=systems[i].secret?99:syst
 
 const v60DistanceByStage={
  '🌍 地球':'0 km','🌙 月':'約38.4万 km','♀ 金星':'約4,100万 km','🔴 火星':'約5,500万 km','☿ 水星':'約7,700万 km','☀️ 太陽':'約1.50億 km','🟠 木星':'約5.9億 km','🪐 土星':'約12億 km','🩵 天王星':'約26億 km','🔵 海王星':'約43億 km',
- '⭐ シリウス':'約8.6 光年','💠 ベガ':'約25 光年','🌟 ポラリス':'約430 光年','❤️ アンタレス':'約550 光年','🔴 ベテルギウス':'約640 光年',
- '❓ タビーの星':'約1,470 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🧲 SGR 1806-20':'約5万 光年',
+ '⭐ シリウス':'約8.6 光年','🐶 プロキオン':'約11.5 光年','💠 ベガ':'約25 光年','🐶 ゴメイサ':'約162 光年','🌟 ポラリス':'約430 光年','🐕 アダーラ':'約430 光年','🐕 ミルザム':'約500 光年','❤️ アンタレス':'約550 光年','🔴 ベテルギウス':'約640 光年',
+ '❓ タビーの星':'約1,470 光年','🐕 ウェズン':'約1,600 光年','🐕 アルドラ':'約2,000 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🧲 SGR 1806-20':'約5万 光年',
  '🌸 花吹雪星':'ゲーム内 約129億 光年','🌝 ムーンフェイス':'約38.4万 km（秘密領域）'
 };
 function v60FormatDistance(raw){
@@ -6334,6 +6363,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '☿ 水星':'0.39G',
     '♀ 金星':'0.90G',
     '⭐ シリウス':'約20G（シリウスA・推定表面重力）',
+    '🐶 プロキオン':'約7G級（主星・概算）',
+    '🐶 ゴメイサ':'数G級（概算）',
+    '🐕 アダーラ':'地球より小さい（巨星・概算）',
+    '🐕 ミルザム':'地球より小さい（巨星・概算）',
+    '🐕 ウェズン':'非常に小さい（超巨星）',
+    '🐕 アルドラ':'非常に小さい（超巨星）',
     '💠 ベガ':'約10G（推定表面重力）',
     '🌟 ポラリス':'約0.1G（推定表面重力）',
     '❤️ アンタレス':'地球より非常に小さい（超巨星・推定幅大）',
@@ -6348,7 +6383,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   const gameGravity={
     '🌍 地球':.56,'🌙 月':.25,'🔴 火星':.38,'🟠 木星':.88,'🪐 土星':.56,
     '🩵 天王星':.54,'🔵 海王星':.62,'☀️ 太陽':.95,'☿ 水星':.38,'♀ 金星':.55,
-    '⭐ シリウス':.82,'💠 ベガ':.74,'🌟 ポラリス':.28,'❤️ アンタレス':.22,'🔴 ベテルギウス':.22,
+    '⭐ シリウス':.82,'🐶 プロキオン':.68,'💠 ベガ':.74,'🐶 ゴメイサ':.72,'🌟 ポラリス':.28,'🐕 アダーラ':.40,'🐕 ミルザム':.40,'❤️ アンタレス':.22,'🔴 ベテルギウス':.22,
+    '🐕 ウェズン':.23,'🐕 アルドラ':.28,
     '❓ タビーの星':.66,'🐕 VYおおいぬ座星':.20,'💥 イータ・カリーナ':.34,'🧲 SGR 1806-20':.88,'💙 R136a1':.70,'✨ S Doradus':.32,'⭐ M31-V1':.30,'💫 AF Andromedae':.34,
     '🟢 ロマーノ星 GR 290':.58,'🌠 M33 Var C':.33,'⭐ M51-DS1':.45,'🎨 Warhol':.46,
     '💙 イカロス':.48,'🦋 モスラ':.42,'❤️ クイユル':.30,'🦖 ゴジラ':.45,
@@ -6624,6 +6660,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
     // 近くの星
     '⭐ シリウス':{desc:'地球から見て、夜空で最も明るく輝く恒星',type:'主系列星'},
+    '🐶 プロキオン':{desc:'こいぬ座で最も明るい、白黄色の主星と白色矮星の連星系',type:'F型準巨星／連星'},
+    '🐶 ゴメイサ':{desc:'こいぬ座で青白く輝く、高速回転するBe型星',type:'B型Be星'},
+    '🐕 アダーラ':{desc:'おおいぬ座で明るく輝く、高温の青色巨星',type:'B型巨星'},
+    '🐕 ミルザム':{desc:'おおいぬ座の青色巨星。「先触れ」の名を持つ星',type:'B型巨星'},
+    '🐕 ウェズン':{desc:'おおいぬ座の巨大な黄色超巨星',type:'黄色超巨星'},
+    '🐕 アルドラ':{desc:'おおいぬ座で青白く輝く大質量の超巨星',type:'青色超巨星'},
     '💠 ベガ':{desc:'七夕の織姫星として知られる、青白く明るい恒星',type:'主系列星'},
     '🌟 ポラリス':{desc:'北の方角を示す、現在の北極星として有名な恒星',type:'ケフェイド変光星'},
     '❤️ アンタレス':{desc:'赤く大きく膨らんだ、寿命後半にいる巨大な恒星',type:'赤色超巨星'},
@@ -9451,6 +9493,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       desc:'地球から見て、夜空で最も明るく輝く恒星',
       type:'主系列星',distance:'8.6 光年',gravity:'20G',jump:'🔽🔽'
     },
+    '🐶 プロキオン':{desc:'こいぬ座で最も明るい「小犬の主星」',type:'F型準巨星／連星',distance:'11.5 光年',gravity:'約7G級',jump:'🔽'},
+    '🐶 ゴメイサ':{desc:'こいぬ座で青白く輝く高速回転星',type:'B型Be星',distance:'162 光年',gravity:'数G級',jump:'🔽'},
+    '🐕 アダーラ':{desc:'おおいぬ座の高温で明るい青色巨星',type:'B型巨星',distance:'430 光年',gravity:'重力傾向｜弱め',jump:'🔼'},
+    '🐕 ミルザム':{desc:'おおいぬ座の青色巨星。「先触れ」と呼ばれる',type:'B型巨星',distance:'500 光年',gravity:'重力傾向｜弱め',jump:'🔼'},
+    '🐕 ウェズン':{desc:'おおいぬ座の巨大な黄色超巨星',type:'黄色超巨星',distance:'1,600 光年',gravity:'重力傾向｜かなり弱い',jump:'🔼🔼'},
+    '🐕 アルドラ':{desc:'おおいぬ座の青白い大質量超巨星',type:'青色超巨星',distance:'2,000 光年',gravity:'重力傾向｜弱い',jump:'🔼'},
     '💠 ベガ':{
       desc:'七夕の織姫星として知られる、青白く明るい恒星',
       type:'主系列星',distance:'25 光年',gravity:'10G',jump:'🔽'
@@ -11052,7 +11100,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(type.includes('青色超巨星')||n==='✨ エアレンデル')return {kind:'star',rows:RC.blueSupergiant,note:'青い大質量星としての主成分イメージ'};
 
     // Other named stars / distant candidates.
-    if((S()?.v155Type||'').includes('星') || /シリウス|ベガ|ポラリス|タビー|VYおおいぬ座|M31|M33|M51|Warhol|イカロス|モスラ|クイユル|ゴジラ|Abell|MACS/.test(n)){
+    if((S()?.v155Type||'').includes('星') || /シリウス|プロキオン|ゴメイサ|アダーラ|ミルザム|ウェズン|アルドラ|ベガ|ポラリス|タビー|VYおおいぬ座|M31|M33|M51|Warhol|イカロス|モスラ|クイユル|ゴジラ|Abell|MACS/.test(n)){
       return {kind:'star',rows:RC.normalStar,note:'星の種類から見た主成分の目安'};
     }
     return null;
@@ -11697,6 +11745,42 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         credit:'NASA / ESA / Hubble'
       }
     },
+    '🐶 プロキオン':{
+      about:'こいぬ座で最も明るい星。プロキオンAは太陽より少し大きく明るい白黄色の星で、近くに高密度な白色矮星プロキオンBがいる連星系。',
+      facts:[['星座','こいぬ座'],['星系','連星'],['主星','F型準巨星'],['犬ポイント','小犬の主星']],
+      point:'シリウスが「大犬の星」なら、プロキオンは「小犬の星」。犬星ゲームでは骨ボーナスが発生する特別な犬系星。',
+      origin:'Procyon は古代ギリシャ語で「犬の前」。シリウス（犬の星）より先に昇ることから付いた名前。'
+    },
+    '🐶 ゴメイサ':{
+      about:'こいぬ座の青白いB型星。高速で自転し、赤道付近からガスの円盤を作ることがあるBe星の仲間。',
+      facts:[['星座','こいぬ座'],['種類','B型Be星'],['色','青白い'],['特徴','高速自転']],
+      point:'小犬座のもう一つの代表星。高速回転する青白い犬星として、プロキオンとは違うキャラを持つ。',
+      origin:'Gomeisa はアラビア語由来の伝統名で、「涙ぐんだ目」に関係する言葉から来たとされる。'
+    },
+    '🐕 アダーラ':{
+      about:'おおいぬ座の明るい青色巨星。太陽よりはるかに高温で、非常に強い紫外線を放つ大質量星。',
+      facts:[['星座','おおいぬ座'],['種類','B型巨星'],['色','青白い'],['温度','非常に高温']],
+      point:'肉眼で見える犬座の明るい星の一つ。シリウス以外にも、おおいぬ座には強烈な星が並んでいる。',
+      origin:'Adhara はアラビア語由来で「乙女たち」を意味する伝統名。'
+    },
+    '🐕 ミルザム':{
+      about:'おおいぬ座の青色巨星。非常に高温で明るく、シリウスより少し先に昇ることから「先触れ」の意味をもつ名前で呼ばれる。',
+      facts:[['星座','おおいぬ座'],['種類','B型巨星'],['色','青白い'],['愛称','先触れ']],
+      point:'夜空で犬の星シリウスが現れる少し前に昇る「お知らせ役」。犬星ルートの案内役みたいな星。',
+      origin:'Mirzam はアラビア語由来で「先触れ・告知するもの」といった意味。'
+    },
+    '🐕 ウェズン':{
+      about:'おおいぬ座にある巨大な黄色超巨星。太陽よりはるかに大きく、進化の進んだ大質量星。',
+      facts:[['星座','おおいぬ座'],['種類','黄色超巨星'],['大きさ','非常に巨大'],['色','黄白色']],
+      point:'青白い犬星が多い中で、ウェズンは巨大な黄色超巨星。犬座の中でも見た目と進化段階が違う。',
+      origin:'Wezen はアラビア語由来で「重さ」を意味する伝統名。'
+    },
+    '🐕 アルドラ':{
+      about:'おおいぬ座の青白い超巨星。非常に明るい大質量星で、寿命は太陽のような星よりずっと短い。',
+      facts:[['星座','おおいぬ座'],['種類','青色超巨星'],['質量','大質量星'],['寿命','比較的短い']],
+      point:'おおいぬ座の尻尾付近を形づくる明るい星。遠くても見えるほど本来の光度が高い。',
+      origin:'Aludra はアラビア語由来の伝統名で、「乙女」に関係する語から来たとされる。'
+    },
     '❓ タビーの星':{
       about:'F3型に近い主系列星で、星そのものは太陽より少し大きく高温。ところがKepler観測で、通常の惑星通過では説明しにくい最大約20%もの不規則な減光が見つかった。',
       facts:[['種類','F型主系列星'],['減光','最大約20%'],['特徴','不規則・非周期的'],['有力説明','周囲の塵']],
@@ -11891,6 +11975,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   // v181: 星レシピの写真が未登録／リンク切れでも観測画像を補完する
   const V181_AUTO_PHOTO_QUERY={
     '⭐ シリウス':'Sirius star',
+    '🐶 プロキオン':'Procyon star',
+    '🐶 ゴメイサ':'Gomeisa Beta Canis Minoris star',
+    '🐕 アダーラ':'Adhara Epsilon Canis Majoris star',
+    '🐕 ミルザム':'Mirzam Beta Canis Majoris star',
+    '🐕 ウェズン':'Wezen Delta Canis Majoris star',
+    '🐕 アルドラ':'Aludra Eta Canis Majoris star',
     '💠 ベガ':'Vega star',
     '🌟 ポラリス':'Polaris star',
     '❤️ アンタレス':'Antares star',
@@ -12186,6 +12276,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '☿ 水星':{main:'昼 約430℃ / 夜 約−180℃',sub:'ほぼ大気がなく熱を保てない'},
     '♀ 金星':{main:'平均 約464℃',sub:'厚いCO₂大気の温室効果で太陽系の惑星で最も高温'},
     '⭐ シリウス':{main:'シリウスA 表面 約9,700℃',sub:'青白いA型星｜伴星Bは白色矮星'},
+    '🐶 プロキオン':{main:'主星 表面 約6,250℃',sub:'約6,530Kの白黄色F型星'},
+    '🐶 ゴメイサ':{main:'表面 約11,000℃級',sub:'青白いB型Be星'},
+    '🐕 アダーラ':{main:'表面 約22,000℃級',sub:'非常に高温なB型巨星'},
+    '🐕 ミルザム':{main:'表面 約23,000℃級',sub:'高温なB型巨星'},
+    '🐕 ウェズン':{main:'表面 約5,500℃級',sub:'巨大な黄色超巨星'},
+    '🐕 アルドラ':{main:'表面 約13,000℃級',sub:'青白いB型超巨星'},
     '💠 ベガ':{main:'表面 約9,300℃',sub:'高速自転のため極と赤道で温度差がある'},
     '🌟 ポラリス':{main:'表面 約5,700℃級',sub:'ケフェイド脈動で温度も周期変化'},
     '❤️ アンタレス':{main:'表面 約3,400℃級',sub:'赤色超巨星なので太陽より低温だが巨大'},
@@ -12217,6 +12313,176 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     return `<div class="v184TempCard"><div><span>🌡️ 温度</span><b>${t.main}</b></div>${t.sub?`<small>${t.sub}</small>`:''}</div>`;
   }
 
+  // v186: 星レシピに「所属」と「寿命の目安」を追加。
+  // 寿命は観測で残り年数を直接測った値ではなく、質量・進化段階からみた概算を優先する。
+  const V186_STAR_CONTEXT={
+    '☀️ 太陽':{
+      home:'天の川銀河 ｜ オリオン腕（局所腕）｜ 太陽系',
+      life:'主系列寿命 約100億年',
+      lifeSub:'現在 約46億歳。主系列をあと約50億年ほど続けた後、赤色巨星へ進む見込み'
+    },
+    '⭐ シリウス':{
+      home:'天の川銀河 ｜ おおいぬ座方向',
+      life:'シリウスA：主系列 約10億年級',
+      lifeSub:'現在は約2億数千万歳級。伴星Bはすでに白色矮星になっている'
+    },
+    '🐶 プロキオン':{
+      home:'天の川銀河 ｜ こいぬ座方向',
+      life:'主星：数十億年級',
+      lifeSub:'すでに主系列の終盤〜準巨星段階。伴星Bは白色矮星'
+    },
+    '🐶 ゴメイサ':{
+      home:'天の川銀河 ｜ こいぬ座方向',
+      life:'数億年級',
+      lifeSub:'B型星は太陽より燃料消費が速く、寿命はかなり短い'
+    },
+    '🐕 アダーラ':{
+      home:'天の川銀河 ｜ おおいぬ座方向',
+      life:'約1000万〜2000万年級',
+      lifeSub:'高温の大質量星なので、太陽のような星より桁違いに短命'
+    },
+    '🐕 ミルザム':{
+      home:'天の川銀河 ｜ おおいぬ座方向',
+      life:'約1000万〜2000万年級',
+      lifeSub:'大質量B型星。燃料を激しく使うため短命'
+    },
+    '🐕 ウェズン':{
+      home:'天の川銀河 ｜ おおいぬ座方向',
+      life:'約1000万年級',
+      lifeSub:'すでに超巨星まで進化した大質量星で、寿命後半'
+    },
+    '🐕 アルドラ':{
+      home:'天の川銀河 ｜ おおいぬ座方向',
+      life:'約1000万年級',
+      lifeSub:'青色超巨星なので寿命は太陽より非常に短い'
+    },
+    '💠 ベガ':{
+      home:'天の川銀河 ｜ こと座方向',
+      life:'主系列 約10億年級',
+      lifeSub:'太陽より約2倍重いA型星で、太陽よりずっと早く燃料を使う'
+    },
+    '🌟 ポラリス':{
+      home:'天の川銀河 ｜ こぐま座方向',
+      life:'数千万〜1億年級',
+      lifeSub:'主星は大質量のケフェイド変光星。現在は進化後半の段階'
+    },
+    '❤️ アンタレス':{
+      home:'天の川銀河 ｜ さそり座方向',
+      life:'約1000万年級',
+      lifeSub:'赤色超巨星まで進化した大質量星。残り寿命の正確な年数は不明'
+    },
+    '🔴 ベテルギウス':{
+      home:'天の川銀河 ｜ オリオン座方向',
+      life:'約1000万年級',
+      lifeSub:'赤色超巨星で寿命後半。超新星までの残り時間は正確には分からない'
+    },
+    '❓ タビーの星':{
+      home:'天の川銀河 ｜ はくちょう座方向',
+      life:'数十億年級',
+      lifeSub:'F型主系列星。巨大星ほど短命ではないが、太陽よりは早く進化する'
+    },
+    '🐕 VYおおいぬ座星':{
+      home:'天の川銀河 ｜ おおいぬ座方向',
+      life:'約1000万年級',
+      lifeSub:'赤色極超巨星で寿命後半。残り寿命は正確には不明'
+    },
+    '💥 イータ・カリーナ':{
+      home:'天の川銀河 ｜ りゅうこつ座星雲（Carina Nebula）',
+      life:'数百万年級',
+      lifeSub:'超大質量星は非常に短命。主星はすでに激しい質量放出を続ける進化後半'
+    },
+    '🧲 SGR 1806-20':{
+      home:'天の川銀河 ｜ 星団 Cl* 1806-20 付近',
+      life:'恒星としての寿命は終了',
+      lifeSub:'超新星後のマグネター。強く活動する時期は一般に約1万年級が目安'
+    },
+    '💙 R136a1':{
+      home:'大マゼラン雲（LMC）｜ タランチュラ星雲・R136星団',
+      life:'数百万年級',
+      lifeSub:'超大質量星。現在の年齢も数百万年以下級と考えられ、非常に短命'
+    },
+    '✨ S Doradus':{
+      home:'大マゼラン雲（LMC）｜ かじき座方向',
+      life:'数百万年級',
+      lifeSub:'LBVは超大質量星の進化後半に現れる短い段階'
+    },
+    '⭐ M31-V1':{
+      home:'アンドロメダ銀河 M31',
+      life:'数千万〜1億年級',
+      lifeSub:'ケフェイド変光星としての質量からみた概算。現在は主系列後の進化段階'
+    },
+    '💫 AF Andromedae':{
+      home:'アンドロメダ銀河 M31',
+      life:'数百万年級',
+      lifeSub:'高光度青色変光星（LBV）は大質量星の短命な進化段階'
+    },
+    '🟢 ロマーノ星 GR 290':{
+      home:'さんかく座銀河 M33',
+      life:'数百万年級',
+      lifeSub:'大質量星で、LBVからウォルフ・ライエ星へ移る進化後半'
+    },
+    '🌠 M33 Var C':{
+      home:'さんかく座銀河 M33',
+      life:'数百万年級',
+      lifeSub:'高光度青色変光星として短命な大質量星'
+    },
+    '⭐ M51-DS1':{
+      home:'子持ち銀河 M51',
+      life:'約1000万年級',
+      lifeSub:'数十太陽質量級の大質量超巨星としての概算。残り寿命は未確定'
+    },
+    '🎨 Warhol':{
+      home:'遠方の背景銀河 ｜ 手前のレンズ：MACS J0416.1−2403銀河団',
+      life:'数百万〜数千万年級（推定）',
+      lifeSub:'大質量星候補だが、質量・進化段階がまだ十分に確定していない'
+    },
+    '💙 イカロス':{
+      home:'遠方の渦巻銀河 ｜ 手前のレンズ：MACS J1149+2223銀河団',
+      life:'数百万〜数千万年級',
+      lifeSub:'青色超巨星なので太陽よりはるかに短命。正確な残り寿命は不明'
+    },
+    '🦋 モスラ':{
+      home:'遠方の背景銀河 ｜ 手前のレンズ：MACS J0416.1−2403銀河団',
+      life:'構成星により数百万〜数千万年級',
+      lifeSub:'複数の巨大星を含む星系候補なので、単一の寿命は決められない'
+    },
+    '❤️ クイユル':{
+      home:'遠方の背景銀河 ｜ 手前のレンズ：El Gordo（ACT-CL J0102−4915）銀河団',
+      life:'数百万〜数千万年級（推定）',
+      lifeSub:'赤色巨星／超巨星候補としての概算。詳しい質量はまだ不確か'
+    },
+    '🦖 ゴジラ':{
+      home:'Sunburst Arc 銀河 ｜ 手前のレンズ：PSZ1 G311.65−18.48銀河団',
+      life:'数百万年級（推定）',
+      lifeSub:'LBV級の超高光度星候補なら非常に短命。正体には不確定さが残る'
+    },
+    '🔷 Abell 2744 LS1':{
+      home:'Abell 2744 の背後にある遠方銀河 ｜ レンズ：Abell 2744銀河団',
+      life:'不明｜大質量星なら数百万〜数千万年級',
+      lifeSub:'星の質量・進化段階がまだ十分に決まっていないため幅を持たせて表示'
+    },
+    '💠 MACS J0647 LS1':{
+      home:'遠方の背景銀河 ｜ 手前のレンズ：MACS J0647+7015銀河団',
+      life:'不明｜大質量星なら数百万〜数千万年級',
+      lifeSub:'超遠方の星候補で、寿命を決めるための質量推定に大きな幅がある'
+    },
+    '✨ エアレンデル':{
+      home:'Sunrise Arc 銀河 ｜ 手前のレンズ：WHL0137−08銀河団',
+      life:'数百万〜数千万年級（推定）',
+      lifeSub:'高温の大質量B型星としての目安。伴星の可能性もあり、正確な寿命は未確定'
+    }
+  };
+
+  function v186StarContextHTML(name=''){
+    const x=V186_STAR_CONTEXT[name];
+    if(!x)return '';
+    return `<div class="v186StarContext">
+      <div class="v186ContextRow"><span>🌌 所属</span><b>${v179Esc(x.home)}</b></div>
+      <div class="v186ContextRow"><span>⌛ 寿命の目安</span><b>${v179Esc(x.life)}</b></div>
+      ${x.lifeSub?`<small>${v179Esc(x.lifeSub)}</small>`:''}
+    </div>`;
+  }
+
   function v175DetailHTML(isEra){
     const base=isEra?V175_ERA_DETAIL[systems[system]?.name]:V175_OBJECT_DETAIL[S()?.name];
     const star=!isEra?V179_STAR_INFO[S()?.name]:null;
@@ -12235,6 +12501,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <h3>${S()?.name||systems[system]?.name||''}</h3>
         ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
         ${!isEra?v184TempHTML(objectName):''}
+        ${!isEra?v186StarContextHTML(objectName):''}
         ${photo?v179PhotoHTML(photo,objectName):''}
         ${star?`<div class="v179SectionLabel">⭐ 星の特徴</div>`:''}
         <p>${d.about||''}</p>
@@ -12323,6 +12590,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v181AutoPhoto .v179PhotoFallback{display:grid;background:radial-gradient(circle at 32% 28%,rgba(86,231,255,.10),transparent 38%),radial-gradient(circle at 72% 70%,rgba(255,79,216,.09),transparent 42%),#030611}
       .v184TempCard{margin:10px 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(255,139,91,.10),rgba(114,217,255,.08));border:1px solid rgba(255,186,135,.18)}
       .v184TempCard>div{display:flex;align-items:center;gap:8px}.v184TempCard span{color:#ffd4ad;font:900 9px/1.2 system-ui}.v184TempCard b{margin-left:auto;color:#fff4d9;font:1000 11px/1.2 system-ui;text-align:right}.v184TempCard small{display:block;margin-top:6px;color:rgba(255,255,255,.56);font:700 8.5px/1.45 system-ui}
+      .v186StarContext{margin:0 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(111,163,255,.09),rgba(187,142,255,.07));border:1px solid rgba(151,190,255,.16)}
+      .v186ContextRow{display:flex;align-items:flex-start;gap:9px;padding:3px 0}.v186ContextRow span{flex:0 0 auto;color:#bfe1ff;font:900 9px/1.35 system-ui}.v186ContextRow b{margin-left:auto;max-width:72%;color:#f4f8ff;font:900 9.5px/1.45 system-ui;text-align:right}.v186StarContext small{display:block;margin-top:6px;padding-top:7px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.52);font:700 8.3px/1.5 system-ui}
       .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
       .v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
       .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
@@ -18162,6 +18431,6 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
   </div>
 </div>
 
-<!-- v184: タビー/VY/SGR追加 + 天体レシピ温度表示 -->
+<!-- v186: 犬系6星追加 + 犬星ボーンボーナス/犬出現 -->
 </body>
 </html>
