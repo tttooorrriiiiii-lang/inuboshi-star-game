@@ -1096,7 +1096,8 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 .v230FateViz.calm .from{background:radial-gradient(circle at 35% 35%,#fff7cf,#ffd761 65%,#a77105)}.v230FateViz.calm .to{background:radial-gradient(circle at 35% 35%,#ffffff,#e6f1ff 62%,#aebedc)}
 .v230FateViz.remnant .from{background:radial-gradient(circle at 35% 35%,#fff,#ffb59d 52%,#f76e4f 75%)}.v230FateViz.remnant .to{background:radial-gradient(circle at 35% 35%,#eaf5ff,#b6d3ff 60%,#5475b7)}
 .v230FateViz.unknown .from,.v230FateViz.unknown .to{background:radial-gradient(circle at 35% 35%,#f0e9ff,#c7b6f2 60%,#7a67a8)}
-@media(max-width:430px){.v229StarProfile{gap:6px}.v229ProfileCard{padding:9px 7px;border-radius:12px}.v229ProfileCard strong{font-size:10px}.v229ProfileCard small{font-size:7px}.v230MagStep i,.v230MultiViz .orb,.v230FateViz .node{width:14px;height:14px;font-size:9px}.v230MagStep b{font-size:5.5px}}
+.v231BurstWrap{position:relative;display:grid;place-items:center;width:34px;height:34px}.v231BurstCore{position:relative;z-index:2;display:grid;place-items:center;width:22px;height:22px;border-radius:50%;font-size:13px;background:radial-gradient(circle at 35% 35%,#fffef7,#ffd1b8 34%,#ff7a45 62%,#bb1d00 82%);box-shadow:0 0 16px rgba(255,117,63,.55),0 0 28px rgba(255,187,89,.22);border:1px solid rgba(255,245,208,.65)}.v231BurstHalo{position:absolute;inset:2px;border-radius:50%;background:radial-gradient(circle,rgba(255,243,165,.45) 0%,rgba(255,177,90,.28) 38%,rgba(255,96,46,.10) 62%,rgba(255,96,46,0) 76%);filter:blur(.2px)}.v231BurstRay{position:absolute;left:50%;top:50%;width:3px;height:11px;margin-left:-1.5px;margin-top:-17px;border-radius:999px;background:linear-gradient(180deg,#fff8c8,#ff9f57 72%,rgba(255,97,43,0));box-shadow:0 0 7px rgba(255,178,78,.38);transform-origin:50% 17px}.v231BurstRay.r2{transform:rotate(45deg)}.v231BurstRay.r3{transform:rotate(90deg)}.v231BurstRay.r4{transform:rotate(135deg)}.v231BurstRay.r5{transform:rotate(180deg)}.v231BurstRay.r6{transform:rotate(225deg)}.v231BurstRay.r7{transform:rotate(270deg)}.v231BurstRay.r8{transform:rotate(315deg)}
+@media(max-width:430px){.v229StarProfile{gap:6px}.v229ProfileCard{padding:9px 7px;border-radius:12px}.v229ProfileCard strong{font-size:10px}.v229ProfileCard small{font-size:7px}.v230MagStep i,.v230MultiViz .orb,.v230FateViz .node{width:14px;height:14px;font-size:9px}.v230MagStep b{font-size:5.5px}.v231BurstWrap{width:30px;height:30px}.v231BurstCore{width:20px;height:20px;font-size:12px}.v231BurstRay{height:9px;margin-top:-15px}}
 </style>
 
 </head>
@@ -12877,7 +12878,13 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
     const a=tier(lo), b=tier(hi);
     if(a===7) return {main:'肉眼では見えない',detail:`詳しく ${s}`,range:[],visible:false};
-    const main = a===b ? `${['','一','二','三','四','五','六'][a]}等星` : `${['','一','二','三','四','五','六'][a]}〜${['','一','二','三','四','五','六'][b]}等星`;
+    const labels=['','一','二','三','四','五','六'];
+    let main='';
+    if(b===7){
+      main = a===6 ? '六等星前後' : `${labels[a]}〜六等星`;
+    }else{
+      main = a===b ? `${labels[a]}等星` : `${labels[a]}〜${labels[b]}等星`;
+    }
     const range=[]; for(let i=a;i<=Math.min(b,6);i++) range.push(i);
     return {main,detail:`詳しく ${s}`,range,visible:true};
   }
@@ -12925,6 +12932,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   }
 
   function v230FateViz(model){
+    if(model.cls==='supernova'){
+      return `<div class="v230Viz v230FateViz ${model.cls}" aria-label="星の最期イメージ"><span class="node from">${model.from}</span><span class="arrow">→</span><span class="v231BurstWrap"><span class="v231BurstHalo"></span><span class="v231BurstRay r1"></span><span class="v231BurstRay r2"></span><span class="v231BurstRay r3"></span><span class="v231BurstRay r4"></span><span class="v231BurstRay r5"></span><span class="v231BurstRay r6"></span><span class="v231BurstRay r7"></span><span class="v231BurstRay r8"></span><span class="v231BurstCore">💥</span></span></div>`;
+    }
     return `<div class="v230Viz v230FateViz ${model.cls}" aria-label="星の最期イメージ"><span class="node from">${model.from}</span><span class="arrow">→</span><span class="node to">${model.to}</span></div>`;
   }
 
@@ -15681,15 +15691,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v230';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v230</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v231';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v231</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v230</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v231</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16244,7 +16254,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v230';
+window.INUBOSHI_GAME_VERSION='v231';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -19940,7 +19950,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v230</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v231</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -20289,11 +20299,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v230';
+  window.INUBOSHI_GAME_VERSION='v231';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v230<small>VISUAL STAR PROFILE CARDS / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v231<small>MAGNITUDE FIX + SUPERNOVA VIZ / 2026-09-05</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
