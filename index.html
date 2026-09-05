@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>犬星くん GALAXY TOUR v193</title>
-<!-- v195: エアレンデルのトランシーバーを前景オブジェクト化 / 接触でSOS発動 -->
+<!-- v197: エアレンデル通常アイテム復活 / トランシーバー確実表示 / 星説明をやさしい日本語へ -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -18949,9 +18949,7 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
     warping:false
   };
 
-  function v194IsEarendel(){
-    try{return S()?.name==='✨ エアレンデル';}catch(e){return false;}
-  }
+  function v194IsEarendel(){return false;}
   function v194FutureStep(){
     try{return systems[system]?.futureStep||0;}catch(e){return 0;}
   }
@@ -19212,8 +19210,8 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
 <script>
 /* === v195: make Earendel transceiver clearly visible and trigger on contact === */
 (function(){
-  const RADIO_X=1985;
-  const WARP_X=2520;
+  const RADIO_X=820;
+  const WARP_X=2480;
   let signalDone=false;
   let signalActive=false;
   let futureWarping=false;
@@ -19279,13 +19277,13 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
     ctx.globalAlpha=.18;
     ctx.fillStyle='#7aeaff';ctx.beginPath();ctx.arc(sx,y-18,47,0,Math.PI*2);ctx.fill();
     ctx.globalAlpha=1;
-    ctx.font='58px system-ui';ctx.fillText('📻',sx,y);
+    ctx.font='78px system-ui';ctx.fillText('📻',sx,y+8);
     ctx.shadowBlur=0;
     ctx.fillStyle='rgba(8,20,30,.90)';
     ctx.strokeStyle='rgba(128,238,255,.70)';ctx.lineWidth=1.5;
-    const bw=116,bh=30,bx=sx-bw/2,by=y-91;
+    const bw=142,bh=34,bx=sx-bw/2,by=y-116;
     ctx.beginPath();ctx.roundRect(bx,by,bw,bh,10);ctx.fill();ctx.stroke();
-    ctx.fillStyle='#dffcff';ctx.font='1000 10px system-ui';ctx.fillText('📻 地球からSOS',sx,by+19);
+    ctx.fillStyle='#dffcff';ctx.font='1000 11px system-ui';ctx.fillText('📻 地球からのSOS',sx,by+22);
     ctx.strokeStyle='rgba(150,239,255,.70)';ctx.lineWidth=1.4;
     for(let i=0;i<3;i++){
       ctx.globalAlpha=.55-i*.13;
@@ -19319,7 +19317,7 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
     const out=prevStageStart();
     if(earendel()){
       signalDone=false;signalActive=false;futureWarping=false;
-      setTimeout(()=>{if(earendel())showToast('📻 前方にトランシーバーが落ちている…',1600);},450);
+      setTimeout(()=>{if(earendel())showToast('📻 すぐ前にトランシーバーが落ちている！',1700);},450);
     }
     return out;
   };
@@ -19354,6 +19352,142 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
     drawRadioForeground();
     prevDrawPlayer();
   };
+})();
+</script>
+
+
+<script>
+/* === v196: Earendel gets normal star-stage objects + plain-language star HUD === */
+(function(){
+  let earKey='';
+  let earItems=[];
+  let earHazards=[];
+  let earAliens=[];
+  let earMorphs=[];
+
+  const SIMPLE_STAR_COPY={
+    '☀️ 太陽':{text:'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',tag:'地球の近くの星'},
+    '⭐ シリウス':{text:'地球の夜空で、いちばん明るく見える星。おおいぬ座の「犬の星」。',tag:'夜空で一番明るい星'},
+    '🐶 プロキオン':{text:'こいぬ座でいちばん明るい星。シリウスより少し先に空へ昇る。',tag:'こいぬ座の代表'},
+    '🕰️ メトシェラ星':{text:'宇宙でも最古クラスの星。宇宙がまだ若かったころから生きている。',tag:'とても古い星'},
+    '💠 ベガ':{text:'七夕の「織姫星」。ものすごい速さで回っている青白い星。',tag:'高速で回る星'},
+    '🌟 ポラリス':{text:'北の方向を教えてくれる北極星。実は1個ではなく、3つの星の仲間。',tag:'北を教える星'},
+    '❤️ アンタレス':{text:'さそり座の「心臓」にあたる赤い巨大星。太陽よりずっと大きい。',tag:'赤い巨大星'},
+    '🔴 ベテルギウス':{text:'オリオン座の赤い巨大星。寿命の終わりに近く、いつか超新星爆発すると考えられている。',tag:'爆発候補の有名星'},
+    '❓ タビーの星':{text:'ときどき急に大きく暗くなる、不思議な星。なぜ暗くなるのか研究が続いている。',tag:'謎の星'},
+    '🐕 VYおおいぬ座星':{text:'太陽よりはるかに大きい犬の星。自分のガスやちりを激しく宇宙へ吹き飛ばしている。',tag:'超巨大な犬の星'},
+    '💥 イータ・カリーナ':{text:'大噴火を起こしたのに、まだ生きている巨大な星。将来は超新星になる候補。',tag:'大噴火した星'},
+    '🪐 Stephenson 2-18':{text:'見つかっている星の中で、いちばん大きい候補のひとつ。太陽とは比べものにならないほど巨大。',tag:'一番大きい候補'},
+    '🧲 SGR 1806-20':{text:'大きな星が死んだあとに残った天体。ものすごく強い磁力をもつ。',tag:'磁力が最強クラス'},
+    '💙 R136a1':{text:'見つかっている中でも、特に重くて明るい星。太陽の何百万倍級の明るさをもつ。',tag:'とても重くて明るい星'},
+    '✨ S Doradus':{text:'とても明るく、明るさが大きく変わる星。この種類の星を代表する名前にもなっている。',tag:'変光星の代表'},
+    '⭐ M31-V1':{text:'宇宙が想像よりずっと広いと分かるきっかけになった、天文学の歴史で大切な星。',tag:'宇宙の広さを教えた星'},
+    '⭐ M51-DS1':{text:'約3100万光年も遠いのに、1個の星として見つかったとても明るい星。',tag:'遠くても見える星'},
+    '🎨 Warhol':{text:'手前にある大きな天体の重力で光が拡大され、見えるようになった遠い星。',tag:'重力レンズで見えた星'},
+    '💙 イカロス':{text:'エアレンデルが見つかる前は、地球からいちばん遠い星として知られていた。',tag:'以前の一番遠い星'},
+    '🦋 モスラ':{text:'重力レンズで大きく拡大されて見える、とても遠い星の集まりの候補。',tag:'隠し・怪獣スター'},
+    '🦖 ゴジラ':{text:'重力レンズでとても明るく見える遠い星。怪物級の明るさから「ゴジラ」と呼ばれる。',tag:'隠し・怪獣スター'},
+    '✨ エアレンデル':{text:'いちばん遠い星。宇宙が若いころの星。',tag:'一番遠い星'}
+  };
+
+  const EASY_DISTANCE={
+    '🎨 Warhol':'とても遠い',
+    '🦋 モスラ':'とても遠い',
+    '🦖 ゴジラ':'とても遠い',
+    '✨ エアレンデル':'いちばん遠い星'
+  };
+
+  function isEarendel(){try{return S()?.name==='✨ エアレンデル';}catch(e){return false;}}
+
+  function buildEarendelWorld(){
+    if(!isEarendel())return;
+    const gy=groundY();
+    const c=S()?.goodColor||'#fff8df';
+    earItems=[];earHazards=[];earAliens=[];earMorphs=[];
+
+    // Same star pickups as ordinary star stages.
+    for(let i=0;i<34;i++){
+      const x=270+i*66+(i%4)*16;
+      earItems.push({x,y:gy-72-(i%5)*34,r:14+(i%3)*2,got:false,color:c});
+    }
+    // Same bone graphic as ordinary stages.
+    [420,930,1420,1920,2300].forEach((x,i)=>{
+      earItems.push({x,y:gy-58-(i%2)*55,r:18,got:false,color:'#ffd65a',food:true});
+    });
+    // Same alien graphic and behavior.
+    [560,1320,2140].forEach((x,i)=>{
+      earAliens.push({x,y:gy-108-(i%2)*72,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
+    });
+    // Same question-mark transformation items.
+    const dogs=['🐩','🐕‍🦺','🦮','🐕'];
+    [360,1080,1680,2260].forEach((x,i)=>{
+      earMorphs.push({x,y:gy-122-(i%3)*48,r:26,got:false,dog:dogs[i%dogs.length]});
+    });
+    // A few normal meteor hazards so it feels like the other stars too.
+    [760,1180,1580,2020,2380].forEach((x,i)=>{
+      earHazards.push({x,y:70+(i%3)*62,w:46,h:46,got:false,symbol:'☄️',diagonal:true,vx:-1.2-(i%2)*.3,vy:1.05+(i%3)*.18});
+    });
+    earKey='earendel';
+  }
+
+  function restoreEarendelWorld(){
+    if(!isEarendel())return;
+    if(earKey!=='earendel')buildEarendelWorld();
+    earItems=earItems.filter(o=>!o.got);
+    earHazards=earHazards.filter(o=>!o.got);
+    earAliens=earAliens.filter(o=>!o.got);
+    earMorphs=earMorphs.filter(o=>!o.got);
+    items=earItems;
+    hazards=earHazards;
+    aliens=earAliens;
+    morphs=earMorphs;
+  }
+
+  const prevStageStart=stageStart;
+  stageStart=function(){
+    const out=prevStageStart();
+    earKey='';
+    if(isEarendel()){
+      buildEarendelWorld();
+      setTimeout(()=>restoreEarendelWorld(),0);
+    }
+    return out;
+  };
+
+  const prevUpdate=update;
+  update=function(now,dt){
+    prevUpdate(now,dt);
+    if(!paused&&isEarendel())restoreEarendelWorld();
+  };
+
+  const prevSync=syncHUD;
+  syncHUD=function(force){
+    prevSync(force);
+    let name='';
+    try{name=S()?.name||'';}catch(e){return;}
+    const x=SIMPLE_STAR_COPY[name];
+    if(!x)return;
+    const raw=S()?.distance||systems[system]?.distance||'';
+    const dist=EASY_DISTANCE[name]||raw.replace('地球から','').trim();
+    locationEl.textContent=`${name}  ·  ${x.tag}`;
+    astroInfo.innerHTML=
+      `<b>${name}</b>`+
+      `<br>${x.text}`+
+      `<span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue"> ${dist}</span></span>`+
+      `<span class="distanceHint">${x.tag}</span>`;
+  };
+
+  // Make the simple copy available to other UI pieces without changing scientific detail cards.
+  for(const sys of systems){
+    for(const st of (sys?.stages||[])){
+      const x=SIMPLE_STAR_COPY[st?.name];
+      if(x)st.desc=x.text;
+    }
+    const sx=SIMPLE_STAR_COPY[sys?.name];
+    if(sx)sys.desc=sx.text;
+  }
+
+  setTimeout(()=>{if(isEarendel()){buildEarendelWorld();restoreEarendelWorld();syncHUD(true);}},0);
 })();
 </script>
 
