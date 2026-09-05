@@ -15691,15 +15691,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v233';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v233</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v234';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v234</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v233</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v234</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16254,7 +16254,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v233';
+window.INUBOSHI_GAME_VERSION='v234';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -16910,58 +16910,60 @@ function v223DrawFutureBuildings(step){
   ctx.restore();
 }
 
-const V233={heatKey:'',heatStart:0};
+const V234={heatKey:'',heatStart:0,heatDelay:1.6};
 function v232DrawScorchedSkyPulse(step){
   if(step!==2)return;
   const gy=groundY();
   const now=performance.now();
   const key='heat|'+v215StageKey();
-  if(V233.heatKey!==key){ V233.heatKey=key; V233.heatStart=now; }
+  if(V234.heatKey!==key){ V234.heatKey=key; V234.heatStart=now; }
   const t=now/1000;
-  const elapsed=(now-V233.heatStart)/1000;
-  const p=Math.max(0,Math.min(1,elapsed/7.2));
-  const spread=Math.max(0,Math.min(1,p/0.58));
-  const dark=Math.max(0,Math.min(1,(p-0.42)/0.58));
-  const haze=0.08+0.04*Math.sin(t*1.35);
+  const elapsed=(now-V234.heatStart)/1000;
+  if(elapsed<V234.heatDelay)return; // 最初は背景そのまま見せる
+  const play=Math.max(0,elapsed-V234.heatDelay);
+  const p=Math.max(0,Math.min(1,play/7.2));
+  const spread=Math.max(0,Math.min(1,p/0.60));
+  const dark=Math.max(0,Math.min(1,(p-0.46)/0.54));
+  const haze=(0.06+0.035*Math.sin(t*1.35))*(1-dark);
   const sunX=W*0.82;
   const sunY=gy*0.20;
-  const maxR=Math.hypot(Math.max(sunX,W-sunX),Math.max(sunY,gy-sunY))+120;
+  const maxR=Math.hypot(Math.max(sunX,W-sunX),Math.max(sunY,gy-sunY))+140;
   const radius=110+maxR*spread;
   ctx.save();
 
-  // Keep the original sun scene visible, then let its heat spread outward.
-  const heat=ctx.createRadialGradient(sunX,sunY,22,sunX,sunY,radius);
-  heat.addColorStop(0,'rgba(255,255,220,0.10)');
-  heat.addColorStop(0.14,`rgba(255,205,120,${(0.16+0.08*(1-dark)).toFixed(3)})`);
-  heat.addColorStop(0.42,`rgba(255,95,35,${(0.20+0.48*(1-dark)).toFixed(3)})`);
-  heat.addColorStop(0.78,`rgba(220,38,18,${(0.10+0.38*(1-dark)).toFixed(3)})`);
-  heat.addColorStop(1,'rgba(220,38,18,0)');
+  // 元の灼熱背景の上で、太陽側から赤い熱が広がっていく。
+  const heat=ctx.createRadialGradient(sunX,sunY,28,sunX,sunY,radius);
+  heat.addColorStop(0,'rgba(255,240,185,0.03)');
+  heat.addColorStop(0.16,`rgba(255,215,120,${(0.06+0.06*(1-dark)).toFixed(3)})`);
+  heat.addColorStop(0.42,`rgba(255,103,36,${(0.14+0.26*(1-dark)).toFixed(3)})`);
+  heat.addColorStop(0.75,`rgba(228,40,18,${(0.10+0.32*(1-dark)).toFixed(3)})`);
+  heat.addColorStop(1,'rgba(228,40,18,0)');
   ctx.fillStyle=heat;
   ctx.fillRect(0,0,W,gy-1);
 
-  // Thin hot-air shimmer bands.
-  for(let i=0;i<4;i++){
-    const bandY=gy*(0.13+i*0.14)+Math.sin(t*0.85+i*1.6)*10;
-    const bandH=26+(i%2)*14;
-    const grad=ctx.createLinearGradient(0,bandY,0,bandY+bandH);
-    grad.addColorStop(0,'rgba(255,120,46,0)');
-    grad.addColorStop(.48,`rgba(255,118,38,${(haze*(1-dark)).toFixed(3)})`);
-    grad.addColorStop(1,'rgba(255,120,46,0)');
-    ctx.fillStyle=grad;
-    ctx.fillRect(0,bandY,W,bandH);
-  }
-
-  // After the red spread, the whole sky slowly chars to black.
-  const charAlpha=0.78*dark;
+  // 広がり切ったあとに、空全体が炭化して暗くなる。
+  const charAlpha=0.82*dark;
   if(charAlpha>0.001){
     ctx.fillStyle=`rgba(0,0,0,${charAlpha.toFixed(3)})`;
     ctx.fillRect(0,0,W,gy-1);
   }
 
-  // Leave a faint dying glow around the swollen sun even after darkening.
-  const afterGlow=ctx.createRadialGradient(sunX,sunY,18,sunX,sunY,Math.max(140,radius*0.42));
-  afterGlow.addColorStop(0,`rgba(255,224,140,${(0.10+0.05*Math.sin(t*1.1)).toFixed(3)})`);
-  afterGlow.addColorStop(0.5,`rgba(255,117,51,${(0.06+0.06*(1-dark)).toFixed(3)})`);
+  // ビルの後ろでだけ動く熱のゆらぎ。
+  for(let i=0;i<4;i++){
+    const bandY=gy*(0.16+i*0.14)+Math.sin(t*0.8+i*1.5)*9;
+    const bandH=24+(i%2)*12;
+    const grad=ctx.createLinearGradient(0,bandY,0,bandY+bandH);
+    grad.addColorStop(0,'rgba(255,120,46,0)');
+    grad.addColorStop(.48,`rgba(255,120,40,${haze.toFixed(3)})`);
+    grad.addColorStop(1,'rgba(255,120,46,0)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,bandY,W,bandH);
+  }
+
+  // 暗転後も、太陽まわりに弱い残光を少し残す。
+  const afterGlow=ctx.createRadialGradient(sunX,sunY,18,sunX,sunY,Math.max(150,radius*0.44));
+  afterGlow.addColorStop(0,`rgba(255,224,140,${(0.06+0.03*Math.sin(t*1.0)).toFixed(3)})`);
+  afterGlow.addColorStop(0.55,`rgba(255,117,51,${(0.04+0.03*(1-dark)).toFixed(3)})`);
   afterGlow.addColorStop(1,'rgba(255,90,40,0)');
   ctx.fillStyle=afterGlow;
   ctx.fillRect(0,0,W,gy-1);
@@ -16969,14 +16971,14 @@ function v232DrawScorchedSkyPulse(step){
   ctx.restore();
 }
 
-// Final future-stage render order: base scene -> future sky -> future buildings -> scorched heat pulse.
+// Final future-stage render order: base scene -> future sky -> scorched pulse (behind city) -> future buildings.
 drawBackground=function(){
   v215BaseBg();
   const step=v215FutureStep();
   if(step>=1&&step<=7){
     v223DrawFutureSky(step);
-    v223DrawFutureBuildings(step);
     v232DrawScorchedSkyPulse(step);
+    v223DrawFutureBuildings(step);
   }
 };
 
@@ -20010,7 +20012,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v233</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v234</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -20359,11 +20361,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v233';
+  window.INUBOSHI_GAME_VERSION='v234';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v233<small>SCORCHED EARTH EXPAND TO DARK / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v234<small>SCORCHED EARTH DELAY + BACK LAYER / 2026-09-05</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
