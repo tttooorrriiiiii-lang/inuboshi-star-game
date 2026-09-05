@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v190</title>
+<title>犬星くん GALAXY TOUR v191</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -1188,6 +1188,10 @@ name:'💥 イータ・カリーナ',distance:'地球から約7,500光年',desc:
 {name:'💥 イータ・カリーナ',distance:'約7,500光年',desc:'巨大噴火を起こしながら生き残った、極端に不安定な大質量連星系',goodColor:'#ffb3e8',sky:['#10030d','#4b1738'],ground:'#725166',ground2:'#2f1f2b',planet:'#ffd6f3',event:'GREAT ERUPTION',eventText:'💥 19世紀級の大噴火！ ガスと塵が双極方向へ吹き出す',gravity:.34,jump:17.6}
 ]},
 {
+name:'🪐 Stephenson 2-18',distance:'地球から約2万光年',desc:'既知でも最大級の赤色超巨星候補。太陽の場所に置けば土星軌道近くまで届くとされる',theme:'cloud',stages:[
+{name:'🪐 Stephenson 2-18',distance:'約2万光年',desc:'超巨大さで有名な赤色超巨星候補。外層は土星軌道級ともいわれる',goodColor:'#ffc6a2',sky:['#120603','#5f2413'],ground:'#845946',ground2:'#42281f',planet:'#ff9e72',event:'COLOSSAL STAR',eventText:'🪐 超巨大！ 星の外層が土星軌道級まで広がる！',gravity:.18,jump:17.9}
+]},
+{
 name:'🧲 SGR 1806-20',distance:'地球から約5万光年',desc:'約10¹⁵ガウス級の超強磁場を持つマグネター。2004年の巨大フレアは地球の上層大気まで乱した',theme:'blackhole',stages:[
 {name:'🧲 SGR 1806-20',distance:'約5万光年',desc:'直径わずか数十km級なのに、銀河最強クラスの磁場とガンマ線フレアを放つ中性子星',goodColor:'#bda8ff',sky:['#02020a','#190d35'],ground:'#3c3152',ground2:'#16101f',planet:'#bca7ff',event:'MAGNETAR FLARE',eventText:'🧲⚡ 超強磁場！ 巨大ガンマ線フレアが走る！',gravity:.85,jump:16.2}
 ]},
@@ -1356,7 +1360,7 @@ const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==B
 const rankByName={
 '☀️ 太陽系・近くの星':0,
 '🐶 プロキオン':0.10,'🐶 ゴメイサ':0.20,'🐕 アダーラ':0.30,'🐕 ミルザム':0.40,
-'❓ タビーの星':1,'🐕 ウェズン':1.20,'🐕 アルドラ':1.40,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
+'❓ タビーの星':1,'🐕 ウェズン':1.20,'🐕 アルドラ':1.40,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🪐 Stephenson 2-18':3.6,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
 '💙 イカロス':13,'🦋 モスラ':14,'❤️ クイユル':15,'🦖 ゴジラ':16,'🔷 Abell 2744 LS1':17,'💠 MACS J0647 LS1':18,'✨ エアレンデル':19,
 '🔥 再電離時代':20,'🌅 宇宙の夜明け':21,'🌑 暗黒時代':22,'🌤️ 再結合時代（宇宙の晴れ上がり）':23,'📡 宇宙背景放射（CMB）':24,'✨ 光子時代':25,'⚛️ ビッグバン元素合成':26,'🌀 レプトン時代':27,'🔵 ハドロン時代':28,'🟣 クォーク時代':29,'⚡ 電弱時代':30,'💥 インフレーション時代':31,'◼️ 大統一時代':32,'❓ プランク時代':33,'💫 ビッグバン':34,'🔁 ビッグバウンス':35,'♻️ 循環宇宙':36,'🫧 永遠のインフレーション':37,'◯ 無境界仮説':38,'⏩ 太陽が明るくなる未来':40,'🔴 赤色巨星の太陽':41,'⚪ 白色矮星の太陽':42,'🌌 星形成の終わり':43,'🔴 最後の恒星たち':44,'🕳️ ブラックホール時代':45,'🌑 暗い宇宙':46,'🥶 熱的死／ビッグフリーズ':47,'💥 ビッグリップ':48,'🔻 ビッグクランチ':49,'⚠️ 真空崩壊':50,'🐾 犬の星':60
 };
@@ -1752,12 +1756,13 @@ function wormholeMilestoneEffect(count){
  else if(count===7){transTitle.innerHTML='🐕 ALUDRA';nextEl.textContent='青白い超巨星の犬星へ。';subEl.textContent='DOG STAR 6';showToast('🐕 アルドラ！ 犬星チェーン終盤！',1900)}
  else if(count===8){transTitle.innerHTML='🐕 VY CANIS MAJORIS';nextEl.textContent='太陽系サイズ級にふくらんだ赤い犬星の怪物へ。';subEl.textContent='DOG STAR 7';showToast('🐕 VYおおいぬ座星！ 巨大ガス噴出に注意！',2000)}
  else if(count===9){transTitle.innerHTML='💥 ETA CARINAE';nextEl.textContent='巨大噴火を生き残った超大質量連星へ。';subEl.textContent='WORMHOLE 9';showToast('💥 イータ・カリーナ！ 大噴火の残骸が広がる。',2000)}
- else if(count===10){transTitle.innerHTML='🧲 MAGNETAR';nextEl.textContent='銀河最強クラスの磁場を持つ中性子星へ。';subEl.textContent='WORMHOLE 10';showToast('🧲 SGR 1806-20！ 磁場とガンマ線が桁違い！',2100)}
- else if(count===11){transTitle.innerHTML='💙 R136a1';nextEl.textContent='太陽100個分超級の大質量星へ。';subEl.textContent='WORMHOLE 11';showToast('💙 R136a1！ 超高温・超大質量の怪物星。',2100)}
- else if(count===13){transTitle.innerHTML='🌌 ANDROMEDA SCALE';nextEl.textContent='天の川を離れ、別銀河の星へ。';subEl.textContent='WORMHOLE 13';showToast('🌌 アンドロメダ銀河の星まで来た。',2100)}
- else if(count===15){transTitle.innerHTML='💙 ICARUS';nextEl.textContent='重力レンズで見える超遠方の個別星へ。';subEl.textContent='WORMHOLE 15';showToast('💙 イカロス級の遠方へ。',2200)}
- else if(count===16){transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='129億年前の光へ。';subEl.textContent='WORMHOLE 16';showToast('✨ エアレンデル。最遠級の個別星へ。',2200)}
- else if(count===17){transTitle.innerHTML='🌑 COSMIC HISTORY';nextEl.textContent='星のない宇宙の歴史へ。';subEl.textContent='WORMHOLE 17';showToast('🌑 ここから先は宇宙史。',2200)}
+ else if(count===10){transTitle.innerHTML='🪐 STEPHENSON 2-18';nextEl.textContent='超巨大さで有名な最大級候補の怪物星へ。';subEl.textContent='WORMHOLE 10';showToast('🪐 Stephenson 2-18！ でかさが土星軌道級…！',2100)}
+ else if(count===11){transTitle.innerHTML='🧲 MAGNETAR';nextEl.textContent='銀河最強クラスの磁場を持つ中性子星へ。';subEl.textContent='WORMHOLE 11';showToast('🧲 SGR 1806-20！ 磁場とガンマ線が桁違い！',2100)}
+ else if(count===12){transTitle.innerHTML='💙 R136a1';nextEl.textContent='太陽100個分超級の大質量星へ。';subEl.textContent='WORMHOLE 12';showToast('💙 R136a1！ 超高温・超大質量の怪物星。',2100)}
+ else if(count===14){transTitle.innerHTML='🌌 ANDROMEDA SCALE';nextEl.textContent='天の川を離れ、別銀河の星へ。';subEl.textContent='WORMHOLE 14';showToast('🌌 アンドロメダ銀河の星まで来た。',2100)}
+ else if(count===16){transTitle.innerHTML='💙 ICARUS';nextEl.textContent='重力レンズで見える超遠方の個別星へ。';subEl.textContent='WORMHOLE 16';showToast('💙 イカロス級の遠方へ。',2200)}
+ else if(count===17){transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='129億年前の光へ。';subEl.textContent='WORMHOLE 17';showToast('✨ エアレンデル。最遠級の個別星へ。',2200)}
+ else if(count===18){transTitle.innerHTML='🌑 COSMIC HISTORY';nextEl.textContent='星のない宇宙の歴史へ。';subEl.textContent='WORMHOLE 18';showToast('🌑 ここから先は宇宙史。',2200)}
 }
 
 function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 WORMHOLE!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 宇宙のもっと奥へ！';subEl.textContent=black?'SPAGHETTIFICATION':`WORMHOLE ${deepWarpCount+1}`;
@@ -1771,7 +1776,7 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
     wormholeMilestoneEffect(deepWarpCount);
     const milestones=[
       '🐶 プロキオン','🐶 ゴメイサ','🐕 アダーラ','🐕 ミルザム','❓ タビーの星','🐕 ウェズン','🐕 アルドラ','🐕 VYおおいぬ座星',
-      '💥 イータ・カリーナ','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル','🌑 暗黒時代','❓ プランク時代'
+      '💥 イータ・カリーナ','🪐 Stephenson 2-18','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル','🌑 暗黒時代','❓ プランク時代'
     ];
     const targetName=milestones[Math.min(deepWarpCount-1,milestones.length-1)];
     const nextSystem=systems.findIndex(s=>s.name===targetName);
@@ -3013,7 +3018,7 @@ for(let i=0;i<systems.length;i++)systemDistanceRank[i]=systems[i].secret?99:syst
 const v60DistanceByStage={
  '🌍 地球':'0 km','🌙 月':'約38.4万 km','♀ 金星':'約4,100万 km','🔴 火星':'約5,500万 km','☿ 水星':'約7,700万 km','☀️ 太陽':'約1.50億 km','🟠 木星':'約5.9億 km','🪐 土星':'約12億 km','🩵 天王星':'約26億 km','🔵 海王星':'約43億 km',
  '⭐ シリウス':'約8.6 光年','🐶 プロキオン':'約11.5 光年','💠 ベガ':'約25 光年','🐶 ゴメイサ':'約162 光年','🌟 ポラリス':'約430 光年','🐕 アダーラ':'約430 光年','🐕 ミルザム':'約500 光年','❤️ アンタレス':'約550 光年','🔴 ベテルギウス':'約640 光年',
- '❓ タビーの星':'約1,470 光年','🐕 ウェズン':'約1,600 光年','🐕 アルドラ':'約2,000 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🧲 SGR 1806-20':'約5万 光年',
+ '❓ タビーの星':'約1,470 光年','🐕 ウェズン':'約1,600 光年','🐕 アルドラ':'約2,000 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🪐 Stephenson 2-18':'約2万 光年','🧲 SGR 1806-20':'約5万 光年',
  '🌸 花吹雪星':'ゲーム内 約129億 光年','🌝 ムーンフェイス':'約38.4万 km（秘密領域）'
 };
 function v60FormatDistance(raw){
@@ -6485,6 +6490,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       simple:'巨大噴火を起こしても生き残った、超大質量の不安定な連星系',
       type:'高光度青色変光星を含む大質量連星系'
     },
+    '🪐 Stephenson 2-18':{
+      simple:'土星軌道級ともいわれる、とんでもなく膨らんだ最大級候補の赤色超巨星',
+      type:'赤色超巨星（最大級候補）'
+    },
     '🧲 SGR 1806-20':{
       simple:'星の死骸なのに、銀河最強級の磁場とガンマ線を放つ超高密度天体',
       type:'マグネター（中性子星）'
@@ -6675,6 +6684,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❓ タビーの星':{desc:'Keplerが最大約20%の異常な減光を観測した謎のF型星',type:'F型主系列星／変光天体'},
     '🐕 VYおおいぬ座星':{desc:'木星〜土星軌道級まで膨らむ最大級の赤色極超巨星',type:'赤色極超巨星'},
     '💥 イータ・カリーナ':{desc:'19世紀の巨大噴火で大量の物質を吹き飛ばしても生き残った超大質量連星系',type:'高光度青色変光星を含む大質量連星系'},
+    '🪐 Stephenson 2-18':{desc:'土星軌道級ともいわれる、超巨大さで有名な赤色超巨星候補',type:'赤色超巨星（最大級候補）'},
     '🧲 SGR 1806-20':{desc:'超強磁場と巨大ガンマ線フレアを持つ中性子星',type:'マグネター'},
     '💙 R136a1':{desc:'太陽の100倍超も重い、怪物級の巨大な大質量星',type:'ウォルフ・ライエ星'},
     '✨ S Doradus':{desc:'明るさが大きく変わる、不安定で巨大な青い星',type:'高光度青色変光星'},
@@ -11823,6 +11833,12 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         note:'※中央の連星そのものだけでなく、19世紀の巨大噴火で放出されたガスと塵も写っている'
       }
     },
+    '🪐 Stephenson 2-18':{
+      about:'たて座方向にある赤色超巨星候補で、推定半径は既知最大級。太陽の位置に置くと外層が土星軌道近くまで届くともいわれる。',
+      facts:[['種類','赤色超巨星候補'],['大きさ','既知最大級'],['半径','太陽の約2,000倍級候補'],['特徴','土星軌道級']],
+      point:'とにかく「でかい」。ただし外層が非常にぼんやり広がるため、正確な半径には不確かさもあり、「宇宙一」と断言するより最大級候補と見るのが安全。',
+      origin:'Stephenson は赤色超巨星の研究で知られる天文学者 Charles Bruce Stephenson にちなむ星団名由来。2-18 はその星団 Stephenson 2 にある18番目の恒星を示す。'
+    },
     '🧲 SGR 1806-20':{
       about:'星が超新星爆発したあとに残った中性子星の一種「マグネター」。直径はわずか数十km級なのに、表面には約10¹⁵ガウス級の超強磁場がある。',
       facts:[['種類','マグネター'],['直径','約20〜30km級'],['磁場','約10¹⁵ガウス級'],['2004年','巨大ガンマ線フレア']],
@@ -11988,6 +12004,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❓ タビーの星':"Tabby's Star KIC 8462852",
     '🐕 VYおおいぬ座星':'VY Canis Majoris',
     '💥 イータ・カリーナ':'Eta Carinae',
+    '🪐 Stephenson 2-18':'Stephenson 2-18 star',
     '🧲 SGR 1806-20':'SGR 1806-20 magnetar',
     '💙 R136a1':'R136a1 star',
     '✨ S Doradus':'S Doradus star',
@@ -12289,6 +12306,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❓ タビーの星':{main:'表面 約6,500℃',sub:'有効温度 約6,750KのF型星'},
     '🐕 VYおおいぬ座星':{main:'表面 約3,200℃',sub:'約3,490Kの赤色極超巨星'},
     '💥 イータ・カリーナ':{main:'主星 約1〜2万℃級',sub:'不安定な連星で状態により推定幅が大きい'},
+    '🪐 Stephenson 2-18':{main:'表面 約3,000℃前後',sub:'赤色超巨星らしい低温な表面'},
     '🧲 SGR 1806-20':{main:'表面 約1,000万℃級',sub:'普通の恒星ではなく、超高温のマグネター'},
     '💙 R136a1':{main:'表面 約4.5万℃級',sub:'非常に高温なWNh型大質量星'},
     '✨ S Doradus':{main:'約8,000〜2.5万℃級',sub:'LBVの変光に伴い大きく変わる'},
@@ -12390,6 +12408,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       home:'天の川銀河 ｜ りゅうこつ座星雲（Carina Nebula）',
       life:'数百万年級',
       lifeSub:'超大質量星は非常に短命。主星はすでに激しい質量放出を続ける進化後半'
+    },
+    '🪐 Stephenson 2-18':{
+      home:'天の川銀河 ｜ たて座方向 ｜ Stephenson 2 星団',
+      life:'約1000万年級',
+      lifeSub:'赤色超巨星まで進化した終盤の大質量星。最大級候補だが半径にはまだ不確かさもある'
     },
     '🧲 SGR 1806-20':{
       home:'天の川銀河 ｜ 星団 Cl* 1806-20 付近',
@@ -12493,6 +12516,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❓ タビーの星':{age:'約10億歳級（推定幅あり）',remaining:'10億年以上の可能性',pct:35,phase:'F型主系列星｜まだ中盤前後'},
     '🐕 VYおおいぬ座星':{age:'約800万〜1000万歳級',remaining:'数万〜数十万年級？',pct:97,phase:'赤色極超巨星｜最終盤'},
     '💥 イータ・カリーナ':{age:'約300万歳級',remaining:'100万年未満級の可能性',pct:92,phase:'超大質量LBV｜最終盤'},
+    '🪐 Stephenson 2-18':{age:'約800万〜1,000万歳級',remaining:'数十万年〜100万年未満級の可能性',pct:97,phase:'赤色超巨星｜かなり終盤'},
     '🧲 SGR 1806-20':{age:'恒星としてはすでに死亡',remaining:'マグネター活動は数千〜1万年級',pct:100,phase:'恒星の一生は終了｜超新星後の残骸'},
     '💙 R136a1':{age:'約150万歳',remaining:'100万年級以下〜数百万年',pct:60,phase:'超大質量星｜若いのに寿命自体が短い'},
     '✨ S Doradus':{age:'数百万歳級',remaining:'100万年級以下の可能性',pct:88,phase:'LBV｜大質量星の進化後半'},
@@ -12625,6 +12649,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       mass:{main:'主星 約90 + 伴星 約30',sub:'超大質量連星系'},
       light:{main:'系全体で数百万太陽光度',sub:'大噴火でさらに目立つ'}
     },
+    '🪐 Stephenson 2-18':{
+      size:{main:'半径 約2,000太陽級',sub:'太陽の約2,000倍・土星軌道近く'},
+      mass:{main:'約10〜20太陽質量級',sub:'巨大だが密度はかなり低い'},
+      light:{main:'約40万〜50万太陽光度',sub:'本来かなり明るい赤色超巨星'}
+    },
     '🧲 SGR 1806-20':{
       size:{main:'半径 約10km',sub:'星の残骸として極小'},
       mass:{main:'約1.4太陽質量',sub:'中性子星／マグネター'},
@@ -12723,6 +12752,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❓ タビーの星':{main:'ふつう',sub:'主系列星として中くらい',known:false},
     '🐕 VYおおいぬ座星':{main:'かなりゆっくり',sub:'巨大な赤色極超巨星',known:false},
     '💥 イータ・カリーナ':{main:'複雑で不明',sub:'連星相互作用で単純比較しづらい',known:false},
+    '🪐 Stephenson 2-18':{main:'かなりゆっくり',sub:'巨大化した赤色超巨星らしい低速回転',known:false},
     '🧲 SGR 1806-20':{main:'超高速',sub:'約7.5秒',known:true},
     '💙 R136a1':{main:'不明',sub:'超大質量で詳しい自転は不確か',known:false},
     '✨ S Doradus':{main:'不明',sub:'変動が大きく単純比較しづらい',known:false},
@@ -12757,6 +12787,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❓ タビーの星':{size:15,light:14,spin:46},
     '🐕 VYおおいぬ座星':{size:100,light:88,spin:8},
     '💥 イータ・カリーナ':{size:38,light:94,spin:18},
+    '🪐 Stephenson 2-18':{size:100,light:86,spin:8},
     '🧲 SGR 1806-20':{size:4,light:98,spin:100},
     '💙 R136a1':{size:36,light:100,spin:0},
     '✨ S Doradus':{size:58,light:90,spin:0},
@@ -12905,6 +12936,33 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       `</div><div class="v189MetricNote">※ 図は見やすさ重視のイメージ図。まず感覚でつかんで、その下の詳細で確かめてね。</div>`;
   }
 
+
+  const V191_STAR_SPOTLIGHT={
+    '⭐ シリウス':{title:'👀 地球からいちばん明るい星',chips:['犬の星','夜空で最も明るい'],text:'本来の明るさだけでなく「近い」こともあって、地球の夜空では恒星ナンバーワンの明るさ。'},
+    '💠 ベガ':{title:'🌀 超高速で回る星',chips:['高速自転','七夕の織姫星'],text:'自転が速すぎて赤道がふくらみ、表面温度まで場所で変わる。'},
+    '🌟 ポラリス':{title:'🧭 北極星として有名',chips:['3重星','道しるべ'],text:'北を示す目印として有名やけど、実は静かな1個星ではなく3重星系。'},
+    '🔴 ベテルギウス':{title:'💥 爆発候補として有名',chips:['超巨星','終盤'],text:'いつか超新星になる有力候補としてよく話題になる、寿命後半の赤い巨星。'},
+    '❓ タビーの星':{title:'❓ 謎の減光で有名',chips:['最大約20%減光','原因研究中'],text:'見た目はわりと普通の星やのに、光だけが妙に消える不思議系。'},
+    '🐕 VYおおいぬ座星':{title:'📏 超巨大な犬系の怪物星',chips:['赤色極超巨星','最大級'],text:'木星〜土星軌道級まで膨らむことがある、とんでも犬星。'},
+    '💥 イータ・カリーナ':{title:'💣 爆発寸前候補の暴れ星',chips:['巨大噴火','超大質量連星'],text:'1840年代に大噴火しても生き残った。将来は超新星級イベント候補。'},
+    '🪐 Stephenson 2-18':{title:'🪐 超巨大・最大級候補',chips:['サイズ王候補','土星軌道級'],text:'とにかく「でかさ」が主役。既知で最も大きい星の候補として有名。'},
+    '🧲 SGR 1806-20':{title:'🧲 磁力やばすぎ星',chips:['マグネター','巨大フレア'],text:'普通の星というより星の死骸やけど、超強磁場とフレアの破壊力が桁違い。'},
+    '💙 R136a1':{title:'💡 いちばん眩しい級',chips:['超高光度','怪物級'],text:'本来の明るさでは太陽の何百万倍級。まぶしさ王クラス。'},
+    '⭐ M31-V1':{title:'📏 宇宙の距離測定で有名',chips:['ケフェイド','歴史的重要星'],text:'宇宙の広さを測る物差しになった歴史的スター。'},
+    '💙 イカロス':{title:'🔭 超遠方で見えた星',chips:['重力レンズ','遠方記録級'],text:'重力レンズで一気に拡大されて見つかった、遠方スターの代表格。'},
+    '✨ エアレンデル':{title:'🏆 最遠級の個別星',chips:['宇宙初期','超遠方'],text:'今見えている光は約129億年前のもの。最遠級の個別星として有名。'}
+  };
+
+  function v191SpotlightHTML(name=''){
+    const x=V191_STAR_SPOTLIGHT[name];
+    if(!x)return '';
+    return `<div class="v191Spotlight">
+      <div class="v191SpotlightTitle">${v179Esc(x.title)}</div>
+      ${x.chips?.length?`<div class="v191SpotlightChips">${x.chips.map(c=>`<span>${v179Esc(c)}</span>`).join('')}</div>`:''}
+      ${x.text?`<div class="v191SpotlightText">${v179Esc(x.text)}</div>`:''}
+    </div>`;
+  }
+
   function v175DetailHTML(isEra){
     const base=isEra?V175_ERA_DETAIL[systems[system]?.name]:V175_OBJECT_DETAIL[S()?.name];
     const star=!isEra?V179_STAR_INFO[S()?.name]:null;
@@ -12922,6 +12980,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <div class="v175RecipeKicker">${title}</div>
         <h3>${S()?.name||systems[system]?.name||''}</h3>
         ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
+        ${!isEra?v191SpotlightHTML(objectName):''}
         ${!isEra?v184TempHTML(objectName):''}
         ${!isEra?v186StarContextHTML(objectName):''}
         ${photo?v179PhotoHTML(photo,objectName):''}
@@ -13020,6 +13079,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       @media(max-width:560px){.v187LifeStats{grid-template-columns:1fr}.v187LifeTrack{height:19px}}
       .v186StarContext{margin:0 0 11px;padding:10px 12px;border-radius:13px;background:linear-gradient(135deg,rgba(111,163,255,.09),rgba(187,142,255,.07));border:1px solid rgba(151,190,255,.16)}
       .v186ContextRow{display:flex;align-items:flex-start;gap:9px;padding:3px 0}.v186ContextRow span{flex:0 0 auto;color:#bfe1ff;font:900 9px/1.35 system-ui}.v186ContextRow b{margin-left:auto;max-width:72%;color:#f4f8ff;font:900 9.5px/1.45 system-ui;text-align:right}.v186StarContext small{display:block;margin-top:6px;padding-top:7px;border-top:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.52);font:700 8.3px/1.5 system-ui}
+      .v191Spotlight{margin-top:8px;padding:10px 10px;border-radius:14px;background:linear-gradient(180deg,rgba(255,240,170,.10),rgba(173,228,255,.05));border:1px solid rgba(255,235,153,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}.v191SpotlightTitle{color:#fff4bf;font:1000 10px/1.35 system-ui}.v191SpotlightChips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}.v191SpotlightChips span{padding:4px 7px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);color:#fff;font:900 7px/1 system-ui}.v191SpotlightText{margin-top:6px;color:rgba(255,255,255,.75);font:800 7.4px/1.45 system-ui}
       .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
       .v188MetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}.v188MetricCard{padding:10px 8px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(136,216,255,.038));border:1px solid rgba(149,220,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);display:flex;flex-direction:column;gap:6px;min-width:0}.v188MetricLabel{color:#bfefff;font:950 8px/1.2 system-ui;letter-spacing:.05em}.v190MetricGrade{display:block;color:#fff;font:1000 11px/1.2 system-ui;letter-spacing:.03em;word-break:keep-all}.v190Gauge{padding:7px 6px;border-radius:10px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}.v190GaugeTrack{height:13px;border-radius:999px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}.v190GaugeTrack i{display:block;height:100%;border-radius:999px}.v190GaugeTrack .v190GaugeDot{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:0 0 9px rgba(255,255,255,.55)}.v190Gauge.size i{background:linear-gradient(90deg,#9fe7ff,#79beff,#bd8eff)}.v190Gauge.light i{background:linear-gradient(90deg,#fff3a0,#ffd257,#ff96dc)}.v190Gauge.spin i{background:linear-gradient(90deg,#8fe7ff,#74a8ff,#d895ff)}.v190GaugeScale{margin-top:4px;display:flex;justify-content:space-between;color:rgba(255,255,255,.5);font:800 6.6px/1 system-ui}.v190Gauge.unknown{opacity:.76}.v190MetricDetailBox{display:flex;flex-direction:column;gap:4px}.v190MetricDetailBox b{display:block;color:#fff;font:950 8.3px/1.34 system-ui}.v190MetricDetailBox small{display:block;color:rgba(255,255,255,.62);font:800 7px/1.35 system-ui}.v189MetricNote{margin-top:6px;color:rgba(255,255,255,.54);font:800 7px/1.4 system-ui;text-align:center}.v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
       .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
@@ -13028,7 +13088,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v179NameOrigin{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:11px 12px;border-radius:13px;background:rgba(255,210,125,.06);border:1px solid rgba(255,218,150,.13)}
       .v179NameOrigin b{color:#ffe0a8;font:950 9px/1.2 system-ui}
       .v179NameOrigin span{color:rgba(255,255,255,.77);font:720 9.5px/1.65 system-ui}
-      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}.v188MetricGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.v188MetricCard{padding:8px 6px}.v190MetricGrade{font-size:9.2px}.v190MetricDetailBox b{font-size:7.6px}.v190MetricDetailBox small{font-size:6.3px}.v190Gauge{padding:6px 5px}}
+      @media(max-width:560px){.v179PhotoImg{height:118px}.v179Facts{grid-template-columns:1fr 1fr}.v188MetricGrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.v188MetricCard{padding:8px 6px}.v190MetricGrade{font-size:9.2px}.v190MetricDetailBox b{font-size:7.6px}.v190MetricDetailBox small{font-size:6.3px}.v190Gauge{padding:6px 5px}.v191SpotlightTitle{font-size:9px}.v191SpotlightText{font-size:6.8px}}
     `;
     document.head.appendChild(st);
 
@@ -15061,7 +15121,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       '📡 宇宙背景放射（CMB）','🌑 暗黒時代','🌅 宇宙の夜明け','🔥 再電離時代'
     ];
     const distantOrder=[
-      '❓ タビーの星','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','💫 AF Andromedae','🟢 ロマーノ星 GR 290',
+      '❓ タビーの星','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🪐 Stephenson 2-18','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','💫 AF Andromedae','🟢 ロマーノ星 GR 290',
       '🌠 M33 Var C','⭐ M51-DS1','🎨 Warhol','💙 イカロス','🦋 モスラ','❤️ クイユル',
       '🦖 ゴジラ','🔷 Abell 2744 LS1','💠 MACS J0647 LS1','✨ エアレンデル'
     ];
