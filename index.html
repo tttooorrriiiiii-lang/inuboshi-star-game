@@ -1510,6 +1510,17 @@ function makeWorld(){
    }
    return;
  }
+ if(s?.futureEra && (s.futureStep===2 || s.futureStep===3)){
+   // 未来の地球編は「最初の地球」と同じく、浮かぶ取得物は骨だけにする。
+   for(let i=0;i<50;i++){
+     items.push({
+       x:130+i*66+(i%6)*10,
+       y:groundY()-39-(i%5)*14-Math.random()*10,
+       r:18,got:false,color:'#ffd65a',food:true
+     });
+   }
+   return;
+ }
  let x=220;for(let i=0;i<(system===BLACK_HOLE_SYSTEM?58:(isDream?88:44));i++){x+=38+Math.random()*(system===BLACK_HOLE_SYSTEM?56:80);items.push({x,y:groundY()-70-Math.random()*175,r:13+Math.random()*5,got:false,color:s.goodColor})}
  const boneCount=isDogStar?26:(isDream?20:5);
  for(let i=0;i<boneCount;i++)items.push({x:330+i*(isDogStar?118:(isDream?220:570))+Math.random()*95,y:groundY()-58-Math.random()*(isDogStar?145:100),r:18,got:false,color:'#ffd65a',food:true,inert:system===BLACK_HOLE_SYSTEM});
@@ -15692,15 +15703,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v235';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v235</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v236';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v236</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v235</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v236</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16255,7 +16266,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v235';
+window.INUBOSHI_GAME_VERSION='v236';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -16618,10 +16629,16 @@ function v223DrawFutureSky(step){
     ctx.fillStyle='#000';
     ctx.fillRect(0,0,W,gy-1);
   }else if(step===6){
-    ctx.fillStyle='rgba(22,8,34,.88)';
+    ctx.fillStyle='rgba(34,10,54,.94)';
     ctx.fillRect(0,0,W,gy-1);
-    ctx.fillStyle='rgba(92,48,122,.18)';
+    ctx.fillStyle='rgba(128,70,185,.24)';
     ctx.fillRect(0,0,W,gy*0.55);
+    const neb=ctx.createLinearGradient(0,0,0,gy);
+    neb.addColorStop(0,'rgba(183,112,255,.12)');
+    neb.addColorStop(0.45,'rgba(85,28,140,.08)');
+    neb.addColorStop(1,'rgba(10,4,18,0)');
+    ctx.fillStyle=neb;
+    ctx.fillRect(0,0,W,gy-1);
   }else if(step>=7){
     ctx.fillStyle='rgba(0,0,0,.93)';
     ctx.fillRect(0,0,W,gy-1);
@@ -16677,27 +16694,32 @@ function v223DrawFutureSky(step){
   // Black-hole era: fill the sky with eerie purple-black holes.
   if(step===6){
     const holes=[
-      [0.17,0.22,44,-0.22],[0.38,0.34,28,0.08],[0.56,0.18,36,0.18],
-      [0.72,0.30,52,-0.15],[0.88,0.16,24,0.05],[0.84,0.43,32,-0.10]
+      [0.10,0.20,32,-0.16],[0.18,0.36,46,0.10],[0.31,0.17,28,-0.05],
+      [0.43,0.30,36,0.14],[0.56,0.18,42,-0.22],[0.68,0.39,58,0.08],
+      [0.79,0.22,34,-0.11],[0.89,0.37,48,0.18]
     ];
     holes.forEach((h,idx)=>{
-      const x=W*h[0], y=gy*h[1], r=h[2], rot=h[3]+Math.sin(t*0.25+idx)*0.04;
-      const rg=ctx.createRadialGradient(x,y,2,x,y,r*1.9);
+      const x=W*h[0], y=gy*h[1], r=h[2], rot=h[3]+Math.sin(t*0.25+idx)*0.05;
+      const rg=ctx.createRadialGradient(x,y,2,x,y,r*2.15);
       rg.addColorStop(0,'rgba(0,0,0,1)');
-      rg.addColorStop(0.34,'rgba(0,0,0,1)');
-      rg.addColorStop(0.48,'rgba(116,82,188,.78)');
-      rg.addColorStop(0.63,'rgba(195,129,255,.34)');
+      rg.addColorStop(0.30,'rgba(0,0,0,1)');
+      rg.addColorStop(0.46,'rgba(109,62,210,.92)');
+      rg.addColorStop(0.62,'rgba(198,118,255,.48)');
+      rg.addColorStop(0.78,'rgba(120,58,170,.16)');
       rg.addColorStop(1,'rgba(195,129,255,0)');
       ctx.fillStyle=rg;
-      ctx.beginPath(); ctx.arc(x,y,r*1.95,0,Math.PI*2); ctx.fill();
-      ctx.globalAlpha=0.48+(idx%3)*0.08;
-      ctx.strokeStyle=idx%2===0?'rgba(171,126,255,.72)':'rgba(231,157,255,.52)';
-      ctx.lineWidth=4+(idx%2);
-      ctx.beginPath(); ctx.ellipse(x,y,r*1.18,r*0.26,rot,0,Math.PI*2); ctx.stroke();
-      ctx.globalAlpha=0.22;
-      ctx.strokeStyle='rgba(255,255,255,.25)';
-      ctx.lineWidth=1.4;
-      ctx.beginPath(); ctx.ellipse(x,y,r*1.42,r*0.36,rot,0,Math.PI*2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x,y,r*2.08,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=0.60+(idx%3)*0.07;
+      ctx.strokeStyle=idx%2===0?'rgba(181,120,255,.95)':'rgba(239,150,255,.72)';
+      ctx.lineWidth=4.5+(idx%2);
+      ctx.beginPath(); ctx.ellipse(x,y,r*1.22,r*0.27,rot,0,Math.PI*2); ctx.stroke();
+      ctx.globalAlpha=0.35;
+      ctx.strokeStyle='rgba(242,214,255,.52)';
+      ctx.lineWidth=1.6;
+      ctx.beginPath(); ctx.ellipse(x,y,r*1.50,r*0.38,rot,0,Math.PI*2); ctx.stroke();
+      ctx.globalAlpha=0.12;
+      ctx.fillStyle='rgba(208,129,255,.20)';
+      ctx.beginPath(); ctx.ellipse(x,y,r*1.7,r*0.55,rot,0,Math.PI*2); ctx.fill();
       ctx.globalAlpha=1;
     });
   }
@@ -20052,7 +20074,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v235</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v236</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -20401,11 +20423,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v235';
+  window.INUBOSHI_GAME_VERSION='v236';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v235<small>ICE METEORS + STARLESS SKIP + PURPLE BH / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v236<small>FUTURE EARTH BONES ONLY + STRONGER PURPLE BH / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
