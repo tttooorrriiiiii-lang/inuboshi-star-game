@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v203</title>
-<!-- v198: エアレンデル右上説明を2行固定 / 古いHUD説明の上書きを除去 -->
+<title>犬星くん GALAXY TOUR v204</title>
+<!-- v204: core-scope runtime fix / Earendel HUD+radio / future city / universal 3 buttons / top-left material counts -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -15635,6 +15635,271 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 })();
 
 stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽しいな♪',1700),550);requestAnimationFrame(frame);
+
+
+/* === v204 CORE-SCOPE FIX: these hooks must live inside the main game IIFE === */
+const V204={
+  radioX:330,
+  wormX:1150,
+  radioDone:false,
+  signalActive:false,
+  futureWarping:false,
+  radioEl:null,
+  wormEl:null
+};
+window.INUBOSHI_GAME_VERSION='v204';
+
+const V204_SIMPLE_STAR_COPY={
+  '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
+  '⭐ シリウス':'地球の夜空で、いちばん明るく見える星。おおいぬ座の「犬の星」。',
+  '🐶 プロキオン':'こいぬ座でいちばん明るい星。シリウスより少し先に空へ昇る。',
+  '🕰️ メトシェラ星':'宇宙でも最古クラスの星。宇宙がまだ若かったころから生きている。',
+  '💠 ベガ':'七夕の「織姫星」。ものすごい速さで回っている青白い星。',
+  '🌟 ポラリス':'北の方向を教えてくれる北極星。実は1個ではなく、3つの星の仲間。',
+  '❤️ アンタレス':'さそり座の「心臓」にあたる赤い巨大星。太陽よりずっと大きい。',
+  '🔴 ベテルギウス':'オリオン座の赤い巨大星。寿命の終わりに近く、いつか超新星爆発すると考えられている。',
+  '❓ タビーの星':'ときどき急に大きく暗くなる、不思議な星。なぜ暗くなるのか研究が続いている。',
+  '🐕 VYおおいぬ座星':'太陽よりはるかに大きい犬の星。自分のガスやちりを激しく宇宙へ吹き飛ばしている。',
+  '💥 イータ・カリーナ':'大噴火を起こしたのに、まだ生きている巨大な星。将来は超新星になる候補。',
+  '🪐 Stephenson 2-18':'見つかっている星の中で、いちばん大きい候補のひとつ。太陽とは比べものにならないほど巨大。',
+  '🧲 SGR 1806-20':'大きな星が死んだあとに残った天体。ものすごく強い磁力をもつ。',
+  '💙 R136a1':'見つかっている中でも、特に重くて明るい星。太陽の何百万倍級の明るさをもつ。',
+  '✨ S Doradus':'とても明るく、明るさが大きく変わる星。この種類の星を代表する名前にもなっている。',
+  '⭐ M31-V1':'宇宙が想像よりずっと広いと分かるきっかけになった、天文学の歴史で大切な星。',
+  '⭐ M51-DS1':'約3100万光年も遠いのに、1個の星として見つかったとても明るい星。',
+  '🎨 Warhol':'手前にある大きな天体の重力で光が拡大され、見えるようになった遠い星。',
+  '💙 イカロス':'エアレンデルが見つかる前は、地球からいちばん遠い星として知られていた。',
+  '✨ エアレンデル':'宇宙誕生から10億年以内に存在した、最も遠い個別星。'
+};
+for(const sys of systems){
+  if(V204_SIMPLE_STAR_COPY[sys?.name])sys.desc=V204_SIMPLE_STAR_COPY[sys.name];
+  for(const st of (sys?.stages||[]))if(V204_SIMPLE_STAR_COPY[st?.name])st.desc=V204_SIMPLE_STAR_COPY[st.name];
+}
+
+function v204IsEarendel(){return S()?.name==='✨ エアレンデル';}
+function v204FutureStep(){return systems[system]?.futureEra?(systems[system].futureStep||0):0;}
+function v204FutureEarth(){const n=v204FutureStep();return n>=1&&n<=4;}
+function v204AnyMaterialStage(){return !!(systems[system]?.futureEra||systems[system]?.epoch);}
+
+function v204InstallWorldUI(){
+  if(!V204.radioEl){
+    V204.radioEl=document.createElement('div');
+    V204.radioEl.id='v204EarRadio';
+    V204.radioEl.innerHTML='<div class="v204RadioEmoji">📻</div><div class="v204RadioTag">地球から SOS</div>';
+    wrap.appendChild(V204.radioEl);
+  }
+  if(!V204.wormEl){
+    V204.wormEl=document.createElement('div');
+    V204.wormEl.id='v204EarWorm';
+    V204.wormEl.innerHTML='<div class="v204WormCore"></div><div class="v204WormTag">🌀 救助ワームホール</div>';
+    wrap.appendChild(V204.wormEl);
+  }
+}
+function v204WorldPos(el,wx,wy,on=true){
+  if(!el)return;
+  const sx=wx-camera;
+  const visible=on&&sx>-110&&sx<W+110;
+  el.classList.toggle('on',visible);
+  if(!visible)return;
+  el.style.left=((sx/Math.max(1,W))*100)+'%';
+  el.style.top=((wy/Math.max(1,H))*100)+'%';
+}
+function v204RenderWorldUI(){
+  v204InstallWorldUI();
+  if(!v204IsEarendel()){
+    V204.radioEl?.classList.remove('on');
+    V204.wormEl?.classList.remove('on');
+    return;
+  }
+  const gy=groundY();
+  v204WorldPos(V204.radioEl,V204.radioX,gy-70,!V204.radioDone);
+  v204WorldPos(V204.wormEl,V204.wormX,gy-105,V204.radioDone&&!V204.signalActive);
+}
+function v204ShowEarthSOS(){
+  if(V204.radioDone||V204.signalActive||!v204IsEarendel())return;
+  V204.radioDone=true;V204.signalActive=true;paused=true;
+  v63RadioScene.innerHTML='<div class="v63RadioCard"><div class="v63RadioIcon">📻</div><div class="v63RadioKicker">EARTH RESCUE SIGNAL</div><div class="v63RadioNoise">ザー……ザー……　こちら地球……</div><div class="v63RadioVoice">「犬星くん、聞こえる？」<br>「救助ワームホールを開いた！」<br>「太陽と地球の未来へ急いで！」</div><div class="v63RadioMeta">SOURCE : EARTH</div></div>';
+  v63RadioScene.classList.remove('heard','reply');
+  v63RadioScene.classList.add('on','contact');
+  missionEl.textContent='📻 地球から救助信号！';
+  eventEl.textContent='EARTH RESCUE SIGNAL';
+  setTimeout(()=>v63RadioScene.classList.add('heard'),350);
+  setTimeout(()=>{
+    v63RadioScene.classList.remove('on','heard','reply','contact');
+    V204.signalActive=false;paused=false;
+    showToast('📻 地球からのSOS！ 前方に救助ワームホール！',1800);
+  },2550);
+}
+function v204WarpFuture(){
+  if(V204.futureWarping||V204.signalActive)return;
+  const target=systems.findIndex(s=>s?.futureEra&&s.futureStep===1);
+  if(target<0)return;
+  V204.futureWarping=true;paused=true;
+  trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spin';
+  transTitle.innerHTML='🌀 EARTH RESCUE WORMHOLE';
+  nextEl.textContent='☀️ 太陽と地球の未来へ';
+  subEl.textContent='EARENDEL → FUTURE SUN';
+  setTimeout(()=>{
+    system=target;stage=0;camera=0;p.x=115;p.vy=0;
+    stageStart();paused=false;syncHUD();
+    trans.style.display='none';warpDog.className='';V204.futureWarping=false;
+    showToast('☀️ 明るくなる太陽の未来へ到着！',1700);
+  },1400);
+}
+
+function v204MaterialData(){
+  const txt=document.querySelector('#v169MaterialInfo b')?.textContent?.trim()||'';
+  const m=txt.match(/^(\S+)\s+(.+?)\s+(\d+)\s*\/\s*(\d+)$/);
+  if(!m)return null;
+  const label=m[2];
+  let emoji=m[1];
+  if(label.includes('高温プラズマ'))emoji='🔥';
+  else if(label.includes('太陽光子'))emoji='☀️';
+  else if(label.includes('鉱物'))emoji='🪨';
+  else if(label.includes('電子'))emoji='⚡';
+  else if(label.includes('光子'))emoji='✨';
+  else if(label.includes('放射'))emoji='☢️';
+  else if(label.includes('水素')||label.includes('ヘリウム'))emoji='☁️';
+  else if(label.includes('原子核'))emoji='⚛️';
+  else if(label.includes('ニュートリノ'))emoji='🌀';
+  else if(label.includes('陽子')||label.includes('中性子'))emoji='🔵';
+  else if(label.includes('クォーク'))emoji='🟣';
+  else if(label.includes('真空'))emoji='💫';
+  else if(label.includes('量子'))emoji='❓';
+  return {emoji,label,have:+m[3],need:+m[4]};
+}
+function v204SyncControlsAndCounts(){
+  wrap.classList.add('v204ThreeControls');
+  for(const el of [pointsEl,foodEl,alienHitEl])if(el){el.style.setProperty('display','flex','important');el.style.setProperty('visibility','visible','important');el.style.setProperty('opacity','1','important');}
+  for(const el of [specialBtn,laserBtn,jumpBtn])if(el)el.style.setProperty('display','flex','important');
+  if(bigBtn)bigBtn.style.setProperty('display','none','important');
+  if(cosmicBtn)cosmicBtn.style.setProperty('display','none','important');
+  pointsEl.textContent=`⭐ ×${points}`;
+  foodEl.textContent=`🦴 ×${food}`;
+  const mat=v204MaterialData();
+  if(v204AnyMaterialStage()&&mat){
+    alienHitEl.textContent=`${mat.emoji} ×${mat.have}/${mat.need}`;
+    alienHitEl.title=`${mat.label} ${mat.have}/${mat.need}`;
+  }else{
+    alienHitEl.textContent=`👽 ×${cosmicCharge}`;
+    alienHitEl.title='';
+  }
+}
+
+function v204FutureInfo(step){
+  return {
+    1:{title:'☀️ 明るくなる太陽',time:'20億年後',age:'158億年',desc:'太陽は年を取るほど少しずつ明るくなる。数十億年後には地球の海を保てないほど日差しが強くなり、今の住みやすい地球は終わっていく。'},
+    2:{title:'🔴 太陽の巨大化（赤色巨星）',time:'50億年後',age:'188億年',desc:'太陽は燃料を使い切るころ、外側が大きくふくらんで赤色巨星になる。今とは比べものにならない巨大な太陽が、内側の惑星をのみ込むほど広がる可能性がある。'},
+    3:{title:'🌍 地球の消滅',time:'50億年後以降',age:'188億年以降',desc:'巨大化した太陽の熱で、海も大気も岩石も今の姿を保てなくなる。地球が太陽にのみ込まれるかには不確実さがあるが、現在の地球環境は残らない。'},
+    4:{title:'⚪ 太陽の死（白色矮星）',time:'60億年後',age:'198億年',desc:'太陽は外側のガスを宇宙へ放出し、中心の小さく高密度な白色矮星だけを残す。もう大きく燃えることはなく、長い時間をかけて静かに冷えていく。'}
+  }[step]||null;
+}
+function v204DrawFutureCity(step){
+  if(step<1||step>4)return;
+  const gy=groundY(),t=performance.now()/1000;
+  const back=['','rgba(39,55,72,.86)','rgba(59,27,25,.90)','rgba(38,17,20,.94)','rgba(27,35,49,.90)'][step];
+  const front=['','rgba(14,24,35,.98)','rgba(35,14,15,.99)','rgba(20,8,11,.99)','rgba(14,20,30,.98)'][step];
+  const win=['','rgba(255,237,166,.76)','rgba(255,161,91,.58)','rgba(255,111,73,.34)','rgba(205,230,255,.25)'][step];
+  ctx.save();
+  // distant skyline
+  const off1=(camera*.10)%104;
+  for(let i=-1;i<Math.ceil(W/104)+2;i++){
+    const x=i*104-off1,w=58+(i&1)*16;
+    let h=120+(Math.abs(i)%5)*29+(step===1?25:0);
+    if(step===3&&i%3===0)h*=.62;
+    const y=gy-h;
+    ctx.fillStyle=back;ctx.globalAlpha=.92;ctx.fillRect(x,y,w,h);
+    ctx.fillStyle=win;ctx.globalAlpha=.6;
+    for(let yy=y+12;yy<gy-12;yy+=19)for(let xx=x+9;xx<x+w-7;xx+=14){if(step>=3&&(Math.floor(xx+yy+i)%3===0))continue;ctx.fillRect(xx,yy,5,7)}
+  }
+  // near skyline: intentionally large so the city is unmistakable on mobile.
+  const off2=(camera*.22)%128;
+  for(let i=-1;i<Math.ceil(W/128)+2;i++){
+    const x=i*128-off2,w=64+(Math.abs(i)%3)*18;
+    let h=155+(Math.abs(i+2)%5)*34;
+    if(step===3&&i%3===1)h*=.58;
+    if(step===4)h*=.82;
+    const y=gy-h;
+    ctx.globalAlpha=1;ctx.fillStyle=front;
+    if(step>=2&&i%4===1){
+      ctx.beginPath();ctx.moveTo(x,gy);ctx.lineTo(x+7,y+25);ctx.lineTo(x+w*.40,y-10);ctx.lineTo(x+w*.78,y+18);ctx.lineTo(x+w,gy);ctx.closePath();ctx.fill();
+    }else ctx.fillRect(x,y,w,h);
+    ctx.fillStyle=win;
+    for(let yy=y+15;yy<gy-15;yy+=22)for(let xx=x+10;xx<x+w-8;xx+=16){if(step===3&&(Math.floor((xx+yy)/10)+i)%2===0)continue;if(step===4&&(Math.floor((xx+yy)/10)+i)%3!==0)continue;ctx.fillRect(xx,yy,6,8)}
+    if(step>=2){
+      ctx.globalAlpha=step===3?.34:.20;ctx.fillStyle=step===4?'rgba(185,215,255,.13)':'rgba(255,135,84,.25)';
+      ctx.beginPath();ctx.ellipse(x+w*.5,y-20-Math.sin(t+i)*5,28,13,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+    }
+  }
+  ctx.restore();ctx.globalAlpha=1;
+}
+
+const v204PrevDrawBackground=drawBackground;
+drawBackground=function(){
+  v204PrevDrawBackground();
+  if(v204FutureEarth())v204DrawFutureCity(v204FutureStep());
+};
+
+const v204PrevSyncHUD=syncHUD;
+syncHUD=function(){
+  v204PrevSyncHUD();
+  v204SyncControlsAndCounts();
+  astroInfo.classList.toggle('v204EarHud',v204IsEarendel());
+  if(v204IsEarendel()){
+    locationEl.textContent='✨ エアレンデル';
+    astroInfo.innerHTML='<b>✨ エアレンデル</b><br><span class="v204EarDesc">宇宙誕生から10億年以内に存在した、最も遠い個別星。</span><span class="distanceBig">🌍 地球から 約129億光年</span><span class="distanceHint">🔭 重力レンズで1個の星として発見<br>🧲 重力｜正確にはまだ不明<br>⬆️ ジャンプ｜高め 🔼</span>';
+  }else if(v204FutureEarth()){
+    const n=v204FutureStep(),info=v204FutureInfo(n);
+    if(info){
+      locationEl.textContent=`FUTURE ${String(n).padStart(2,'0')} · ${info.title}`;
+      astroInfo.innerHTML=`<b>${info.title}</b><br>${info.desc}<span class="distanceBig">⏩ 未来 ${info.time}</span><span class="distanceHint">🌌 宇宙誕生から ${info.age}<br>☀️ 太陽と地球の未来 ${n} / 4</span>`;
+    }
+  }else{
+    const simple=V204_SIMPLE_STAR_COPY[S()?.name];
+    if(simple){
+      const dist=S()?.distance||systems[system]?.distance||'';
+      astroInfo.innerHTML=`<b>${S().name}</b><br>${simple}<span class="distanceBig">🌍 地球から ${dist}</span><span class="distanceHint">🧲 重力 ${S().gravity??'不明'}｜⬆️ ジャンプ ${S().jump??'—'}</span>`;
+    }
+  }
+};
+
+const v204PrevStageStart=stageStart;
+stageStart=function(){
+  const out=v204PrevStageStart();
+  V204.radioDone=false;V204.signalActive=false;V204.futureWarping=false;
+  if(v204IsEarendel()){
+    wormholeActive=false;blackHoleActive=false;
+    // Guaranteed early objects using the exact same draw/collision types as ordinary star stages.
+    items.push({x:245,y:groundY()-72,r:16,got:false,color:S().goodColor});
+    items.push({x:305,y:groundY()-52,r:18,got:false,color:'#ffd65a',food:true});
+    morphs.push({x:270,y:groundY()-120,r:26,got:false,dog:'🐩'});
+    aliens.push({x:350,y:groundY()-105,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
+    morphs.push({x:730,y:groundY()-150,r:26,got:false,dog:'🦮'});
+    aliens.push({x:820,y:groundY()-150,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
+    showToast('📻 前方にトランシーバー。地球からの信号？',1900);
+  }
+  setTimeout(()=>syncHUD(),0);
+  return out;
+};
+
+const v204PrevUpdate=update;
+update=function(now,dt){
+  if(!paused&&v204IsEarendel()){
+    wormholeActive=false;blackHoleActive=false;satellites=[];
+    const cx=p.x+p.w*.5;
+    if(!V204.radioDone&&cx>=V204.radioX-55){v204ShowEarthSOS();v204RenderWorldUI();return;}
+    if(V204.radioDone&&!V204.signalActive&&!V204.futureWarping&&cx>=V204.wormX-55){v204WarpFuture();v204RenderWorldUI();return;}
+  }
+  v204PrevUpdate(now,dt);
+  v204SyncControlsAndCounts();
+  if(v204IsEarendel()||v204FutureEarth())syncHUD();
+};
+
+v204InstallWorldUI();
+(function v204OverlayLoop(){v204SyncControlsAndCounts();v204RenderWorldUI();requestAnimationFrame(v204OverlayLoop)})();
+setTimeout(()=>{v204SyncControlsAndCounts();syncHUD();},0);
+/* === /v204 CORE-SCOPE FIX === */
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -18937,918 +19202,71 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
 
 <!-- v187: 星の年齢・残り寿命・人生進行度ゲージ追加 -->
 
-<script>
-/* === v194: Earendel rescue signal -> future Earth, future skyline, clearer future titles === */
-(function(){
-  const V194={
-    EAR_SIGNAL_X:2140,
-    FUTURE_WARP_X:2638,
-    signalShown:false,
-    signalActive:false,
-    warping:false
-  };
 
-  function v194IsEarendel(){return false;}
-  function v194FutureStep(){
-    try{return systems[system]?.futureStep||0;}catch(e){return 0;}
-  }
-  function v194ResetEarendelFlags(){
-    V194.signalShown=false;
-    V194.signalActive=false;
-    V194.warping=false;
-  }
-
-  function v194ShowRescueSignal(){
-    if(V194.signalShown||V194.signalActive||!v194IsEarendel())return;
-    V194.signalShown=true;
-    V194.signalActive=true;
-    paused=true;
-    const radio=document.getElementById('v63RadioScene');
-    if(!radio){
-      setTimeout(()=>{V194.signalActive=false;paused=false;},1800);
-      return;
-    }
-    radio.innerHTML=''+
-      '<div class="v63RadioCard">'+
-        '<div class="v63RadioIcon">📻</div>'+
-        '<div class="v63RadioKicker">EARTH RESCUE SIGNAL</div>'+
-        '<div class="v63RadioNoise">ザー……ザー……　こちら地球……　聞こえる？</div>'+
-        '<div class="v63RadioVoice">「……エアレンデル到達を確認……」<br>「……救助ワームホールを開く……」<br>「……太陽と地球の未来へ急いで……」</div>'+
-        '<div class="v63RadioMeta">SOURCE : EARTH / DISTANT FUTURE LINE</div>'+
-      '</div>';
-    radio.classList.remove('heard','reply');
-    radio.classList.add('on','contact');
-    if(typeof missionEl!=='undefined')missionEl.textContent='📻 地球からの救助信号を受信した';
-    if(typeof eventEl!=='undefined')eventEl.textContent='EARTH RESCUE SIGNAL';
-    setTimeout(()=>{radio.classList.add('heard');},420);
-    setTimeout(()=>{
-      radio.classList.remove('on','heard','reply','contact');
-      V194.signalActive=false;
-      paused=false;
-      if(typeof showToast==='function')showToast('📻 地球からの救助信号！ ワームホールが開いた！',1850);
-    },2850);
-  }
-
-  function v194WarpToFuture(){
-    if(V194.warping)return;
-    const target=systems.findIndex(s=>s?.futureEra&&s.futureStep===1);
-    if(target<0)return;
-    V194.warping=true;
-    paused=true;
-    if(typeof trans!=='undefined')trans.style.display='grid';
-    if(typeof warpDog!=='undefined'){
-      warpDog.textContent=typeof playerDog!=='undefined'?playerDog:'🐕';
-      warpDog.className='spin';
-    }
-    if(typeof transTitle!=='undefined')transTitle.innerHTML='📻 EARTH RESCUE WORMHOLE';
-    if(typeof nextEl!=='undefined')nextEl.textContent='☀️ 地球からの信号をたどって、明るくなる太陽へ';
-    if(typeof subEl!=='undefined')subEl.textContent='EARENDEL → FUTURE SUN';
-    setTimeout(()=>{
-      system=target;stage=0;camera=0;
-      try{p.x=110;p.vy=0;}catch(e){}
-      paused=false;
-      if(typeof stageStart==='function')stageStart();
-      if(typeof syncHUD==='function')syncHUD(true);
-      if(typeof trans!=='undefined')trans.style.display='none';
-      if(typeof warpDog!=='undefined')warpDog.className='';
-      V194.warping=false;
-      if(typeof showToast==='function')showToast('☀️ 明るくなる太陽の時代へワープ！',1700);
-    },1500);
-  }
-
-  function v194DrawFutureCity(step){
-    if(!step||step>4)return;
-    const gy=groundY();
-    const t=performance.now()/1000;
-    ctx.save();
-
-    const cfg={
-      1:{fill:'#223142',edge:'rgba(255,227,179,.35)',window:'rgba(255,237,166,.58)',smoke:'rgba(255,211,132,.14)',alpha:.88,ruin:false,tilt:false},
-      2:{fill:'#2a1518',edge:'rgba(255,173,121,.28)',window:'rgba(255,133,88,.45)',smoke:'rgba(255,120,84,.18)',alpha:.94,ruin:false,tilt:true},
-      3:{fill:'#1a0d10',edge:'rgba(255,122,90,.22)',window:'rgba(255,107,71,.32)',smoke:'rgba(255,96,58,.24)',alpha:.98,ruin:true,tilt:true},
-      4:{fill:'#17212f',edge:'rgba(225,245,255,.18)',window:'rgba(205,233,255,.18)',smoke:'rgba(170,210,255,.10)',alpha:.84,ruin:true,tilt:false}
-    }[step];
-
-    for(let i=0;i<12;i++){
-      const x=((i*104-camera*.18)%(W+160)+W+160)%(W+160)-80;
-      let h=58+(i%5)*22+(step===1?18:0)+(step===2?12:0)-(step===4?8:0);
-      const w=34+(i%3)*12;
-      if(cfg.ruin&&i%3===0)h*=0.62;
-      const top=gy-h;
-      ctx.globalAlpha=cfg.alpha;
-      ctx.fillStyle=cfg.fill;
-      if(cfg.ruin&&i%4===0){
-        ctx.beginPath();
-        ctx.moveTo(x,gy);
-        ctx.lineTo(x+4,top+18);
-        ctx.lineTo(x+w*.35,top-6);
-        ctx.lineTo(x+w*.78,top+22);
-        ctx.lineTo(x+w,gy);
-        ctx.closePath();
-        ctx.fill();
-      }else{
-        ctx.save();
-        if(cfg.tilt&&i%4===1){
-          ctx.translate(x+w*.5,gy-h*.42);
-          ctx.rotate((i%2?1:-1)*0.028*(step>=2?1.4:1));
-          ctx.fillRect(-w*.5,-h*.58,w,h);
-          ctx.restore();
-        }else{
-          ctx.fillRect(x,top,w,h);
-        }
-      }
-      ctx.globalAlpha=.55;
-      ctx.strokeStyle=cfg.edge;
-      if(!(cfg.tilt&&i%4===1))ctx.strokeRect(x,top,w,h);
-
-      if(!(cfg.ruin&&i%5===2)){
-        ctx.globalAlpha=1;
-        ctx.fillStyle=cfg.window;
-        const rows=Math.max(2,Math.floor(h/20));
-        const cols=Math.max(2,Math.floor(w/13));
-        for(let r=0;r<rows;r++){
-          for(let c=0;c<cols;c++){
-            if(step===3 && (r+c+i)%3===0)continue;
-            if(step===4 && (r+c+i)%2===0)continue;
-            ctx.fillRect(x+7+c*11,top+9+r*16,4.6,6.3);
-          }
-        }
-      }
-      if(step>=2){
-        ctx.globalAlpha=step===3?.36:.24;
-        ctx.fillStyle=cfg.smoke;
-        ctx.beginPath();
-        ctx.ellipse(x+w*.5,top-18-Math.sin(t+i)*4,18+(i%3)*8,11+(i%2)*6,0,0,Math.PI*2);
-        ctx.fill();
-      }
-      if(step===3&&i%4===2){
-        ctx.globalAlpha=.3;
-        ctx.strokeStyle='rgba(255,165,102,.4)';
-        ctx.beginPath();
-        ctx.moveTo(x+w*.15,top+12);ctx.lineTo(x+w*.4,top-18);ctx.lineTo(x+w*.68,top+8);
-        ctx.stroke();
-      }
-    }
-
-    // haze / heat / ash in front of skyline
-    for(let i=0;i<26;i++){
-      const x=((i*77+t*(step===4?8:15))%(W+100))-50;
-      const y=52+(i*31)%Math.max(80,gy-90);
-      ctx.globalAlpha=step===1?.12:step===2?.16:step===3?.20:.10;
-      ctx.fillStyle=cfg.smoke;
-      ctx.beginPath();ctx.arc(x,y,2+(i%3)*1.8,0,Math.PI*2);ctx.fill();
-    }
-
-    ctx.restore();
-    ctx.globalAlpha=1;
-  }
-
-  function v194DrawEarendelRadio(){
-    if(!v194IsEarendel())return;
-    const wx=V194.FUTURE_WARP_X-130;
-    const sx=wx-camera;
-    if(sx<-90||sx>W+90)return;
-    const y=groundY()-118+Math.sin(performance.now()/260)*6;
-    ctx.save();
-    ctx.textAlign='center';
-    ctx.globalAlpha=.30;
-    ctx.fillStyle='#9cecff';
-    ctx.beginPath();ctx.arc(sx,y,34,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=.92;
-    ctx.shadowColor='#9cecff';
-    ctx.shadowBlur=18;
-    ctx.font='46px system-ui';
-    ctx.fillText('📻',sx,y+15);
-    ctx.shadowBlur=0;
-    ctx.strokeStyle='rgba(170,235,255,.72)';
-    ctx.lineWidth=1.5;
-    for(let i=0;i<3;i++){
-      ctx.globalAlpha=.45-i*.1;
-      ctx.beginPath();ctx.arc(sx,y,28+i*11,(-0.9+i*.03),(-0.25+i*.03));ctx.stroke();
-      ctx.beginPath();ctx.arc(sx,y,28+i*11,(Math.PI+0.25-i*.03),(Math.PI+0.9-i*.03));ctx.stroke();
-    }
-    ctx.globalAlpha=.86;
-    ctx.fillStyle='#dffaff';
-    ctx.font='900 10px system-ui';
-    ctx.fillText('SOS',sx,y-36);
-    ctx.restore();
-  }
-
-  const prevStageStart=stageStart;
-  stageStart=function(){
-    const out=prevStageStart();
-    v194ResetEarendelFlags();
-    if(v194IsEarendel()&&typeof showToast==='function'){
-      setTimeout(()=>{if(v194IsEarendel())showToast('📻 ……ノイズ？ 地球からの救助信号かもしれない。',1750);},520);
-    }
-    return out;
-  };
-
-  const prevUpdate=update;
-  update=function(now,dt){
-    if(!paused&&v194IsEarendel()){
-      try{wormholeActive=false;blackHoleActive=false;satellites=[];}catch(e){}
-      if(p.x>=V194.EAR_SIGNAL_X&&!V194.signalShown&&!V194.signalActive){
-        v194ShowRescueSignal();
-        return;
-      }
-      if(!V194.signalActive){
-        if(typeof missionEl!=='undefined')missionEl.textContent='📻 地球からの救助信号を追って、ワームホールへ';
-        if(typeof eventEl!=='undefined')eventEl.textContent='EARTH RESCUE SIGNAL';
-      }
-      if(p.x>=V194.FUTURE_WARP_X&&!V194.signalActive&&!V194.warping){
-        p.x=V194.FUTURE_WARP_X;
-        v194WarpToFuture();
-        return;
-      }
-    }
-
-    prevUpdate(now,dt);
-
-    if(!paused&&v194IsEarendel()&&!V194.signalActive&&!V194.warping){
-      if(typeof missionEl!=='undefined')missionEl.textContent='📻 地球からの救助信号を追って、ワームホールへ';
-      if(typeof eventEl!=='undefined')eventEl.textContent='EARTH RESCUE SIGNAL';
-    }
-  };
-
-  const prevBg=drawBackground;
-  drawBackground=function(){
-    prevBg();
-    if(v194IsEarendel())v194DrawEarendelRadio();
-    const step=v194FutureStep();
-    if(step>=1&&step<=4)v194DrawFutureCity(step);
-  };
-
-  const prevSync=syncHUD;
-  syncHUD=function(force){
-    prevSync(force);
-    const step=v194FutureStep();
-    if(step<1||step>4)return;
-    const info={
-      1:{title:'☀️ 明るくなる太陽',time:'20億年後',age:'158億年',desc:'太陽は少しずつ明るくなり、地球の海や気候は今のままではいられなくなる。',event:'太陽の一生｜だんだん明るくなる時代'},
-      2:{title:'🔴 太陽の巨大化（赤色巨星）',time:'50億年後',age:'188億年',desc:'太陽は外側を大きく膨らませ、赤く巨大な赤色巨星へ変化していく。',event:'太陽の一生｜巨大化していく老年期'},
-      3:{title:'🌍 地球の消滅',time:'50億年後以降',age:'188億年以降',desc:'赤色巨星になった太陽の影響で、今の地球の姿は残れないと考えられている。',event:'地球の運命｜赤色巨星とともに終わりへ'},
-      4:{title:'⚪ 太陽の死（白色矮星）',time:'60億年後',age:'198億年',desc:'太陽は外層を放出し終え、小さく高密度な白色矮星だけが静かに残る。',event:'太陽の一生｜死後に残る白色矮星'}
-    }[step];
-    if(!info)return;
-    locationEl.textContent=`FUTURE ${String(step).padStart(2,'0')}  ·  ${info.title}`;
-    astroInfo.innerHTML=
-      `<b>${info.title}</b>`+
-      `<br>${info.desc}`+
-      `<br><span class="distanceBig"><span class="distLead">⏩ 未来</span><span class="distValue">${info.time}</span></span>`+
-      `<span class="distanceHint">🌌 宇宙誕生から ${info.age}<br>☀️ 太陽と地球の未来 ${step} / 4</span>`;
-    missionEl.textContent='☀️ 地球から、太陽と地球の未来を見届ける';
-    eventEl.textContent=info.event;
-  };
-
-  if(typeof syncHUD==='function')setTimeout(()=>syncHUD(true),0);
-})();
-</script>
-
-
-<script>
-/* === v195: make Earendel transceiver clearly visible and trigger on contact === */
-(function(){
-  const RADIO_X=520;
-  const WARP_X=980;
-  let signalDone=false;
-  let signalActive=false;
-  let futureWarping=false;
-
-  function earendel(){try{return S()?.name==='✨ エアレンデル';}catch(e){return false;}}
-  function radioScene(){return document.getElementById('v63RadioScene');}
-
-  function showSignal(){
-    if(signalDone||signalActive||!earendel())return;
-    signalDone=true;signalActive=true;paused=true;
-    const el=radioScene();
-    if(el){
-      el.innerHTML=''+
-        '<div class="v63RadioCard">'+
-          '<div class="v63RadioIcon">📻</div>'+
-          '<div class="v63RadioKicker">EARTH RESCUE SIGNAL</div>'+
-          '<div class="v63RadioNoise">ザー……ザー……　こちら地球……</div>'+
-          '<div class="v63RadioVoice">「……犬星くん、聞こえる？」<br>「……救助ワームホールを開く……」<br>「……太陽と地球の未来へ……」</div>'+
-          '<div class="v63RadioMeta">SOURCE : EARTH</div>'+
-        '</div>';
-      el.classList.remove('heard','reply');
-      el.classList.add('on','contact');
-      setTimeout(()=>el.classList.add('heard'),350);
-    }
-    missionEl.textContent='📻 地球から救助信号！';
-    eventEl.textContent='EARTH SOS RECEIVED';
-    setTimeout(()=>{
-      el?.classList.remove('on','heard','reply','contact');
-      signalActive=false;paused=false;
-      showToast('📻 地球からのSOS！ 前方に救助ワームホール！',1900);
-    },2800);
-  }
-
-  function warpFuture(){
-    if(futureWarping||signalActive)return;
-    const si=systems.findIndex(s=>s?.futureEra&&s.futureStep===1);
-    if(si<0)return;
-    futureWarping=true;paused=true;
-    trans.style.display='grid';
-    warpDog.textContent=playerDog;
-    warpDog.className='spin';
-    transTitle.innerHTML='🌀 RESCUE WORMHOLE';
-    nextEl.textContent='☀️ 地球の救助信号をたどる';
-    subEl.textContent='EARENDEL → BRIGHTER SUN';
-    setTimeout(()=>{
-      system=si;stage=0;camera=0;p.x=110;p.vy=0;
-      paused=false;stageStart();syncHUD(true);
-      trans.style.display='none';warpDog.className='';futureWarping=false;
-      showToast('☀️ 明るくなる太陽の未来へ到着！',1700);
-    },1450);
-  }
-
-  function drawRadioForeground(){
-    if(!earendel())return;
-    const sx=RADIO_X-camera;
-    if(sx<-120||sx>W+120)return;
-    const gy=groundY();
-    const bob=Math.sin(performance.now()/220)*3;
-    const y=gy-30+bob;
-    ctx.save();
-    ctx.textAlign='center';
-    ctx.shadowColor='#80ecff';ctx.shadowBlur=24;
-    ctx.globalAlpha=.18;
-    ctx.fillStyle='#7aeaff';ctx.beginPath();ctx.arc(sx,y-18,47,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=1;
-    ctx.font='78px system-ui';ctx.fillText('📻',sx,y+8);
-    ctx.shadowBlur=0;
-    ctx.fillStyle='rgba(8,20,30,.90)';
-    ctx.strokeStyle='rgba(128,238,255,.70)';ctx.lineWidth=1.5;
-    const bw=142,bh=34,bx=sx-bw/2,by=y-116;
-    ctx.beginPath();ctx.roundRect(bx,by,bw,bh,10);ctx.fill();ctx.stroke();
-    ctx.fillStyle='#dffcff';ctx.font='1000 11px system-ui';ctx.fillText('📻 地球からのSOS',sx,by+22);
-    ctx.strokeStyle='rgba(150,239,255,.70)';ctx.lineWidth=1.4;
-    for(let i=0;i<3;i++){
-      ctx.globalAlpha=.55-i*.13;
-      ctx.beginPath();ctx.arc(sx,y-30,31+i*11,-1.08,-.30);ctx.stroke();
-      ctx.beginPath();ctx.arc(sx,y-30,31+i*11,Math.PI+.30,Math.PI+1.08);ctx.stroke();
-    }
-    ctx.restore();ctx.globalAlpha=1;
-  }
-
-  function drawRescueWormhole(){
-    if(!earendel()||!signalDone)return;
-    const sx=WARP_X-camera;
-    if(sx<-150||sx>W+150)return;
-    const cy=groundY()-105,t=performance.now()/800;
-    ctx.save();ctx.translate(sx,cy);
-    for(let i=0;i<7;i++){
-      ctx.globalAlpha=.18+i*.055;
-      ctx.strokeStyle=i%2?'#b8f4ff':'#cfa8ff';
-      ctx.lineWidth=2+i*.35;
-      ctx.beginPath();ctx.ellipse(0,0,52+i*7,26+i*4,t+i*.34,0,Math.PI*2);ctx.stroke();
-    }
-    const g=ctx.createRadialGradient(0,0,4,0,0,70);
-    g.addColorStop(0,'#fff');g.addColorStop(.18,'#bff6ff');g.addColorStop(.52,'rgba(178,134,255,.55)');g.addColorStop(1,'rgba(0,0,0,0)');
-    ctx.globalAlpha=.72;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,72,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=.92;ctx.fillStyle='#fff';ctx.font='1000 10px system-ui';ctx.textAlign='center';ctx.fillText('🌀 救助ワームホール',0,-88);
-    ctx.restore();ctx.globalAlpha=1;
-  }
-
-  const prevStageStart=stageStart;
-  stageStart=function(){
-    const out=prevStageStart();
-    if(earendel()){
-      signalDone=false;signalActive=false;futureWarping=false;
-      setTimeout(()=>{if(earendel())showToast('📻 前にトランシーバーが落ちている！ 地球からの信号？',1800);},450);
-    }
-    return out;
-  };
-
-  const prevUpdate=update;
-  update=function(now,dt){
-    if(!paused&&earendel()){
-      wormholeActive=false;blackHoleActive=false;satellites=[];
-      if(!signalDone&&Math.abs((p.x+p.w*.5)-RADIO_X)<74){
-        showSignal();return;
-      }
-      if(!signalDone&&p.x>RADIO_X+95){
-        showSignal();return;
-      }
-      if(signalDone&&!signalActive&&!futureWarping&&p.x>=WARP_X-30){
-        p.x=WARP_X-30;warpFuture();return;
-      }
-      if(!signalDone){
-        missionEl.textContent='📻 落ちているトランシーバーまで進む';
-        eventEl.textContent='UNKNOWN EARTH SIGNAL';
-      }else if(!signalActive){
-        missionEl.textContent='🌀 地球の救助ワームホールへ';
-        eventEl.textContent='EARTH RESCUE ROUTE';
-      }
-    }
-    prevUpdate(now,dt);
-  };
-
-  const prevDrawPlayer=drawPlayer;
-  drawPlayer=function(){
-    drawRescueWormhole();
-    drawRadioForeground();
-    prevDrawPlayer();
-  };
-})();
-</script>
-
-
-<script>
-/* === v196: Earendel gets normal star-stage objects + plain-language star HUD === */
-(function(){
-  let earKey='';
-  let earItems=[];
-  let earHazards=[];
-  let earAliens=[];
-  let earMorphs=[];
-
-  const SIMPLE_STAR_COPY={
-    '☀️ 太陽':{text:'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',tag:'地球の近くの星'},
-    '⭐ シリウス':{text:'地球の夜空で、いちばん明るく見える星。おおいぬ座の「犬の星」。',tag:'夜空で一番明るい星'},
-    '🐶 プロキオン':{text:'こいぬ座でいちばん明るい星。シリウスより少し先に空へ昇る。',tag:'こいぬ座の代表'},
-    '🕰️ メトシェラ星':{text:'宇宙でも最古クラスの星。宇宙がまだ若かったころから生きている。',tag:'とても古い星'},
-    '💠 ベガ':{text:'七夕の「織姫星」。ものすごい速さで回っている青白い星。',tag:'高速で回る星'},
-    '🌟 ポラリス':{text:'北の方向を教えてくれる北極星。実は1個ではなく、3つの星の仲間。',tag:'北を教える星'},
-    '❤️ アンタレス':{text:'さそり座の「心臓」にあたる赤い巨大星。太陽よりずっと大きい。',tag:'赤い巨大星'},
-    '🔴 ベテルギウス':{text:'オリオン座の赤い巨大星。寿命の終わりに近く、いつか超新星爆発すると考えられている。',tag:'爆発候補の有名星'},
-    '❓ タビーの星':{text:'ときどき急に大きく暗くなる、不思議な星。なぜ暗くなるのか研究が続いている。',tag:'謎の星'},
-    '🐕 VYおおいぬ座星':{text:'太陽よりはるかに大きい犬の星。自分のガスやちりを激しく宇宙へ吹き飛ばしている。',tag:'超巨大な犬の星'},
-    '💥 イータ・カリーナ':{text:'大噴火を起こしたのに、まだ生きている巨大な星。将来は超新星になる候補。',tag:'大噴火した星'},
-    '🪐 Stephenson 2-18':{text:'見つかっている星の中で、いちばん大きい候補のひとつ。太陽とは比べものにならないほど巨大。',tag:'一番大きい候補'},
-    '🧲 SGR 1806-20':{text:'大きな星が死んだあとに残った天体。ものすごく強い磁力をもつ。',tag:'磁力が最強クラス'},
-    '💙 R136a1':{text:'見つかっている中でも、特に重くて明るい星。太陽の何百万倍級の明るさをもつ。',tag:'とても重くて明るい星'},
-    '✨ S Doradus':{text:'とても明るく、明るさが大きく変わる星。この種類の星を代表する名前にもなっている。',tag:'変光星の代表'},
-    '⭐ M31-V1':{text:'宇宙が想像よりずっと広いと分かるきっかけになった、天文学の歴史で大切な星。',tag:'宇宙の広さを教えた星'},
-    '⭐ M51-DS1':{text:'約3100万光年も遠いのに、1個の星として見つかったとても明るい星。',tag:'遠くても見える星'},
-    '🎨 Warhol':{text:'手前にある大きな天体の重力で光が拡大され、見えるようになった遠い星。',tag:'重力レンズで見えた星'},
-    '💙 イカロス':{text:'エアレンデルが見つかる前は、地球からいちばん遠い星として知られていた。',tag:'以前の一番遠い星'},
-    '🦋 モスラ':{text:'重力レンズで大きく拡大されて見える、とても遠い星の集まりの候補。',tag:'隠し・怪獣スター'},
-    '🦖 ゴジラ':{text:'重力レンズでとても明るく見える遠い星。怪物級の明るさから「ゴジラ」と呼ばれる。',tag:'隠し・怪獣スター'},
-    '✨ エアレンデル':{text:'宇宙誕生から10億年以内に存在した、最も遠い個別星。',tag:'一番遠い星'}
-  };
-
-  const EASY_DISTANCE={
-    '🎨 Warhol':'とても遠い',
-    '🦋 モスラ':'とても遠い',
-    '🦖 ゴジラ':'とても遠い',
-    '✨ エアレンデル':'いちばん遠い星'
-  };
-
-  function isEarendel(){try{return S()?.name==='✨ エアレンデル';}catch(e){return false;}}
-
-  function buildEarendelWorld(){
-    if(!isEarendel())return;
-    const gy=groundY();
-    const c=S()?.goodColor||'#fff8df';
-    earItems=[];earHazards=[];earAliens=[];earMorphs=[];
-
-    // Same star pickups as ordinary star stages.
-    for(let i=0;i<34;i++){
-      const x=185+i*70+(i%4)*13;
-      earItems.push({x,y:gy-72-(i%5)*34,r:14+(i%3)*2,got:false,color:c});
-    }
-    // Same bone graphic as ordinary stages.
-    [270,720,1180,1650,2130].forEach((x,i)=>{
-      earItems.push({x,y:gy-58-(i%2)*55,r:18,got:false,color:'#ffd65a',food:true});
-    });
-    // Same alien graphic and behavior.
-    [350,980,1780,2250].forEach((x,i)=>{
-      earAliens.push({x,y:gy-108-(i%2)*72,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
-    });
-    // Same question-mark transformation items.
-    const dogs=['🐩','🐕‍🦺','🦮','🐕'];
-    [315,840,1480,2080].forEach((x,i)=>{
-      earMorphs.push({x,y:gy-122-(i%3)*48,r:26,got:false,dog:dogs[i%dogs.length]});
-    });
-    // A few normal meteor hazards so it feels like the other stars too.
-    [760,1180,1580,2020,2380].forEach((x,i)=>{
-      earHazards.push({x,y:70+(i%3)*62,w:46,h:46,got:false,symbol:'☄️',diagonal:true,vx:-1.2-(i%2)*.3,vy:1.05+(i%3)*.18});
-    });
-    earKey='earendel';
-  }
-
-  function restoreEarendelWorld(){
-    if(!isEarendel())return;
-    if(earKey!=='earendel')buildEarendelWorld();
-    earItems=earItems.filter(o=>!o.got);
-    earHazards=earHazards.filter(o=>!o.got);
-    earAliens=earAliens.filter(o=>!o.got);
-    earMorphs=earMorphs.filter(o=>!o.got);
-    items=earItems;
-    hazards=earHazards;
-    aliens=earAliens;
-    morphs=earMorphs;
-  }
-
-  const prevStageStart=stageStart;
-  stageStart=function(){
-    const out=prevStageStart();
-    earKey='';
-    if(isEarendel()){
-      buildEarendelWorld();
-      setTimeout(()=>restoreEarendelWorld(),0);
-    }
-    return out;
-  };
-
-  const prevUpdate=update;
-  update=function(now,dt){
-    prevUpdate(now,dt);
-    if(!paused&&isEarendel())restoreEarendelWorld();
-  };
-
-  const prevSync=syncHUD;
-  syncHUD=function(force){
-    prevSync(force);
-    let name='';
-    try{name=S()?.name||'';}catch(e){return;}
-    const x=SIMPLE_STAR_COPY[name];
-    if(!x)return;
-    if(name==='✨ エアレンデル'){
-      locationEl.textContent='✨ エアレンデル';
-      astroInfo.innerHTML=`<b>✨ エアレンデル</b><br>宇宙誕生から10億年以内に存在した、最も遠い個別星。`;
-      return;
-    }
-    const raw=S()?.distance||systems[system]?.distance||'';
-    const dist=EASY_DISTANCE[name]||raw.replace('地球から','').trim();
-    locationEl.textContent=`${name}  ·  ${x.tag}`;
-    astroInfo.innerHTML=
-      `<b>${name}</b>`+
-      `<br>${x.text}`+
-      `<span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue"> ${dist}</span></span>`+
-      `<span class="distanceHint">${x.tag}</span>`;
-  };
-
-  // Make the simple copy available to other UI pieces without changing scientific detail cards.
-  for(const sys of systems){
-    for(const st of (sys?.stages||[])){
-      const x=SIMPLE_STAR_COPY[st?.name];
-      if(x)st.desc=x.text;
-    }
-    const sx=SIMPLE_STAR_COPY[sys?.name];
-    if(sx)sys.desc=sx.text;
-  }
-
-  setTimeout(()=>{if(isEarendel()){buildEarendelWorld();restoreEarendelWorld();syncHUD(true);}},0);
-})();
-</script>
-
-
-<style id="v199-earendel-fix-style">
-#v199EarRadio,#v199EarWorm{
-  position:absolute;z-index:9;display:none;pointer-events:none;
-  transform:translate(-50%,-50%);text-align:center;color:#eaffff;
-  filter:drop-shadow(0 0 9px rgba(108,238,255,.9));
+<style id="v204-runtime-style">
+#wrap.v204ThreeControls .controls{
+  left:50%!important;right:auto!important;transform:translateX(-50%)!important;
+  width:min(430px,95vw)!important;display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;
+  justify-content:stretch!important;align-items:end!important;padding:0 8px!important
 }
-#v199EarRadio.on,#v199EarWorm.on{display:block}
-#v199EarRadio .v199RadioEmoji{font-size:68px;line-height:1;animation:v199RadioBob .75s ease-in-out infinite alternate}
-#v199EarRadio .v199RadioTag{
-  margin-top:-3px;padding:5px 9px;border:1px solid rgba(134,240,255,.75);border-radius:999px;
-  background:rgba(5,18,30,.88);box-shadow:0 0 18px rgba(85,225,255,.32);
-  font:1000 10px/1 system-ui;white-space:nowrap
+#wrap.v204ThreeControls #special,#wrap.v204ThreeControls #laser,#wrap.v204ThreeControls #jump{
+  display:flex!important;width:100%!important;min-width:0!important;height:78px!important;
+  border-radius:28px!important;align-items:center!important;justify-content:center!important;flex-direction:column!important;
+  font-size:12px!important
 }
-#v199EarRadio:before,#v199EarRadio:after{
-  content:"";position:absolute;left:50%;top:28px;width:82px;height:82px;border:1.5px solid rgba(118,236,255,.56);
-  border-radius:50%;transform:translate(-50%,-50%) scale(.45);opacity:.7;animation:v199RadioWave 1.25s ease-out infinite
+#wrap.v204ThreeControls #big,#wrap.v204ThreeControls #cosmicPower{display:none!important}
+#wrap.v204ThreeControls #v169CosmicDock.on{
+  display:flex!important;left:auto!important;right:10px!important;transform:none!important;
+  width:auto!important;bottom:max(105px,calc(env(safe-area-inset-bottom) + 96px))!important;padding:6px!important
 }
-#v199EarRadio:after{animation-delay:.55s}
-#v199EarWorm .v199WormCore{
-  width:104px;height:104px;border-radius:50%;border:3px solid rgba(216,247,255,.85);
-  background:radial-gradient(circle,#fff 0 6%,#a9f5ff 13%,rgba(153,119,255,.65) 34%,rgba(40,8,83,.2) 61%,transparent 70%);
-  box-shadow:0 0 25px #74e9ff,0 0 48px rgba(171,111,255,.65),inset 0 0 25px rgba(255,255,255,.8);
-  animation:v199WormSpin .8s linear infinite
+#wrap.v204ThreeControls #v169MaterialInfo{display:none!important}
+#wrap.v204ThreeControls #v169AbilityBtn{min-width:116px!important}
+#points,#food,#alienHitCount{display:flex!important;align-items:center!important;justify-content:center!important}
+#v204EarRadio,#v204EarWorm{
+  position:absolute;z-index:14;display:none;pointer-events:none;transform:translate(-50%,-50%);text-align:center;color:#eaffff;
+  filter:drop-shadow(0 0 12px rgba(104,239,255,.95))
 }
-#v199EarWorm .v199WormTag{
-  margin-top:2px;padding:5px 8px;border-radius:999px;background:rgba(17,8,35,.83);
-  border:1px solid rgba(220,198,255,.62);font:1000 9px/1 system-ui;white-space:nowrap
-}
-#astroInfo.v199EarHud{width:min(48%,258px)!important;text-align:left!important;padding:10px 11px!important;line-height:1.38!important}
-#astroInfo.v199EarHud>b{font-size:16px!important}
-#astroInfo.v199EarHud .v199EarDesc{display:block;margin-top:7px;font-size:10px;line-height:1.5;font-weight:850;color:#fff}
-#astroInfo.v199EarHud .distanceBig{margin-top:8px!important;font-size:14px!important}
-#astroInfo.v199EarHud .distanceHint{margin-top:6px!important;font-size:9px!important;line-height:1.48!important;letter-spacing:.02em!important}
-@keyframes v199RadioBob{to{transform:translateY(-5px) rotate(2deg)}}
-@keyframes v199RadioWave{to{transform:translate(-50%,-50%) scale(1.3);opacity:0}}
-@keyframes v199WormSpin{to{transform:rotate(360deg)}}
+#v204EarRadio.on,#v204EarWorm.on{display:block!important}
+.v204RadioEmoji{font-size:74px;line-height:1;animation:v204RadioBob .6s ease-in-out infinite alternate}
+.v204RadioTag,.v204WormTag{margin-top:2px;padding:6px 10px;border:1.5px solid rgba(143,243,255,.82);border-radius:999px;background:rgba(6,17,31,.92);font:1000 10px/1 system-ui;white-space:nowrap;box-shadow:0 0 20px rgba(86,231,255,.42)}
+#v204EarRadio:before,#v204EarRadio:after{content:"";position:absolute;left:50%;top:31px;width:90px;height:90px;border:2px solid rgba(122,239,255,.55);border-radius:50%;transform:translate(-50%,-50%) scale(.4);animation:v204RadioWave 1.1s ease-out infinite}
+#v204EarRadio:after{animation-delay:.5s}
+.v204WormCore{width:118px;height:118px;border-radius:50%;border:3px solid #eaffff;background:radial-gradient(circle,#fff 0 5%,#9ef7ff 12%,rgba(163,116,255,.72) 33%,rgba(38,9,83,.25) 61%,transparent 72%);box-shadow:0 0 28px #78edff,0 0 58px rgba(178,104,255,.72),inset 0 0 28px #fff;animation:v204WormSpin .75s linear infinite}
+#astroInfo.v204EarHud{width:min(48%,250px)!important;text-align:left!important;padding:9px 10px!important;line-height:1.35!important}
+#astroInfo.v204EarHud>b{font-size:15px!important}
+#astroInfo.v204EarHud .v204EarDesc{display:block;margin-top:5px;font-weight:950;line-height:1.42;font-size:10px}
+#astroInfo.v204EarHud .distanceBig{font-size:12px!important;line-height:1.25!important;margin-top:6px!important}
+#astroInfo.v204EarHud .distanceHint{font-size:8px!important;line-height:1.45!important;letter-spacing:0!important}
+#v204GameVersion{margin:10px 0;padding:9px 11px;border:1px solid rgba(126,239,255,.35);border-radius:12px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 11px/1.25 system-ui;letter-spacing:.08em;text-align:center}
+#v204GameVersion small{display:block;margin-top:4px;font:800 8px/1.25 system-ui;opacity:.6}
+#v204JumpVersion{padding:7px 10px;margin:8px 0 10px;border-radius:10px;background:rgba(86,231,255,.08);border:1px solid rgba(86,231,255,.24);color:#bff8ff;font:1000 10px/1 system-ui;text-align:center}
+@keyframes v204RadioBob{to{transform:translateY(-5px) rotate(2deg)}}
+@keyframes v204RadioWave{to{transform:translate(-50%,-50%) scale(1.35);opacity:0}}
+@keyframes v204WormSpin{to{transform:rotate(360deg)}}
 @media(max-width:520px){
-  #astroInfo.v199EarHud{width:47%!important;font-size:9px!important;padding:8px 9px!important}
-  #astroInfo.v199EarHud>b{font-size:14px!important}
-  #astroInfo.v199EarHud .v199EarDesc{font-size:9px!important;line-height:1.42!important}
-  #astroInfo.v199EarHud .distanceBig{font-size:12px!important}
-  #astroInfo.v199EarHud .distanceHint{font-size:8px!important}
-  #v199EarRadio .v199RadioEmoji{font-size:58px}
+  #wrap.v204ThreeControls .controls{gap:6px!important;padding:0 5px!important}
+  #wrap.v204ThreeControls #special,#wrap.v204ThreeControls #laser,#wrap.v204ThreeControls #jump{height:74px!important;font-size:11px!important}
+  .v204RadioEmoji{font-size:64px}
+  #astroInfo .v204EarDesc{font-size:9px}
 }
 </style>
-<script>
-/* === v199: final Earendel HUD + guaranteed world radio overlay === */
+<script id="v204-version-script">
 (function(){
-  const RADIO_X=520;
-  const WORM_X=980;
-  let radioEl=null,wormEl=null;
-
-  function earendel(){try{return S()?.name==='✨ エアレンデル';}catch(e){return false;}}
-  function ensureWorldUI(){
-    if(!radioEl){
-      radioEl=document.createElement('div');radioEl.id='v199EarRadio';
-      radioEl.innerHTML='<div class="v199RadioEmoji">📻</div><div class="v199RadioTag">地球から SOS</div>';
-      wrap.appendChild(radioEl);
-    }
-    if(!wormEl){
-      wormEl=document.createElement('div');wormEl.id='v199EarWorm';
-      wormEl.innerHTML='<div class="v199WormCore"></div><div class="v199WormTag">救助ワームホール</div>';
-      wrap.appendChild(wormEl);
-    }
-  }
-  function setWorldPos(el,wx,wy){
-    const sx=wx-camera;
-    const visible=sx>-120&&sx<W+120;
-    el.classList.toggle('on',earendel()&&visible);
-    if(!earendel()||!visible)return;
-    el.style.left=((sx/Math.max(1,W))*100)+'%';
-    el.style.top=((wy/Math.max(1,H))*100)+'%';
-  }
-  function renderWorldUI(){
-    ensureWorldUI();
-    if(!earendel()){
-      radioEl?.classList.remove('on');wormEl?.classList.remove('on');return;
-    }
-    const gy=groundY();
-    setWorldPos(radioEl,RADIO_X,gy-82);
-    // Once the player has reached the radio area, make the rescue wormhole visible ahead.
-    const reached=(p.x+p.w*.5)>=RADIO_X-65;
-    if(reached)setWorldPos(wormEl,WORM_X,gy-100);else wormEl?.classList.remove('on');
-  }
-
-  // Final HUD wins over every older HUD wrapper.
-  const prevSync=syncHUD;
-  syncHUD=function(force){
-    prevSync(force);
-    if(!earendel()){
-      astroInfo?.classList.remove('v199EarHud');
-      return;
-    }
-    astroInfo.classList.add('v199EarHud');
-    locationEl.textContent='✨ エアレンデル  ·  一番遠い星';
-    astroInfo.innerHTML=
-      `<b>✨ エアレンデル</b>`+
-      `<span class="v199EarDesc">宇宙誕生から10億年以内に存在した、最も遠い個別星。</span>`+
-      `<span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue"> 約129億 光年</span></span>`+
-      `<span class="distanceHint">🧲 重力｜正確にはまだ不明<br>⬆️ ジャンプ｜標準 ↔️<br>🔭 重力レンズで大きく見えて発見</span>`;
-  };
-
-  // Keep the DOM radio/wormhole aligned even when old canvas layers clear ordinary objects.
-  const prevUpdate=update;
-  update=function(now,dt){
-    prevUpdate(now,dt);
-    renderWorldUI();
-    if(earendel())syncHUD(true);
-  };
-
-  const prevStageStart=stageStart;
-  stageStart=function(){
-    const out=prevStageStart();
-    setTimeout(()=>{ensureWorldUI();renderWorldUI();if(earendel())syncHUD(true);},0);
-    return out;
-  };
-
-  function loop(){renderWorldUI();requestAnimationFrame(loop)}
-  if(document.readyState==='loading')addEventListener('DOMContentLoaded',()=>{ensureWorldUI();loop()},{once:true});
-  else{ensureWorldUI();loop()}
-})();
-</script>
-
-
-<style id="v201-future-ui-style">
-#wrap.v201FutureMode #special,
-#wrap.v201FutureMode #laser,
-#wrap.v201FutureMode #jump{display:flex!important}
-#wrap.v201FutureMode #big,
-#wrap.v201FutureMode #cosmicPower{display:none!important}
-#wrap.v201FutureMode .controls{
-  width:min(420px,94vw)!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  gap:8px!important
-}
-#wrap.v201FutureMode #special,
-#wrap.v201FutureMode #laser,
-#wrap.v201FutureMode #jump{min-width:0!important}
-#wrap.v201FutureMode #v169CosmicDock{display:none!important}
-#wrap.v201FutureMode #points,
-#wrap.v201FutureMode #food,
-#wrap.v201FutureMode #alienHitCount{display:flex!important}
-#wrap.v201FutureMode #alienHitCount{white-space:nowrap}
-@media(max-width:520px){
-  #wrap.v201FutureMode .controls{width:min(430px,95vw)!important;gap:6px!important}
-  #wrap.v201FutureMode #special small,
-  #wrap.v201FutureMode #laser small,
-  #wrap.v201FutureMode #jump small{font-size:8px!important}
-}
-</style>
-<script>
-/* === v201: future skyline, button restore, top-left material counter === */
-(function(){
-  function curSys(){ try{return systems[system]||null;}catch(e){return null;} }
-  function futureStep(){ return curSys()?.futureEra ? (curSys().futureStep||0) : 0; }
-  function futureMode(){ const s=futureStep(); return s>=1 && s<=4; }
-  function anyCosmicMode(){ const s=curSys(); return !!(s && (s.futureEra || s.epoch)); }
-
-  function parseMat(){
-    const txt=document.querySelector('#v169MaterialInfo b')?.textContent?.trim()||'';
-    let m=txt.match(/^(.+?)\s+(.+?)\s+([0-9]+)\s*\/\s*([0-9]+)$/);
-    if(!m)m=txt.match(/^(\S+)\s+(.+?)\s+([0-9]+)\s*\/\s*([0-9]+)$/);
-    if(!m)return null;
-    return {symbol:m[1],label:m[2],have:Number(m[3]),need:Number(m[4])};
-  }
-
-  function syncButtonsAndCounters(){
-    try{
-      if(specialBtn){ specialBtn.style.display=''; }
-      if(laserBtn){ laserBtn.style.display=''; }
-      if(jumpBtn){ jumpBtn.style.display=''; }
-
-      wrap.classList.toggle('v201FutureMode', futureMode());
-
-      pointsEl.style.display='';
-      foodEl.style.display='';
-      alienHitEl.style.display='';
-      pointsEl.textContent=`⭐ ${typeof points==='number'?points:0}`;
-      foodEl.textContent=`🦴 ${typeof food==='number'?food:0}`;
-
-      const mat=parseMat();
-      if(anyCosmicMode() && mat){
-        alienHitEl.textContent=`${mat.symbol} × ${mat.have}/${mat.need}`;
-        alienHitEl.title=`${mat.label} ${mat.have}/${mat.need}`;
-      }else{
-        alienHitEl.textContent=`👽 ${typeof cosmicCharge==='number'?cosmicCharge:0}`;
-        alienHitEl.title='';
-      }
-    }catch(e){}
-  }
-
-  function futureInfo(step){
-    return {
-      1:{title:'☀️ 明るくなる太陽',time:'20億年後',age:'158億年',desc:'太陽は年を取るにつれて少しずつ明るくなる。数十億年後には今よりかなり強い日差しになり、地球の海は蒸発へ向かって今の住みやすさは失われていく。',event:'太陽の一生｜年を取って明るさが増す時代'},
-      2:{title:'🔴 太陽の巨大化（赤色巨星）',time:'50億年後',age:'188億年',desc:'太陽は燃料の使い方を変え、外側を大きくふくらませて赤色巨星になる。大きさは水星や金星の軌道近くまで広がると考えられ、内側の惑星は大きく環境を変えられる。',event:'太陽の一生｜赤く巨大になる老年期'},
-      3:{title:'🌍 地球の消滅',time:'50億年後以降',age:'188億年以降',desc:'太陽の巨大化と強烈な熱の影響で、海・大気・岩石まで今の姿では保てなくなる。地球がのみ込まれるかは不確実さもあるが、少なくとも現在の地球環境は終わると考えられている。',event:'地球の運命｜地球らしさが失われていく'},
-      4:{title:'⚪ 太陽の死（白色矮星）',time:'60億年後',age:'198億年',desc:'外側のガスを放出し終えたあと、太陽には地球ほどの大きさの高密度な中心核だけが残る。これが白色矮星で、もう新しく大きく燃え上がることはなく、長い時間をかけて静かに冷えていく。',event:'太陽の一生｜最後に残る白色矮星'}
-    }[step]||null;
-  }
-
-  function drawSkyline(step){
-    if(step<1||step>4)return;
-    const gy=groundY();
-    const t=performance.now()/1000;
-    ctx.save();
-
-    const back={1:'rgba(26,39,58,.78)',2:'rgba(45,18,22,.84)',3:'rgba(30,12,16,.90)',4:'rgba(24,30,44,.82)'}[step];
-    const front={1:'rgba(13,20,31,.98)',2:'rgba(27,10,13,.98)',3:'rgba(16,7,10,.98)',4:'rgba(12,16,24,.96)'}[step];
-    const win={1:'rgba(255,238,170,.72)',2:'rgba(255,170,108,.58)',3:'rgba(255,120,88,.32)',4:'rgba(210,230,255,.24)'}[step];
-
-    // back skyline
-    for(let i=0;i<10;i++){
-      const x=((i*138-camera*.18)%(W+220)+W+220)%(W+220)-110;
-      const w=52+(i%3)*18;
-      let h=92+(i%5)*28;
-      if(step===1)h+=24;
-      if(step===4)h-=10;
-      if(step===3&&i%3===0)h*=0.58;
-      const y=gy-h;
-      ctx.globalAlpha=.88;
-      ctx.fillStyle=back;
-      ctx.fillRect(x,y,w,h);
-      if(step>=2&&i%4===1){
-        ctx.beginPath();
-        ctx.moveTo(x,gy);ctx.lineTo(x+6,y+28);ctx.lineTo(x+w*.38,y-8);ctx.lineTo(x+w*.82,y+18);ctx.lineTo(x+w,gy);ctx.closePath();ctx.fill();
-      }
-    }
-
-    // front skyline
-    for(let i=0;i<14;i++){
-      const x=((i*100-camera*.36)%(W+180)+W+180)%(W+180)-90;
-      const w=36+(i%4)*14;
-      let h=72+(i%6)*22;
-      if(step===1)h+=18;
-      if(step===2&&i%5===1)h+=18;
-      if(step===3&&i%3===2)h*=0.52;
-      if(step===4)h*=0.82;
-      const y=gy-h;
-      ctx.fillStyle=front;
-      if(step>=2&&i%5===2){
-        ctx.beginPath();
-        ctx.moveTo(x,gy);ctx.lineTo(x+8,y+18);ctx.lineTo(x+w*.55,y-5);ctx.lineTo(x+w,gy);ctx.closePath();ctx.fill();
-      }else{
-        ctx.fillRect(x,y,w,h);
-      }
-      ctx.fillStyle=win;
-      const rows=Math.max(2,Math.floor(h/18));
-      const cols=Math.max(2,Math.floor(w/12));
-      for(let r=0;r<rows;r++){
-        for(let c=0;c<cols;c++){
-          if(step===3 && (r+c+i)%3===0)continue;
-          if(step===4 && (r+c+i)%2===0)continue;
-          ctx.fillRect(x+6+c*10,y+7+r*14,4,5);
-        }
-      }
-      if(step>=2){
-        ctx.globalAlpha=step===3?.28:.18;
-        ctx.fillStyle=step===4?'rgba(190,215,255,.11)':'rgba(255,140,94,.20)';
-        ctx.beginPath();
-        ctx.ellipse(x+w*.5,y-14-Math.sin(t+i)*4,18+(i%3)*5,9+(i%2)*4,0,0,Math.PI*2);
-        ctx.fill();
-        ctx.globalAlpha=1;
-      }
-    }
-
-    ctx.restore();
-  }
-
-  const prevGround=drawGround;
-  drawGround=function(){
-    prevGround();
-    if(futureMode())drawSkyline(futureStep());
-  };
-
-  const prevSync=syncHUD;
-  syncHUD=function(force){
-    prevSync(force);
-    syncButtonsAndCounters();
-    const step=futureStep();
-    if(!futureMode())return;
-    const info=futureInfo(step);
-    if(!info)return;
-    locationEl.textContent=`FUTURE ${String(step).padStart(2,'0')}  ·  ${info.title}`;
-    astroInfo.innerHTML=
-      `<b>${info.title}</b>`+
-      `<br>${info.desc}`+
-      `<br><span class="distanceBig"><span class="distLead">⏩ 未来</span><span class="distValue"> ${info.time}</span></span>`+
-      `<span class="distanceHint">🌌 宇宙誕生から ${info.age}<br>☀️ 太陽と地球の未来 ${step} / 4</span>`;
-  };
-
-  const prevUpdate=update;
-  update=function(now,dt){
-    prevUpdate(now,dt);
-    syncButtonsAndCounters();
-  };
-
-  const prevStageStart=stageStart;
-  stageStart=function(){
-    const out=prevStageStart();
-    setTimeout(syncButtonsAndCounters,0);
-    setTimeout(()=>{ if(futureMode()) syncHUD(true); },30);
-    return out;
-  };
-
-  if(document.readyState==='loading'){
-    addEventListener('DOMContentLoaded',()=>{ syncButtonsAndCounters(); setTimeout(()=>syncHUD(true),50); },{once:true});
-  }else{
-    setTimeout(()=>{ syncButtonsAndCounters(); syncHUD(true); },0);
-  }
-})();
-</script>
-
-
-<style id="v203-version-style">
-#v203GameVersion{
-  margin:8px 0 12px;padding:9px 12px;border-radius:12px;
-  border:1px solid rgba(111,229,255,.35);
-  background:linear-gradient(90deg,rgba(86,231,255,.10),rgba(255,79,216,.08));
-  color:#fff;font:1000 12px/1.2 system-ui;letter-spacing:.08em;
-  text-align:center;box-shadow:0 0 16px rgba(86,231,255,.10)
-}
-#v203GameVersion small{display:block;margin-top:4px;font:800 8px/1.25 system-ui;opacity:.58;letter-spacing:.04em}
-#v203JumpVersion{
-  margin:0 0 10px;padding:7px 10px;border-radius:10px;
-  background:rgba(86,231,255,.08);border:1px solid rgba(86,231,255,.18);
-  color:#dffaff;text-align:center;font:1000 10px/1.2 system-ui;letter-spacing:.08em
-}
-</style>
-<script id="v203-version-script">
-(function(){
-  window.INUBOSHI_GAME_VERSION='v203';
+  window.INUBOSHI_GAME_VERSION='v204';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
-    if(devCard&&!document.getElementById('v203GameVersion')){
-      const ver=document.createElement('div');
-      ver.id='v203GameVersion';
-      ver.innerHTML='GAME VERSION　v203<small>2026-09-05 BUILD</small>';
-      const sub=devCard.querySelector('.v62DevSub');
-      if(sub)sub.insertAdjacentElement('afterend',ver);
-      else devCard.prepend(ver);
+    if(devCard&&!document.getElementById('v204GameVersion')){
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v204<small>CORE RUNTIME FIX / 2026-09-05</small>';devCard.prepend(el);
     }
-    const jumpCard=document.getElementById('v150JumpCard');
-    if(jumpCard&&!document.getElementById('v203JumpVersion')){
-      const ver=document.createElement('div');
-      ver.id='v203JumpVersion';
-      ver.textContent='GAME VERSION　v203';
-      const head=jumpCard.querySelector('#v150JumpHead');
-      if(head)head.insertAdjacentElement('afterend',ver);
-      else jumpCard.prepend(ver);
+    const jumpCard=document.querySelector('#v150JumpPanel .v150JumpCard');
+    if(jumpCard&&!document.getElementById('v204JumpVersion')){
+      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v204';
+      const input=jumpCard.querySelector('#v150JumpSearch');if(input)jumpCard.insertBefore(el,input);else jumpCard.prepend(el);
     }
   }
-  if(document.readyState==='loading')addEventListener('DOMContentLoaded',()=>{install();setTimeout(install,100)},{once:true});
-  else{install();setTimeout(install,100)}
+  if(document.readyState==='loading')addEventListener('DOMContentLoaded',install,{once:true});else install();
+  setTimeout(install,400);
 })();
 </script>
 
