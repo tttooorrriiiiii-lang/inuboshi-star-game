@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>犬星くん GALAXY TOUR v193</title>
-<!-- v197: エアレンデル通常アイテム復活 / トランシーバー確実表示 / 星説明をやさしい日本語へ -->
+<!-- v198: エアレンデル右上説明を2行固定 / 古いHUD説明の上書きを除去 -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -1205,8 +1205,8 @@ name:'💙 R136a1',distance:'地球から約16.3万光年',desc:'知られてい
 {name:'🦖 ゴジラ',distance:'赤方偏移 z≈2.37',desc:'重力レンズで極端に明るく見える遠方の恒星候補',theme:'triangulum',hiddenStar:true,stages:[
 {name:'🦖 ゴジラ',distance:'赤方偏移 z≈2.37',desc:'非常に大きく拡大されて観測された遠方星',goodColor:'#fff08a',sky:['#050205','#33120a'],ground:'#8e6f4f',ground2:'#3e2b20',planet:'#ffe86d',event:'METEOR SHOWER',eventText:'強烈な恒星光が飛び交う！',gravity:.45,jump:17.8}
 ]},
-{name:'✨ エアレンデル',distance:'光が約129億年かけて到達',desc:'宇宙誕生から10億年以内に存在した最遠級の個別星',theme:'andromeda',stages:[
-{name:'✨ エアレンデル',distance:'光が約129億年かけて到達',desc:'最遠級の恒星。ここが「遠くへ行く旅」の最遠地点',goodColor:'#fff8df',sky:['#01030b','#0b1438'],ground:'#8ea5c7',ground2:'#364763',planet:'#fff6dd',event:'STAR SHOWER',eventText:'宇宙初期の恒星光が降り注ぐ！',gravity:.45,jump:17.9}
+{name:'✨ エアレンデル',distance:'とても遠い',desc:'いちばん遠い星。宇宙が若いころに生まれた。',theme:'andromeda',stages:[
+{name:'✨ エアレンデル',distance:'とても遠い',desc:'いちばん遠い星。宇宙が若いころに生まれた。',goodColor:'#fff8df',sky:['#01030b','#0b1438'],ground:'#8ea5c7',ground2:'#364763',planet:'#fff6dd',event:'STAR SHOWER',eventText:'宇宙初期の恒星光が降り注ぐ！',gravity:.45,jump:17.9}
 ]},
 {name:'🔥 再電離時代',distance:'ビッグバン後 約2億〜10億年',desc:'最初の星や銀河の紫外線で宇宙の水素が再び電離した時代',theme:'andromeda',postEarendel:true,epoch:true,stages:[
 {name:'🔥 再電離時代',distance:'約2億〜10億年後',desc:'星と銀河の光が宇宙全体の状態を変えていく',goodColor:'#ffb587',sky:['#0b0202','#3b100c'],ground:'#81503f',ground2:'#351f1a',planet:'#ffaf7a',event:'COSMIC GAS',eventText:'星の光が宇宙を電離していく！',gravity:.43,jump:18.1}
@@ -1429,7 +1429,7 @@ function stageStart(){
  blackHoleY=Math.max(145,Math.min(groundY()-145,H*(.34+Math.random()*.20)));
  nextCosmic=430+Math.floor(Math.random()*220);nextSwarm=430+Math.floor(Math.random()*220);
  nextSatellite=360+Math.floor(Math.random()*300);
- makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast(returnFromDogStar?'🌍 地球に帰ってきた。':'🐕 いつもの散歩道。',1600);if(isDogStarStage())showToast('🐶🦴 犬星ボーナス！ 骨どっさり＆犬がときどき出る！',1900);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 地球の光は129億年ぶん遠い…',2300);if(systems[system].endless)showToast('♾️ 広がりつづける宇宙。どこまで続くんだろう…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
+ makeWorld();checkHomeRoute();syncHUD();if(system===0&&stage===0)showToast(returnFromDogStar?'🌍 地球に帰ってきた。':'🐕 いつもの散歩道。',1600);if(isDogStarStage())showToast('🐶🦴 犬星ボーナス！ 骨どっさり＆犬がときどき出る！',1900);if(S().name.includes('エアレンデル'))showToast('✨ エアレンデル到達！ 宇宙が若いころの星。',2300);if(systems[system].endless)showToast('♾️ 広がりつづける宇宙。どこまで続くんだろう…',2200);if(systems[system].dream)showToast('🐕🐩🦮 最終地点・犬の星！ 敵なし・星いっぱい・地球帰還チャンス！',2800)
 }
 function maybeLore(){if(paused||p.x<nextLoreAt)return;const rank=systemDistanceRank[system]??0;const s=systems[system];let msg='';if(s.dream)msg=['🐾 ここでは星も犬の夢を見ている。','🌈 ふわふわした犬たちが宇宙を漂っている。','🦴 骨の形の光がゆっくり流れていく。'][Math.floor(Math.random()*3)];else if(s.endless)msg=['🌑 光が消えた。地球の気配も、もうない。','🐾 暗闇の中に、光る足跡がまぎれている。','… ワン …　遠くから何か聞こえた。'][Math.floor(Math.random()*3)];else if(s.postEarendel)msg=['🫥 星より古い光の中を進んでいる。','📡 ここまで来ると、通信も記憶みたいにかすれる。','🌌 宇宙の歴史そのものを横切っている。'][Math.floor(Math.random()*3)];else if(rank>=10)msg=['✨ 地球の光はもう見えない。','🌌 遠すぎて、帰り道の感覚まで薄れていく。','💫 ワープするたび宇宙の色が変わる。'][Math.floor(Math.random()*3)];else if(rank>=6)msg=['🪐 もう太陽系は点のように遠い。','🌠 銀河がただの光の粒になっていく。','🔭 ここからは宇宙が歴史に見える。'][Math.floor(Math.random()*3)];else if(rank>=1)msg=['🌍 地球はまだ遠くない。でも確実に離れている。','🌙 もう気軽には帰れない距離だ。','🛰️ 通信ノイズに地球の気配がまざる。'][Math.floor(Math.random()*3)];if(msg)showToast(msg,1700);nextLoreAt+=780+Math.random()*360}
 
@@ -1727,7 +1727,7 @@ function wormholeMilestoneEffect(count){
  else if(count===11){transTitle.innerHTML='⭐ M51-DS1';nextEl.textContent='約3100万光年先で個別に見える星へ。';subEl.textContent='WORMHOLE 11';showToast('⭐ M51-DS1！ 距離が一気に銀河間スケールへ。',2100)}
  else if(count===12){transTitle.innerHTML='🎨 WARHOL';nextEl.textContent='重力レンズで大きく増幅された遠方星へ。';subEl.textContent='WORMHOLE 12';showToast('🎨 Warhol！ 重力レンズが遠い星を見せる。',2150)}
  else if(count===13){transTitle.innerHTML='💙 ICARUS';nextEl.textContent='かつて最遠記録だった重力レンズ星へ。';subEl.textContent='WORMHOLE 13';showToast('💙 イカロス！ 94億光年級の世界へ。',2200)}
- else if(count===14){transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='129億年前の光へ。';subEl.textContent='WORMHOLE 14';showToast('✨ エアレンデル。最遠級の個別星へ。',2200)}
+ else if(count===14){transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='いちばん遠い星へ。';subEl.textContent='WORMHOLE 14';showToast('✨ エアレンデル。宇宙が若いころの星！',2200)}
  else if(count===15){transTitle.innerHTML='🌑 COSMIC HISTORY';nextEl.textContent='ここからは星より前、宇宙の歴史へ。';subEl.textContent='WORMHOLE 15';showToast('🌑 ここから先は宇宙史。',2200)}
 }
 
@@ -14835,12 +14835,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     prevSync(force);
 
     if(V170.phase==='outbound'&&isEarendel()){
-      locationEl.textContent='✨ エアレンデル  ·  TURNAROUND';
+      locationEl.textContent='✨ エアレンデル';
       astroInfo.innerHTML=
         `<b>✨ エアレンデル</b>`+
-        `<br>129億年前に出た光を見ている、最遠級の個別星。`+
-        `<span class="distanceBig"><span class="distLead">👀 見えている光</span><span class="distValue">129億年前の光</span></span>`+
-        `<span class="distanceHint">ここが「遠くへ行く旅」の折り返し地点</span>`;
+        `<br>いちばん遠い星。`+
+        `<br>宇宙が若いころに生まれた。`;
     }
 
     if(V170.phase==='returnMoon'&&isMoon()){
@@ -19467,6 +19466,11 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
     try{name=S()?.name||'';}catch(e){return;}
     const x=SIMPLE_STAR_COPY[name];
     if(!x)return;
+    if(name==='✨ エアレンデル'){
+      locationEl.textContent='✨ エアレンデル';
+      astroInfo.innerHTML=`<b>✨ エアレンデル</b><br>いちばん遠い星。<br>宇宙が若いころに生まれた。`;
+      return;
+    }
     const raw=S()?.distance||systems[system]?.distance||'';
     const dist=EASY_DISTANCE[name]||raw.replace('地球から','').trim();
     locationEl.textContent=`${name}  ·  ${x.tag}`;
