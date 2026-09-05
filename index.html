@@ -8509,7 +8509,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   function v160AdvanceFuture(){
     if(v160FutureAdvanceLock)return;
     const step=v160FutureStep();
-    const si=v160FindBy(x=>x?.futureEra&&x.futureStep===step+1);
+    const nextStep=(step===3)?5:(step+1);
+    const si=v160FindBy(x=>x?.futureEra&&x.futureStep===nextStep);
 
     if(si<0){
       // v178: 本編ルートは宇宙の終わりからビッグクランチへ一本化。
@@ -11127,10 +11128,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     1:{name:'☀️ 明るくなる太陽',time:'20億年後',age:'158億年',desc:'太陽は年を取るほど明るくなり、地球の海も保てなくなっていく。',group:'☀️ 太陽と地球の未来',local:1,total:3},
     2:{name:'🔴 太陽の巨大化（赤色巨星）',time:'50億年後',age:'188億年',desc:'中心の水素が減り、外側が巨大に膨らんで赤色巨星になる。',group:'☀️ 太陽と地球の未来',local:2,total:3},
     3:{name:'⚪ 太陽の死（白色矮星）',time:'60億年後',age:'198億年',desc:'太陽は外側のガスを宇宙へ放ち、小さく高密度な白色矮星が残る。',group:'☀️ 太陽と地球の未来',local:3,total:3},
-    4:{name:'🔴 最後の長寿命星',time:'14兆年後',age:'14兆年',desc:'最も長生きする小さな星も、少しずつ寿命を迎えていく。',group:'🌌 宇宙全体の未来',local:1,total:4},
-    5:{name:'🌌 星の時代の終わり',time:'100兆年後',age:'100兆年',desc:'新しい星がほぼ生まれず、星が輝く時代そのものが終わる。',group:'🌌 宇宙全体の未来',local:2,total:4},
-    6:{name:'🕳️ ブラックホール時代',time:'1正年後',age:'1正年',desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。',group:'🌌 宇宙全体の未来',local:3,total:4},
-    7:{name:'🌑 暗い宇宙',time:'1グーゴル年後',age:'1グーゴル年',desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。',group:'🌌 宇宙全体の未来',local:4,total:4}
+    4:{name:'（通常ルートでは非表示）',time:'14兆年後',age:'14兆年',desc:'この段階は通常ルートではスキップされる。',group:'🌌 宇宙全体の未来',local:0,total:3},
+    5:{name:'🌑 星のない地球',time:'100兆年後',age:'100兆年',desc:'星が輝く時代が終わり、地球から見える空はほとんど真っ黒になる。',group:'🌌 宇宙全体の未来',local:1,total:3},
+    6:{name:'🕳️ ブラックホール時代',time:'1正年後',age:'1正年',desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。',group:'🌌 宇宙全体の未来',local:2,total:3},
+    7:{name:'🌑 暗い宇宙',time:'1グーゴル年後',age:'1グーゴル年',desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。',group:'🌌 宇宙全体の未来',local:3,total:3}
   };
 
   // ----------------------------------------------------------
@@ -15573,7 +15574,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   }
 
   function cleanName(s=''){return String(s).replace(/\s+/g,' ').trim();}
-  function v226FutureLabel(step){return ({2:'🔥 灼熱の地球',3:'🥶 地球の氷河期',4:'🌘 ほぼ真っ暗な地球',5:'🌑 星のない地球'})[step]||'';}
+  function v226FutureLabel(step){return ({2:'🔥 灼熱の地球',3:'🥶 地球の氷河期',5:'🌑 星のない地球',6:'🕳️ ブラックホール時代',7:'🌑 暗い宇宙'})[step]||'';}
   function routeApi(){return window.__v170RouteAPI;}
   function debugApi(){return window.__inuboshiDebugAPI;}
 
@@ -15691,15 +15692,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v234';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v234</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v235';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v235</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v234</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v235</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15718,7 +15719,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       <div class="v193QuickGroup v193FutureGroup"><b>🔮 未来の地球</b><div class="v172Quick">
         <button class="v172QuickBtn" data-v172-quick="future2">🔥 灼熱の地球<small>現在から約50億年後</small></button>
         <button class="v172QuickBtn" data-v172-quick="future3">🥶 地球の氷河期<small>現在から約60億年後</small></button>
-        <button class="v172QuickBtn" data-v172-quick="future4">🌘 ほぼ真っ暗な地球<small>現在から約14兆年後</small></button>
+        <button class="v172QuickBtn" data-v172-quick="future5">🌑 星のない地球<small>現在から約100兆年後</small></button>
       </div></div>
       <div class="v193QuickGroup v193SecretStarGroup"><b>🧩 隠し星</b><div class="v172Quick">
         <button class="v172QuickBtn" data-v172-quick="mothra">🦋 モスラ<small>重力レンズで見える怪獣スター</small></button>
@@ -15766,7 +15767,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
     orderedData.forEach(sys=>{
       if(!sys?.stages?.length)return;
-      if(sys?.futureEra&&sys.futureStep===1)return;
+      if(sys?.futureEra&&(sys.futureStep===1||sys.futureStep===4))return;
       const displaySysName=(sys?.futureEra&&v226FutureLabel(sys.futureStep))||sys.name;
       const group=document.createElement('div');
       group.className='v172Group';
@@ -16254,7 +16255,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v234';
+window.INUBOSHI_GAME_VERSION='v235';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -16287,10 +16288,10 @@ const V215_FUTURE={
   1:{title:'☀️ 明るくなる太陽',time:'20億年後',group:'確認用',local:0,total:2,desc:'この段階は通常ルートでは通らない。'},
   2:{title:'🔥 灼熱の地球',time:'50億年後',group:'🌍 地球の未来',local:1,total:2,desc:'巨大化した太陽の熱で、地球は海も大気も保てない灼熱の世界になる。'},
   3:{title:'🥶 地球の氷河期',time:'60億年後',group:'🌍 地球の未来',local:2,total:2,desc:'太陽が白色矮星になって光と熱が弱まり、地球は凍りついた寒い世界になる。'},
-  4:{title:'🌘 ほぼ真っ暗な地球',time:'14兆年後',group:'🌌 宇宙全体の未来',local:1,total:4,desc:'長寿命の星だけがわずかに残り、地球から見える星空はかなり少なくなる。'},
-  5:{title:'🌑 星のない地球',time:'100兆年後',group:'🌌 宇宙全体の未来',local:2,total:4,desc:'星が輝く時代が終わり、地球の空はほとんど真っ黒になる。'},
-  6:{title:'🕳️ ブラックホール時代',time:'1正年後',group:'🌌 宇宙全体の未来',local:3,total:4,desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。'},
-  7:{title:'🌑 暗い宇宙',time:'1グーゴル年後',group:'🌌 宇宙全体の未来',local:4,total:4,desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。'}
+  4:{title:'（非表示）',time:'14兆年後',group:'🌌 宇宙全体の未来',local:0,total:3,desc:'この段階は通常ルートではスキップされる。'},
+  5:{title:'🌑 星のない地球',time:'100兆年後',group:'🌌 宇宙全体の未来',local:1,total:3,desc:'星が輝く時代が終わり、地球の空はほとんど真っ黒になる。'},
+  6:{title:'🕳️ ブラックホール時代',time:'1正年後',group:'🌌 宇宙全体の未来',local:2,total:3,desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。'},
+  7:{title:'🌑 暗い宇宙',time:'1グーゴル年後',group:'🌌 宇宙全体の未来',local:3,total:3,desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。'}
 };
 
 function v215IsEarendel(){return S()?.name==='✨ エアレンデル';}
@@ -16610,58 +16611,97 @@ function v223FutureAny(){ const n=v215FutureStep(); return n>=1&&n<=7; }
 function v223DrawFutureSky(step){
   if(!(step>=1&&step<=7))return;
   const gy=groundY();
+  const t=performance.now()/1000;
   ctx.save();
-  // Step 5: pitch black sky. Step 6-7 stay nearly black. Others keep star-filled night.
+
   if(step===5){
-    ctx.fillStyle='#000'; ctx.fillRect(0,0,W,gy-1);
-  }else if(step>=6){
-    ctx.fillStyle=step===6?'rgba(0,0,0,.76)':'rgba(0,0,0,.9)';
+    ctx.fillStyle='#000';
+    ctx.fillRect(0,0,W,gy-1);
+  }else if(step===6){
+    ctx.fillStyle='rgba(22,8,34,.88)';
+    ctx.fillRect(0,0,W,gy-1);
+    ctx.fillStyle='rgba(92,48,122,.18)';
+    ctx.fillRect(0,0,W,gy*0.55);
+  }else if(step>=7){
+    ctx.fillStyle='rgba(0,0,0,.93)';
     ctx.fillRect(0,0,W,gy-1);
   }else if(step===4){
-    ctx.fillStyle='rgba(4,7,14,.52)'; ctx.fillRect(0,0,W,gy-1);
+    ctx.fillStyle='rgba(4,7,14,.58)';
+    ctx.fillRect(0,0,W,gy-1);
+  }else if(step===3){
+    ctx.fillStyle='rgba(14,24,43,.12)';
+    ctx.fillRect(0,0,W,gy-1);
   }else{
-    ctx.fillStyle='rgba(8,14,30,.20)'; ctx.fillRect(0,0,W,gy-1);
+    // Future 01-02: no star overlay.
+    ctx.restore();
+    return;
   }
 
   let starCount = 0;
-  if(step===1) starCount=95;
-  else if(step===2) starCount=100;
-  else if(step===3) starCount=82;
-  else if(step===4) starCount=22;
+  if(step===3) starCount=132;
+  else if(step===4) starCount=18;
   else if(step===5) starCount=0;
-  else if(step===6) starCount=8;
-  else if(step===7) starCount=4;
+  else if(step===6) starCount=12;
+  else if(step===7) starCount=3;
 
   for(let i=0;i<starCount;i++){
     const x=((i*47 + (i%7)*29 + camera*0.08)%(W+80))-40;
     const y=26 + (i*31 % Math.max(90, gy-70));
-    const r = (step===4? 0.7 : 0.8) + (i%3)*0.45;
-    const a = step===4 ? 0.36 + (i%4)*0.07 : 0.45 + (i%5)*0.09;
+    const r = (step===6?0.65:(step===4?0.7:0.85)) + (i%3)*(step===6?0.22:0.45);
+    const a = step===6 ? 0.12 + (i%4)*0.05 : step===4 ? 0.32 + (i%4)*0.06 : 0.46 + (i%5)*0.09;
     ctx.globalAlpha=a;
-    ctx.fillStyle = step===3 ? '#eef7ff' : (i%5===0 ? '#fff7cf' : '#ffffff');
+    ctx.fillStyle = step===6 ? (i%3===0 ? '#cda8ff' : '#f0dcff') : step===3 ? '#eef7ff' : (i%5===0 ? '#fff7cf' : '#ffffff');
     ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
   }
   ctx.globalAlpha=1;
 
-  // Same vibe as Earth's shooting stars. Less frequent in far future, none in the starless era.
-  const meteorCount = step<=3 ? 3 : (step===4 ? 1 : 0);
-  const t = performance.now()/1000;
+  // Ice-age Earth: same feel as the first Earth, but richer sky.
+  const meteorCount = step===3 ? 5 : (step===4 ? 1 : 0);
   for(let i=0;i<meteorCount;i++){
-    const prog=(t*(step===3?0.08:0.11)+i*0.27)%1;
-    const x=W+120 - prog*(W+340);
-    const y=50 + i*72 + (prog*22);
-    ctx.strokeStyle=step===3?'rgba(230,245,255,.82)':'rgba(255,255,255,.88)';
-    ctx.shadowColor=step===3?'rgba(210,235,255,.9)':'rgba(255,245,190,.8)';
-    ctx.shadowBlur=10;
+    const prog=(t*(step===3?0.095:0.11)+i*0.19)%1;
+    const x=W+120 - prog*(W+360);
+    const y=42 + i*58 + (prog*18);
+    ctx.strokeStyle=step===3?'rgba(245,250,255,.92)':'rgba(255,255,255,.88)';
+    ctx.shadowColor=step===3?'rgba(223,240,255,.96)':'rgba(255,245,190,.8)';
+    ctx.shadowBlur=12;
     ctx.lineWidth=2;
     ctx.beginPath();
     ctx.moveTo(x,y);
-    ctx.lineTo(x+34,y-12);
+    ctx.lineTo(x+40,y-14);
     ctx.stroke();
     ctx.fillStyle='#fff';
-    ctx.beginPath(); ctx.arc(x,y,1.9,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2); ctx.fill();
   }
   ctx.shadowBlur=0;
+
+  // Black-hole era: fill the sky with eerie purple-black holes.
+  if(step===6){
+    const holes=[
+      [0.17,0.22,44,-0.22],[0.38,0.34,28,0.08],[0.56,0.18,36,0.18],
+      [0.72,0.30,52,-0.15],[0.88,0.16,24,0.05],[0.84,0.43,32,-0.10]
+    ];
+    holes.forEach((h,idx)=>{
+      const x=W*h[0], y=gy*h[1], r=h[2], rot=h[3]+Math.sin(t*0.25+idx)*0.04;
+      const rg=ctx.createRadialGradient(x,y,2,x,y,r*1.9);
+      rg.addColorStop(0,'rgba(0,0,0,1)');
+      rg.addColorStop(0.34,'rgba(0,0,0,1)');
+      rg.addColorStop(0.48,'rgba(116,82,188,.78)');
+      rg.addColorStop(0.63,'rgba(195,129,255,.34)');
+      rg.addColorStop(1,'rgba(195,129,255,0)');
+      ctx.fillStyle=rg;
+      ctx.beginPath(); ctx.arc(x,y,r*1.95,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=0.48+(idx%3)*0.08;
+      ctx.strokeStyle=idx%2===0?'rgba(171,126,255,.72)':'rgba(231,157,255,.52)';
+      ctx.lineWidth=4+(idx%2);
+      ctx.beginPath(); ctx.ellipse(x,y,r*1.18,r*0.26,rot,0,Math.PI*2); ctx.stroke();
+      ctx.globalAlpha=0.22;
+      ctx.strokeStyle='rgba(255,255,255,.25)';
+      ctx.lineWidth=1.4;
+      ctx.beginPath(); ctx.ellipse(x,y,r*1.42,r*0.36,rot,0,Math.PI*2); ctx.stroke();
+      ctx.globalAlpha=1;
+    });
+  }
+
   ctx.restore();
 }
 
@@ -20012,7 +20052,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v234</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v235</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
@@ -20361,11 +20401,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v234';
+  window.INUBOSHI_GAME_VERSION='v235';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v234<small>SCORCHED EARTH DELAY + BACK LAYER / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v235<small>ICE METEORS + STARLESS SKIP + PURPLE BH / 2026-09-05</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
