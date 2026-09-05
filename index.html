@@ -6777,7 +6777,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // 月・火星は少なめ。他の通常ステージも多すぎない量で均一配置。
     const isMoon=S()?.name==='🌙 月';
     const isMars=S()?.name==='🔴 火星';
-    const count=(isMoon||isMars)?16:20;
+    const count=(isMoon||isMars)?26:30;
     const startX=300,endX=3330;
     const span=(endX-startX)/Math.max(1,count-1);
     const col=S()?.goodColor||'#fff';
@@ -8297,7 +8297,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   stageStart=function(){
     const out=v160PrevStageStart();
 
-    if(v160IsFrozenEarth()||v160IsFuture()||v160IsEnd()){
+    if(v160IsFrozenEarth()||(v160IsFuture()&&v160FutureStep()>=5)||v160IsEnd()){
       items=[];hazards=[];aliens=[];morphs=[];swarm=[];
       shootingStars=[];gasClouds=[];secretPickups=[];satellites=[];
       bosses=[];fallingStars=[];boneShots=[];earthWalkers=[];
@@ -8411,9 +8411,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
 
     if(v160IsFuture()){
-      v160ClearNormalObjects();
-
       const step=v160FutureStep();
+      if(step>=5)v160ClearNormalObjects();
       const len=v160FutureLengths[step]||1800;
 
       if(p.x>=len){
@@ -14611,7 +14610,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
     // Outbound journey ends at Earendel. Do NOT enter the old reverse-history route.
     if(V170.phase==='outbound'&&isEarendel()){
-      clearNormal();
+      // v212: keep the normal star/bone/alien/morph objects visible on Earendel.
       if(p.x>EAR_RETURN_X-520){
         missionEl.textContent='🌀 帰還ワームホールが見える';
         eventEl.textContent='遠くへ行く旅は、ここで折り返す';
@@ -15096,15 +15095,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v211';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v211</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v212';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v212</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v211</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v212</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15654,7 +15653,7 @@ const V204={
   radioEl:null,
   wormEl:null
 };
-window.INUBOSHI_GAME_VERSION='v211';
+window.INUBOSHI_GAME_VERSION='v212';
 
 const V204_SIMPLE_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -15781,14 +15780,14 @@ function v204SyncControlsAndCounts(){
   for(const el of [specialBtn,laserBtn,jumpBtn])if(el)el.style.setProperty('display','flex','important');
   if(bigBtn)bigBtn.style.setProperty('display','none','important');
   if(cosmicBtn)cosmicBtn.style.setProperty('display','none','important');
-  pointsEl.textContent=`⭐ ×${points}`;
-  foodEl.textContent=`🦴 ×${food}`;
+  pointsEl.textContent=`⭐ ${points}`;
+  foodEl.textContent=`🦴 ${food}`;
   const mat=v204MaterialData();
   if(v204AnyMaterialStage()&&mat){
-    alienHitEl.textContent=`${mat.emoji} ×${mat.have}/${mat.need}`;
+    alienHitEl.textContent=`${mat.emoji} ${mat.have}/${mat.need}`;
     alienHitEl.title=`${mat.label} ${mat.have}/${mat.need}`;
   }else{
-    alienHitEl.textContent=`👽 ×${cosmicCharge}`;
+    alienHitEl.textContent=`👽 ${cosmicCharge}`;
     alienHitEl.title='';
   }
 }
@@ -15851,21 +15850,14 @@ const v204PrevSyncHUD=syncHUD;
 syncHUD=function(){
   v204PrevSyncHUD();
   v204SyncControlsAndCounts();
-  astroInfo.classList.toggle('v204EarHud',v204IsEarendel());
-  if(v204IsEarendel()){
-    locationEl.textContent='✨ エアレンデル';
-    astroInfo.innerHTML='<b>✨ エアレンデル</b><br><span class="v204EarDesc">宇宙誕生から10億年以内に存在した、最も遠い個別星。</span><span class="distanceBig">🌍 地球から 約129億光年</span><span class="distanceHint">🔭 重力レンズで1個の星として発見<br>🧲 重力｜正確にはまだ不明<br>⬆️ ジャンプ｜高め 🔼</span>';
-  }else if(v204FutureEarth()){
+  astroInfo.classList.remove('v204EarHud');
+  // v212: Moon, planets and ALL ordinary stars (including Earendel) keep the same v155 card structure.
+  // Only the special future-Earth chapter needs a custom card.
+  if(v204FutureEarth()){
     const n=v204FutureStep(),info=v204FutureInfo(n);
     if(info){
       locationEl.textContent=`FUTURE ${String(n).padStart(2,'0')} · ${info.title}`;
       astroInfo.innerHTML=`<b>${info.title}</b><br>${info.desc}<span class="distanceBig">⏩ 未来 ${info.time}</span><span class="distanceHint">🌌 宇宙誕生から ${info.age}<br>☀️ 太陽と地球の未来 ${n} / 4</span>`;
-    }
-  }else{
-    const simple=V204_SIMPLE_STAR_COPY[S()?.name];
-    if(simple){
-      const dist=S()?.distance||systems[system]?.distance||'';
-      astroInfo.innerHTML=`<b>${S().name}</b><br>${simple}<span class="distanceBig">🌍 地球から ${dist}</span><span class="distanceHint">🧲 重力 ${S().gravity??'不明'}｜⬆️ ジャンプ ${S().jump??'—'}</span>`;
     }
   }
 };
@@ -15877,22 +15869,8 @@ stageStart=function(){
   try{V169.pickups=[];V169.hazards=[];V169.pops=[];}catch(e){}
   if(v204IsEarendel()){
     wormholeActive=false;blackHoleActive=false;
-    const gy=groundY();
-    const starXs=[240,520,820,1120,1510,1900,2280];
-    const boneXs=[360,980,1760,2140];
-    const alienXs=[690,1380,2050];
-    starXs.forEach((x,i)=>items.push({x,y:gy-70-(i%3)*52,r:16,got:false,color:S().goodColor}));
-    boneXs.forEach((x,i)=>items.push({x,y:gy-62-(i%2)*60,r:18,got:false,color:'#ffd65a',food:true}));
-    alienXs.forEach((x,i)=>aliens.push({x,y:gy-108-(i%2)*44,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0}));
-    morphs.push({x:1240,y:gy-138,r:26,got:false,dog:'🐩'});
-    morphs.push({x:1680,y:gy-158,r:26,got:false,dog:'🦮'});
+    // v212: no custom bubbles or duplicate pickups — keep makeWorld()/drawGood()/drawAlien()/drawMorph() exactly as normal stages.
     showToast('📻 ずっと先にトランシーバーがある。',1500);
-  }else if(v204FutureEarth()){
-    const gy=groundY();
-    const starXs=[320,760,1180,1540,1910,2280];
-    starXs.forEach((x,i)=>items.push({x,y:gy-68-(i%3)*54,r:16,got:false,color:S().goodColor}));
-    items.push({x:560,y:gy-58,r:18,got:false,color:'#ffd65a',food:true});
-    items.push({x:1360,y:gy-118,r:18,got:false,color:'#ffd65a',food:true});
   }
   setTimeout(()=>syncHUD(),0);
   return out;
@@ -16172,19 +16150,20 @@ drawBackground=function(){
 function v210DrawEarthForegroundExact(){
   const gy=groundY();
   ctx.save();
+  // Exact same geometry as the present-Earth block; use the night-Earth colors seen in the opening stage.
   for(let i=0;i<11;i++){
     const x=((i*125-camera*.16)%(W+190)+W+190)%(W+190)-90;
     const bh=90+(i%4)*28;
-    ctx.fillStyle=i%2?'#9aa7b6':'#7d8c9e';
+    ctx.fillStyle=i%2?'#3a4657':'#2d3848';
     ctx.fillRect(x,gy-bh-30,85,bh);
-    ctx.fillStyle='rgba(255,244,170,.72)';
+    ctx.fillStyle='rgba(255,236,150,.88)';
     for(let r=0;r<4;r++)for(let c=0;c<3;c++)ctx.fillRect(x+12+c*22,gy-bh-16+r*20,9,10);
   }
   for(let i=0;i<9;i++){
     const x=((i*180-camera*.55)%(W+220)+W+220)%(W+220)-100;
     ctx.fillStyle='#6f4a2d';
     ctx.fillRect(x,gy-64,10,64);
-    ctx.fillStyle=i%2?'#58a765':'#6cb56b';
+    ctx.fillStyle=i%2?'#375b46':'#4f7d58';
     ctx.beginPath();ctx.arc(x+5,gy-83,32+(i%3)*5,0,Math.PI*2);ctx.fill();
   }
   ctx.restore();
@@ -19215,9 +19194,10 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める</strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v212MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v212</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
+    <div style="margin:0 14px 9px;padding:7px 10px;border:1px solid rgba(126,239,255,.28);border-radius:10px;background:rgba(86,231,255,.07);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v212</div>
     <input id="v150JumpSearch" type="search" autocomplete="off" placeholder="月、エアレンデル、暗黒時代…">
     <div id="v150JumpList"></div>
     <div id="v150JumpEmpty">見つからへんかった 👀</div>
@@ -19557,15 +19537,15 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v211';
+  window.INUBOSHI_GAME_VERSION='v212';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v211<small>VERSION IN MENU HEADER / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v212<small>HUD/OBJECT/CITY RESET / 2026-09-05</small>';devCard.prepend(el);
     }
-    const jumpCard=document.querySelector('#v150JumpPanel .v150JumpCard');
+    const jumpCard=document.querySelector('#v150JumpCard');
     if(jumpCard&&!document.getElementById('v204JumpVersion')){
-      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v211';
+      const el=document.createElement('div');el.id='v204JumpVersion';el.textContent='GAME VERSION　v212';
       const input=jumpCard.querySelector('#v150JumpSearch');if(input)jumpCard.insertBefore(el,input);else jumpCard.prepend(el);
     }
   }
@@ -19573,6 +19553,30 @@ drawGround=function(){
   setTimeout(install,400);
 })();
 </script>
+
+
+<style id="v212-final-visual-fix">
+/* v212: bring the three main buttons back to the softer rounded-rectangle family. */
+#wrap.v204ThreeControls #special,
+#wrap.v204ThreeControls #laser,
+#wrap.v204ThreeControls #jump{
+  border-radius:36px!important;
+  clip-path:none!important;
+  -webkit-clip-path:none!important;
+  overflow:hidden!important;
+}
+#wrap.v204ThreeControls #special::before,
+#wrap.v204ThreeControls #laser::before,
+#wrap.v204ThreeControls #jump::before,
+#wrap.v204ThreeControls #special::after,
+#wrap.v204ThreeControls #laser::after,
+#wrap.v204ThreeControls #jump::after{border-radius:30px!important}
+@media(max-width:520px){
+  #wrap.v204ThreeControls #special,
+  #wrap.v204ThreeControls #laser,
+  #wrap.v204ThreeControls #jump{border-radius:34px!important}
+}
+</style>
 
 </body>
 </html>
