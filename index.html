@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR</title>
+<title>犬星くん GALAXY TOUR v181</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -6285,6 +6285,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 })();
 
 
+/* === v180: Solar System photos + broader real-observation coverage === */
 /* === v179: real star thumbnails / physical traits / name origins === */
 /* === v178: canonical crunch loop / ice-age return / era matter / sorted debug === */
 /* === v177: no knockback / Big Bang rescue / expanded cosmic-to-Earth history === */
@@ -11240,6 +11241,89 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   // v179: star encyclopedia — physical traits, name origins,
   // and real observation thumbnails where a useful image exists.
   // ----------------------------------------------------------
+  // v180: v179 had photo definitions for only 9 stars.
+  // Add real NASA observation images for the Solar System bodies as well.
+  const V180_BODY_PHOTOS={
+    '🌍 地球':{
+      id:'earth-apollo11',
+      src:'https://science.nasa.gov/wp-content/uploads/2023/06/earth-apollo-11-as11-36-5355-16x9-1.jpg',
+      page:'https://science.nasa.gov/image-detail/earth-apollo-11-as11-36-5355-16x9/',
+      label:'Apollo 11から見た地球',
+      credit:'NASA'
+    },
+    '🌙 月':{
+      id:'moon-pia13516',
+      src:'https://images-assets.nasa.gov/image/PIA13516/PIA13516~orig.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA13516/PIA13516~large.jpg',
+      page:'https://science.nasa.gov/image-detail/amf-pia13516/',
+      label:'LRO観測｜月の東側',
+      credit:'NASA / GSFC / Arizona State University'
+    },
+    '🔴 火星':{
+      id:'mars-pia00407',
+      src:'https://images-assets.nasa.gov/image/PIA00407/PIA00407~orig.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA00407/PIA00407~large.jpg',
+      page:'https://science.nasa.gov/photojournal/global-color-views-of-mars/',
+      label:'Viking観測｜火星全球',
+      credit:'NASA / JPL / USGS'
+    },
+    '🟠 木星':{
+      id:'jupiter-pia25726',
+      src:'https://images-assets.nasa.gov/image/PIA25726/PIA25726~orig.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA25726/PIA25726~large.jpg',
+      page:'https://science.nasa.gov/image-detail/amf-pia25726/',
+      label:'Juno観測｜木星とイオ',
+      credit:'NASA / JPL-Caltech / SwRI / MSSS'
+    },
+    '🪐 土星':{
+      id:'saturn-cassini',
+      src:'https://science.nasa.gov/wp-content/uploads/2023/05/pia05380-saturn-with-rings-16x9-1.jpg',
+      page:'https://science.nasa.gov/image-detail/pia05380-saturn-with-rings-16x9/',
+      label:'Cassini観測｜土星とリング',
+      credit:'NASA / JPL / Space Science Institute'
+    },
+    '🩵 天王星':{
+      id:'uranus-pia18182',
+      src:'https://images-assets.nasa.gov/image/PIA18182/PIA18182~orig.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA18182/PIA18182~large.jpg',
+      page:'https://science.nasa.gov/photojournal/uranus-as-seen-by-nasas-voyager-2/',
+      label:'Voyager 2観測｜天王星',
+      credit:'NASA / JPL-Caltech'
+    },
+    '🔵 海王星':{
+      id:'neptune-pia01492',
+      src:'https://images-assets.nasa.gov/image/PIA01492/PIA01492~orig.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA01492/PIA01492~large.jpg',
+      page:'https://science.nasa.gov/image-detail/pia01492-neptune-full-disk-16x9/',
+      label:'Voyager 2観測｜海王星',
+      credit:'NASA / JPL-Caltech'
+    },
+    '☀️ 太陽':{
+      id:'sun-pia26681',
+      src:'https://images-assets.nasa.gov/image/PIA26681/PIA26681~orig.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA26681/PIA26681~large.jpg',
+      page:'https://science.nasa.gov/photojournal/image-of-sun-from-nasas-solar-dynamics-observatory/',
+      label:'SDO観測｜太陽',
+      credit:'NASA / GSFC / Solar Dynamics Observatory'
+    },
+    '☿ 水星':{
+      id:'mercury-pia00437',
+      src:'https://images-assets.nasa.gov/image/PIA00437/PIA00437~orig.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA00437/PIA00437~large.jpg',
+      page:'https://science.nasa.gov/photojournal/planet-mercury/',
+      label:'Mariner 10観測｜水星',
+      credit:'NASA / JPL / USGS'
+    },
+    '♀ 金星':{
+      id:'venus-mariner10',
+      src:'https://science.nasa.gov/wp-content/uploads/2024/03/venus-mariner-10-pia23791-fig2.jpg',
+      src2:'https://images-assets.nasa.gov/image/PIA23791/PIA23791~orig.jpg',
+      page:'https://science.nasa.gov/image-detail/venus-mariner-10-pia23791-fig2-2/',
+      label:'Mariner 10観測｜金星',
+      credit:'NASA / JPL-Caltech'
+    }
+  };
+
   const V179_STAR_INFO={
     '⭐ シリウス':{
       about:'地球から見える恒星で最も明るいシリウスAと、地球ほどの大きさしかない白色矮星シリウスBの2重星。2つは約50年で互いを回る。',
@@ -11258,7 +11342,16 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       about:'太陽より高温の青白い主系列星。ものすごい速さで自転しているため球ではなく赤道方向にふくらみ、極と赤道で表面温度も違う。',
       facts:[['種類','A型主系列星'],['自転','非常に高速'],['形','赤道がふくらむ'],['見え方','ほぼ極側から見る']],
       point:'高速自転のせいで「同じ星の表面なのに場所によって温度が違う」。地球からは自転軸の極に近い方向を見ている。',
-      origin:'アラビア語 an-nasr al-wāqiʿ に由来する名前で、「降りる／襲いかかる鷲」のような意味をもつ。'
+      origin:'アラビア語 an-nasr al-wāqiʿ に由来する名前で、「降りる／襲いかかる鷲」のような意味をもつ。',
+      photo:{
+        id:'vega-pia07218',
+        src:'https://images-assets.nasa.gov/image/PIA07218/PIA07218~orig.jpg',
+        src2:'https://images-assets.nasa.gov/image/PIA07218/PIA07218~large.jpg',
+        page:'https://science.nasa.gov/photojournal/tiny-particles-so-far-away/',
+        label:'Spitzer観測｜ベガの周囲の塵円盤',
+        credit:'NASA / JPL-Caltech / University of Arizona',
+        note:'※星の表面写真ではなく、ベガを取り巻く塵の熱放射'
+      }
     },
     '🌟 ポラリス':{
       about:'実は1個の星ではなく、ポラリスA・すぐ近くのAb・遠くのBからなる3重星系。主星Aは膨らんだ超巨星で、明るさや温度、直径が周期的に変わるケフェイド変光星。',
@@ -11392,7 +11485,16 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       about:'赤く低温で大きく膨らんだ赤色巨星。赤外線で強く輝くタイプで、太陽のような主系列星より半径が大きく、表面重力は弱い。',
       facts:[['種類','赤色巨星'],['色','赤い・低温'],['半径','大きく膨張'],['表面重力','弱い']],
       point:'超遠方で見つかった星なのに、青い巨大星ではなく「赤く冷たい巨星」という点が特徴。赤外線観測と相性がいい。',
-      origin:'Quyllur（クイユル）はケチュア語でそのまま「星」という意味。'
+      origin:'Quyllur（クイユル）はケチュア語でそのまま「星」という意味。',
+      photo:{
+        id:'quyllur-elgordo',
+        src:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/webb/science/2023/08/STScI-01GZY4B7BCRX8EBXESJEQF1E75.png?crop=faces%2Cfocalpoint&fit=clip&h=760&w=1140',
+        src2:'https://assets.science.nasa.gov/dynamicimage/assets/science/missions/webb/science/2023/08/STScI-01GZY2VJ33V4R0B7QKFEEQ72E1.png?crop=faces%2Cfocalpoint&fit=clip&h=900&w=900',
+        page:'https://science.nasa.gov/missions/webb/webb-spotlights-gravitational-arcs-in-el-gordo-galaxy-cluster/',
+        label:'Webb観測｜クイユルを含む領域',
+        credit:'NASA / ESA / CSA / STScI',
+        note:'※星の輪郭写真ではなく、クイユルが点光源として見える観測領域'
+      }
     },
     '🦖 ゴジラ':{
       about:'非常に明るい大質量変光星の候補で、LBVの長いアウトバースト状態にある可能性が高い。高温で、強い恒星風と激しい質量放出を起こす怪物級の星。',
@@ -11433,22 +11535,175 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     })[c]);
   }
 
-  function v179PhotoHTML(photo){
+  // v181: 星レシピの写真が未登録／リンク切れでも観測画像を補完する
+  const V181_AUTO_PHOTO_QUERY={
+    '⭐ シリウス':'Sirius star',
+    '💠 ベガ':'Vega star',
+    '🌟 ポラリス':'Polaris star',
+    '❤️ アンタレス':'Antares star',
+    '🔴 ベテルギウス':'Betelgeuse star',
+    '💙 R136a1':'R136a1 star',
+    '✨ S Doradus':'S Doradus star',
+    '⭐ M31-V1':'M31 V1 Cepheid',
+    '💫 AF Andromedae':'AF Andromedae star',
+    '🟢 ロマーノ星 GR 290':"Romano's Star GR 290",
+    '🌠 M33 Var C':'M33 Var C star',
+    '⭐ M51-DS1':'M51 DS1 star',
+    '🎨 Warhol':'Warhol star gravitational lens',
+    '💙 イカロス':'Icarus MACS J1149 Lensed Star 1',
+    '🦋 モスラ':'Mothra star MACS J0416',
+    '❤️ クイユル':'Quyllur star',
+    '🦖 ゴジラ':'Godzilla star gravitational lens',
+    '🔷 Abell 2744 LS1':'Abell 2744 LS1 star',
+    '💠 MACS J0647 LS1':'MACS J0647 LS1 star',
+    '✨ エアレンデル':'Earendel star',
+    '🌍 地球':'Earth planet',
+    '🌙 月':'Moon',
+    '🔴 火星':'Mars planet',
+    '🟠 木星':'Jupiter planet',
+    '🪐 土星':'Saturn planet',
+    '🩵 天王星':'Uranus planet',
+    '🔵 海王星':'Neptune planet',
+    '☀️ 太陽':'Sun',
+    '☿ 水星':'Mercury planet',
+    '♀ 金星':'Venus planet'
+  };
+
+  function v181ObjectLabel(name=''){
+    return String(name).replace(/^[^A-Za-z0-9ぁ-んァ-ヶ一-龠]+/,'').trim()||String(name).trim();
+  }
+
+  function v181AutoQuery(name=''){
+    return V181_AUTO_PHOTO_QUERY[name]||v181ObjectLabel(name);
+  }
+
+  function v181AutoPhotoFor(name=''){
+    const q=v181AutoQuery(name);
+    const safeId=q.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,54)||'object';
+    return {
+      id:`auto-${safeId}`,
+      src:'',
+      src2:'',
+      page:`https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(q)}`,
+      label:`${v181ObjectLabel(name)} の観測画像`,
+      credit:'Wikipedia / Wikimedia',
+      note:'※写真未登録の天体は観測画像を自動検索して表示',
+      auto:true,
+      autoQuery:q
+    };
+  }
+
+  function v181FetchJson(url,timeout=5200){
+    const ctrl=typeof AbortController!=='undefined'?new AbortController():null;
+    const timer=ctrl?setTimeout(()=>ctrl.abort(),timeout):0;
+    return fetch(url,{mode:'cors',cache:'force-cache',signal:ctrl?.signal})
+      .then(r=>{
+        if(!r.ok)throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .finally(()=>{if(timer)clearTimeout(timer)});
+  }
+
+  async function v181FindAutoPhoto(query=''){
+    const q=String(query||'').trim();
+    if(!q)return null;
+
+    const cacheKey=`inuboshi_v181_auto_photo_${q.toLowerCase().replace(/[^a-z0-9]+/g,'_').slice(0,70)}`;
+    try{
+      const cached=JSON.parse(localStorage.getItem(cacheKey)||'null');
+      if(cached?.src)return cached;
+    }catch(e){}
+
+    // 1. Wikipedia の検索結果から代表画像を探す
+    try{
+      const url='https://en.wikipedia.org/w/api.php?'+new URLSearchParams({
+        action:'query',
+        format:'json',
+        origin:'*',
+        generator:'search',
+        gsrsearch:q,
+        gsrlimit:'6',
+        prop:'pageimages|info',
+        piprop:'thumbnail',
+        pithumbsize:'1100',
+        inprop:'url'
+      });
+      const json=await v181FetchJson(url);
+      const pages=Object.values(json?.query?.pages||{})
+        .filter(p=>p?.thumbnail?.source)
+        .sort((a,b)=>(a.index??99)-(b.index??99));
+      const p=pages[0];
+      if(p){
+        const found={
+          src:p.thumbnail.source,
+          page:p.fullurl||`https://en.wikipedia.org/wiki/${encodeURIComponent(String(p.title||q).replace(/ /g,'_'))}`,
+          label:`${p.title||q}｜観測画像`,
+          credit:'Wikipedia / Wikimedia'
+        };
+        try{localStorage.setItem(cacheKey,JSON.stringify(found))}catch(e){}
+        return found;
+      }
+    }catch(e){}
+
+    // 2. Wikipedia に代表画像が無い場合は Wikimedia Commons の画像検索へ
+    try{
+      const url='https://commons.wikimedia.org/w/api.php?'+new URLSearchParams({
+        action:'query',
+        format:'json',
+        origin:'*',
+        generator:'search',
+        gsrnamespace:'6',
+        gsrsearch:q,
+        gsrlimit:'18',
+        prop:'imageinfo',
+        iiprop:'url|mime',
+        iiurlwidth:'1100'
+      });
+      const json=await v181FetchJson(url);
+      const bad=/(diagram|map|logo|icon|symbol|flag|chart|spectrum|spectra|constellation|drawing|illustration|locator|location)/i;
+      const pages=Object.values(json?.query?.pages||{})
+        .filter(p=>p?.imageinfo?.[0])
+        .filter(p=>!bad.test(p.title||''))
+        .filter(p=>/image\/(jpeg|png|webp)/i.test(p.imageinfo?.[0]?.mime||''));
+      const p=pages[0];
+      if(p){
+        const info=p.imageinfo[0];
+        const found={
+          src:info.thumburl||info.url,
+          page:`https://commons.wikimedia.org/wiki/${encodeURIComponent(String(p.title||'').replace(/ /g,'_'))}`,
+          label:`${v181ObjectLabel(q)}｜Wikimedia観測画像`,
+          credit:'Wikimedia Commons'
+        };
+        try{localStorage.setItem(cacheKey,JSON.stringify(found))}catch(e){}
+        return found;
+      }
+    }catch(e){}
+
+    return null;
+  }
+
+  function v179PhotoHTML(photo,objectName=''){
     if(!photo)return '';
+    const autoQuery=photo.autoQuery||v181AutoQuery(objectName);
+    const page=photo.page||`https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(autoQuery)}`;
+    const waiting=!!photo.auto&&!photo.src;
     return `
-      <div class="v179PhotoCard" data-v179-photo-card="${v179Esc(photo.id)}">
-        <a class="v179PhotoLink" href="${v179Esc(photo.page)}" target="_blank" rel="noopener noreferrer">
+      <div class="v179PhotoCard${waiting?' v181AutoPhoto':''}" data-v179-photo-card="${v179Esc(photo.id)}">
+        <a class="v179PhotoLink" href="${v179Esc(page)}" target="_blank" rel="noopener noreferrer">
           <img class="v179PhotoImg" loading="lazy" decoding="async"
             data-v179-id="${v179Esc(photo.id)}"
-            data-v179-src="${v179Esc(photo.src)}"
+            data-v179-src="${v179Esc(photo.src||'')}"
+            data-v179-src2="${v179Esc(photo.src2||'')}"
+            data-v181-query="${v179Esc(autoQuery)}"
+            ${waiting?'style="display:none"':''}
             alt="${v179Esc(photo.label)}">
-          <div class="v179PhotoFallback">📷 画像が読めない時はここから元の観測ページへ</div>
+          <div class="v179PhotoFallback"${waiting?' style="display:grid"':''}>${waiting?'📡 観測画像を探しています…':'📷 画像を再取得しています…'}</div>
         </a>
         <div class="v179PhotoMeta">
           <b>📷 ${v179Esc(photo.label)}</b>
           <span>${v179Esc(photo.credit||'')}</span>
           ${photo.note?`<small>${v179Esc(photo.note)}</small>`:''}
-          <a href="${v179Esc(photo.page)}" target="_blank" rel="noopener noreferrer">🔭 元の観測ページ</a>
+          <a href="${v179Esc(page)}" target="_blank" rel="noopener noreferrer">🔭 元の観測ページ</a>
         </div>
       </div>`;
   }
@@ -11466,42 +11721,80 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       img.dataset.v179Ready='1';
 
       const id=img.dataset.v179Id;
-      const remote=img.dataset.v179Src;
+      const remote=img.dataset.v179Src||'';
+      const remote2=img.dataset.v179Src2||'';
+      const autoQuery=img.dataset.v181Query||'';
       const cacheKey=`inuboshi_v179_photo_${id}`;
       const card=img.closest('.v179PhotoCard');
       const fallback=card?.querySelector('.v179PhotoFallback');
+      const photoLink=card?.querySelector('.v179PhotoLink');
+      const metaTitle=card?.querySelector('.v179PhotoMeta b');
+      const metaCredit=card?.querySelector('.v179PhotoMeta span');
+      const sourceLink=card?.querySelector('.v179PhotoMeta a');
 
       let cached='';
       try{cached=localStorage.getItem(cacheKey)||''}catch(e){}
+      const candidates=[cached,remote,remote2].filter(Boolean);
+      let candidateIndex=0;
+      let autoTried=false;
 
-      const showFallback=()=>{
+      const showFallback=(text='📷 観測画像を取得できませんでした')=>{
         img.style.display='none';
-        if(fallback)fallback.style.display='grid';
+        if(fallback){
+          fallback.textContent=text;
+          fallback.style.display='grid';
+        }
       };
       const showImage=()=>{
         img.style.display='block';
         if(fallback)fallback.style.display='none';
+        card?.classList.remove('v181AutoPhoto');
+      };
+      const applyAuto=async()=>{
+        if(autoTried||!autoQuery){
+          showFallback();
+          return;
+        }
+        autoTried=true;
+        showFallback('📡 別の観測画像を探しています…');
+        const found=await v181FindAutoPhoto(autoQuery);
+        if(!found?.src){
+          showFallback('📷 観測画像を取得できませんでした');
+          return;
+        }
+
+        if(photoLink)photoLink.href=found.page||photoLink.href;
+        if(sourceLink)sourceLink.href=found.page||sourceLink.href;
+        if(metaTitle)metaTitle.textContent=`📷 ${found.label||v181ObjectLabel(autoQuery)+' の観測画像'}`;
+        if(metaCredit)metaCredit.textContent=found.credit||'Wikipedia / Wikimedia';
+
+        // Auto image is appended after all original sources. If it also fails,
+        // the normal error handler will end on the visible fallback.
+        candidates.push(found.src);
+        candidateIndex=candidates.length-1;
+        img.src=found.src;
       };
 
       img.addEventListener('error',()=>{
-        // If a cached copy failed too, try the current official URL once.
-        if(img.src.startsWith('data:')&&remote){
-          img.src=remote;
+        candidateIndex++;
+        if(candidateIndex<candidates.length){
+          img.src=candidates[candidateIndex];
           return;
         }
-        showFallback();
+        applyAuto();
       },{once:false});
 
       img.addEventListener('load',()=>{
         showImage();
 
         // Best-effort local cache. Some official servers allow CORS and some do not.
-        // If CORS is blocked the remote image still displays and the source link remains.
-        if(cached||!remote)return;
-        fetch(remote,{mode:'cors',cache:'force-cache'})
+        // The remote image can still display even if local caching is blocked.
+        const active=img.currentSrc||img.src||remote;
+        if(cached||!active||active.startsWith('data:image/'))return;
+        fetch(active,{mode:'cors',cache:'force-cache'})
           .then(r=>r.ok?r.blob():Promise.reject(new Error('image fetch')))
           .then(blob=>{
-            if(!blob.type.startsWith('image/')||blob.size>650000)return;
+            if(!blob.type.startsWith('image/')||blob.size>3800000)return;
             const fr=new FileReader();
             fr.onload=()=>{
               try{
@@ -11514,7 +11807,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
           .catch(()=>{});
       },{once:false});
 
-      img.src=cached||remote;
+      if(candidates.length){
+        img.src=candidates[0];
+      }else{
+        applyAuto();
+      }
     });
   }
 
@@ -11525,6 +11822,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const d=star?{...(base||{}),...star}:base;
     if(!d)return '';
 
+    const bodyPhoto=!isEra?V180_BODY_PHOTOS[S()?.name]:null;
+    const objectName=S()?.name||systems[system]?.name||'';
+    const photo=star?.photo||bodyPhoto||(!isEra&&star?v181AutoPhotoFor(objectName):null)||null;
     const title=isEra?'📖 この時代をもっと詳しく':star?'⭐ この星をもっと詳しく':'📖 この天体をもっと詳しく';
     const meta=S()?.distance||systems[system]?.distance||'';
 
@@ -11533,7 +11833,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <div class="v175RecipeKicker">${title}</div>
         <h3>${S()?.name||systems[system]?.name||''}</h3>
         ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
-        ${star?v179PhotoHTML(star.photo):''}
+        ${photo?v179PhotoHTML(photo,objectName):''}
         ${star?`<div class="v179SectionLabel">⭐ 星の特徴</div>`:''}
         <p>${d.about||''}</p>
         ${star?v179FactsHTML(star.facts):''}
@@ -11615,6 +11915,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       .v179PhotoMeta span{font:750 7.5px/1.25 system-ui;color:rgba(255,255,255,.46)}
       .v179PhotoMeta small{width:100%;font:700 7.5px/1.35 system-ui;color:rgba(255,255,255,.42)}
       .v179PhotoMeta a{margin-left:auto;color:#aee8ff;text-decoration:none;font:900 8px/1.2 system-ui}
+      .v179PhotoCard:before{content:'REAL OBSERVATION';position:absolute;z-index:2;margin:7px;padding:4px 7px;border-radius:999px;background:rgba(0,0,0,.58);color:#fff;font:900 6.5px/1 system-ui;letter-spacing:.08em;pointer-events:none}
+      .v181AutoPhoto .v179PhotoFallback{display:grid;background:radial-gradient(circle at 32% 28%,rgba(86,231,255,.10),transparent 38%),radial-gradient(circle at 72% 70%,rgba(255,79,216,.09),transparent 42%),#030611}
       .v179SectionLabel{margin-top:13px;color:#cceaff;font:1000 9px/1 system-ui;letter-spacing:.05em}
       .v179Facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:10px}
       .v179Fact{padding:8px 9px;border:1px solid rgba(255,255,255,.075);border-radius:11px;background:rgba(255,255,255,.04)}
@@ -17454,5 +17756,6 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
   </div>
 </div>
 
+<!-- v181: 星レシピ写真・全件表示フォールバック追加 -->
 </body>
 </html>
