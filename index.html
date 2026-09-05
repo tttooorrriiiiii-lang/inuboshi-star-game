@@ -1733,7 +1733,14 @@ function wormholeMilestoneEffect(count){
 
 function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 WORMHOLE!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 宇宙のもっと奥へ！';subEl.textContent=black?'SPAGHETTIFICATION':`WORMHOLE ${deepWarpCount+1}`;
  setTimeout(()=>{
-  if(black){blackHoleVisited=true;system=BLACK_HOLE_SYSTEM;stage=0}
+  if(black){
+    const bhIndex=systems.findIndex(s=>s?.name==='⚫ ブラックホール');
+    if(bhIndex>=0){
+      blackHoleVisited=true;whiteHoleTriggered=false;
+      system=bhIndex;stage=0;p.x=105;camera=0;
+      wormholeActive=false;blackHoleActive=false;satellites=[];
+    }
+  }
   else if(systems[system].endless){
     const dreamIndex=systems.findIndex(s=>s.dream);
     if(dreamIndex>=0){transTitle.innerHTML='⚪ 光がひらく…';subEl.textContent='DARKNESS → DOG STAR';trans.style.background='#fff';setTimeout(()=>{trans.style.background=''},280);system=dreamIndex;stage=0;dreamReached=true;showToast('🐾 暗闇の先に、犬の星がひらいた…',2600)}
@@ -1749,7 +1756,12 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
     const nextSystem=systems.findIndex(s=>s.name===targetName);
     if(nextSystem>=0){system=nextSystem;stage=Math.floor(Math.random()*systems[system].stages.length);furthestRank=Math.max(furthestRank,systemDistanceRank[system]??0)}
   }
-  stageStart();trans.style.display='none';warpDog.className='';paused=false
+  try{stageStart();}
+  finally{
+    trans.style.display='none';trans.classList?.remove('on');
+    trans.style.background='';warpDog.className='';paused=false;
+  }
+  if(black)showToast('⚫ ブラックホール内部へ！',1200);
  },1550)
 }
 function whiteHoleEscape(){if(paused||whiteHoleTriggered)return;whiteHoleTriggered=true;whiteHoleEscaped=true;checkHomeRoute();paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spaghetti';transTitle.innerHTML='⚪ WHITE HOLE!';nextEl.textContent='びよーーーん → パァン！！';subEl.textContent='BLACK HOLE EXIT / WHITE HOLE';setTimeout(()=>{const base=Math.max(1,furthestRank);const choices=systems.map((s,i)=>({s,i,r:systemDistanceRank[i]??0})).filter(o=>o.i!==BLACK_HOLE_SYSTEM&&!o.s.secret&&!o.s.dream&&o.r>=base);choices.sort((a,b)=>a.r-b.r);const pick=choices[0];system=pick?.i??0;stage=system===0?0:Math.floor(Math.random()*systems[system].stages.length);playerDog='🐕';morphUntil=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('⚪ ホワイトホールから脱出！ 帰還はまだ選ばない。',1700)},1600)}
@@ -14883,11 +14895,29 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       try{v94SatellitePending=false;}catch(e){}
       return true;
     },
+    blackHole:()=>{
+      const si=systems.findIndex(s=>s?.name==='⚫ ブラックホール');
+      if(si<0)return false;
+      V170.phase='outbound';window.__v170ForwardCosmic=false;
+      try{v86ClearRide?.();}catch(e){}
+      try{v94SatellitePending=false;}catch(e){}
+      satellites=[];alienRideUntil=0;wormholeActive=false;blackHoleActive=false;
+      blackHoleVisited=true;whiteHoleTriggered=false;
+      system=si;stage=0;p.x=105;camera=0;paused=false;
+      [reward,comm,trans,gameOverEl,criticalEl].forEach(el=>{
+        if(!el)return;el.classList?.remove('on');if(el===trans)el.style.display='none';
+      });
+      if(trans){trans.style.display='none';trans.style.background='';}
+      stageStart();syncHUD();
+      showToast('⚫ ブラックホール内部から確認',1100);
+      return true;
+    },
     jumpStage:(si,ti)=>{
       if(!systems[si]?.stages?.[ti])return false;
 
       const sys=systems[si];
       const st=sys.stages[ti];
+      if(sys?.name==='⚫ ブラックホール')return window.__v170RouteAPI.blackHole();
 
       try{v86ClearRide?.();}catch(e){}
       try{v94SatellitePending=false;}catch(e){}
@@ -15009,6 +15039,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(action==='birth')ok=!!api?.earthBirth?.();
     if(action==='earthHistory')ok=!!api?.earthHistory?.();
     if(action==='finalEarth')ok=!!api?.finalEarth?.();
+    if(action==='blackhole')ok=!!api?.blackHole?.();
     if(action?.startsWith('future')){
       const step=Number(action.replace('future',''));
       const si=systems.findIndex(x=>x?.futureEra&&x.futureStep===step);
@@ -15037,15 +15068,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v213';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v213</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v214';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v214</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v213</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v214</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -15054,6 +15085,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <button class="v172QuickBtn" data-v172-quick="returnEarth">❄️ 帰還地球・氷河期<small>帰還直後の地球</small></button>
         <button class="v172QuickBtn" data-v172-quick="forward">💫 ビッグバンから<small>Big Bang → 再電離</small></button>
         <button class="v172QuickBtn" data-v172-quick="formation">🌌 銀河〜太陽系<small>銀河 → 天の川 → 太陽系</small></button>
+        <button class="v172QuickBtn" data-v172-quick="blackhole">⚫ ブラックホール内部<small>特殊ルート｜ホワイトホールまで進める</small></button>
       </div></div>
       <div class="v193QuickGroup"><b>🌍 地球の歴史</b><div class="v172Quick">
         <button class="v172QuickBtn" data-v172-quick="birth">🌋 地球誕生<small>原始地球が育つ</small></button>
@@ -15593,7 +15625,7 @@ const V204={
   radioEl:null,
   wormEl:null
 };
-window.INUBOSHI_GAME_VERSION='v213';
+window.INUBOSHI_GAME_VERSION='v214';
 
 const V204_SIMPLE_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -19200,11 +19232,12 @@ drawBackground=function(){v213PrevBg();v213DrawEarthNightCity();};
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v213</span></strong>
+      <strong>🛠️ 確認用｜行きたい場所から始める <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v214</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
-    <div style="margin:0 14px 9px;padding:7px 10px;border:1px solid rgba(126,239,255,.28);border-radius:10px;background:rgba(86,231,255,.07);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v213</div>
-    <input id="v150JumpSearch" type="search" autocomplete="off" placeholder="月、エアレンデル、暗黒時代…">
+    <div style="margin:0 14px 9px;padding:7px 10px;border:1px solid rgba(126,239,255,.28);border-radius:10px;background:rgba(86,231,255,.07);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v214</div>
+    <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部<small style="display:block;margin-top:4px;opacity:.58;font-size:9px">特殊ルートへ直接移動</small></button>
+    <input id="v150JumpSearch" type="search" autocomplete="off" placeholder="月、エアレンデル、ブラックホール…">
     <div id="v150JumpList"></div>
     <div id="v150JumpEmpty">見つからへんかった 👀</div>
   </div>
@@ -19265,7 +19298,9 @@ drawBackground=function(){v213PrevBg();v213DrawEarthNightCity();};
         ).toLowerCase();
 
         row.addEventListener('click',()=>{
-          api.jump(st.si,st.ti);
+          const isBH=cleanName(sys.name)==='⚫ ブラックホール';
+          if(isBH&&window.__v170RouteAPI?.blackHole)window.__v170RouteAPI.blackHole();
+          else api.jump(st.si,st.ti);
           close(false);
         });
         list.appendChild(row);
@@ -19311,6 +19346,10 @@ drawBackground=function(){v213PrevBg();v213DrawEarthNightCity();};
     e.preventDefault();
     e.stopPropagation();
     open();
+  });
+  document.getElementById('v214BlackHoleDirect')?.addEventListener('click',()=>{
+    const ok=window.__v170RouteAPI?.blackHole?.();
+    if(ok)close(false);
   });
   closeBtn.addEventListener('click',()=>close(true));
   panel.addEventListener('click',e=>{if(e.target===panel)close(true);});
@@ -19543,11 +19582,11 @@ drawBackground=function(){v213PrevBg();v213DrawEarthNightCity();};
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v213';
+  window.INUBOSHI_GAME_VERSION='v214';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v213<small>FUTURE ROUTE + HUD + EARTH CITY / 2026-09-05</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v214<small>BLACK HOLE ROUTE FIX / 2026-09-05</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
