@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>犬星くん GALAXY TOUR v193</title>
-<!-- v194: エアレンデル救助信号→未来の地球 / 未来背景にビル追加 / 未来タイトルわかりやすく調整 -->
+<!-- v195: エアレンデルのトランシーバーを前景オブジェクト化 / 接触でSOS発動 -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#02030d;font-family:"Arial Rounded MT Bold","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif}
@@ -19205,6 +19205,155 @@ stageStart();setTimeout(()=>showToast('🌙 星のきれいな夜。お散歩楽
   };
 
   if(typeof syncHUD==='function')setTimeout(()=>syncHUD(true),0);
+})();
+</script>
+
+
+<script>
+/* === v195: make Earendel transceiver clearly visible and trigger on contact === */
+(function(){
+  const RADIO_X=1985;
+  const WARP_X=2520;
+  let signalDone=false;
+  let signalActive=false;
+  let futureWarping=false;
+
+  function earendel(){try{return S()?.name==='✨ エアレンデル';}catch(e){return false;}}
+  function radioScene(){return document.getElementById('v63RadioScene');}
+
+  function showSignal(){
+    if(signalDone||signalActive||!earendel())return;
+    signalDone=true;signalActive=true;paused=true;
+    const el=radioScene();
+    if(el){
+      el.innerHTML=''+
+        '<div class="v63RadioCard">'+
+          '<div class="v63RadioIcon">📻</div>'+
+          '<div class="v63RadioKicker">EARTH RESCUE SIGNAL</div>'+
+          '<div class="v63RadioNoise">ザー……ザー……　こちら地球……</div>'+
+          '<div class="v63RadioVoice">「……犬星くん、聞こえる？」<br>「……救助ワームホールを開く……」<br>「……太陽と地球の未来へ……」</div>'+
+          '<div class="v63RadioMeta">SOURCE : EARTH</div>'+
+        '</div>';
+      el.classList.remove('heard','reply');
+      el.classList.add('on','contact');
+      setTimeout(()=>el.classList.add('heard'),350);
+    }
+    missionEl.textContent='📻 地球から救助信号！';
+    eventEl.textContent='EARTH SOS RECEIVED';
+    setTimeout(()=>{
+      el?.classList.remove('on','heard','reply','contact');
+      signalActive=false;paused=false;
+      showToast('📻 地球からのSOS！ 前方に救助ワームホール！',1900);
+    },2800);
+  }
+
+  function warpFuture(){
+    if(futureWarping||signalActive)return;
+    const si=systems.findIndex(s=>s?.futureEra&&s.futureStep===1);
+    if(si<0)return;
+    futureWarping=true;paused=true;
+    trans.style.display='grid';
+    warpDog.textContent=playerDog;
+    warpDog.className='spin';
+    transTitle.innerHTML='🌀 RESCUE WORMHOLE';
+    nextEl.textContent='☀️ 地球の救助信号をたどる';
+    subEl.textContent='EARENDEL → BRIGHTER SUN';
+    setTimeout(()=>{
+      system=si;stage=0;camera=0;p.x=110;p.vy=0;
+      paused=false;stageStart();syncHUD(true);
+      trans.style.display='none';warpDog.className='';futureWarping=false;
+      showToast('☀️ 明るくなる太陽の未来へ到着！',1700);
+    },1450);
+  }
+
+  function drawRadioForeground(){
+    if(!earendel())return;
+    const sx=RADIO_X-camera;
+    if(sx<-120||sx>W+120)return;
+    const gy=groundY();
+    const bob=Math.sin(performance.now()/220)*3;
+    const y=gy-30+bob;
+    ctx.save();
+    ctx.textAlign='center';
+    ctx.shadowColor='#80ecff';ctx.shadowBlur=24;
+    ctx.globalAlpha=.18;
+    ctx.fillStyle='#7aeaff';ctx.beginPath();ctx.arc(sx,y-18,47,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+    ctx.font='58px system-ui';ctx.fillText('📻',sx,y);
+    ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(8,20,30,.90)';
+    ctx.strokeStyle='rgba(128,238,255,.70)';ctx.lineWidth=1.5;
+    const bw=116,bh=30,bx=sx-bw/2,by=y-91;
+    ctx.beginPath();ctx.roundRect(bx,by,bw,bh,10);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#dffcff';ctx.font='1000 10px system-ui';ctx.fillText('📻 地球からSOS',sx,by+19);
+    ctx.strokeStyle='rgba(150,239,255,.70)';ctx.lineWidth=1.4;
+    for(let i=0;i<3;i++){
+      ctx.globalAlpha=.55-i*.13;
+      ctx.beginPath();ctx.arc(sx,y-30,31+i*11,-1.08,-.30);ctx.stroke();
+      ctx.beginPath();ctx.arc(sx,y-30,31+i*11,Math.PI+.30,Math.PI+1.08);ctx.stroke();
+    }
+    ctx.restore();ctx.globalAlpha=1;
+  }
+
+  function drawRescueWormhole(){
+    if(!earendel()||!signalDone)return;
+    const sx=WARP_X-camera;
+    if(sx<-150||sx>W+150)return;
+    const cy=groundY()-105,t=performance.now()/800;
+    ctx.save();ctx.translate(sx,cy);
+    for(let i=0;i<7;i++){
+      ctx.globalAlpha=.18+i*.055;
+      ctx.strokeStyle=i%2?'#b8f4ff':'#cfa8ff';
+      ctx.lineWidth=2+i*.35;
+      ctx.beginPath();ctx.ellipse(0,0,52+i*7,26+i*4,t+i*.34,0,Math.PI*2);ctx.stroke();
+    }
+    const g=ctx.createRadialGradient(0,0,4,0,0,70);
+    g.addColorStop(0,'#fff');g.addColorStop(.18,'#bff6ff');g.addColorStop(.52,'rgba(178,134,255,.55)');g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.globalAlpha=.72;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,72,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=.92;ctx.fillStyle='#fff';ctx.font='1000 10px system-ui';ctx.textAlign='center';ctx.fillText('🌀 救助ワームホール',0,-88);
+    ctx.restore();ctx.globalAlpha=1;
+  }
+
+  const prevStageStart=stageStart;
+  stageStart=function(){
+    const out=prevStageStart();
+    if(earendel()){
+      signalDone=false;signalActive=false;futureWarping=false;
+      setTimeout(()=>{if(earendel())showToast('📻 前方にトランシーバーが落ちている…',1600);},450);
+    }
+    return out;
+  };
+
+  const prevUpdate=update;
+  update=function(now,dt){
+    if(!paused&&earendel()){
+      wormholeActive=false;blackHoleActive=false;satellites=[];
+      if(!signalDone&&Math.abs((p.x+p.w*.5)-RADIO_X)<74){
+        showSignal();return;
+      }
+      if(!signalDone&&p.x>RADIO_X+95){
+        showSignal();return;
+      }
+      if(signalDone&&!signalActive&&!futureWarping&&p.x>=WARP_X-30){
+        p.x=WARP_X-30;warpFuture();return;
+      }
+      if(!signalDone){
+        missionEl.textContent='📻 落ちているトランシーバーまで進む';
+        eventEl.textContent='UNKNOWN EARTH SIGNAL';
+      }else if(!signalActive){
+        missionEl.textContent='🌀 地球の救助ワームホールへ';
+        eventEl.textContent='EARTH RESCUE ROUTE';
+      }
+    }
+    prevUpdate(now,dt);
+  };
+
+  const prevDrawPlayer=drawPlayer;
+  drawPlayer=function(){
+    drawRescueWormhole();
+    drawRadioForeground();
+    prevDrawPlayer();
+  };
 })();
 </script>
 
