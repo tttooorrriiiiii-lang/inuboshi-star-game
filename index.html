@@ -17281,15 +17281,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v283';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v283</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v284';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v284</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v283</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v284</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17844,7 +17844,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v283';
+window.INUBOSHI_GAME_VERSION='v284';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -22908,6 +22908,152 @@ window.__v283UiState=()=>({
 /* === /v283 === */
 
 
+/* === v284: NEPTUNE WIND + STRONGER HORIZONTAL STORM ===
+   海王星も「強風演出」側に追加。
+   風はゆらゆらではなく、横へ速く流れる長い線を多めに出して
+   強風感をはっきり見せる。
+*/
+v251WindCfg=function(name){
+  const map={
+    '🔵 海王星':{strength:.92,line:'#92b8ff',label:'超高速の青い強風',itemDrift:1.18},
+    '💙 R136a1':{strength:1.00,line:'#a9f4ff',label:'超強烈な恒星風',itemDrift:1.22},
+    '✨ S Doradus':{strength:.78,line:'#d8c7ff',label:'不安定な恒星風',itemDrift:.95},
+    '💥 イータ・カリーナ':{strength:.84,line:'#ffd0ed',label:'大質量星の恒星風',itemDrift:1.02},
+    '🐕 VYおおいぬ座星':{strength:.62,line:'#ffb394',label:'ガスと塵の流出',itemDrift:.82}
+  };
+  return map[name]||null;
+};
+
+v251ApplyPickupWind=function(now,dt){
+  const cfg=v251WindCfg(S()?.name);
+  if(!cfg)return;
+  const gy=groundY();
+  const gust=0.72+0.28*((Math.sin(now/1200)+1)/2);
+  const dx=(0.095+0.13*cfg.strength)*(cfg.itemDrift||1)*gust*dt;
+
+  for(const it of items){
+    if(!it || it.got)continue;
+    // 実際に取る星・骨そのものを、前よりもしっかり横へ流す
+    it.x-=dx;
+    // 縦方向のゆらぎは弱め、ほぼ横流れにする
+    it.y+=Math.sin(now/780+(it.x||0)*0.012)*(0.008+0.010*cfg.strength)*dt;
+    if(Number.isFinite(it.y)){
+      it.y=Math.max(48,Math.min(gy-30,it.y));
+    }
+  }
+};
+
+v251DrawWindOverlay=function(){
+  const cfg=v251WindCfg(S()?.name);
+  if(!cfg)return;
+
+  const gy=groundY();
+  const now=performance.now();
+  const t=now/1000;
+
+  ctx.save();
+
+  // 1) 画面を横切るメインの強風ライン
+  for(let i=0;i<34;i++){
+    const band=i/33;
+    const y=gy*(0.16+0.76*band)+Math.sin(t*0.8+i*0.55)*(2+cfg.strength*1.8);
+    const speed=280+cfg.strength*220+(i%5)*28; // かなり速く横移動
+    const cycle=W+1200;
+    const head=((i*137-t*speed)%cycle+cycle)%cycle-560;
+    const len=180+(i%6)*34+cfg.strength*170;
+
+    ctx.globalAlpha=0.09+(i%4)*0.018;
+    ctx.strokeStyle=cfg.line;
+    ctx.lineWidth=1.2+(i%3)*0.45;
+    ctx.beginPath();
+    ctx.moveTo(head+len,y);
+    ctx.lineTo(head,y);
+    ctx.stroke();
+
+    // 先端のショックライン
+    if(i%3===0){
+      ctx.globalAlpha=0.06;
+      ctx.lineWidth=0.9;
+      ctx.beginPath();
+      ctx.moveTo(head+len*0.78,y-5);
+      ctx.lineTo(head+len*0.10,y-5);
+      ctx.stroke();
+    }
+  }
+
+  // 2) 短い高速 streak を重ねて、ビュオッとした感じを強める
+  for(let i=0;i<58;i++){
+    const y=60+(i*17%(Math.max(120,gy-70)));
+    const speed=420+cfg.strength*260+(i%7)*24;
+    const cycle=W+900;
+    const head=((i*61-t*speed)%cycle+cycle)%cycle-300;
+    const len=48+(i%5)*18+cfg.strength*46;
+    ctx.globalAlpha=0.035+(i%5)*0.010;
+    ctx.strokeStyle='#f6fbff';
+    ctx.lineWidth=(i%4===0)?1.0:0.75;
+    ctx.beginPath();
+    ctx.moveTo(head+len,y);
+    ctx.lineTo(head,y);
+    ctx.stroke();
+  }
+
+  // 3) 犬の近くまでくる低い位置の強風帯
+  for(let i=0;i<12;i++){
+    const y=gy-115+i*11+Math.sin(t*1.2+i)*2.2;
+    const speed=340+cfg.strength*240+i*8;
+    const cycle=W+700;
+    const head=((i*89-t*speed)%cycle+cycle)%cycle-240;
+    const len=110+(i%4)*24+cfg.strength*70;
+    ctx.globalAlpha=0.07+(i%3)*0.015;
+    ctx.strokeStyle=cfg.line;
+    ctx.lineWidth=1.35;
+    ctx.beginPath();
+    ctx.moveTo(head+len,y);
+    ctx.lineTo(head,y);
+    ctx.stroke();
+  }
+
+  // ラベルも少し風圧強めに
+  ctx.globalAlpha=0.82;
+  ctx.fillStyle='#eefaff';
+  ctx.font='900 8px system-ui';
+  ctx.fillText('←←← 🌪 '+cfg.label,Math.max(18,W*0.50),Math.max(82,gy-214));
+
+  ctx.restore();
+};
+
+v251DrawPickupWindTail=function(it){
+  const cfg=v251WindCfg(S()?.name);
+  if(!cfg || !it || it.got)return;
+  const sx=it.x-camera;
+  if(sx<-160 || sx>W+160)return;
+
+  ctx.save();
+  ctx.globalAlpha=it.food ? 0.26 : 0.18;
+  ctx.strokeStyle=cfg.line;
+  ctx.lineWidth=it.food ? 2.0 : 1.5;
+
+  // 尾もまっすぐ長くして「流されてる感」を強める
+  ctx.beginPath();
+  ctx.moveTo(sx+12,it.y);
+  ctx.lineTo(sx+120+(it.food?20:0),it.y);
+  ctx.stroke();
+
+  if(!it.food){
+    ctx.globalAlpha=0.08;
+    ctx.lineWidth=1.0;
+    ctx.beginPath();
+    ctx.moveTo(sx+6,it.y-4);
+    ctx.lineTo(sx+92,it.y-4);
+    ctx.stroke();
+  }
+  ctx.restore();
+};
+
+window.__v284WindStars=()=>['🔵 海王星','💙 R136a1','✨ S Doradus','💥 イータ・カリーナ','🐕 VYおおいぬ座星'];
+/* === /v284 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -25933,7 +26079,7 @@ window.__v283UiState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v283</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v284</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -26404,11 +26550,11 @@ window.__v283UiState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v283';
+  window.INUBOSHI_GAME_VERSION='v284';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v283<small>25-30 CHAR STAR DESCS + METRIC BARS + LEFT HUD AIR / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v284<small>NEPTUNE WIND + STRONGER HORIZONTAL STORM / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
