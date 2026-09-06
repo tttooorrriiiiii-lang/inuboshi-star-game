@@ -14253,7 +14253,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     }
 
     if(nr){
-      btn.innerHTML='<b>📘 天体レシピ <span class="v242RecipeArrow">›</span></b><small>温度・大きさ・星座・寿命・最期など</small>';
+      btn.innerHTML='<b>📘 この星を知ろう <span class="v242RecipeArrow">›</span></b><small>温度・大きさ・星座・寿命・最期など</small>';
       head.textContent=`🧪 ${S()?.name} レシピ`;
       sub.textContent=nr.kind==='star'?'この星は何でできている？':'この天体は何でできている？';
       body.innerHTML=
@@ -16428,15 +16428,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v266';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v266</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v267';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v267</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v266</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v267</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16991,7 +16991,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v266';
+window.INUBOSHI_GAME_VERSION='v267';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -21243,6 +21243,87 @@ window.__v266HudState=()=>({
 /* === /v266 === */
 
 
+/* === v267: COMPACT DISTANCE MAP + SATELLITE HUD CLEANUP === */
+(function v267InstallCompactHud(){
+  if(document.getElementById('v267CompactHudStyle'))return;
+  const st=document.createElement('style');
+  st.id='v267CompactHudStyle';
+  st.textContent=`
+    /* EARTH DISTANCEを右の天体カードと重ならない幅へ */
+    #v263DistanceMap{
+      width:min(50%,330px)!important;
+      padding:6px 8px 5px!important;
+    }
+    #v263DistanceMap .v263DistTop{font-size:7px!important}
+    #v263DistanceMap .v263DistBottom{font-size:6px!important}
+    #v263DistStage{max-width:42%!important}
+    .v263DistRail{margin:3px 2px 1px!important}
+
+    @media(max-width:520px){
+      #v263DistanceMap{
+        width:50%!important;
+        max-width:330px!important;
+        left:7px!important;
+      }
+      #v263DistanceMap .v263DistTop{font-size:6.3px!important}
+      #v263DistanceMap .v263DistBottom{font-size:5.6px!important}
+      #v263DistStage{max-width:40%!important}
+    }
+  `;
+  document.head.appendChild(st);
+})();
+
+/* 右端ラベルも短くする */
+const v267BaseDistanceUpdate=v263UpdateDistanceMap;
+v263UpdateDistanceMap=function(){
+  v267BaseDistanceUpdate();
+  const scaleEl=document.getElementById('v263DistScale');
+  if(!scaleEl)return;
+
+  const d=v263DistanceForCurrent();
+  if((d.ly||0)>12900000000) scaleEl.textContent='架空域';
+  else scaleEl.textContent='✨ 最遠';
+};
+
+/* 「もうすぐ衛星」系の常設missionは消す。
+   衛星そのもの・接近トースト・乗車演出は残る。 */
+const v267BaseUpdate=update;
+update=function(now,dt){
+  const out=v267BaseUpdate(now,dt);
+
+  const mt=(missionEl?.textContent||'').trim();
+  if(
+    mt==='📡 遠くの衛星がこちらへ向かっている' ||
+    mt==='🛰️ 衛星が近づいてくる' ||
+    mt==='📡 遠くに衛星の反応'
+  ){
+    missionEl.textContent='';
+  }
+
+  return out;
+};
+
+const v267BaseSyncHUD=syncHUD;
+syncHUD=function(force=false){
+  v267BaseSyncHUD(force);
+  const mt=(missionEl?.textContent||'').trim();
+  if(
+    mt==='📡 遠くの衛星がこちらへ向かっている' ||
+    mt==='🛰️ 衛星が近づいてくる' ||
+    mt==='📡 遠くに衛星の反応'
+  ){
+    missionEl.textContent='';
+  }
+};
+
+window.__v267HudState=()=>({
+  distanceWidth:getComputedStyle(document.getElementById('v263DistanceMap')).width,
+  mission:missionEl?.textContent||'',
+  recipeLabel:document.querySelector('#v242RecipeBtn b')?.textContent||''
+});
+/* === /v267 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -24268,7 +24349,7 @@ window.__v266HudState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v266</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v267</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -24739,11 +24820,11 @@ window.__v266HudState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v266';
+  window.INUBOSHI_GAME_VERSION='v267';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v266<small>HUD CLEANUP + SPACING PASS / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v267<small>DISTANCE MAP COMPACT + SATELLITE HUD CLEANUP + RECIPE LABEL / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
