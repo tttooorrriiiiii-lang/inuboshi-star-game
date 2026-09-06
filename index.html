@@ -17281,15 +17281,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v286';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v286</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v289';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v289</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v286</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v289</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17844,7 +17844,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v286';
+window.INUBOSHI_GAME_VERSION='v289';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -23442,6 +23442,149 @@ window.__v286Debug=()=>({
 /* === /v286 === */
 
 
+/* === v287: JUMP ARROW BALANCE FIX ===
+   飛びやすさを、jump値だけでなく重力も見て判定する。
+   飛びにくい星は⬇️、飛びやすい星は⬆️で表示。
+*/
+function v287JumpEmoji(st){
+  const g = Number.isFinite(st?.gravity) ? Number(st.gravity) : null;
+  const j = Number.isFinite(st?.jump) ? Number(st.jump) : null;
+
+  // まずは高重力・低重力を優先
+  if(g !== null){
+    if(g >= 0.85) return '⬇️⬇️⬇️';
+    if(g >= 0.68) return '⬇️⬇️';
+    if(g >= 0.56) return '⬇️';
+    if(g <= 0.35) return '⬆️⬆️⬆️';
+    if(g <= 0.45) return '⬆️⬆️';
+    if(g <= 0.52) return '⬆️';
+  }
+
+  // 近い値帯はjump値でも微調整
+  if(j !== null){
+    if(j <= 15.4) return '⬇️⬇️';
+    if(j <= 15.7) return '⬇️';
+    if(j >= 18.6) return '⬆️⬆️⬆️';
+    if(j >= 17.3) return '⬆️⬆️';
+    if(j >= 16.2) return '⬆️';
+  }
+
+  return '⬆️';
+}
+
+v215GravityLine=function(st){
+  const g = Number.isFinite(st?.gravity) ? Number(st.gravity).toFixed(2) : '—';
+  const jumpIcons = v287JumpEmoji(st);
+  return `<span class="v283MetricBlock"><span class="v283MetricRow">🧲 重力｜${g}G</span><span class="v283MetricRow">🐕 ジャンプ｜${jumpIcons}</span></span>`;
+};
+
+window.__v287JumpDebug=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  earth:v287JumpEmoji({gravity:.56,jump:15.6}),
+  mercury:v287JumpEmoji({gravity:.55,jump:15.2}),
+  venus:v287JumpEmoji({gravity:.58,jump:15.4}),
+  moon:v287JumpEmoji({gravity:.38,jump:15.8}),
+  pulsar:v287JumpEmoji({gravity:.90,jump:16.0}),
+  giant:v287JumpEmoji({gravity:.18,jump:17.9})
+});
+/* === /v287 === */
+
+
+/* === v288: WIND ROCK SPAWN REDUCED ===
+   風ステージの岩をさらに少なくする。
+   - 画面上の風岩は基本1個まで
+   - 次の出現までの待ち時間を長くする
+*/
+function v288SpawnGroundRock(now){
+  const s=S();
+  if(!s || !v285IsWindStage()) return;
+  if(now < (window.__v288NextRockAt||0)) return;
+
+  const activeWindRocks = hazards.filter(h => h && h.windRoll && !h.got && h.x > p.x-280).length;
+  if(activeWindRocks >= 1){
+    window.__v288NextRockAt = now + 1200 + Math.random()*1200;
+    return;
+  }
+
+  const gy=groundY();
+  const strong=(v251WindCfg(s.name)?.strength||0.8);
+  hazards.push({
+    x:p.x+W+110+Math.random()*190,
+    y:gy-44,
+    w:40,h:40,
+    got:false,
+    symbol:'🪨',
+    windRoll:true,
+    harmless:true,
+    spin:Math.random()*Math.PI*2,
+    vx:-(3.9 + strong*2.2 + Math.random()*0.8),
+    vy:0,
+    bob:Math.random()*Math.PI*2,
+    bumped:false
+  });
+
+  // v286よりさらに少なく
+  window.__v288NextRockAt = now + 4200 + Math.random()*3600;
+}
+
+const v288BaseUpdate = update;
+update=function(now,dt){
+  const out=v288BaseUpdate(now,dt);
+  try{v288SpawnGroundRock(now)}catch(e){console.error('[v288 spawn rock]',e)}
+  return out;
+};
+
+window.__v288RockDebug=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  nextAt:window.__v288NextRockAt||0,
+  active:hazards.filter(h => h && h.windRoll && !h.got && h.x > p.x-280).length
+});
+/* === /v288 === */
+
+
+/* === v289: EARTH TYPE LINE MATCH ===
+   地球だけ種類表示が本文に混ざっていたので、
+   他の天体と同じく「星名の直下」に種類を独立表示する。
+*/
+function v289RenderEarthInfo(){
+  if(!(system===0 && stage===0) || !astroInfo) return;
+
+  const st=S();
+  const type='岩石惑星';
+  const desc='液体の海と生命をもち、大気に包まれた太陽系第三惑星';
+
+  astroInfo.innerHTML=
+    `<b>🌍 地球</b>`+
+    `<span class="v277TypeLine">${type}</span>`+
+    `${desc}`+
+    `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span>`+
+    `<span class="distanceHint">${v215GravityLine(st)}</span>`;
+}
+
+const v289BaseSyncHUD=syncHUD;
+syncHUD=function(force=false){
+  const out=v289BaseSyncHUD(force);
+  v289RenderEarthInfo();
+  return out;
+};
+
+const v289BaseUpdate=update;
+update=function(now,dt){
+  const out=v289BaseUpdate(now,dt);
+  v289RenderEarthInfo();
+  return out;
+};
+
+requestAnimationFrame(v289RenderEarthInfo);
+
+window.__v289EarthInfo=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  type:document.querySelector('#astroInfo .v277TypeLine')?.textContent||'',
+  text:document.getElementById('astroInfo')?.textContent||''
+});
+/* === /v289 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -26467,7 +26610,7 @@ window.__v286Debug=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v286</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v289</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -26938,11 +27081,11 @@ window.__v286Debug=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v286';
+  window.INUBOSHI_GAME_VERSION='v289';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v286<small>SOLAR TYPES + TUNED WIND ROCKS / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v289<small>EARTH TYPE LINE MATCH / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
