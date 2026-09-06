@@ -2138,6 +2138,58 @@ function v247DrawPulsarFX(name,now){
   ctx.restore();
 }
 
+
+function v248WindCfg(name){
+  return {
+    '💙 R136a1':{strength:1.00,label:'超強烈な恒星風',line:'#a9f4ff',icons:['✨','⭐','🪨','🦴']},
+    '✨ S Doradus':{strength:.78,label:'不安定な恒星風',line:'#d8c7ff',icons:['✨','🪨','⭐']},
+    '💥 イータ・カリーナ':{strength:.84,label:'大質量星の恒星風',line:'#ffd0ed',icons:['💨','🪨','✨']},
+    '🐕 VYおおいぬ座星':{strength:.62,label:'ガスと塵の流出',line:'#ffb394',icons:['🪨','✨','🦴']}
+  }[name]||null;
+}
+
+function v248DrawSlowStellarWind(name,now){
+  const cfg=v248WindCfg(name);
+  if(!cfg)return;
+  const gy=groundY();
+  const t=now/1000;
+  ctx.save();
+
+  // Long, slow wind streaks. Intentionally slow so the direction is easy to read.
+  for(let i=0;i<12;i++){
+    const base=((i*119 - t*(18+cfg.strength*8))%(W+260)+W+260)%(W+260)-130;
+    const y=52+(i%7)*42+Math.sin(t*.42+i)*9;
+    const len=110+(i%4)*34;
+    ctx.globalAlpha=.10+(i%4)*.035;
+    ctx.strokeStyle=cfg.line;
+    ctx.lineWidth=1.4+(i%3)*.45;
+    ctx.beginPath();
+    ctx.moveTo(base+len,y);
+    ctx.bezierCurveTo(base+len*.70,y-10,base+len*.33,y+12,base,y);
+    ctx.stroke();
+  }
+
+  // Debris / items drifting slowly with the wind.
+  for(let i=0;i<9;i++){
+    const x=((W+180+i*137 - t*(26+cfg.strength*10))%(W+420))-120;
+    const y=95+(i%5)*78+Math.sin(t*.55+i*.8)*15;
+    const icon=cfg.icons[i%cfg.icons.length];
+    ctx.globalAlpha=.30+(i%3)*.10;
+    ctx.font=`${17+(i%3)*4}px system-ui`;
+    ctx.save();
+    ctx.translate(x,Math.min(gy-38,y));
+    ctx.rotate(-.12+Math.sin(t*.35+i)*.10);
+    ctx.fillText(icon,0,0);
+    ctx.restore();
+  }
+
+  ctx.globalAlpha=.74;
+  ctx.fillStyle='#eefaff';
+  ctx.font='900 8px system-ui';
+  ctx.fillText(`💨 ${cfg.label} →`,W*.58,44);
+  ctx.restore();
+}
+
 function drawStageSpecialFX(){
   const s=S(),name=s.name,now=performance.now(),gy=groundY(),t=now/1000;
   ctx.save();
@@ -2337,6 +2389,7 @@ function drawStageSpecialFX(){
   }
   v247DrawMultipleSystem(name,now);
   v247DrawPulsarFX(name,now);
+  v248DrawSlowStellarWind(name,now);
   const dim=v241StageDimAlpha(name,now);
   if(dim>0){ctx.globalAlpha=dim;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H)}
   ctx.restore();
@@ -2694,7 +2747,7 @@ function spawnEvents(){
  }
  if(name==='💙 R136a1'&&eventPhase>0&&eventPhase%180===0){
    for(let i=0;i<6;i++)gasClouds.push({
-     x:W+70+i*75,y:45+(i%4)*55,vx:1.6+Math.random()*.8,
+     x:W+70+i*75,y:45+(i%4)*55,vx:.22+Math.random()*.16,
      r:55+Math.random()*55,a:.09+Math.random()*.06,color:'#9de9ff'
    });
    eventEl.textContent='💙 RADIATION WIND — 超強烈な恒星風！';
@@ -2753,7 +2806,7 @@ function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier
  if(s.name==='✨ S Doradus'){const phase=(Math.sin(now/650)+1)/2;speed+=phase>.52?-.16:.18;eventEl.textContent=phase>.52?'✨ EXPANDED — 大きく膨張・ゆるい風':'✨ COMPACT — 縮んで高温・強い風';}
  if(s.name==='⭐ M31-V1')speed+=Math.sin(now/430)*.10;
 if(s.event==='SUPER WIND'&&eventPhase%300>170)speed+=.62;if(s.event==='GIANT STORM'&&eventPhase%260>170)shake=5;else shake*=.88;const rideActive=!!v86Ride;if(!rideActive)p.x+=speed*dt;if(now<alienRideUntil){p.vy*=.82;p.y+=((groundY()-205)-p.y)*.045*dt}else if(now<satelliteUntil&&(!v63IsOpeningEarth()||v86Ride?.kind==='ufo')){p.vy*=.88;p.y+=((groundY()-175)-p.y)*.035*dt}else{p.vy+=s.gravity*dt;p.y+=p.vy*dt}const ceiling=34;if(p.y<ceiling){p.y=ceiling;if(p.vy<0)p.vy=0;}if(s.event==='ICE WIND'&&!p.on)p.x+=Math.sin(now/180)*.55*dt;if(s.event==='GRAVITY WELL'&&!p.on){p.x+=Math.sin(now/120)*1.1*dt;p.vy+=.10*dt}if(s.name==='🧲 SGR 1806-20'){const mx=p.x+150,my=p.y+24;for(const it of items){if(it.got)continue;it.x+=Math.sign(mx-it.x)*.16*dt;if(!it.food)it.y+=Math.sign(my-it.y)*.10*dt}for(const h of hazards){if(h.got)continue;h.x+=Math.sign(mx-h.x)*.07*dt}if(!p.on)p.x+=Math.sin(now/95)*.30*dt;}if(s.name==='💙 R136a1'){const gust=(Math.sin(now/260)+1)/2;if(gust>.55){p.x-=gust*.34*dt;for(const it of items){if(!it.got)it.x-=gust*.20*dt}}}
- if(s.name==='✨ S Doradus'){const phase=(Math.sin(now/650)+1)/2;if(!p.on)p.x+=Math.sin(now/115)*(phase>.52?.18:.34)*dt;}if(p.y+p.h>=groundY()){p.y=groundY()-p.h;p.vy=0;p.on=true;jumps=0}else p.on=false;if(system===0&&stage===0){
+ if(s.name==='✨ S Doradus'){const phase=(Math.sin(now/650)+1)/2;if(!p.on)p.x+=Math.sin(now/115)*(phase>.52?.18:.34)*dt;}if(v248WindCfg(s.name)&&s.name!=='💙 R136a1'){const w=v248WindCfg(s.name);for(const it of items){if(!it.got){it.x-=w.strength*.035*dt;it.y+=Math.sin(now/900+it.x*.008)*.018*dt}}}if(p.y+p.h>=groundY()){p.y=groundY()-p.h;p.vy=0;p.on=true;jumps=0}else p.on=false;if(system===0&&stage===0){
  for(const w of earthWalkers)w.x-=w.v*dt;
 
  if(returnFromDogStar&&p.x>=rocketX-110){
@@ -12426,6 +12479,13 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       point:'とにかく「でかい」。ただし外層が非常にぼんやり広がるため、正確な半径には不確かさもあり、「宇宙一」と断言するより最大級候補と見るのが安全。',
       origin:'Stephenson は赤色超巨星の研究で知られる天文学者 Charles Bruce Stephenson にちなむ星団名由来。2-18 はその星団 Stephenson 2 にある18番目の恒星を示す。'
     },
+    '🌀 PSR J1748-2446ad':{
+      about:'球状星団 Terzan 5 にある超高速のミリ秒パルサー。中性子星が約1.396ミリ秒で1回転し、1秒間に約716回転する。現在知られているパルサーの中で最速の自転記録を持つ。',
+      facts:[['種類','ミリ秒パルサー／中性子星'],['自転','716 Hz（毎秒約716回転）'],['1回転','約1.396ミリ秒'],['場所','球状星団 Terzan 5'],['星系','食を起こす連星系'],['発見','Green Bank Telescope']],
+      point:'「高速自転星」の究極クラス。アルタイルが数時間で1回転なのに対し、この星は約0.0014秒で1回転する。磁極から出る電波ビームが地球を横切るたび、宇宙の灯台のようなパルスとして見える。',
+      origin:'PSR は pulsar（パルサー）の天体名。J1748−2446 はJ2000座標のおおよその位置を表し、末尾 ad は Terzan 5 で区別されたパルサーの識別子。',
+      sourceNote:'716 Hzの記録は Hessels et al. (2006) とNASA解説に基づく。'
+    },
     '🧲 SGR 1806-20':{
       about:'星が超新星爆発したあとに残った中性子星の一種「マグネター」。直径はわずか数十km級なのに、表面には約10¹⁵ガウス級の超強磁場がある。',
       facts:[['種類','マグネター'],['直径','約20〜30km級'],['磁場','約10¹⁵ガウス級'],['2004年','巨大ガンマ線フレア']],
@@ -16228,15 +16288,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v247';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v247</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v248';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v248</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v247</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v248</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16791,7 +16851,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v247';
+window.INUBOSHI_GAME_VERSION='v248';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -17904,17 +17964,88 @@ document.addEventListener('click',function(e){
   const b=e.target?.closest?.('#v214BlackHoleDirect');
   if(!b)return;
   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  const ok=v247EnterBlackHole('hidden-button');
-  if(ok){
-    const panel=document.getElementById('v150JumpPanel');
-    panel?.classList.remove('on');
-    panel?.setAttribute('aria-hidden','true');
-  }
+  window.__v248BlackHoleButton?.();
 },true);
 
 v247PhysicsHTML();
 setTimeout(()=>{try{v246AlignPhysicsHud();}catch(e){}},0);
 /* === /v247 === */
+
+
+/* === v248: hidden-menu black-hole reload handoff === */
+let v248ForceBHUntil=0;
+
+function v248StoreBHOrigin(){
+  try{
+    localStorage.setItem('inuboshi_v248_bh_origin_name',systems[system]?.name||'');
+    localStorage.setItem('inuboshi_v248_bh_origin_rank',String(Number.isFinite(systemDistanceRank[system])?systemDistanceRank[system]:0));
+  }catch(e){}
+}
+
+function v248BlackHoleMenuButton(){
+  v248StoreBHOrigin();
+  try{localStorage.setItem('inuboshi_v248_force_blackhole','1');}catch(e){}
+  // A single reload clears the old modal/paused/route state that kept stealing the jump.
+  location.reload();
+  return true;
+}
+window.__v248BlackHoleButton=v248BlackHoleMenuButton;
+
+function v248ForceBlackHoleAfterReload(){
+  let forced=false;
+  try{
+    forced=localStorage.getItem('inuboshi_v248_force_blackhole')==='1';
+    if(forced)localStorage.removeItem('inuboshi_v248_force_blackhole');
+  }catch(e){}
+  if(!forced)return false;
+
+  const si=systems.findIndex(s=>s?.name==='⚫ ブラックホール');
+  if(si<0)return false;
+
+  try{
+    const originName=localStorage.getItem('inuboshi_v248_bh_origin_name')||'';
+    const oi=systems.findIndex(s=>s?.name===originName);
+    window.__v246BHOriginSystem=oi;
+    window.__v246BHOriginRank=Number(localStorage.getItem('inuboshi_v248_bh_origin_rank')||0);
+    window.__v246BHOriginStage='';
+  }catch(e){}
+
+  // Do not ask the old route managers to move us. Set the live game state directly.
+  system=si;stage=0;paused=false;camera=0;
+  p.x=105;p.vy=0;p.y=Math.max(34,groundY()-p.h);
+  wormholeActive=false;blackHoleActive=false;whiteHoleTriggered=false;blackHoleVisited=true;
+  try{v86ClearRide?.();}catch(e){}
+  try{v94SatellitePending=false;}catch(e){}
+  try{satellites=[];}catch(e){}
+  try{stageStart();}catch(e){console.error('[v248 BH stageStart]',e)}
+
+  // Re-assert once after every startup wrapper has had a chance to run.
+  system=si;stage=0;paused=false;camera=0;
+  p.x=105;p.vy=0;p.y=Math.max(34,groundY()-p.h);
+  wormholeActive=false;blackHoleActive=false;whiteHoleTriggered=false;blackHoleVisited=true;
+  v248ForceBHUntil=performance.now()+5200;
+  try{syncHUD(true);}catch(e){}
+  setTimeout(()=>showToast('⚫ ブラックホール内部。右へ進むとホワイトホール！',1700),120);
+  return true;
+}
+
+const v248PrevUpdate=update;
+update=function(now,dt){
+  if(now<v248ForceBHUntil){
+    const si=systems.findIndex(s=>s?.name==='⚫ ブラックホール');
+    if(si>=0){
+      if(system!==si){
+        system=si;stage=0;paused=false;camera=0;p.x=Math.max(105,p.x||105);p.vy=0;
+        try{makeWorld();}catch(e){}
+      }
+      wormholeActive=false;blackHoleActive=false;whiteHoleTriggered=false;
+    }
+  }
+  return v248PrevUpdate(now,dt);
+};
+
+setTimeout(v248ForceBlackHoleAfterReload,260);
+/* === /v248 === */
 
 
 })();
@@ -20942,10 +21073,10 @@ setTimeout(()=>{try{v246AlignPhysicsHud();}catch(e){}},0);
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v247</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v248</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
-    <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">直接移動 → ホワイトホール出口まで遊べる</small></button>
+    <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">1回だけ再読込 → ブラックホール内部へ確実に移動</small></button>
     <input id="v150JumpSearch" type="search" autocomplete="off" placeholder="検索：月 / アルゴル / ビッグバン / 氷河期…">
     <div id="v150JumpList"></div>
     <div id="v150JumpEmpty">見つからへんかった 👀</div>
@@ -20972,13 +21103,8 @@ setTimeout(()=>{try{v246AlignPhysicsHud();}catch(e){}},0);
 
   function goBlackHoleHard(){
     try{
-      const ok=window.__v247EnterBlackHole?.('menu');
-      if(ok){
-        panel.classList.remove('on');
-        panel.setAttribute('aria-hidden','true');
-        return true;
-      }
-    }catch(e){console.error('[BH HARD JUMP]',e);}
+      return !!window.__v248BlackHoleButton?.();
+    }catch(e){console.error('[BH RELOAD HANDOFF]',e);}
     return false;
   }
 
@@ -21399,11 +21525,11 @@ setTimeout(()=>{try{v246AlignPhysicsHud();}catch(e){}},0);
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v247';
+  window.INUBOSHI_GAME_VERSION='v248';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v247<small>PHYSICS HUD + MOVING MULTI-STARS + SLOW VARIABLES + FASTEST PULSAR + BH BUTTON / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v248<small>PULSAR INFO + SLOW STELLAR WIND + BH RELOAD HANDOFF / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
@@ -21442,7 +21568,7 @@ document.addEventListener('click',function(e){
   const b=e.target&&e.target.closest&&e.target.closest('#v214BlackHoleDirect');
   if(!b)return;
   e.preventDefault();
-  try{window.__v247EnterBlackHole?.('fallback');}catch(err){console.error('[BH FALLBACK]',err);}
+  try{window.__v248BlackHoleButton?.();}catch(err){console.error('[BH FALLBACK]',err);}
 },true);
 </script>
 
