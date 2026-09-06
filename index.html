@@ -16316,15 +16316,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v256';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v256</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v257';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v257</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v256</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v257</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16879,7 +16879,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v256';
+window.INUBOSHI_GAME_VERSION='v257';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -18876,6 +18876,289 @@ window.__v256State=()=>({
   originVoid:!!V256_ORIGIN.voidStart
 });
 /* === /v256 === */
+
+
+/* === v257: EARENDEL → BLACK HOLE WALK → QUIET WHITE HOLE → STAGE 2 === */
+
+const V257_STAGE2_META={
+  origin:{icon:'💥',title:'宇宙の始まりへ',sub:'ORIGIN ROUTE'},
+  end:{icon:'🌑',title:'宇宙の終わりへ',sub:'END OF UNIVERSE ROUTE'},
+  home:{icon:'🏠',title:'地球へ帰る',sub:'HOME ROUTE'},
+  unknown:{icon:'🌸',title:'異世界の星へ',sub:'ANOTHER WORLD ROUTE'}
+};
+const V257_FLOW={
+  exiting:false,
+  stage2:false,
+  menuVariant:null
+};
+
+/* v256ではエアレンデル途中でSTAGE 2を出していたが、
+   v257では「ホワイトホールを出たあと」にだけ出す。 */
+v256OpenStage2=function(){ return false; };
+
+function v257Stage2Target(kind,variant=null){
+  if(kind==='home')return {si:0,ti:0,name:'🌍 地球',kind};
+
+  if(kind==='unknown'&&variant){
+    const name=variant==='dog'?'🐾 犬の星':'🌸 秘密の花銀河';
+    const si=systems.findIndex(s=>s?.name===name);
+    if(si>=0)return {si,ti:0,name,kind,variant};
+  }
+
+  // originはv256の暗闇→BIG BANG準備もここで有効になる。
+  return v254RouteTarget(kind);
+}
+
+function v257ShowStage2(kind,target,done){
+  const meta=V257_STAGE2_META[kind]||V257_STAGE2_META.origin;
+  const el=document.getElementById('v256ChapterOverlay');
+  if(!el){ done?.(); return; }
+
+  const clear=el.querySelector('.v256Clear');
+  const num=el.querySelector('.v256Num');
+  const name=el.querySelector('.v256Name');
+  const sub=el.querySelector('.v256Sub');
+
+  if(clear)clear.textContent='⚪ WHITE HOLE EXIT';
+  if(num)num.textContent='STAGE 2';
+  if(name)name.textContent=`${meta.icon} ${meta.title}`;
+  if(sub)sub.textContent=`BLACK HOLE の向こう側 / ${meta.sub}`;
+
+  V257_FLOW.stage2=true;
+  paused=true;
+  el.classList.add('on');
+  missionEl.textContent=`STAGE 2｜${meta.icon} ${meta.title}`;
+  eventEl.textContent='ブラックホールの向こう側';
+
+  setTimeout(()=>{
+    el.classList.remove('on');
+    V257_FLOW.stage2=false;
+    done?.();
+  },2100);
+}
+
+/* ホワイトホールは「何も噴き出していない静かな出口」だけ描く。
+   旧・脱出ワームホールや4分岐ゲートもブラックホール内では描かない。 */
+function v257DrawQuietWhiteHole(){
+  const gy=groundY();
+  const wx=whiteHoleX-camera;
+  if(wx<-180||wx>W+180)return;
+
+  const t=performance.now()/1000;
+  ctx.save();
+  ctx.translate(wx,gy-90);
+
+  // 周囲は静かな薄い光のみ。
+  const halo=ctx.createRadialGradient(0,0,6,0,0,108);
+  halo.addColorStop(0,'rgba(255,255,255,1)');
+  halo.addColorStop(.16,'rgba(255,255,255,.98)');
+  halo.addColorStop(.38,'rgba(223,247,255,.48)');
+  halo.addColorStop(.72,'rgba(190,220,255,.10)');
+  halo.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=halo;
+  ctx.beginPath();ctx.arc(0,0,108,0,Math.PI*2);ctx.fill();
+
+  // 噴出線・粒・カラフルな物質はなし。中心に静かな白い穴だけ。
+  ctx.globalAlpha=.96;
+  ctx.shadowColor='#fff';
+  ctx.shadowBlur=30;
+  ctx.fillStyle='#fff';
+  ctx.beginPath();
+  ctx.arc(0,0,45+Math.sin(t*.55)*1.8,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.globalAlpha=.30;
+  ctx.shadowBlur=0;
+  ctx.strokeStyle='#dff8ff';
+  ctx.lineWidth=1.4;
+  ctx.beginPath();
+  ctx.arc(0,0,61,0,Math.PI*2);
+  ctx.stroke();
+
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha=.78;
+  ctx.fillStyle='#fff';
+  ctx.font='900 9px system-ui';
+  ctx.textAlign='center';
+  ctx.fillText('⚪ 静かなホワイトホール',wx,gy-190);
+  ctx.font='800 7px system-ui';
+  ctx.globalAlpha=.52;
+  ctx.fillText('何も噴き出していない出口',wx,gy-176);
+  ctx.restore();
+}
+
+const v257BaseDrawPortal=drawPortal;
+drawPortal=function(){
+  if(system===BLACK_HOLE_SYSTEM){
+    v257DrawQuietWhiteHole();
+    return;
+  }
+  return v257BaseDrawPortal();
+};
+
+/* ブラックホール内部では途中の古い脱出ワームホールを無効化。
+   最後の静かなホワイトホールまで自分で歩く。 */
+const v257BaseEnterBH=v252EnterBlackHole;
+v252EnterBlackHole=function(source='direct'){
+  const ok=v257BaseEnterBH(source);
+  if(ok){
+    try{blackHoleWormholes.length=0}catch(e){}
+    whiteHoleTriggered=false;
+    V257_FLOW.exiting=false;
+    missionEl.textContent='⚫ ブラックホール内部を進む';
+    eventEl.textContent='遠くに静かな白い出口がある';
+  }
+  return ok;
+};
+window.__v252EnterBlackHole=v252EnterBlackHole;
+window.__v248BlackHoleButton=()=>v252EnterBlackHole('legacy-v248');
+window.__v247EnterBlackHole=v252EnterBlackHole;
+window.__v246EnterBlackHole=v252EnterBlackHole;
+window.__v245EnterBlackHole=v252EnterBlackHole;
+window.__v242EnterBlackHole=v252EnterBlackHole;
+window.__v217GoBlackHole=v252EnterBlackHole;
+if(window.__v170RouteAPI)window.__v170RouteAPI.blackHole=()=>v252EnterBlackHole('route-api');
+
+/* ホワイトホールを「出る」→ 白フラッシュ → STAGE 2 → 運命ルート。
+   ブラックホール内で4択表示はしない。 */
+whiteHoleEscape=function(){
+  if(paused||whiteHoleTriggered||V257_FLOW.exiting)return;
+  whiteHoleTriggered=true;
+  V257_FLOW.exiting=true;
+  whiteHoleEscaped=true;
+  checkHomeRoute();
+
+  const kind=V254_FATE.winner||v254Winner();
+  const target=v257Stage2Target(kind);
+  const meta=V257_STAGE2_META[kind]||V257_STAGE2_META.origin;
+
+  paused=true;
+  trans.style.display='grid';
+  trans.style.background='rgba(255,255,255,.97)';
+  warpDog.textContent=playerDog;
+  warpDog.className='';
+  transTitle.innerHTML='⚪';
+  nextEl.textContent='ホワイトホールを抜ける';
+  subEl.textContent='QUIET EXIT';
+
+  setTimeout(()=>{
+    trans.style.display='none';
+    trans.style.background='';
+    v257ShowStage2(kind,target,()=>{
+      system=target.si;stage=target.ti;camera=0;
+      p.x=115;p.vy=0;
+      playerDog='🐕';morphUntil=0;
+      if(kind==='home')returnFromDogStar=true;
+
+      paused=false;
+      try{stageStart();}catch(e){
+        console.error('[v257 STAGE2 ROUTE]',e);
+        system=0;stage=0;camera=0;paused=false;
+        try{stageStart();}catch(_){}
+      }
+
+      whiteHoleTriggered=false;
+      V257_FLOW.exiting=false;
+      V256_CHAPTER.stage2Shown=true;
+      showToast(`STAGE 2｜${meta.icon} ${meta.title}`,1700);
+    });
+  },720);
+};
+
+/* エアレンデルでは最初からブラックホールが見える。
+   STAGE 2はまだ始まっていないので、表示は「この先の入口」とする。 */
+const v257BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v257BaseStageStart();
+  if(S()?.name==='✨ エアレンデル'){
+    V256_CHAPTER.stage2Shown=false;
+    V256_CHAPTER.opening=false;
+    blackHoleActive=true;
+    wormholeActive=false;
+    blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
+    missionEl.textContent='✨ エアレンデルの先にブラックホールが見える';
+    eventEl.textContent='入りたいなら、自分から近づく';
+  }
+  return out;
+};
+
+const v257BaseUpdate=update;
+update=function(now,dt){
+  const out=v257BaseUpdate(now,dt);
+
+  if(S()?.name==='✨ エアレンデル'&&system!==BLACK_HOLE_SYSTEM&&!V257_FLOW.stage2){
+    // v256側が途中で隠しても、最終的に必ず表示状態へ戻す。
+    blackHoleActive=true;
+    wormholeActive=false;
+    blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
+    V215.wormX=999999;
+    V215.wormEl?.classList.remove('on');
+    missionEl.textContent='✨ エアレンデルの先にブラックホールが見える';
+    eventEl.textContent='自分から入ると、その先へ進める';
+  }
+
+  if(system===BLACK_HOLE_SYSTEM&&!paused){
+    // 中盤を越えたあたりから「出口がある」ことを伝える。
+    const q=Math.max(0,Math.min(1,p.x/whiteHoleX));
+    if(q>.42&&q<.78){
+      missionEl.textContent=`⚫ ブラックホール内部を進む ${Math.floor(q*100)}%`;
+      eventEl.textContent='遠くに白い光が見えてきた';
+    }else if(q>=.78){
+      missionEl.textContent=`⚫ 出口まで ${Math.max(0,100-Math.floor(q*100))}%`;
+      eventEl.textContent='⚪ 何も噴き出していないホワイトホール';
+    }
+  }
+
+  return out;
+};
+
+/* -----------------------------------------------------------
+   隠しメニュー用：STAGE 2 の全パターンへ直接テスト移動
+   ----------------------------------------------------------- */
+function v257MenuStage2(kind,variant=null){
+  if(!V257_STAGE2_META[kind])return false;
+
+  V254_FATE.locked=true;
+  V254_FATE.revealed=true;
+  V254_FATE.winner=kind;
+  V254_FATE.last=kind;
+
+  // テスト時も見た目は本番と同じSTAGE 2表示を通す。
+  const target=v257Stage2Target(kind,variant);
+  const meta=V257_STAGE2_META[kind];
+
+  paused=true;
+  document.getElementById('v150JumpPanel')?.classList.remove('on');
+  document.getElementById('v150JumpPanel')?.setAttribute('aria-hidden','true');
+
+  v257ShowStage2(kind,target,()=>{
+    system=target.si;stage=target.ti;camera=0;p.x=115;p.vy=0;
+    playerDog='🐕';morphUntil=0;
+    if(kind==='home')returnFromDogStar=true;
+    paused=false;
+    try{stageStart();}catch(e){
+      console.error('[v257 MENU STAGE2]',e);
+      paused=false;
+    }
+    showToast(`TEST｜STAGE 2 ${meta.icon} ${meta.title}`,1500);
+  });
+  return true;
+}
+window.__v257Stage2Jump=v257MenuStage2;
+
+window.__v257State=()=>({
+  stage:S()?.name||'',
+  system:systems[system]?.name||'',
+  blackHoleActive:!!blackHoleActive,
+  inBlackHole:system===BLACK_HOLE_SYSTEM,
+  whiteHoleX,
+  x:p.x,
+  fate:V254_FATE.winner||v254Winner(),
+  stage2:V257_FLOW.stage2
+});
+/* === /v257 === */
 
 
 })();
@@ -21903,10 +22186,20 @@ window.__v256State=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v256</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v257</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">直接移動 → ブラックホール内部へ</small></button>
+    <div id="v257Stage2Quick" style="margin:0 14px 12px;padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(7,9,20,.74)">
+      <div style="margin-bottom:8px;color:#d7e8ff;font:1000 10px/1 system-ui;letter-spacing:.04em">STAGE 2｜全ルート確認</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px">
+        <button type="button" data-v257-stage2="origin" style="padding:9px 6px;border:1px solid rgba(255,226,110,.28);border-radius:10px;background:rgba(70,57,18,.58);color:#fff;font:900 9px/1.2 system-ui">💥 宇宙の始まり</button>
+        <button type="button" data-v257-stage2="end" style="padding:9px 6px;border:1px solid rgba(255,110,150,.28);border-radius:10px;background:rgba(65,20,38,.58);color:#fff;font:900 9px/1.2 system-ui">🌑 宇宙の終わり</button>
+        <button type="button" data-v257-stage2="home" style="padding:9px 6px;border:1px solid rgba(150,235,255,.28);border-radius:10px;background:rgba(18,50,65,.58);color:#fff;font:900 9px/1.2 system-ui">🏠 地球へ帰る</button>
+        <button type="button" data-v257-stage2="flower" style="padding:9px 6px;border:1px solid rgba(231,150,255,.28);border-radius:10px;background:rgba(60,27,70,.58);color:#fff;font:900 9px/1.2 system-ui">🌸 異世界・花</button>
+        <button type="button" data-v257-stage2="dog" style="grid-column:1/-1;padding:9px 6px;border:1px solid rgba(255,188,226,.28);border-radius:10px;background:rgba(71,31,61,.58);color:#fff;font:900 9px/1.2 system-ui">🐾 異世界・犬</button>
+      </div>
+    </div>
     <input id="v150JumpSearch" type="search" autocomplete="off" placeholder="検索：月 / アルゴル / ビッグバン / 氷河期…">
     <div id="v150JumpList"></div>
     <div id="v150JumpEmpty">見つからへんかった 👀</div>
@@ -22123,6 +22416,15 @@ window.__v256State=()=>({
   document.getElementById('v214BlackHoleDirect')?.addEventListener('click',()=>{
     const ok=goBlackHoleHard();
     if(ok)close(false);
+  });
+  document.querySelectorAll('[data-v257-stage2]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const raw=b.dataset.v257Stage2||'';
+      if(raw==='flower')window.__v257Stage2Jump?.('unknown','flower');
+      else if(raw==='dog')window.__v257Stage2Jump?.('unknown','dog');
+      else window.__v257Stage2Jump?.(raw);
+      close(false);
+    });
   });
   closeBtn.addEventListener('click',()=>close(true));
   panel.addEventListener('click',e=>{if(e.target===panel)close(true);});
@@ -22355,11 +22657,11 @@ window.__v256State=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v256';
+  window.INUBOSHI_GAME_VERSION='v257';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v256<small>CHAPTER 2 + LAST HUMAN RADIO + ORIGIN PROLOGUE + METHUSELAH / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v257<small>BH WALK → QUIET WHITE HOLE → STAGE 2 / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
