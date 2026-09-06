@@ -17336,15 +17336,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v290';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v290</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v291';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v291</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v290</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v291</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17899,7 +17899,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v290';
+window.INUBOSHI_GAME_VERSION='v291';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -23773,6 +23773,111 @@ window.__v290RecipeDebug=()=>({
 /* === /v290 === */
 
 
+/* === v291: RECIPE VISUALS RESTORED + BLACK HOLE PANEL FIX ===
+   v290でデータは足していたが、レシピ本体に
+   ・距離図
+   ・星の一生図
+   ・大きさ / 明るさ / 自転 図
+   が差し込まれていなかったので、ここで表示を復活。
+   あわせてブラックホール専用レシピも確実に表示する。
+*/
+
+v175DetailHTML=function(isEra){
+  const base=isEra?V175_ERA_DETAIL[systems[system]?.name]:V175_OBJECT_DETAIL[S()?.name];
+  const star=!isEra?V179_STAR_INFO[S()?.name]:null;
+  const d=star?{...(base||{}),...star}:base;
+  if(!d)return '';
+
+  const objectName=S()?.name||systems[system]?.name||'';
+  const bodyPhoto=!isEra?V180_BODY_PHOTOS[objectName]:null;
+  const photo=star?.photo||bodyPhoto||(!isEra&&star?v181AutoPhotoFor(objectName):null)||null;
+  const title=isEra
+    ? ((systems[system]?.hypothesis||systems[system]?.endHypothesis)?'📖 この仮説をもっと詳しく':'📖 この時代をもっと詳しく')
+    : star?'⭐ この星をもっと詳しく':'📖 この天体をもっと詳しく';
+  const meta=S()?.distance||systems[system]?.distance||'';
+
+  return `
+    <section class="v175RecipeDetail">
+      <div class="v175RecipeKicker">${title}</div>
+      <h3>${S()?.name||systems[system]?.name||''}</h3>
+      ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
+
+      ${!isEra?v191SpotlightHTML(objectName):''}
+      ${!isEra?v229ProfileHTML(objectName):''}
+      ${!isEra?v184TempHTML(objectName):''}
+      ${!isEra?v186StarContextHTML(objectName):''}
+      ${!isEra?v223DistanceHTML(objectName):''}
+      ${!isEra?v187LifeHTML(objectName,d):''}
+      ${!isEra?v188MetricsHTML(objectName):''}
+      ${!isEra?v237ConstellationHTML(objectName):''}
+
+      ${photo?v179PhotoHTML(photo,objectName):''}
+
+      ${star?`<div class="v179SectionLabel">⭐ 星の特徴</div>`:''}
+      <p>${d.about||''}</p>
+      ${star?v179FactsHTML(star.facts):''}
+
+      <div class="v175RecipePoint"><b>💡 ここがポイント</b><span>${d.point||''}</span></div>
+
+      ${star&&d.origin?`
+        <div class="v179NameOrigin">
+          <b>🏷️ 名前の由来</b>
+          <span>${d.origin}</span>
+        </div>`:''}
+
+      ${isEra&&d.next?`<div class="v175RecipeNext">${d.next}</div>`:''}
+    </section>`;
+};
+
+const v291BaseRenderContextRecipe=renderContextRecipe;
+renderContextRecipe=function(){
+  const panel=document.getElementById('v162RecipePanel');
+  const body=panel?.querySelector('.v162RecipeBody');
+  const head=panel?.querySelector('.v162RecipeHead strong');
+  const sub=panel?.querySelector('.v162RecipeHead small');
+  const btn=document.getElementById('v162RecipeBtn');
+  if(!body||!head||!sub||!btn)return;
+
+  const sysName=systems[system]?.name||'';
+  const stageName=S()?.name||'';
+  const isBlackHole=(system===BLACK_HOLE_SYSTEM || sysName==='⚫ ブラックホール' || stageName.includes('ブラックホール'));
+
+  if(isBlackHole){
+    btn.classList.remove('v168RecipeOff');
+    btn.style.visibility='visible';
+    btn.style.pointerEvents='auto';
+    btn.innerHTML='<b>🕳️ ブラックホールを見る <span class="v242RecipeArrow">＋</span></b><small>種類・しくみ・ゲーム演出との違い</small>';
+    head.textContent='🕳️ ブラックホール';
+    sub.textContent='4種類 / 事象の地平面 / スパゲッティー化';
+    body.innerHTML=v290BlackHoleRecipeHTML();
+    return;
+  }
+
+  const out=v291BaseRenderContextRecipe();
+  try{
+    // 非ブラックホール時も、開いた瞬間に写真や追加図を確実に描画
+    setTimeout(()=>{
+      v179HydratePhotos(body);
+      if(panel.classList.contains('on')){
+        body.scrollTop=body.scrollTop;
+      }
+    },0);
+  }catch(e){}
+  return out;
+};
+
+window.__v291RecipeAudit=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  hasDistanceFn:typeof v223DistanceHTML==='function',
+  hasLifeFn:typeof v187LifeHTML==='function',
+  hasMetricsFn:typeof v188MetricsHTML==='function',
+  eridaniHasLife:!!V187_STAR_LIFE['🖖 40エリダヌス座A'],
+  eridaniHasMetrics:!!V188_STAR_METRICS['🖖 40エリダヌス座A'],
+  psrHasMetrics:!!V188_STAR_METRICS['🌀 PSR J1748-2446ad']
+});
+/* === /v291 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -26798,7 +26903,7 @@ window.__v290RecipeDebug=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v290</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v291</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -27269,11 +27374,11 @@ window.__v290RecipeDebug=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v290';
+  window.INUBOSHI_GAME_VERSION='v291';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v290<small>BLACK HOLE RECIPE + 40 ERI / PSR RECIPE VISUALS / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v291<small>RECIPE VISUALS RESTORED + BLACK HOLE PANEL FIX / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
