@@ -1549,13 +1549,148 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v273RealFlowHud">
+/*
+  v273:
+  距離MAP・カウンター・mission・eventを同じ #hud の通常フローに入れる。
+  top座標を個別指定しないので、内容量が変わっても物理的に重ならない。
+*/
+#hud{
+  position:absolute!important;
+  top:8px!important;
+  left:8px!important;
+  width:min(46%,300px)!important;
+  max-width:300px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  gap:6px!important;
+  z-index:13!important;
+  box-sizing:border-box!important;
+  pointer-events:none!important;
+}
+
+/* 距離MAPはHUDの1段目 */
+#hud #v263DistanceMap{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+}
+
+/* カウンターは2段目 */
+#hud .stack{
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:5px!important;
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+}
+#hud .stack .pill{
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+}
+#hud #location{display:none!important}
+
+/* mission/eventも絶対配置をやめ、下へ自然に積む */
+#hud #mission,
+#hud #event{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:0!important;
+  margin:0!important;
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+#hud #mission:empty,
+#hud #event:empty{
+  display:none!important;
+}
+
+/* 旧メーターがレイアウトに空白を作らないようにする */
+#hud #powerBox{
+  display:none!important;
+}
+
+/* この星のデータを見る：補足文なしの1行ボタン */
+#v270InlineRecipeBtn{
+  min-height:34px!important;
+  padding:7px 10px!important;
+  margin-top:8px!important;
+  justify-content:space-between!important;
+}
+#v270InlineRecipeBtn .sub{
+  display:none!important;
+}
+#v270InlineRecipeBtn > span:first-child{
+  font:900 9px/1.2 system-ui!important;
+}
+
+/* BONEゲージは引き続き完全非表示 */
+#v70BoneHud,
+[id*="BoneHud"],
+.boneHud,
+.bone-radar,
+[data-bone-radar]{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+@media(max-width:520px){
+  #hud{
+    top:7px!important;
+    left:7px!important;
+    width:45%!important;
+    max-width:288px!important;
+    gap:5px!important;
+  }
+  #hud .stack{gap:4px!important}
+  #hud #mission,
+  #hud #event{
+    font-size:8.6px!important;
+    line-height:1.25!important;
+    padding:6px 8px!important;
+  }
+  #v270InlineRecipeBtn{
+    min-height:32px!important;
+    padding:6px 9px!important;
+  }
+  #v270InlineRecipeBtn > span:first-child{
+    font-size:8.5px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
 <canvas id="game"></canvas>
-<div id="hud"><div class="stack"><div class="pill" id="location"></div><div class="pill countBig" id="points"></div><div class="pill countBig" id="food"></div><div class="pill countBig" id="alienHitCount">👽 0</div></div><div id="mission"></div><div id="event"></div><div id="powerBox"><div id="powerTop"><span>超巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
-<div id="astroInfo"></div>
-<div id="v263DistanceMap" aria-label="地球からの距離マップ">
+<div id="hud"><div id="v263DistanceMap" aria-label="地球からの距離マップ">
   <div class="v263DistTop">
     <span class="v263DistTitle">🌍 EARTH DISTANCE</span>
     <span id="v263DistNow">0 km</span>
@@ -1571,7 +1706,8 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
     <span id="v263DistStage">現在地</span>
     <span id="v263DistScale">エアレンデル</span>
   </div>
-</div>
+</div><div class="stack"><div class="pill" id="location"></div><div class="pill countBig" id="points"></div><div class="pill countBig" id="food"></div><div class="pill countBig" id="alienHitCount">👽 0</div></div><div id="mission"></div><div id="event"></div><div id="powerBox"><div id="powerTop"><span>超巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
+<div id="astroInfo"></div>
 <div id="toast"></div>
 <div id="bigBanner">✦ 超巨大化！ ✦<small>犬星くん超巨大化フィーバー！ ジャンプもできる！</small></div>
 <div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3｜⭐・🦴・🛜を吸引</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザー<small id="laserAmmoText">攻撃 8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">🌑 ダークマター<small id="cosmicPowerText">時空を歪める</small></button><button class="ctrl jumpCtrl" id="jump">⬆️ ジャンプ<small>タップでジャンプ</small></button></div>
@@ -16728,15 +16864,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v272';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v272</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v273';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v273</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v272</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v273</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17291,7 +17427,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v272';
+window.INUBOSHI_GAME_VERSION='v273';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -21789,7 +21925,7 @@ function v270EnsureInlineRecipeButton(){
     btn.id='v270InlineRecipeBtn';
     btn.type='button';
     btn.setAttribute('aria-label','この星のデータを見る');
-    btn.innerHTML='<span><span>📘 この星のデータを見る</span><span class="sub">温度・大きさ・星座・寿命・最期など</span></span><span class="plus">＋</span>';
+    btn.innerHTML='<span>📘 この星のデータを見る</span><span class="plus">＋</span>';
     btn.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
@@ -21859,6 +21995,19 @@ window.__v272TopLeftState=()=>({
   eventDisplay:getComputedStyle(document.getElementById('event')).display
 });
 /* === /v272 === */
+
+
+/* === v273: REAL FLOW HUD DEBUG === */
+window.__v273HudFlow=()=>({
+  distanceParent:document.getElementById('v263DistanceMap')?.parentElement?.id||null,
+  hudDisplay:getComputedStyle(document.getElementById('hud')).display,
+  hudGap:getComputedStyle(document.getElementById('hud')).gap,
+  distancePosition:getComputedStyle(document.getElementById('v263DistanceMap')).position,
+  missionPosition:getComputedStyle(document.getElementById('mission')).position,
+  eventPosition:getComputedStyle(document.getElementById('event')).position,
+  recipeText:document.getElementById('v270InlineRecipeBtn')?.textContent||''
+});
+/* === /v273 === */
 
 
 })();
@@ -24886,7 +25035,7 @@ window.__v272TopLeftState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v272</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v273</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -25357,11 +25506,11 @@ window.__v272TopLeftState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v272';
+  window.INUBOSHI_GAME_VERSION='v273';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v272<small>TOP-LEFT HUD STACK FIX / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v273<small>REAL FLOW HUD STACK + RECIPE COPY CLEANUP / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
