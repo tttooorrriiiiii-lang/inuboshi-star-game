@@ -1619,7 +1619,7 @@ function makeWorld(){
  const hazardBands=[{a:700,b:1250,n:1},{a:1250,b:1900,n:2},{a:1900,b:2500,n:3},{a:2500,b:3050,n:4},{a:3050,b:3450,n:5}];
  if(system!==BLACK_HOLE_SYSTEM&&!isDream&&!isPersonality)for(const band of hazardBands)for(let i=0;i<Math.max(0,Math.round(band.n*bandScale));i++){const hy=20+Math.random()*Math.max(140,H*.42);hazards.push({x:band.a+Math.random()*(band.b-band.a),y:hy,w:46,h:46,got:false,symbol:'☄️',diagonal:true,vx:-1.25-Math.random()*.7,vy:1.0+Math.random()*.65})}
  if(isSun&&system!==BLACK_HOLE_SYSTEM){for(let i=0;i<42;i++){const hx=620+Math.random()*2750;const hy=10+Math.random()*Math.max(160,H*.48);hazards.push({x:hx,y:hy,w:48,h:52,got:false,symbol:'🔥',diagonal:true,vx:-.75-Math.random()*.9,vy:1.1+Math.random()*1.35})}}
- if(system!==BLACK_HOLE_SYSTEM&&!isDream&&!isPersonality)for(let i=0;i<3;i++)aliens.push({x:1100+i*900,y:groundY()-95-Math.random()*120,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0});
+ if(system!==BLACK_HOLE_SYSTEM&&!isDream&&(!isPersonality||isDogStar))for(let i=0;i<3;i++)aliens.push({x:1100+i*900,y:groundY()-95-Math.random()*120,w:46,h:46,got:false,hitFlash:0,chargeHits:0,lastHit:0,dogSignal:isDogStar});
  const forms=system===BLACK_HOLE_SYSTEM?['🪨','💿','📡','⚙️','🧊','🪞','💎','🔩','🧿','🛰️']:isDream?['🐕','🐩','🦮','🐕‍🦺']:['🐩','🐕‍🦺','🦮'];
  const morphCount=system===BLACK_HOLE_SYSTEM?9:isDream?90:(isPersonality?0:4);
  for(let i=0;i<morphCount;i++)morphs.push({x:250+i*(isDream?105:650)+Math.random()*55,y:isDream?groundY()-55-Math.random()*150:groundY()-110-Math.random()*145,r:isDream?24:26,got:false,dog:forms[i%forms.length]})
@@ -2292,7 +2292,7 @@ if(it.v244DenebLight){
  ctx.save();ctx.translate(sx,it.y);ctx.shadowColor='#dff6ff';ctx.shadowBlur=26;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,5,0,Math.PI*2);ctx.fill();ctx.globalAlpha=.38;ctx.strokeStyle='#e9fbff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-20,0);ctx.lineTo(20,0);ctx.moveTo(0,-20);ctx.lineTo(0,20);ctx.stroke();ctx.restore();return;
 }if(system===BLACK_HOLE_SYSTEM&&!it.food){const glyphs=['✦','◉','⌁','⟡','∞','◌'];const g=glyphs[Math.abs(Math.floor(it.x))%glyphs.length];ctx.save();ctx.translate(sx,it.y);ctx.rotate(performance.now()/900+(it.x%7));ctx.shadowColor=it.color;ctx.shadowBlur=24;ctx.fillStyle=it.color;ctx.font='900 28px system-ui';ctx.fillText(g,-12,10);ctx.restore();return}if(it.food){ctx.save();ctx.font='34px system-ui';ctx.shadowColor=it.inert?'#7cf7ff':'#ffd65a';ctx.shadowBlur=18;ctx.fillText(it.inert?'🔋':'🦴',sx-17,it.y+12);ctx.restore();return}ctx.save();ctx.translate(sx,it.y);ctx.shadowColor=it.color;ctx.shadowBlur=18;ctx.fillStyle=it.color;ctx.beginPath();for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2===0?18:8,px=Math.cos(a)*rr,py=Math.sin(a)*rr;i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.restore()}
 function drawHazard(h){const sx=h.x-camera;if(sx<-90||sx>W+90||h.got)return;ctx.save();ctx.translate(sx+23,h.y+23);ctx.shadowColor=h.symbol==='🔥'?'#ff9b24':'#ff542e';ctx.shadowBlur=h.symbol==='🔥'?24:18;ctx.font=`${h.symbol==='🔥'?46:42}px system-ui`;ctx.fillText(h.symbol,-22,17);ctx.restore()}
-function drawAlien(a){if(a.got)return;const sx=a.x-camera;if(sx<-70||sx>W+70)return;ctx.save();if(a.hitFlash>0){a.hitFlash--;const rr=34+(14-a.hitFlash)*5;ctx.globalAlpha=.65*(a.hitFlash/14);ctx.strokeStyle='#62ff72';ctx.lineWidth=4;ctx.shadowColor='#62ff72';ctx.shadowBlur=30;ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,rr,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.28*(a.hitFlash/14);ctx.fillStyle='#50ff6e';ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,28,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}ctx.shadowColor='#7dff70';ctx.shadowBlur=15;ctx.font='43px system-ui';ctx.fillText('👽',sx,a.y+40);ctx.restore()}
+function drawAlien(a){if(a.got)return;const sx=a.x-camera;if(sx<-70||sx>W+70)return;const dogSignal=!!a.dogSignal||isDogStarStage();ctx.save();if(a.hitFlash>0){a.hitFlash--;const rr=34+(14-a.hitFlash)*5;ctx.globalAlpha=.65*(a.hitFlash/14);ctx.strokeStyle=dogSignal?'#ffbce9':'#62ff72';ctx.lineWidth=4;ctx.shadowColor=dogSignal?'#ff9edc':'#62ff72';ctx.shadowBlur=30;ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,rr,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.28*(a.hitFlash/14);ctx.fillStyle=dogSignal?'#ffc8eb':'#50ff6e';ctx.beginPath();ctx.arc(sx+a.w/2,a.y+a.h/2,28,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}ctx.shadowColor=dogSignal?'#ff9edc':'#7dff70';ctx.shadowBlur=15;ctx.font='43px system-ui';ctx.fillText(dogSignal?'🐶':'👽',sx,a.y+40);ctx.restore()}
 function drawMorph(m){if(m.got)return;const sx=m.x-camera;if(sx<-70||sx>W+70)return;ctx.save();ctx.translate(sx,m.y);ctx.rotate(Math.sin(performance.now()/220)*.18);ctx.shadowColor='#64f5ff';ctx.shadowBlur=24;ctx.fillStyle='rgba(60,20,90,.82)';ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,27,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.font='30px system-ui';ctx.fillText('❓',-15,11);ctx.restore()}
 function drawSwarm(o){if(o.got)return;const sx=o.x-camera;if(sx<-100||sx>W+120)return;ctx.save();ctx.shadowColor=o.kind==='crow'?'#9b8cff':o.kind==='dino'?'#ff954d':o.kind==='evil'?'#ff174d':'#7dff70';ctx.shadowBlur=o.kind==='evil'?26:13;ctx.font=`${o.kind==='dino'?58:o.kind==='evil'?44:36}px system-ui`;ctx.fillText(o.kind==='crow'?'🐦‍⬛':o.kind==='dino'?'🦖':'👾',sx,o.y+(o.kind==='dino'?55:36));if(o.kind==='evil'){ctx.fillStyle='#fff';ctx.font='900 8px system-ui';ctx.fillText('DANGER',sx-3,o.y-6)}ctx.restore()}
 function drawSecretPickup(o){if(o.got)return;const sx=o.x-camera;if(sx<-80||sx>W+100)return;ctx.save();const bob=Math.sin(performance.now()/180+o.phase)*12;ctx.translate(sx,o.y+bob);ctx.shadowColor=o.kind==='flower'?'#ff78d1':o.kind==='earth'?'#69d8ff':'#fff1a0';ctx.shadowBlur=28;ctx.font='48px system-ui';ctx.fillText(o.icon,-24,18);ctx.strokeStyle=o.kind==='earth'?'#69d8ff':'#fff';ctx.lineWidth=1.5;ctx.globalAlpha=.65;ctx.beginPath();ctx.arc(0,0,33,0,Math.PI*2);ctx.stroke();ctx.restore()}
@@ -2488,7 +2488,7 @@ sx=blackHoleX-camera;if(blackHoleEnabled()&&sx>-190&&sx<W+190){const t=performan
 function registerAlienHit(amount=1){
  if(cosmicPowerReady)return;
  cosmicCharge=Math.min(5,cosmicCharge+amount);
- if(cosmicCharge>=5){cosmicCharge=5;cosmicPowerReady=true;showToast('👽✨ 宇宙パワー満タン！ 発動できる',1500)}
+ if(cosmicCharge>=5){cosmicCharge=5;cosmicPowerReady=true;showToast(`${isDogStarStage()?'🐶':'👽'}✨ 宇宙パワー満タン！ 発動できる`,1500)}
  else showToast(`🌌 宇宙パワー +${amount}`,650);
  syncHUD()
 }
@@ -3815,10 +3815,11 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
     const now=performance.now();
     if(now-lastAlienTouchAt<900)return;
     lastAlienTouchAt=now;
+    const dogSignal=isDogStarStage()||!!obj?.dogSignal;
     alienContactFlashUntil=now+650;
     if(obj){obj.hitFlash=16;obj.chargeHits=(obj.chargeHits||0)+1;obj.y-=18;}
     p.vy=-7.5;invincibleUntil=Math.max(invincibleUntil,now+500);
-    wrap.style.boxShadow='inset 0 0 110px rgba(74,255,112,.88)';
+    wrap.style.boxShadow=dogSignal?'inset 0 0 110px rgba(255,153,218,.62)':'inset 0 0 110px rgba(74,255,112,.88)';
     setTimeout(()=>{if(performance.now()>=alienContactFlashUntil)wrap.style.boxShadow=''},650);
 
     const hadFive=cosmicCharge>=5;
@@ -3827,15 +3828,18 @@ laserBtn.addEventListener('pointerdown',e=>{e.preventDefault();fireLaser()},{pas
     if(hadFive && obj && !obj.v61Communicated){
       obj.v61Communicated=true;obj.got=true;alienContacts++;points+=4;starTotal+=4;
       comm.classList.add('on');
-      const ct=comm.querySelector('#commTitle');if(ct)ct.textContent=`📡 👽 COSMIC SIGNAL ${alienContacts}`;
-      commText.textContent=['「遠くへ行くほど、帰る場所が大切になる」','「暗闇の向こうには、本当に何もない場所がある」','「白すぎる部屋を見た犬がいる」','「ワレワレノ星にも、犬の寝床はある」'][alienContacts%4];
-      showToast(`📡 👽と交信！ 宇宙パワーは ${cosmicCharge} のまま`,1150);
+      const ct=comm.querySelector('#commTitle');
+      if(ct)ct.textContent=dogSignal?`📡 🐶 DOG SIGNAL ${alienContacts}`:`📡 👽 COSMIC SIGNAL ${alienContacts}`;
+      commText.textContent=dogSignal
+        ? ['「ワン！」','「骨、いる？」','「ここも犬の星やで」','「もっと遠くまで散歩しよ！」'][alienContacts%4]
+        : ['「遠くへ行くほど、帰る場所が大切になる」','「暗闇の向こうには、本当に何もない場所がある」','「白すぎる部屋を見た犬がいる」','「ワレワレノ星にも、犬の寝床はある」'][alienContacts%4];
+      showToast(dogSignal?`📡 🐶と交信！ 宇宙パワーは ${cosmicCharge} のまま`:`📡 👽と交信！ 宇宙パワーは ${cosmicCharge} のまま`,1150);
       setTimeout(()=>comm.classList.remove('on'),2300);
-      if(alienContacts>=5&&!alienOfferPrompted&&!endingSeen.alien){
+      if(!dogSignal&&alienContacts>=5&&!alienOfferPrompted&&!endingSeen.alien){
         alienOfferPrompted=true;setTimeout(()=>{if(!paused)showAlienOffer()},650);
       }
     }else{
-      showToast(`👽💚 CONTACT！ 宇宙パワー ${cosmicCharge}`,800);
+      showToast(`${dogSignal?'🐶💗':'👽💚'} CONTACT！ 宇宙パワー ${cosmicCharge}`,800);
     }
     syncHUD();
   };
@@ -4004,7 +4008,7 @@ const v63BaseStartCommunication=startCommunication;
 startCommunication=function(obj){
   const first=v63RadioFound&&!v63AlienRecognizedCraft&&!!obj;
   const out=v63BaseStartCommunication(obj);
-  if(first){v63AlienRecognizedCraft=true;setTimeout(()=>showToast('👽「……ソノ船、ドコデ？」',1700),720);}
+  if(first&&!isDogStarStage()){v63AlienRecognizedCraft=true;setTimeout(()=>showToast('👽「……ソノ船、ドコデ？」',1700),720);}
   return out;
 };
 
@@ -16091,15 +16095,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v244';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v244</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v245';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v245</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v244</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v245</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16654,7 +16658,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v244';
+window.INUBOSHI_GAME_VERSION='v245';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -16783,7 +16787,7 @@ function v215SyncControlsAndCounts(force=false){
   if(cosmicBtn&&cosmicBtn.style.display!=='none')cosmicBtn.style.setProperty('display','none','important');
   for(const el of [pointsEl,foodEl,alienHitEl])if(el){el.style.setProperty('display','flex','important');el.style.setProperty('visibility','visible','important');}
 
-  let third=`👽 ${cosmicCharge}`;
+  let third=`${isDogStarStage()?'🐶':'👽'} ${cosmicCharge}`;
   const mat=window.__v169MaterialAPI?.state?.();
   if(systems[system]?.futureEra&&mat?.cfg){
     const em=v215MaterialEmoji(mat.cfg.mat,mat.cfg.symbol);
@@ -20476,7 +20480,7 @@ drawGround=function(){
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v244</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v245</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">直接移動 → ホワイトホール出口まで遊べる</small></button>
@@ -20503,6 +20507,38 @@ drawGround=function(){
   function cleanName(v=''){
     return String(v).replace(/\s+/g,' ').trim();
   }
+
+  function goBlackHoleHard(){
+    let data=[];
+    try{data=api.list()||[];}catch(e){console.error('[BH LIST]',e);return false;}
+    const bh=data.find(s=>s.blackHole||cleanName(s.name)==='⚫ ブラックホール');
+    if(!bh?.stages?.length)return false;
+    const st=bh.stages.find(x=>cleanName(x.name)==='🕳️ ブラックホール内部')||bh.stages[0];
+
+    // Important: jump through the tiny debug API itself.
+    // It owns the live lexical `system/stage` variables and therefore cannot use a stale index bridge.
+    try{
+      api.setPaused(false);
+      const ok=api.jump(bh.si,st.ti);
+      if(ok!==false){
+        setTimeout(()=>{
+          try{
+            const current=api.list()?.[bh.si];
+            // no second route transition; just ensure the menu is gone
+            panel.classList.remove('on');
+            panel.setAttribute('aria-hidden','true');
+          }catch(e){}
+        },0);
+        return true;
+      }
+    }catch(e){console.error('[BH HARD JUMP]',e);}
+    return false;
+  }
+
+  // Rebind legacy names too, so every black-hole button uses the same reliable path.
+  window.__v245EnterBlackHole=goBlackHoleHard;
+  window.__v242EnterBlackHole=goBlackHoleHard;
+  window.__v217GoBlackHole=goBlackHoleHard;
 
   function build(){
     list.innerHTML='';
@@ -20605,9 +20641,7 @@ drawGround=function(){
           row.addEventListener('click',()=>{
             const isBH=!!sys.blackHole||sysName==='⚫ ブラックホール';
             if(isBH){
-              let ok=false;
-              try{ok=!!(window.__v242EnterBlackHole?.()||window.__v217GoBlackHole?.()||window.__v170RouteAPI?.blackHole?.());}
-              catch(e){console.error(e)}
+              const ok=goBlackHoleHard();
               if(ok)close(false);
             }else{
               const ok=api.jump(st.si,st.ti);
@@ -20684,8 +20718,7 @@ drawGround=function(){
     open();
   });
   document.getElementById('v214BlackHoleDirect')?.addEventListener('click',()=>{
-    let ok=false;
-    try{ok=!!(window.__v242EnterBlackHole?.()||window.__v217GoBlackHole?.()||window.__v170RouteAPI?.blackHole?.());}catch(e){console.error(e)}
+    const ok=goBlackHoleHard();
     if(ok)close(false);
   });
   closeBtn.addEventListener('click',()=>close(true));
@@ -20919,11 +20952,11 @@ drawGround=function(){
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v244';
+  window.INUBOSHI_GAME_VERSION='v245';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v244<small>STRONG STAR PERSONALITIES / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v245<small>DOG-STAR SIGNALS + BLACK HOLE HARD JUMP / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
@@ -20955,6 +20988,16 @@ drawGround=function(){
   #wrap.v204ThreeControls #jump{border-radius:34px!important}
 }
 </style>
+
+
+<script id="v245-blackhole-fallback">
+document.addEventListener('click',function(e){
+  const b=e.target&&e.target.closest&&e.target.closest('#v214BlackHoleDirect');
+  if(!b)return;
+  e.preventDefault();
+  try{window.__v245EnterBlackHole?.();}catch(err){console.error('[BH FALLBACK]',err);}
+},true);
+</script>
 
 </body>
 </html>
