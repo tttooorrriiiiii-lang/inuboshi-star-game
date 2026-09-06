@@ -1820,6 +1820,71 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v276HudGapAndMetricNowrap">
+/* v276: 左上カウンターの間隔をさらに広げる */
+#hud{
+  gap:14px!important;
+}
+#hud .stack{
+  gap:10px!important;
+}
+#hud .stack .pill{
+  padding:7px 6px!important;
+}
+#hud #mission,
+#hud #event{
+  margin-top:1px!important;
+}
+@media(max-width:520px){
+  #hud{
+    gap:12px!important;
+  }
+  #hud .stack{
+    gap:8px!important;
+  }
+  #hud .stack .pill{
+    padding:6px 5px!important;
+  }
+}
+
+/* v276: 重力/ジャンプを1行で見せる */
+#astroInfo .v276Metrics{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:10px!important;
+  white-space:nowrap!important;
+  max-width:100%!important;
+}
+#astroInfo .v276Metric{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:2px!important;
+  white-space:nowrap!important;
+}
+</style>
+
+
+<style id="v277AstroTypeLine">
+#astroInfo .v277TypeLine{
+  display:block!important;
+  margin:6px 0 8px!important;
+  font-size:.84em!important;
+  line-height:1.36!important;
+  color:rgba(220,247,255,.82)!important;
+  text-align:right!important;
+  letter-spacing:.01em!important;
+  text-shadow:0 0 6px rgba(86,231,255,.16)!important;
+}
+@media(max-width:520px){
+  #astroInfo .v277TypeLine{
+    margin:5px 0 7px!important;
+    font-size:.82em!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -16998,15 +17063,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v275';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v275</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v277';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v277</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v275</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v277</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17561,7 +17626,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v275';
+window.INUBOSHI_GAME_VERSION='v277';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -22165,6 +22230,63 @@ window.__v275UiState=()=>({
 /* === /v275 === */
 
 
+/* === v276: GRAVITY/JUMP NO-WRAP + DOG LABEL === */
+v215GravityLine=function(st){
+  const g=Number.isFinite(st?.gravity)?Number(st.gravity).toFixed(2):'—';
+  const j=Number.isFinite(st?.jump)?Number(st.jump).toFixed(1):'—';
+  return `<span class="v276Metrics"><span class="v276Metric">🧲 重力 ${g}G</span><span class="v276Metric">🐕 ジャンプ ${j}</span></span>`;
+};
+
+window.__v276UiState=()=>({
+  hudGap:getComputedStyle(document.getElementById('hud')).gap,
+  stackGap:getComputedStyle(document.querySelector('#hud .stack')).gap,
+  gravityLine:(typeof v215GravityLine==='function' ? v215GravityLine(S?.()) : 'no-fn')
+});
+/* === /v276 === */
+
+
+/* === v277: DISTANCE MAP CLEANUP + TYPE MOVE === */
+v263FormatDistance=function(ly){
+  if(!Number.isFinite(ly)||ly<=0)return '0 km';
+  if(ly<1e-6){
+    const km=ly*9.4607e12;
+    return km>=1000?`${Math.round(km).toLocaleString()} km`:`${Math.round(km)} km`;
+  }
+  if(ly<.01){
+    const au=ly*63241.1;
+    return `${au.toFixed(1)} AU`;
+  }
+  if(ly<1000)return `${ly<10?ly.toFixed(1):Math.round(ly)} 光年`;
+  if(ly<1e6)return `${Math.round(ly/1000).toLocaleString()}千光年`;
+  if(ly<1e9)return `${(ly/1e6).toFixed(ly<1e7?1:0)}百万光年`;
+  return `${(ly/1e8).toFixed(0)}億光年`;
+};
+
+v215OrdinaryHud=function(){
+  const st=S(),sys=systems[system];if(!st||!sys)return false;
+  if(system===0&&stage===0)return false;
+  if(sys.futureEra||sys.epoch||sys.hypothesis||sys.endHypothesis||sys.v177EarthHistory||sys.v177Formation||sys.v170EarthBirth||sys.secret||sys.dream||sys.endless)return false;
+  const phase=window.__v170RouteAPI?.state?.().phase||'';
+  if(phase==='returnMoon'||phase==='returnEarth')return false;
+  const ear=st.name==='✨ エアレンデル';
+  const dist=ear?'約129億光年':(typeof v60Distance==='function'?v60Distance():(st.distance||sys.distance||''));
+  const type=st.v155Type?`<span class="v277TypeLine">種類｜${st.v155Type}</span>`:'';
+  const desc=ear?V215_STAR_COPY['✨ エアレンデル']:(st.desc||sys.desc||'');
+  locationEl.textContent=`${st.name} · ${dist}`;
+  astroInfo.innerHTML=`<b>${st.name}</b>${type}${desc}`+
+    `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span>`+
+    `<span class="distanceHint">${v215GravityLine(st)}</span>`;
+  return true;
+};
+
+window.__v277UiState=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  sampleDistanceMap:v263FormatDistance(2500000),
+  hasTypeLine:!!document.querySelector('#astroInfo .v277TypeLine')
+});
+/* === /v277 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -25190,7 +25312,7 @@ window.__v275UiState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v275</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v277</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -25661,11 +25783,11 @@ window.__v275UiState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v275';
+  window.INUBOSHI_GAME_VERSION='v277';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v275<small>HUD AIR + INFO PANEL LEADING + SOFTER DIST GLOW / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v277<small>DISTANCE MAP LABEL CLEANUP + TYPE LINE UNDER TITLE / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
