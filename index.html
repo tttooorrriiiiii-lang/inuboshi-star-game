@@ -1158,12 +1158,121 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v263DistanceMapStyle">
+#v263DistanceMap{
+  position:absolute;
+  z-index:8;
+  left:8px;
+  top:178px;
+  width:min(62%,360px);
+  box-sizing:border-box;
+  padding:7px 9px 6px;
+  border:1px solid rgba(155,228,255,.38);
+  border-radius:13px;
+  background:linear-gradient(90deg,rgba(4,8,24,.76),rgba(27,12,52,.70));
+  box-shadow:0 0 16px rgba(94,203,255,.16);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  color:#fff;
+  pointer-events:none;
+}
+#v263DistanceMap .v263DistTop,
+#v263DistanceMap .v263DistBottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:7px;
+}
+#v263DistanceMap .v263DistTop{
+  font:900 7.5px/1 system-ui;
+  letter-spacing:.04em;
+  color:#c7efff;
+}
+#v263DistNow{
+  color:#fff3a9;
+  text-shadow:0 0 8px rgba(255,229,92,.65);
+  white-space:nowrap;
+}
+.v263DistRail{
+  position:relative;
+  height:18px;
+  margin:4px 3px 2px;
+}
+.v263DistLine{
+  position:absolute;
+  left:18px;right:18px;
+  top:8px;
+  height:3px;
+  border-radius:99px;
+  background:linear-gradient(90deg,#5bdcff 0%,#a984ff 48%,#ff83ce 78%,#fff2a5 100%);
+  box-shadow:0 0 8px rgba(136,190,255,.55);
+  opacity:.78;
+}
+.v263DistEarth,.v263DistEnd{
+  position:absolute;top:0;
+  font-size:13px;line-height:18px;
+}
+.v263DistEarth{left:0}
+.v263DistEnd{right:0}
+#v263DistMarker{
+  position:absolute;
+  top:-1px;
+  left:18px;
+  transform:translateX(-50%);
+  font-size:15px;
+  line-height:18px;
+  filter:drop-shadow(0 0 5px #fff);
+  transition:left .55s ease;
+}
+.v263DistBottom{
+  font:800 6.5px/1 system-ui;
+  color:rgba(228,240,255,.66);
+}
+#v263DistStage{
+  max-width:48%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#dff7ff;
+}
+@media(max-width:520px){
+  #v263DistanceMap{
+    top:174px;
+    left:7px;
+    width:60%;
+    padding:6px 7px 5px;
+    border-radius:11px;
+  }
+  #v263DistanceMap .v263DistTop{font-size:6.8px}
+  .v263DistBottom{font-size:6px}
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
 <canvas id="game"></canvas>
 <div id="hud"><div class="stack"><div class="pill" id="location"></div><div class="pill countBig" id="points"></div><div class="pill countBig" id="food"></div><div class="pill countBig" id="alienHitCount">👽 0</div></div><div id="mission"></div><div id="event"></div><div id="powerBox"><div id="powerTop"><span>超巨大化</span><span id="powerText">🦴 あと5個</span></div><div id="meter"><div id="meterFill"></div></div></div></div>
-<div id="astroInfo"></div><div id="toast"></div>
+<div id="astroInfo"></div>
+<div id="v263DistanceMap" aria-label="地球からの距離マップ">
+  <div class="v263DistTop">
+    <span class="v263DistTitle">🌍 EARTH DISTANCE</span>
+    <span id="v263DistNow">0 km</span>
+  </div>
+  <div class="v263DistRail">
+    <span class="v263DistEarth">🌍</span>
+    <span class="v263DistLine"></span>
+    <span id="v263DistMarker">🐕</span>
+    <span class="v263DistEnd">✨</span>
+  </div>
+  <div class="v263DistBottom">
+    <span>地球</span>
+    <span id="v263DistStage">現在地</span>
+    <span id="v263DistScale">エアレンデル</span>
+  </div>
+</div>
+<div id="toast"></div>
 <div id="bigBanner">✦ 超巨大化！ ✦<small>犬星くん超巨大化フィーバー！ ジャンプもできる！</small></div>
 <div class="controls"><button class="ctrl itemCtrl" id="special">⭐ アイテム<small id="chipText">星30で解禁</small></button><button class="ctrl attackCtrl boneCtrl" id="big">🦴 骨ブーメラン<small>骨3｜⭐・🦴・🛜を吸引</small></button><button class="ctrl attackCtrl laserCtrl" id="laser">🔫 レーザー<small id="laserAmmoText">攻撃 8 / 30</small></button><button class="ctrl powerCtrl" id="cosmicPower">🌑 ダークマター<small id="cosmicPowerText">時空を歪める</small></button><button class="ctrl jumpCtrl" id="jump">⬆️ ジャンプ<small>タップでジャンプ</small></button></div>
 <div id="sparkBadge">✨ STAR オーラ</div><div id="secretBadge"></div><div id="reward"><button id="rewardClose" aria-label="閉じる">×</button><div id="rewardTitle">⭐ アイテムを使う</div><div id="rewardSub">集めた⭐で能力を選べる</div><div class="rewardBtns"><button class="rewardBtn" data-special="giant" data-cost="35">🐕 超巨大化<br>35⭐</button><button class="rewardBtn utilityItem" data-special="boneBoomerang" data-cost="0">🦴 骨ブーメラン連射<br>骨3で5連射・回収</button><button class="rewardBtn cosmicItem" data-special="cosmic" data-cost="0">🌑 ダークマター<br>時空を歪める</button><button class="rewardBtn" data-special="wormhole" data-cost="80">🌀 ワームホール呼出<br>80⭐</button><button class="rewardBtn v72ShieldItem" data-special="shield" data-cost="30">🛡️ 宇宙シールド<br>30⭐｜12秒</button><button class="rewardBtn" data-special="magnet" data-cost="50">🧲 星マグネット<br>50⭐</button><button class="rewardBtn" data-special="friend" data-cost="120">🐕 仲間＋1（何匹でも）<br>120⭐</button><button class="rewardBtn" data-special="secret" data-cost="70">🎁 シークレットボーナス<br>70⭐</button><button class="rewardBtn homeBtn" id="homeWarpBtn" data-special="home" data-cost="0" disabled>🏠 地球へ帰る<br>🌏 0 / 3</button></div></div><div id="guardFlash">⭐ STAR LOST!<br><span style="font-size:16px">星が5個こぼれた！</span></div>
@@ -16319,15 +16428,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v262';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v262</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v263';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v263</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v262</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v263</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16882,7 +16991,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v262';
+window.INUBOSHI_GAME_VERSION='v263';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -20646,6 +20755,154 @@ window.__v262State=()=>({
 /* === /v262 === */
 
 
+/* === v263: EARTH DISTANCE MAP ===
+   横幅は対数スケール。太陽系〜100億光年以上を同じバーに収めるため、
+   実距離の線形比較ではなく「距離感をつかむための対数イメージ図」。
+*/
+const V263_DISTANCE_LY={
+  '🌍 地球':0,
+  '🌙 月':4.06e-8,
+  '♀ 金星':4.0e-5,
+  '♂ 火星':7.5e-5,
+  '⭐ シリウス':8.6,
+  '🐶 プロキオン':11.5,
+  '🖖 40エリダヌス座A':16.3,
+  '🦅 アルタイル':16.7,
+  '😈 アルゴル':93,
+  '🌾 スピカ':250,
+  '🌟 ポラリス':447,
+  '❤️ アンタレス':550,
+  '🔴 ベテルギウス':642,
+  '🦢 デネブ':2600,
+  '🐕 VYおおいぬ座星':3900,
+  '💥 イータ・カリーナ':7500,
+  '🌀 PSR J1748-2446ad':18000,
+  '🪐 スティーブンソン2-18':20000,
+  '🧲 SGR 1806-20':50000,
+  '💙 R136a1':163000,
+  '✨ S Doradus':163000,
+  '⭐ M31-V1':2530000,
+  '💙 イカロス':9000000000,
+  '✨ エアレンデル':12900000000,
+  '🌸 花の星':25000000000,
+  '🐾 犬の夢の星':50000000000
+};
+const V263_MAX_LY=50000000000;
+const V263_MIN_LY=4.06e-8;
+
+function v263DistanceForCurrent(){
+  const sysName=systems[system]?.name||'';
+  const stageName=S()?.name||'';
+
+  if(system===BLACK_HOLE_SYSTEM){
+    return {special:'測定不能',label:'ブラックホール内部',pos:.88};
+  }
+  if(sysName==='🌌 宇宙の最果て'){
+    return {special:'距離を定義できない',label:'宇宙の最果て',pos:.96};
+  }
+  if(V260_ORIGIN?.active || ['💫 ビッグバン','🟣 粒子の宇宙','⚛️ ビッグバン元素合成','📡 宇宙背景放射（CMB）','🌑 暗黒時代','🌅 宇宙の夜明け'].includes(sysName)){
+    return {special:'時間を遡行中',label:sysName,pos:.08};
+  }
+  if(systems[system]?.futureEra){
+    return {ly:0,label:`未来の地球｜${stageName}`,pos:0};
+  }
+  if(systems[system]?.v177EarthHistory||systems[system]?.v177Formation||systems[system]?.v170EarthBirth){
+    return {ly:0,label:`過去の地球｜${stageName}`,pos:0};
+  }
+
+  const ly=V263_DISTANCE_LY[stageName] ?? V263_DISTANCE_LY[sysName];
+  if(Number.isFinite(ly)){
+    return {ly,label:stageName||sysName};
+  }
+  return {special:'距離不明',label:stageName||sysName||'現在地',pos:.5};
+}
+
+function v263LogPos(ly){
+  if(!Number.isFinite(ly)||ly<=0)return 0;
+  const a=Math.log10(Math.max(V263_MIN_LY,ly));
+  const lo=Math.log10(V263_MIN_LY);
+  const hi=Math.log10(V263_MAX_LY);
+  return Math.max(0,Math.min(1,(a-lo)/(hi-lo)));
+}
+
+function v263FormatDistance(ly){
+  if(!Number.isFinite(ly)||ly<=0)return '0 km';
+  if(ly<1e-6){
+    const km=ly*9.4607e12;
+    return km>=1000?`${Math.round(km).toLocaleString()} km`:`${Math.round(km)} km`;
+  }
+  if(ly<.01){
+    const au=ly*63241.1;
+    return `${au.toFixed(1)} AU`;
+  }
+  if(ly<1000)return `${ly<10?ly.toFixed(1):Math.round(ly)} 光年`;
+  if(ly<1e6)return `約${Math.round(ly/1000).toLocaleString()}千光年`;
+  if(ly<1e9)return `約${(ly/1e6).toFixed(ly<1e7?1:0)}百万光年`;
+  return `約${(ly/1e8).toFixed(0)}億光年`;
+}
+
+function v263UpdateDistanceMap(){
+  const box=document.getElementById('v263DistanceMap');
+  const nowEl=document.getElementById('v263DistNow');
+  const marker=document.getElementById('v263DistMarker');
+  const stageEl=document.getElementById('v263DistStage');
+  const scaleEl=document.getElementById('v263DistScale');
+  if(!box||!nowEl||!marker||!stageEl||!scaleEl)return;
+
+  const d=v263DistanceForCurrent();
+  let pos=Number.isFinite(d.pos)?d.pos:v263LogPos(d.ly);
+
+  // 地球アイコンと最遠アイコンの間だけを移動。
+  const px=18+pos*calcV263RailWidth();
+  marker.style.left=`${px}px`;
+  nowEl.textContent=d.special||v263FormatDistance(d.ly);
+  stageEl.textContent=d.label||'現在地';
+
+  if((d.ly||0)>12900000000){
+    scaleEl.textContent='架空領域';
+  }else{
+    scaleEl.textContent='✨ エアレンデル';
+  }
+
+  // Fictional worlds / special routes get a tiny note in the title.
+  const title=box.querySelector('.v263DistTitle');
+  if(title){
+    title.textContent=(d.ly||0)>12900000000
+      ?'🌍 EARTH DISTANCE｜架空距離'
+      :'🌍 EARTH DISTANCE｜対数MAP';
+  }
+}
+
+function calcV263RailWidth(){
+  const rail=document.querySelector('#v263DistanceMap .v263DistRail');
+  if(!rail)return 190;
+  return Math.max(40,rail.clientWidth-36);
+}
+
+const v263BaseUpdate=update;
+update=function(now,dt){
+  const out=v263BaseUpdate(now,dt);
+  v263UpdateDistanceMap();
+  return out;
+};
+
+const v263BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v263BaseStageStart();
+  requestAnimationFrame(v263UpdateDistanceMap);
+  return out;
+};
+
+requestAnimationFrame(v263UpdateDistanceMap);
+
+window.__v263DistanceMap=()=>({
+  current:v263DistanceForCurrent(),
+  maxLy:V263_MAX_LY,
+  note:'対数スケール。太陽系から数百億光年までを1本のバーに収めるための距離イメージ図。'
+});
+/* === /v263 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -23671,7 +23928,7 @@ window.__v262State=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v262</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v263</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -24142,11 +24399,11 @@ window.__v262State=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v262';
+  window.INUBOSHI_GAME_VERSION='v263';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v262<small>COSMIC EDGE TIMING FIX + FUTURE RED HEAT HOLD / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v263<small>EARTH DISTANCE MAP / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
