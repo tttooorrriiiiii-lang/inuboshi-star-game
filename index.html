@@ -1341,6 +1341,10 @@ name:'💥 イータ・カリーナ',distance:'地球から約7,500光年',desc:
 {name:'💥 イータ・カリーナ',distance:'約7,500光年',desc:'巨大噴火を起こしながら生き残った、極端に不安定な大質量連星系',goodColor:'#ffb3e8',sky:['#10030d','#4b1738'],ground:'#725166',ground2:'#2f1f2b',planet:'#ffd6f3',event:'GREAT ERUPTION',eventText:'💥 19世紀級の大噴火！ ガスと塵が双極方向へ吹き出す',gravity:.34,jump:17.6}
 ]},
 {
+name:'🌀 PSR J1748-2446ad',distance:'地球から約1.8万光年',desc:'球状星団Terzan 5にある、現在知られている中で最速回転のパルサー。毎秒約716回転する中性子星',theme:'blackhole',stages:[
+{name:'🌀 PSR J1748-2446ad',distance:'約1.8万光年',desc:'約1.4ミリ秒で1回転する超高速ミリ秒パルサー。灯台のような電波ビームが高速で横切る',goodColor:'#8feaff',sky:['#01030b','#101b38'],ground:'#2c3651',ground2:'#0c111e',planet:'#dffcff',event:'PULSAR BEAM',eventText:'🌀📡 毎秒約716回転！ 超高速ビームが横切る！',gravity:.90,jump:16.0}
+]},
+{
 name:'🪐 Stephenson 2-18',distance:'地球から約2万光年',desc:'既知でも最大級の赤色超巨星候補。太陽の場所に置けば土星軌道近くまで届くとされる',theme:'cloud',stages:[
 {name:'🪐 Stephenson 2-18',distance:'約2万光年',desc:'超巨大さで有名な赤色超巨星候補。外層は土星軌道級ともいわれる',goodColor:'#ffc6a2',sky:['#120603','#5f2413'],ground:'#845946',ground2:'#42281f',planet:'#ff9e72',event:'COLOSSAL STAR',eventText:'🪐 超巨大！ 星の外層が土星軌道級まで広がる！',gravity:.18,jump:17.9}
 ]},
@@ -1492,7 +1496,7 @@ const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==B
 const rankByName={
 '☀️ 太陽系・近くの星':0,
 '🐶 プロキオン':0.10,'🦅 アルタイル':0.12,'😈 アルゴル':0.14,'🕰️ メトシェラ星':0.16,'🌾 スピカ':0.18,'🐶 ゴメイサ':0.20,'🐕 アダーラ':0.30,'🐕 ミルザム':0.40,
-'❓ タビーの星':1,'🦢 デネブ':1.10,'🐕 ウェズン':1.20,'🐕 アルドラ':1.40,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🪐 Stephenson 2-18':3.6,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
+'❓ タビーの星':1,'🦢 デネブ':1.10,'🐕 ウェズン':1.20,'🐕 アルドラ':1.40,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🌀 PSR J1748-2446ad':3.45,'🪐 Stephenson 2-18':3.6,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
 '💙 イカロス':13,'🦋 モスラ':14,'❤️ クイユル':15,'🦖 ゴジラ':16,'🔷 Abell 2744 LS1':17,'💠 MACS J0647 LS1':18,'✨ エアレンデル':19,
 '🔥 再電離時代':20,'🌅 宇宙の夜明け':21,'🌑 暗黒時代':22,'🌤️ 再結合時代（宇宙の晴れ上がり）':23,'📡 宇宙背景放射（CMB）':24,'✨ 光子時代':25,'⚛️ ビッグバン元素合成':26,'🌀 レプトン時代':27,'🔵 ハドロン時代':28,'🟣 粒子の宇宙':29,'⚡ 電弱時代':30,'💥 インフレーション時代':31,'◼️ 大統一時代':32,'❓ プランク時代':33,'💫 ビッグバン':34,'🔁 ビッグバウンス':35,'♻️ 循環宇宙':36,'🫧 永遠のインフレーション':37,'◯ 無境界仮説':38,'⏩ 太陽が明るくなる未来':40,'🔴 赤色巨星の太陽':41,'⚪ 太陽の死（白色矮星）':42,'🌌 星形成の終わり':43,'🔴 最後の恒星たち':44,'🕳️ ブラックホール時代':45,'🌑 暗い宇宙':46,'🥶 熱的死／ビッグフリーズ':47,'💥 ビッグリップ':48,'🔻 ビッグクランチ':49,'⚠️ 真空崩壊':50,'🐾 犬の星':60
 };
@@ -1522,6 +1526,7 @@ const V244_STAR_HINTS={
   '🦢 デネブ':'🦢 とても遠いのに1等星。遠景のまま光だけ強烈！',
   '🐕 VYおおいぬ座星':'🐕 巨大な赤い星からガスの塊が噴き出す！',
   '💥 イータ・カリーナ':'💥 巨大噴火を生き延びた星。双極方向に物質が飛ぶ！',
+  '🌀 PSR J1748-2446ad':'🌀 毎秒約716回転！ 知られている中で最速のパルサー！',
   '🪐 Stephenson 2-18':'🪐 星が画面に入りきらないほど巨大！',
   '🧲 SGR 1806-20':'🧲 マグネターの超強磁場が周囲を引っ張る！',
   '💙 R136a1':'💙 超大質量・超高光度。恒星風に押し戻される！',
@@ -1542,6 +1547,7 @@ const V246_STAGE_SIGNAL_ICON={
   '❤️ アンタレス':'❤️',
   '🔴 ベテルギウス':'🔴',
   '💥 イータ・カリーナ':'💥',
+  '🌀 PSR J1748-2446ad':'🌀',
   '🪐 Stephenson 2-18':'🪐',
   '🧲 SGR 1806-20':'🧲',
   '💙 R136a1':'💙',
@@ -1943,28 +1949,29 @@ function homeEnding(){returnFromDogStar=true;system=0;stage=0;stageStart()}
 
 function wormholeMilestoneEffect(count){
  if(count===1){transTitle.innerHTML='🐶 PROCYON';nextEl.textContent='こいぬ座の主星へ。最初の犬星！';subEl.textContent='DOG STAR 1';showToast('🐶 プロキオン！ 犬星ボーナス開始！',1900)}
- else if(count===2){transTitle.innerHTML='🦅 ALTAIR';nextEl.textContent='七夕の彦星として有名な高速自転星へ。';subEl.textContent='WORMHOLE 2';showToast('🦅 アルタイル！ いぬかいぼしの別名もあるで。',1950)}
+ else if(count===2){transTitle.innerHTML='🦅 ALTAIR';nextEl.textContent='七夕の彦星として有名な高速自転星へ。';subEl.textContent='WORMHOLE 2';showToast('🦅 アルタイル！ 超高速自転！',1950)}
  else if(count===3){transTitle.innerHTML='😈 ALGOL';nextEl.textContent='周期的に暗くなる、悪魔の星へ。';subEl.textContent='WORMHOLE 3';showToast('😈 アルゴル！ 食変光星の代表格や。',1950)}
  else if(count===4){transTitle.innerHTML='🕰️ METHUSELAH';nextEl.textContent='宇宙でも最古級の古い星へ。';subEl.textContent='WORMHOLE 4';showToast('🕰️ メトシェラ星！ 太古の宇宙の名残やで。',1900)}
- else if(count===5){transTitle.innerHTML='🌾 SPICA';nextEl.textContent='春を代表する、青白い近接連星へ。';subEl.textContent='WORMHOLE 5';showToast('🌾 スピカ！ おとめ座の青白い1等星。',1950)}
- else if(count===6){transTitle.innerHTML='❓ TABBY’S STAR';nextEl.textContent='突然暗くなる、謎の星へ。';subEl.textContent='WORMHOLE 6';showToast('❓ タビーの星！ 光が突然ごっそり減る…',1900)}
+ else if(count===5){transTitle.innerHTML='🌾 SPICA';nextEl.textContent='春を代表する、青白い近接連星へ。';subEl.textContent='WORMHOLE 5';showToast('🌾 スピカ！ 2つの星が近くで回る。',1950)}
+ else if(count===6){transTitle.innerHTML='❓ TABBY’S STAR';nextEl.textContent='突然暗くなる、謎の星へ。';subEl.textContent='WORMHOLE 6';showToast('❓ タビーの星！ 光がゆっくり落ちる…',1900)}
  else if(count===7){transTitle.innerHTML='🦢 DENEB';nextEl.textContent='夏の大三角でいちばん遠い超巨星へ。';subEl.textContent='WORMHOLE 7';showToast('🦢 デネブ！ 遠いのにめっちゃ目立つ。',2000)}
  else if(count===8){transTitle.innerHTML='🐕 VY CANIS MAJORIS';nextEl.textContent='太陽系サイズ級にふくらんだ赤い犬星の怪物へ。';subEl.textContent='DOG STAR 2';showToast('🐕 VYおおいぬ座星！ 巨大ガス噴出に注意！',2000)}
- else if(count===9){transTitle.innerHTML='💥 ETA CARINAE';nextEl.textContent='巨大噴火を生き残った超大質量連星へ。';subEl.textContent='WORMHOLE 9';showToast('💥 イータ・カリーナ！ 大噴火の残骸が広がる。',2000)}
- else if(count===10){transTitle.innerHTML='🪐 STEPHENSON 2-18';nextEl.textContent='超巨大さで有名な最大級候補の怪物星へ。';subEl.textContent='WORMHOLE 10';showToast('🪐 Stephenson 2-18！ でかさが土星軌道級…！',2100)}
- else if(count===11){transTitle.innerHTML='🧲 MAGNETAR';nextEl.textContent='銀河最強クラスの磁場を持つ中性子星へ。';subEl.textContent='WORMHOLE 11';showToast('🧲 SGR 1806-20！ 磁場とガンマ線が桁違い！',2100)}
- else if(count===12){transTitle.innerHTML='💙 R136a1';nextEl.textContent='超高光度・超大質量の代表級へ。';subEl.textContent='WORMHOLE 12';showToast('💙 R136a1！ まぶしさ王クラス。',2100)}
- else if(count===13){transTitle.innerHTML='✨ S DORADUS';nextEl.textContent='S Doradus型変光星の代表へ。';subEl.textContent='WORMHOLE 13';showToast('✨ S Doradus！ このタイプの名前になった代表星。',2100)}
- else if(count===14){transTitle.innerHTML='⭐ M31-V1';nextEl.textContent='宇宙の距離測定を変えた歴史的な変光星へ。';subEl.textContent='WORMHOLE 14';showToast('⭐ M31-V1！ アンドロメダ銀河まで来た。',2100)}
- else if(count===15){transTitle.innerHTML='⭐ M51-DS1';nextEl.textContent='約3100万光年先で個別に見える星へ。';subEl.textContent='WORMHOLE 15';showToast('⭐ M51-DS1！ 距離が一気に銀河間スケールへ。',2100)}
- else if(count===16){transTitle.innerHTML='💙 ICARUS';nextEl.textContent='かつて最遠記録だった重力レンズ星へ。';subEl.textContent='WORMHOLE 16';showToast('💙 イカロス！ 94億光年級の世界へ。',2200)}
- else if(count===17){transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='いちばん遠い星へ。';subEl.textContent='WORMHOLE 17';showToast('✨ エアレンデル。宇宙が若いころの星！',2200)}
- else if(count===18){transTitle.innerHTML='🌑 DARK AGES';nextEl.textContent='星のない暗い宇宙へ。';subEl.textContent='ORIGIN 1';showToast('🌑 暗黒時代。まだ星が生まれる前や。',2200)}
- else if(count===19){transTitle.innerHTML='🌅 COSMIC DAWN';nextEl.textContent='最初の星が灯る宇宙の夜明けへ。';subEl.textContent='ORIGIN 2';showToast('🌅 宇宙の夜明け。最初の光が見えてくる！',2200)}
- else if(count===20){transTitle.innerHTML='📡 CMB';nextEl.textContent='宇宙の霧が晴れたあとの最古の光へ。';subEl.textContent='ORIGIN 3';showToast('📡 宇宙背景放射。赤ちゃん宇宙の光や。',2200)}
- else if(count===21){transTitle.innerHTML='⚛️ FIRST ELEMENTS';nextEl.textContent='水素やヘリウムができる宇宙へ。';subEl.textContent='ORIGIN 4';showToast('⚛️ 最初の元素が組み上がる！',2200)}
- else if(count===22){transTitle.innerHTML='🟣 PARTICLE ERA';nextEl.textContent='粒子たちが激しく飛び交う超初期宇宙へ。';subEl.textContent='ORIGIN 5';showToast('🟣 粒子の宇宙。物質の材料が大混戦！',2200)}
- else if(count===23){transTitle.innerHTML='💥 BIG BANG';nextEl.textContent='理論の限界を越えて、宇宙の始まりへ。';subEl.textContent='ORIGIN 6';showToast('💥 ビッグバン。ここより前はまだ謎が多い。',2300)}
+ else if(count===9){transTitle.innerHTML='💥 ETA CARINAE';nextEl.textContent='巨大噴火を生き残った超大質量連星へ。';subEl.textContent='WORMHOLE 9';showToast('💥 イータ・カリーナ！ 2つの星が動く大噴火星系。',2000)}
+ else if(count===10){transTitle.innerHTML='🌀 FASTEST PULSAR';nextEl.textContent='毎秒716回転する超高速中性子星へ。';subEl.textContent='WORMHOLE 10';showToast('🌀 PSR J1748-2446ad！ 1秒で約716回転！',2150)}
+ else if(count===11){transTitle.innerHTML='🪐 STEPHENSON 2-18';nextEl.textContent='超巨大さで有名な最大級候補の怪物星へ。';subEl.textContent='WORMHOLE 11';showToast('🪐 Stephenson 2-18！ でかさが土星軌道級…！',2100)}
+ else if(count===12){transTitle.innerHTML='🧲 MAGNETAR';nextEl.textContent='銀河最強クラスの磁場を持つ中性子星へ。';subEl.textContent='WORMHOLE 12';showToast('🧲 SGR 1806-20！ 磁場とガンマ線が桁違い！',2100)}
+ else if(count===13){transTitle.innerHTML='💙 R136a1';nextEl.textContent='超高光度・超大質量の代表級へ。';subEl.textContent='WORMHOLE 13';showToast('💙 R136a1！ まぶしさ王クラス。',2100)}
+ else if(count===14){transTitle.innerHTML='✨ S DORADUS';nextEl.textContent='S Doradus型変光星の代表へ。';subEl.textContent='WORMHOLE 14';showToast('✨ S Doradus！ ゆっくり大きく変光する。',2100)}
+ else if(count===15){transTitle.innerHTML='⭐ M31-V1';nextEl.textContent='宇宙の距離測定を変えた歴史的な変光星へ。';subEl.textContent='WORMHOLE 15';showToast('⭐ M31-V1！ 周期で明るさがゆっくり変わる。',2100)}
+ else if(count===16){transTitle.innerHTML='⭐ M51-DS1';nextEl.textContent='約3100万光年先で個別に見える星へ。';subEl.textContent='WORMHOLE 16';showToast('⭐ M51-DS1！ 距離が一気に銀河間スケールへ。',2100)}
+ else if(count===17){transTitle.innerHTML='💙 ICARUS';nextEl.textContent='かつて最遠記録だった重力レンズ星へ。';subEl.textContent='WORMHOLE 17';showToast('💙 イカロス！ 94億光年級の世界へ。',2200)}
+ else if(count===18){transTitle.innerHTML='✨ EARENDEL';nextEl.textContent='いちばん遠い星へ。';subEl.textContent='WORMHOLE 18';showToast('✨ エアレンデル。宇宙が若いころの星！',2200)}
+ else if(count===19){transTitle.innerHTML='🌑 DARK AGES';nextEl.textContent='星のない暗い宇宙へ。';subEl.textContent='ORIGIN 1';showToast('🌑 暗黒時代。まだ星が生まれる前や。',2200)}
+ else if(count===20){transTitle.innerHTML='🌅 COSMIC DAWN';nextEl.textContent='最初の星が灯る宇宙の夜明けへ。';subEl.textContent='ORIGIN 2';showToast('🌅 宇宙の夜明け。最初の光が見えてくる！',2200)}
+ else if(count===21){transTitle.innerHTML='📡 CMB';nextEl.textContent='宇宙の霧が晴れたあとの最古の光へ。';subEl.textContent='ORIGIN 3';showToast('📡 宇宙背景放射。赤ちゃん宇宙の光や。',2200)}
+ else if(count===22){transTitle.innerHTML='⚛️ FIRST ELEMENTS';nextEl.textContent='水素やヘリウムができる宇宙へ。';subEl.textContent='ORIGIN 4';showToast('⚛️ 最初の元素が組み上がる！',2200)}
+ else if(count===23){transTitle.innerHTML='🟣 PARTICLE ERA';nextEl.textContent='粒子たちが激しく飛び交う超初期宇宙へ。';subEl.textContent='ORIGIN 5';showToast('🟣 粒子の宇宙。物質の材料が大混戦！',2200)}
+ else if(count===24){transTitle.innerHTML='💥 BIG BANG';nextEl.textContent='理論の限界を越えて、宇宙の始まりへ。';subEl.textContent='ORIGIN 6';showToast('💥 ビッグバン。ここより前はまだ謎が多い。',2300)}
 }
 
 function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className=black?'spaghetti':'spin';transTitle.innerHTML=black?'⚫ BLACK HOLE IN!':'🌀 WORMHOLE!';nextEl.textContent=black?'🐕 びよーーーん…！！':'🐕 宇宙のもっと奥へ！';subEl.textContent=black?'SPAGHETTIFICATION':`WORMHOLE ${deepWarpCount+1}`;
@@ -1985,7 +1992,7 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
     wormholeMilestoneEffect(deepWarpCount);
     const milestones=[
       '🐶 プロキオン','🦅 アルタイル','😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星',
-      '💥 イータ・カリーナ','🪐 Stephenson 2-18','🧲 SGR 1806-20','💙 R136a1',
+      '💥 イータ・カリーナ','🌀 PSR J1748-2446ad','🪐 Stephenson 2-18','🧲 SGR 1806-20','💙 R136a1',
       '✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル',
       '🌑 暗黒時代','🌅 宇宙の夜明け','📡 宇宙背景放射（CMB）','⚛️ ビッグバン元素合成','🟣 粒子の宇宙','💫 ビッグバン'
     ];
@@ -2029,20 +2036,108 @@ function drawTinyEarth(x,y,r){ctx.save();const rg=ctx.createRadialGradient(x-r*.
 
 
 function v241StageDimAlpha(name,now){
+  const smooth=x=>x*x*(3-2*x);
   if(name==='😈 アルゴル'){
-    const pulse=(Math.sin(now/520)+1)/2;
-    return pulse>.72?.42:(.04+pulse*.08);
+    // 約10秒かけて、ゆっくり食へ。ゲーム上は変化が分かるよう暗さを強調。
+    const p=(Math.sin(now/1550-Math.PI/2)+1)/2;
+    return .02+smooth(p)*.72;
   }
   if(name==='❓ タビーの星'){
-    const mix=(Math.sin(now/310)+Math.sin(now/1170+1.8)+Math.sin(now/88+.45))/3;
-    if(mix>.58)return .36;
-    if(mix>.30)return .18;
-    return .03;
+    // 不規則な減光を、急点滅ではなく長い波で見せる。
+    const a=(Math.sin(now/2400-.8)+1)/2;
+    const b=(Math.sin(now/4100+1.7)+1)/2;
+    const p=Math.max(0,(a*.68+b*.32)-.42)/.58;
+    return .02+smooth(Math.min(1,p))*.58;
   }
-  if(name==='✨ S Doradus'||name==='⭐ M31-V1')return .03+((Math.sin(now/360)+1)/2)*.10;
-  if(name==='💙 R136a1')return .06+((Math.sin(now/220)+1)/2)*.20;
+  if(name==='✨ S Doradus'){
+    const p=(Math.sin(now/2100-Math.PI/2)+1)/2;
+    return .03+smooth(p)*.50;
+  }
+  if(name==='⭐ M31-V1'){
+    const p=(Math.sin(now/1650-Math.PI/2)+1)/2;
+    return .03+smooth(p)*.54;
+  }
+  if(name==='🌟 ポラリス'){
+    const p=(Math.sin(now/1950-Math.PI/2)+1)/2;
+    return .01+smooth(p)*.18;
+  }
+  if(name==='❤️ アンタレス'){
+    const p=(Math.sin(now/2300-Math.PI/2)+1)/2;
+    return .02+smooth(p)*.34;
+  }
+  if(name==='🔴 ベテルギウス'){
+    const p=(Math.sin(now/2500-Math.PI/2)+1)/2;
+    return .02+smooth(p)*.45;
+  }
+  if(name==='🐕 VYおおいぬ座星'){
+    const p=(Math.sin(now/2750-Math.PI/2)+1)/2;
+    return .02+smooth(p)*.40;
+  }
+  if(name==='💙 R136a1')return .04+((Math.sin(now/650)+1)/2)*.12;
   return 0;
 }
+
+function v247DrawMultipleSystem(name,now){
+  const cfg={
+    '⭐ シリウス':{n:2,cx:.78,cy:.22,r:42,speed:.00055,sizes:[16,6],colors:['#f8fdff','#d8f1ff']},
+    '🐶 プロキオン':{n:2,cx:.79,cy:.22,r:46,speed:.00062,sizes:[17,7],colors:['#fff1b8','#edf6ff']},
+    '😈 アルゴル':{n:3,cx:.79,cy:.22,r:40,speed:.00072,sizes:[15,11,6],colors:['#e9f2ff','#ffd6b9','#c7d4ff'],outer:78},
+    '🌾 スピカ':{n:2,cx:.79,cy:.22,r:30,speed:.00086,sizes:[15,13],colors:['#e8f8ff','#b9eaff']},
+    '🌟 ポラリス':{n:3,cx:.78,cy:.22,r:38,speed:.00038,sizes:[16,6,5],colors:['#fff4bd','#e9f4ff','#d5e7ff'],outer:82},
+    '❤️ アンタレス':{n:2,cx:.79,cy:.22,r:46,speed:.00034,sizes:[18,6],colors:['#ff7a5c','#bfe8ff']},
+    '💥 イータ・カリーナ':{n:2,cx:.76,cy:.22,r:38,speed:.00048,sizes:[17,12],colors:['#ffd7ee','#dff6ff']},
+    '🌀 PSR J1748-2446ad':{n:2,cx:.79,cy:.22,r:52,speed:.00095,sizes:[8,10],colors:['#e8fdff','#ffd7a8']}
+  }[name];
+  if(!cfg)return;
+
+  const cx=W*cfg.cx,cy=H*cfg.cy,t=now*cfg.speed;
+  ctx.save();
+  ctx.globalAlpha=.22;ctx.strokeStyle='#dff4ff';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.ellipse(cx,cy,cfg.r,cfg.r*.38,0,0,Math.PI*2);ctx.stroke();
+  if(cfg.n===3&&cfg.outer){
+    ctx.globalAlpha=.13;ctx.beginPath();ctx.ellipse(cx,cy,cfg.outer,cfg.outer*.40,.12,0,Math.PI*2);ctx.stroke();
+  }
+
+  for(let i=0;i<cfg.n;i++){
+    let rr=cfg.r,ang=t+i*Math.PI;
+    if(cfg.n===3&&i===2){rr=cfg.outer||cfg.r*1.8;ang=t*.38+1.2;}
+    const x=cx+Math.cos(ang)*rr;
+    const y=cy+Math.sin(ang)*rr*.38;
+    const size=cfg.sizes[i]||8;
+    const col=cfg.colors[i]||'#fff';
+    const rg=ctx.createRadialGradient(x-size*.25,y-size*.25,1,x,y,size*2.3);
+    rg.addColorStop(0,'#fff');rg.addColorStop(.24,col);rg.addColorStop(1,'transparent');
+    ctx.globalAlpha=.95;ctx.fillStyle=rg;ctx.beginPath();ctx.arc(x,y,size*2.3,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=col;ctx.shadowColor=col;ctx.shadowBlur=14;ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  }
+  ctx.restore();
+}
+
+function v247DrawPulsarFX(name,now){
+  if(name!=='🌀 PSR J1748-2446ad')return;
+  const cx=W*.79,cy=H*.22,a=now/92;
+  ctx.save();
+  const rg=ctx.createRadialGradient(cx,cy,1,cx,cy,52);
+  rg.addColorStop(0,'#fff');rg.addColorStop(.22,'#aef5ff');rg.addColorStop(.55,'rgba(118,173,255,.48)');rg.addColorStop(1,'transparent');
+  ctx.fillStyle=rg;ctx.beginPath();ctx.arc(cx,cy,54,0,Math.PI*2);ctx.fill();
+
+  ctx.translate(cx,cy);ctx.rotate(a);
+  for(let k=0;k<2;k++){
+    ctx.rotate(Math.PI*k);
+    const beam=ctx.createLinearGradient(0,0,235,0);
+    beam.addColorStop(0,'rgba(255,255,255,.78)');
+    beam.addColorStop(.22,'rgba(136,238,255,.46)');
+    beam.addColorStop(1,'rgba(96,154,255,0)');
+    ctx.fillStyle=beam;
+    ctx.beginPath();ctx.moveTo(5,-8);ctx.lineTo(245,-32);ctx.lineTo(245,32);ctx.lineTo(5,8);ctx.closePath();ctx.fill();
+  }
+  ctx.restore();
+
+  ctx.save();ctx.globalAlpha=.55;ctx.fillStyle='#dffcff';ctx.font='1000 9px system-ui';
+  ctx.fillText('716 ROTATIONS / SEC',W*.66,H*.36);
+  ctx.restore();
+}
+
 function drawStageSpecialFX(){
   const s=S(),name=s.name,now=performance.now(),gy=groundY(),t=now/1000;
   ctx.save();
@@ -2240,6 +2335,8 @@ function drawStageSpecialFX(){
     ctx.globalAlpha=.28;ctx.strokeStyle='#fff';ctx.lineWidth=3;
     for(let r=24;r<130;r+=24){ctx.beginPath();ctx.arc(W*.50,H*.26,r-(eventPhase%18),0,Math.PI*2);ctx.stroke()}
   }
+  v247DrawMultipleSystem(name,now);
+  v247DrawPulsarFX(name,now);
   const dim=v241StageDimAlpha(name,now);
   if(dim>0){ctx.globalAlpha=dim;ctx.fillStyle='#000';ctx.fillRect(0,0,W,H)}
   ctx.restore();
@@ -2648,8 +2745,9 @@ function update(now,dt){if(paused)return;const s=S();eventPhase++;difficultyTier
    for(const o of swarm){if(o.got)continue;const dx=p.x-o.x,dy=(p.y+20)-o.y;const d=Math.hypot(dx,dy);if(d<360){o.x+=dx*.018*dt;o.y+=dy*.018*dt}}
  }
  let speed=2.12+difficultyTier*.24+Math.min(.14,companionCount*.009);if(food===0)speed*=.82;
- if(s.name==='🦅 アルタイル')speed+=1.62+Math.sin(now/105)*.30;
- if(s.name==='💠 ベガ')speed+=1.28+Math.sin(now/120)*.24;
+ if(s.name==='🦅 アルタイル')speed+=2.35+Math.sin(now/90)*.36;
+ if(s.name==='💠 ベガ')speed+=1.95+Math.sin(now/100)*.30;
+ if(s.name==='🌀 PSR J1748-2446ad')speed+=2.85+Math.sin(now/58)*.42;
  if(s.name==='🪐 Stephenson 2-18')speed*=.92;
  if(s.name==='💙 R136a1'){const gust=(Math.sin(now/260)+1)/2;speed-=.18+gust*.42;eventEl.textContent=gust>.62?'💙 RADIATION WIND — 恒星風に押し戻される！':'💙 R136a1 — 次の恒星風が来る…';}
  if(s.name==='✨ S Doradus'){const phase=(Math.sin(now/650)+1)/2;speed+=phase>.52?-.16:.18;eventEl.textContent=phase>.52?'✨ EXPANDED — 大きく膨張・ゆるい風':'✨ COMPACT — 縮んで高温・強い風';}
@@ -3491,7 +3589,7 @@ for(let i=0;i<systems.length;i++)systemDistanceRank[i]=systems[i].secret?99:syst
 const v60DistanceByStage={
  '🌍 地球':'0 km','🌙 月':'約38.4万 km','♀ 金星':'約4,100万 km','🔴 火星':'約5,500万 km','☿ 水星':'約7,700万 km','☀️ 太陽':'約1.50億 km','🟠 木星':'約5.9億 km','🪐 土星':'約12億 km','🩵 天王星':'約26億 km','🔵 海王星':'約43億 km',
  '⭐ シリウス':'約8.6 光年','🐶 プロキオン':'約11.5 光年','🦅 アルタイル':'約16.7 光年','💠 ベガ':'約25 光年','😈 アルゴル':'約93 光年','🐶 ゴメイサ':'約162 光年','🕰️ メトシェラ星':'約190 光年','🌾 スピカ':'約250 光年','🌟 ポラリス':'約430 光年','🐕 アダーラ':'約430 光年','🐕 ミルザム':'約500 光年','❤️ アンタレス':'約550 光年','🔴 ベテルギウス':'約640 光年',
- '❓ タビーの星':'約1,470 光年','🦢 デネブ':'約1,400〜2,600 光年','🐕 ウェズン':'約1,600 光年','🐕 アルドラ':'約2,000 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🪐 Stephenson 2-18':'約2万 光年','🧲 SGR 1806-20':'約5万 光年',
+ '❓ タビーの星':'約1,470 光年','🦢 デネブ':'約1,400〜2,600 光年','🐕 ウェズン':'約1,600 光年','🐕 アルドラ':'約2,000 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🌀 PSR J1748-2446ad':'約1.8万 光年','🪐 Stephenson 2-18':'約2万 光年','🧲 SGR 1806-20':'約5万 光年',
  '🌸 花吹雪星':'ゲーム内 約129億 光年','🌝 ムーンフェイス':'約38.4万 km（秘密領域）'
 };
 function v60FormatDistance(raw){
@@ -6865,6 +6963,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🦢 デネブ':'非常に小さい（超巨星・推定幅大）',
     '🐕 VYおおいぬ座星':'地球より非常に小さい（極超巨星）',
     '💥 イータ・カリーナ':'正確な表面重力は推定困難（連星・強い質量放出）',
+    '🌀 PSR J1748-2446ad':'約10¹¹G級（中性子星）',
     '🧲 SGR 1806-20':'約10¹¹G級（中性子星）',
     '💙 R136a1':'約4.6G（推定表面重力）'
   };
@@ -6874,7 +6973,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🩵 天王星':.54,'🔵 海王星':.62,'☀️ 太陽':.95,'☿ 水星':.38,'♀ 金星':.55,
     '⭐ シリウス':.82,'🐶 プロキオン':.68,'🦅 アルタイル':.72,'💠 ベガ':.74,'😈 アルゴル':.70,'🐶 ゴメイサ':.72,'🕰️ メトシェラ星':.49,'🌾 スピカ':.62,'🌟 ポラリス':.28,'🐕 アダーラ':.40,'🐕 ミルザム':.40,'❤️ アンタレス':.22,'🔴 ベテルギウス':.22,
     '🐕 ウェズン':.23,'🐕 アルドラ':.28,
-    '❓ タビーの星':.66,'🦢 デネブ':.26,'🐕 VYおおいぬ座星':.20,'💥 イータ・カリーナ':.34,'🧲 SGR 1806-20':.88,'💙 R136a1':.70,'✨ S Doradus':.32,'⭐ M31-V1':.30,'💫 AF Andromedae':.34,
+    '❓ タビーの星':.66,'🦢 デネブ':.26,'🐕 VYおおいぬ座星':.20,'💥 イータ・カリーナ':.34,'🌀 PSR J1748-2446ad':.90,'🧲 SGR 1806-20':.88,'💙 R136a1':.70,'✨ S Doradus':.32,'⭐ M31-V1':.30,'💫 AF Andromedae':.34,
     '🟢 ロマーノ星 GR 290':.58,'🌠 M33 Var C':.33,'⭐ M51-DS1':.45,'🎨 Warhol':.46,
     '💙 イカロス':.48,'🦋 モスラ':.42,'❤️ クイユル':.30,'🦖 ゴジラ':.45,
     '🔷 Abell 2744 LS1':.47,'💠 MACS J0647 LS1':.46,'✨ エアレンデル':.45
@@ -12820,6 +12919,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🐕 VYおおいぬ座星':{main:'表面 約3,200℃',sub:'約3,490Kの赤色極超巨星'},
     '💥 イータ・カリーナ':{main:'主星 約1〜2万℃級',sub:'不安定な連星で状態により推定幅が大きい'},
     '🪐 Stephenson 2-18':{main:'表面 約3,000℃前後',sub:'赤色超巨星らしい低温な表面'},
+    '🌀 PSR J1748-2446ad':{main:'中性子星なので非常に高温',sub:'年齢・加熱状態で表面温度の推定幅が大きい'},
     '🧲 SGR 1806-20':{main:'表面 約1,000万℃級',sub:'普通の恒星ではなく、超高温のマグネター'},
     '💙 R136a1':{main:'表面 約4.5万℃級',sub:'非常に高温なWNh型大質量星'},
     '✨ S Doradus':{main:'約8,000〜2.5万℃級',sub:'LBVの変光に伴い大きく変わる'},
@@ -12945,6 +13045,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       home:'天の川銀河 ｜ たて座方向 ｜ Stephenson 2 星団',
       life:'約1000万年級',
       lifeSub:'赤色超巨星まで進化した終盤の大質量星。最大級候補だが半径にはまだ不確かさもある'
+    },
+    '🌀 PSR J1748-2446ad':{
+      home:'天の川銀河 ｜ いて座方向 ｜ 球状星団 Terzan 5',
+      life:'恒星としての寿命は終了',
+      lifeSub:'超新星後の中性子星。現在は超高速で回るミリ秒パルサーとして存在'
     },
     '🧲 SGR 1806-20':{
       home:'天の川銀河 ｜ 星団 Cl* 1806-20 付近',
@@ -13211,6 +13316,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🐕 VYおおいぬ座星':{mag:'約6.5〜9等',magSub:'変光＋塵で暗さが変わる',multi:'1個星扱い',multiSub:'確実な伴星は未確認',fate:'🚨 超新星候補',fateSub:'赤色極超巨星｜寿命最終盤級',fateClass:'supernova'},
     '💥 イータ・カリーナ':{mag:'現在 約4〜5等級',magSub:'巨大噴火時は−1等級級まで増光',multi:'2重星',multiSub:'超大質量の連星系',fate:'🚨 超新星候補',fateSub:'非常に大質量｜時期は予測できない',fateClass:'supernova'},
     '🪐 Stephenson 2-18':{mag:'肉眼では見えない',magSub:'塵に隠れ、赤外線で目立つ',multi:'不明',multiSub:'伴星の有無は確定していない',fate:'超新星候補',fateSub:'大質量なら核崩壊型へ｜推定幅あり',fateClass:'supernova'},
+    '🌀 PSR J1748-2446ad':{mag:'可視光では極暗い',magSub:'電波パルスが主役',multi:'2重星系',multiSub:'ミリ秒パルサー＋伴星',fate:'💀 すでに爆発後',fateSub:'超新星後に残った超高速中性子星',fateClass:'remnant'},
     '🧲 SGR 1806-20':{mag:'可視光では極暗い',magSub:'X線・γ線・赤外線が主役',multi:'星の残骸1個',multiSub:'マグネター',fate:'💀 すでに爆発後',fateSub:'超新星後に残った中性子星',fateClass:'remnant'},
     '💙 R136a1':{mag:'約13等級',magSub:'肉眼では見えない',multi:'1個星扱い',multiSub:'近接伴星は未確定',fate:'🚨 超新星級の最期候補',fateSub:'超大質量｜ブラックホール化も候補',fateClass:'supernova'},
     '✨ S Doradus':{mag:'約8〜11等級',magSub:'大きく変光する',multi:'1個星扱い',multiSub:'確実な近接伴星は未確定',fate:'🚨 超新星候補',fateSub:'LBV｜大質量星の進化後半',fateClass:'supernova'},
@@ -13601,6 +13707,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🐕 VYおおいぬ座星':{main:'かなりゆっくり',sub:'巨大な赤色極超巨星',known:false},
     '💥 イータ・カリーナ':{main:'複雑で不明',sub:'連星相互作用で単純比較しづらい',known:false},
     '🪐 Stephenson 2-18':{main:'かなりゆっくり',sub:'巨大化した赤色超巨星らしい低速回転',known:false},
+    '🌀 PSR J1748-2446ad':{main:'最速級',sub:'約1.4ミリ秒｜毎秒約716回転',known:true},
     '🧲 SGR 1806-20':{main:'超高速',sub:'約7.5秒',known:true},
     '💙 R136a1':{main:'不明',sub:'超大質量で詳しい自転は不確か',known:false},
     '✨ S Doradus':{main:'不明',sub:'変動が大きく単純比較しづらい',known:false},
@@ -13635,6 +13742,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🐕 VYおおいぬ座星':{size:100,light:88,spin:8},
     '💥 イータ・カリーナ':{size:38,light:94,spin:18},
     '🪐 Stephenson 2-18':{size:100,light:86,spin:8},
+    '🌀 PSR J1748-2446ad':{size:3,light:82,spin:100},
     '🧲 SGR 1806-20':{size:4,light:98,spin:100},
     '💙 R136a1':{size:36,light:100,spin:0},
     '✨ S Doradus':{size:58,light:90,spin:0},
@@ -13836,6 +13944,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🐕 VYおおいぬ座星':{title:'📏 超巨大な犬系の怪物星',chips:['赤色極超巨星','最大級'],text:'木星〜土星軌道級まで膨らむことがある、とんでも犬星。'},
     '💥 イータ・カリーナ':{title:'💣 爆発寸前候補の暴れ星',chips:['巨大噴火','超大質量連星'],text:'1840年代に大噴火しても生き残った。将来は超新星級イベント候補。'},
     '🪐 Stephenson 2-18':{title:'🪐 超巨大・最大級候補',chips:['サイズ王候補','土星軌道級'],text:'とにかく「でかさ」が主役。既知で最も大きい星の候補として有名。'},
+    '🌀 PSR J1748-2446ad':{title:'🌀 回転速度やばすぎパルサー',chips:['毎秒約716回転','最速記録'],text:'約1.4ミリ秒で1回転する、現在知られている中で最速のパルサー。ビームが灯台みたいに高速で横切る。'},
     '🧲 SGR 1806-20':{title:'🧲 磁力やばすぎ星',chips:['マグネター','巨大フレア'],text:'普通の星というより星の死骸やけど、超強磁場とフレアの破壊力が桁違い。'},
     '💙 R136a1':{title:'💡 いちばん眩しい級',chips:['超高光度','怪物級'],text:'本来の明るさでは太陽の何百万倍級。まぶしさ王クラス。'},
     '✨ S Doradus':{title:'✨ 変光星タイプの代表',chips:['S Dor型の名前の由来','LBV代表'],text:'「S Doradus型変光星」という分類名そのものの代表になった星。'},
@@ -16119,15 +16228,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v246';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v246</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v247';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v247</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v246</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v247</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16164,7 +16273,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       '📡 宇宙背景放射（CMB）','🌑 暗黒時代','🌅 宇宙の夜明け','🔥 再電離時代'
     ];
     const distantOrder=[
-      '🐶 プロキオン','🦅 アルタイル','😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🪐 Stephenson 2-18',
+      '🐶 プロキオン','🦅 アルタイル','😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🌀 PSR J1748-2446ad','🪐 Stephenson 2-18',
       '🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル'
     ];
     const solarStageOrder=[
@@ -16682,7 +16791,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v246';
+window.INUBOSHI_GAME_VERSION='v247';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -17681,6 +17790,131 @@ whiteHoleEscape=function(){
 
 v246AlignPhysicsHud();
 /* === /v246 === */
+
+
+/* === v247: screenshot-style gravity/jump HUD + reliable BH menu entry === */
+function v247PhysicsData(){
+  const st=S();
+  const earth=systems?.[0]?.stages?.find(x=>x?.name==='🌍 地球')||{gravity:.56,jump:15.6};
+  const g=Number.isFinite(st?.gravity)?st.gravity:earth.gravity;
+  const j=Number.isFinite(st?.jump)?st.jump:earth.jump;
+
+  // Game gravity normalized so Earth is always 1.00G, matching the reference HUD.
+  const gravityG=Math.max(.01,g/earth.gravity);
+
+  // Jump "feel" uses expected jump height ~ v²/g relative to Earth.
+  const earthFeel=(earth.jump*earth.jump)/Math.max(.01,earth.gravity);
+  const feel=(j*j)/Math.max(.01,g);
+  const ratio=feel/earthFeel;
+
+  let arrow='↔',cls='same';
+  if(ratio>=1.55){arrow='⬆️⬆️';cls='up2'}
+  else if(ratio>=1.12){arrow='⬆️';cls='up'}
+  else if(ratio<=.68){arrow='⬇️⬇️';cls='down2'}
+  else if(ratio<=.90){arrow='⬇️';cls='down'}
+
+  return {gravityG,arrow,cls};
+}
+function v247PhysicsHTML(){
+  const d=v247PhysicsData();
+  return `<span class="v247PhysicsBlock">
+    <span>🧲 重力｜<b>${d.gravityG.toFixed(2)}G</b></span>
+    <span>⬆️ ジャンプ｜<b class="${d.cls}">${d.arrow}</b></span>
+  </span>`;
+}
+v246AlignPhysicsHud=function(){
+  if(!astroInfo)return;
+  const hint=astroInfo.querySelector('.distanceHint');
+  if(!hint)return;
+
+  const parts=hint.innerHTML
+    .split(/<br\s*\/?>/i)
+    .filter(Boolean)
+    .filter(part=>{
+      const plain=part.replace(/<[^>]*>/g,'').replace(/&nbsp;/g,' ').trim();
+      return !/(ゲーム重力|実際の重力|地球重力|🧲\s*重力|ジャンプ力|⬆️\s*ジャンプ|v246Physics|v247Physics)/.test(plain);
+    });
+
+  hint.innerHTML=v247PhysicsHTML()+(parts.length?'<br>'+parts.join('<br>'):'');
+};
+
+(function v247InstallPhysicsStyle(){
+  if(document.getElementById('v247PhysicsStyle'))return;
+  const st=document.createElement('style');st.id='v247PhysicsStyle';
+  st.textContent=`
+    .v247PhysicsBlock{display:flex;flex-direction:column;gap:2px;margin:3px 0 2px;color:#bfeaff;font:900 9px/1.35 system-ui}
+    .v247PhysicsBlock span{display:block;white-space:nowrap}
+    .v247PhysicsBlock b{color:#fff;font:1000 10px/1 system-ui}
+    .v247PhysicsBlock b.up,.v247PhysicsBlock b.up2{color:#b9ffca}
+    .v247PhysicsBlock b.down,.v247PhysicsBlock b.down2{color:#ffcabf}
+    .v247PhysicsBlock b.same{color:#fff7bd}
+  `;
+  document.head.appendChild(st);
+})();
+
+let v247BHLockUntil=0;
+function v247EnterBlackHole(source='menu'){
+  const si=systems.findIndex(s=>s?.name==='⚫ ブラックホール');
+  if(si<0)return false;
+
+  // Save the actual star we came from before the route controller changes state.
+  if(system!==si){
+    window.__v246BHOriginSystem=system;
+    window.__v246BHOriginRank=Number.isFinite(systemDistanceRank[system])?systemDistanceRank[system]:0;
+    window.__v246BHOriginStage=S()?.name||'';
+  }
+
+  // Crucial: use v170's canonical route once so its private phase becomes "outbound".
+  // Previous versions changed only system/stage, leaving that private route phase behind.
+  let ok=false;
+  try{ok=!!window.__v170RouteAPI?.blackHole?.();}catch(e){console.error('[BH ROUTE API]',e)}
+  if(!ok){
+    try{ok=!!v246EnterBlackHole(source);}catch(e){console.error('[BH V246 FALLBACK]',e)}
+  }
+
+  v247BHLockUntil=performance.now()+1800;
+  system=si;stage=0;paused=false;camera=0;p.x=110;p.vy=0;
+  wormholeActive=false;blackHoleActive=false;whiteHoleTriggered=false;blackHoleVisited=true;
+  try{syncHUD(true);}catch(e){}
+  return true;
+}
+window.__v247EnterBlackHole=v247EnterBlackHole;
+window.__v246EnterBlackHole=v247EnterBlackHole;
+window.__v245EnterBlackHole=v247EnterBlackHole;
+window.__v242EnterBlackHole=v247EnterBlackHole;
+window.__v217GoBlackHole=v247EnterBlackHole;
+
+// Keep the black-hole system selected for a short moment after the button click,
+// preventing older asynchronous route wrappers from snapping back to the prior star.
+const v247BaseUpdate=update;
+update=function(now,dt){
+  if(now<v247BHLockUntil){
+    const si=systems.findIndex(s=>s?.name==='⚫ ブラックホール');
+    if(si>=0&&system!==si){
+      system=si;stage=0;paused=false;camera=0;p.x=110;p.vy=0;
+      try{makeWorld();syncHUD(true);}catch(e){}
+    }
+    wormholeActive=false;blackHoleActive=false;whiteHoleTriggered=false;
+  }
+  return v247BaseUpdate(now,dt);
+};
+
+// Capture the hidden-menu button before the later menu scripts can intercept it.
+document.addEventListener('click',function(e){
+  const b=e.target?.closest?.('#v214BlackHoleDirect');
+  if(!b)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  const ok=v247EnterBlackHole('hidden-button');
+  if(ok){
+    const panel=document.getElementById('v150JumpPanel');
+    panel?.classList.remove('on');
+    panel?.setAttribute('aria-hidden','true');
+  }
+},true);
+
+v247PhysicsHTML();
+setTimeout(()=>{try{v246AlignPhysicsHud();}catch(e){}},0);
+/* === /v247 === */
 
 
 })();
@@ -20708,7 +20942,7 @@ v246AlignPhysicsHud();
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v246</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v247</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">直接移動 → ホワイトホール出口まで遊べる</small></button>
@@ -20738,7 +20972,7 @@ v246AlignPhysicsHud();
 
   function goBlackHoleHard(){
     try{
-      const ok=window.__v246EnterBlackHole?.('menu');
+      const ok=window.__v247EnterBlackHole?.('menu');
       if(ok){
         panel.classList.remove('on');
         panel.setAttribute('aria-hidden','true');
@@ -21165,11 +21399,11 @@ v246AlignPhysicsHud();
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v246';
+  window.INUBOSHI_GAME_VERSION='v247';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v246<small>FASTER ROTATORS + STAR SIGNALS + BLACK/WHITE HOLE ROUTE / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v247<small>PHYSICS HUD + MOVING MULTI-STARS + SLOW VARIABLES + FASTEST PULSAR + BH BUTTON / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
@@ -21208,7 +21442,7 @@ document.addEventListener('click',function(e){
   const b=e.target&&e.target.closest&&e.target.closest('#v214BlackHoleDirect');
   if(!b)return;
   e.preventDefault();
-  try{window.__v246EnterBlackHole?.('fallback');}catch(err){console.error('[BH FALLBACK]',err);}
+  try{window.__v247EnterBlackHole?.('fallback');}catch(err){console.error('[BH FALLBACK]',err);}
 },true);
 </script>
 
