@@ -16319,15 +16319,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v261';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v261</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v262';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v262</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v261</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v262</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16882,7 +16882,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v261';
+window.INUBOSHI_GAME_VERSION='v262';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -17602,54 +17602,72 @@ function v232DrawScorchedSkyPulse(step){
   const now=performance.now();
   const key='heat|'+v215StageKey();
   if(V234.heatKey!==key){ V234.heatKey=key; V234.heatStart=now; }
+
   const t=now/1000;
   const elapsed=(now-V234.heatStart)/1000;
-  if(elapsed<V234.heatDelay)return; // 最初は背景そのまま見せる
-  const play=Math.max(0,elapsed-V234.heatDelay);
-  const p=Math.max(0,Math.min(1,play/7.2));
-  const spread=Math.max(0,Math.min(1,p/0.60));
-  const dark=Math.max(0,Math.min(1,(p-0.46)/0.54));
-  const haze=(0.06+0.035*Math.sin(t*1.35))*(1-dark);
+
+  // v262:
+  // 0〜1.8秒   元の未来地球を見せる
+  // 1.8〜6.8秒 赤い熱がゆっくり画面全体へ広がる
+  // 6.8〜10.6秒 赤い世界をしっかり見せる
+  // 10.6秒以降 ようやく暗くなり始める
+  const delay=1.8;
+  if(elapsed<delay)return;
+
+  const play=elapsed-delay;
+  const spread=Math.max(0,Math.min(1,play/5.0));
+  const dark=Math.max(0,Math.min(1,(play-8.8)/4.4));
+  const haze=(0.075+0.035*Math.sin(t*1.15))*(1-dark*.72);
+
   const sunX=W*0.82;
   const sunY=gy*0.20;
-  const maxR=Math.hypot(Math.max(sunX,W-sunX),Math.max(sunY,gy-sunY))+140;
+  const maxR=Math.hypot(Math.max(sunX,W-sunX),Math.max(sunY,gy-sunY))+170;
   const radius=110+maxR*spread;
+
   ctx.save();
 
-  // 元の灼熱背景の上で、太陽側から赤い熱が広がっていく。
-  const heat=ctx.createRadialGradient(sunX,sunY,28,sunX,sunY,radius);
-  heat.addColorStop(0,'rgba(255,240,185,0.03)');
-  heat.addColorStop(0.16,`rgba(255,215,120,${(0.06+0.06*(1-dark)).toFixed(3)})`);
-  heat.addColorStop(0.42,`rgba(255,103,36,${(0.14+0.26*(1-dark)).toFixed(3)})`);
-  heat.addColorStop(0.75,`rgba(228,40,18,${(0.10+0.32*(1-dark)).toFixed(3)})`);
-  heat.addColorStop(1,'rgba(228,40,18,0)');
+  // 太陽側から強い赤い熱がゆっくり広がる。
+  const heat=ctx.createRadialGradient(sunX,sunY,20,sunX,sunY,radius);
+  heat.addColorStop(0,'rgba(255,248,205,0.16)');
+  heat.addColorStop(0.13,`rgba(255,215,112,${(0.18+0.10*(1-dark)).toFixed(3)})`);
+  heat.addColorStop(0.38,`rgba(255,104,32,${(0.25+0.31*(1-dark)).toFixed(3)})`);
+  heat.addColorStop(0.72,`rgba(231,38,18,${(0.20+0.36*(1-dark)).toFixed(3)})`);
+  heat.addColorStop(1,'rgba(205,20,10,0)');
   ctx.fillStyle=heat;
   ctx.fillRect(0,0,W,gy-1);
 
-  // 広がり切ったあとに、空全体が炭化して暗くなる。
-  const charAlpha=0.82*dark;
+  // 広がり切ったあともしばらく赤い世界を保つ。
+  if(spread>=.98){
+    const redHold=1-dark;
+    ctx.fillStyle=`rgba(176,20,10,${(0.16*redHold).toFixed(3)})`;
+    ctx.fillRect(0,0,W,gy-1);
+  }
+
+  // 暗転はかなり後から。
+  const charAlpha=0.84*dark;
   if(charAlpha>0.001){
     ctx.fillStyle=`rgba(0,0,0,${charAlpha.toFixed(3)})`;
     ctx.fillRect(0,0,W,gy-1);
   }
 
-  // ビルの後ろでだけ動く熱のゆらぎ。
-  for(let i=0;i<4;i++){
-    const bandY=gy*(0.16+i*0.14)+Math.sin(t*0.8+i*1.5)*9;
-    const bandH=24+(i%2)*12;
+  // ビルの後ろで揺れる熱。
+  for(let i=0;i<5;i++){
+    const bandY=gy*(0.13+i*0.14)+Math.sin(t*0.66+i*1.5)*10;
+    const bandH=28+(i%2)*14;
     const grad=ctx.createLinearGradient(0,bandY,0,bandY+bandH);
-    grad.addColorStop(0,'rgba(255,120,46,0)');
-    grad.addColorStop(.48,`rgba(255,120,40,${haze.toFixed(3)})`);
-    grad.addColorStop(1,'rgba(255,120,46,0)');
+    grad.addColorStop(0,'rgba(255,116,40,0)');
+    grad.addColorStop(.48,`rgba(255,104,32,${haze.toFixed(3)})`);
+    grad.addColorStop(1,'rgba(255,116,40,0)');
     ctx.fillStyle=grad;
     ctx.fillRect(0,bandY,W,bandH);
   }
 
-  // 暗転後も、太陽まわりに弱い残光を少し残す。
-  const afterGlow=ctx.createRadialGradient(sunX,sunY,18,sunX,sunY,Math.max(150,radius*0.44));
-  afterGlow.addColorStop(0,`rgba(255,224,140,${(0.06+0.03*Math.sin(t*1.0)).toFixed(3)})`);
-  afterGlow.addColorStop(0.55,`rgba(255,117,51,${(0.04+0.03*(1-dark)).toFixed(3)})`);
-  afterGlow.addColorStop(1,'rgba(255,90,40,0)');
+  // 太陽の赤い残光も長めに残す。
+  const glowR=Math.max(190,radius*.48);
+  const afterGlow=ctx.createRadialGradient(sunX,sunY,14,sunX,sunY,glowR);
+  afterGlow.addColorStop(0,`rgba(255,239,171,${(0.18-0.08*dark).toFixed(3)})`);
+  afterGlow.addColorStop(.48,`rgba(255,101,38,${(0.14-0.07*dark).toFixed(3)})`);
+  afterGlow.addColorStop(1,'rgba(224,40,18,0)');
   ctx.fillStyle=afterGlow;
   ctx.fillRect(0,0,W,gy-1);
 
@@ -20375,24 +20393,6 @@ update=function(now,dt){
     }
   }
 
-  /* ---------------------------------------------------------
-     4) 宇宙の最果て → BIG BANG直前：
-        約3秒間、完全ホワイトアウト
-     --------------------------------------------------------- */
-  if(V260_ORIGIN.active&&systems[system]?.name==='🌌 宇宙の最果て'&&V260_ORIGIN.edgeStart){
-    const e=now-V260_ORIGIN.edgeStart;
-    if(e>=9000&&!V261.whiteoutShown){
-      V261.whiteoutShown=true;
-      trans.style.display='grid';
-      trans.style.background='#fff';
-      trans.style.color='#fff';
-      warpDog.textContent='';
-      warpDog.className='';
-      transTitle.innerHTML='';
-      nextEl.textContent='';
-      subEl.textContent='';
-    }
-  }
 
   return out;
 };
@@ -20401,16 +20401,6 @@ update=function(now,dt){
    v261は 9秒まで最果て演出 + 3秒ホワイトアウト = 合計12秒。 */
 V260_ORIGIN.edgeDuration=12000;
 
-const v261BaseJumpEra=v260JumpEra;
-v260JumpEra=function(index,now){
-  // ホワイトアウトを解除した瞬間にBIG BANGステージへ。
-  trans.style.display='none';
-  trans.style.background='';
-  trans.style.color='';
-  warpDog.textContent=playerDog;
-  V261.whiteoutShown=false;
-  return v261BaseJumpEra(index,now);
-};
 
 /* 宇宙の最果てに入り直した時はホワイトアウト状態を初期化 */
 const v261BaseStageStart=stageStart;
@@ -20418,9 +20408,6 @@ stageStart=function(){
   const out=v261BaseStageStart();
   if(systems[system]?.name==='🌌 宇宙の最果て'){
     V261.whiteoutShown=false;
-    trans.style.display='none';
-    trans.style.background='';
-    trans.style.color='';
   }
   if(systems[system]?.name==='🐾 犬の夢の星'){
     V261.dogBoneAt=performance.now()+180;
@@ -20540,6 +20527,123 @@ window.__v261State=()=>({
   whiteout:V261.whiteoutShown
 });
 /* === /v261 === */
+
+
+/* === v262: EXACT COSMIC EDGE SEQUENCE + FUTURE HEAT RESET === */
+
+/* 2つ前の「黒い世界→白い丸→光が広がる」をそのまま核にして、
+   光が画面を覆ったあとだけ約3秒長く白を保つ。
+   transition / wormhole UI は一切使わない。 */
+V260_ORIGIN.edgeDuration=12000;
+
+v260DrawCosmicEdge=function(){
+  if(!V260_ORIGIN.active||systems[system]?.name!=='🌌 宇宙の最果て'||!V260_ORIGIN.edgeStart)return;
+
+  const e=performance.now()-V260_ORIGIN.edgeStart;
+  const cx=W*.5,cy=H*.38;
+  ctx.save();
+
+  // 0〜4.6秒：最後の星が遠ざかりながら消える。
+  const fade=Math.max(0,1-e/4600);
+  ctx.fillStyle='#000';
+  ctx.globalAlpha=Math.min(.96,e/3400);
+  ctx.fillRect(0,0,W,H);
+
+  if(e<4600){
+    for(let i=0;i<22;i++){
+      const a=i*.87;
+      const q=e/4600;
+      const rr=(48+i*10)*(1+q*2.8);
+      const x=cx+Math.cos(a)*rr;
+      const y=cy+Math.sin(a)*rr*.57;
+      ctx.globalAlpha=.52*fade*(.58+(i%4)*.12);
+      ctx.fillStyle='#e7efff';
+      ctx.beginPath();ctx.arc(x,y,1+(i%3)*.38,0,Math.PI*2);ctx.fill();
+    }
+  }
+
+  // 4.6〜6.2秒：完全な黒い世界。
+  if(e>=4600){
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#000';
+    ctx.fillRect(0,0,W,H);
+  }
+
+  // 6.2〜7.0秒：白い丸が一点だけ現れる。
+  if(e>=6200){
+    const pq=Math.max(0,Math.min(1,(e-6200)/800));
+    const r=2+pq*9;
+    ctx.globalAlpha=1;
+    ctx.shadowColor='#fff';
+    ctx.shadowBlur=14+pq*38;
+    ctx.fillStyle='#fff';
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+  }
+
+  // 7.0〜9.0秒：その白い光が急激に画面いっぱいへ広がる。
+  if(e>=7000&&e<9000){
+    const q=Math.max(0,Math.min(1,(e-7000)/2000));
+    const ease=1-Math.pow(1-q,2.2);
+    const rr=10+ease*Math.max(W,H)*1.55;
+
+    const rg=ctx.createRadialGradient(cx,cy,0,cx,cy,rr);
+    rg.addColorStop(0,'rgba(255,255,255,1)');
+    rg.addColorStop(.10,'rgba(255,255,245,1)');
+    rg.addColorStop(.28,'rgba(255,223,175,.96)');
+    rg.addColorStop(.54,'rgba(255,133,94,.76)');
+    rg.addColorStop(.78,'rgba(205,105,255,.30)');
+    rg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=rg;
+    ctx.globalAlpha=1;
+    ctx.beginPath();ctx.arc(cx,cy,rr,0,Math.PI*2);ctx.fill();
+  }
+
+  // 9.0〜12.0秒：光が広がり切ってから、何も表示せず真っ白のまま保つ。
+  if(e>=9000){
+    V261.whiteoutShown=true;
+    ctx.globalAlpha=1;
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#fff';
+    ctx.fillRect(0,0,W,H);
+  }else{
+    V261.whiteoutShown=false;
+  }
+
+  ctx.restore();
+};
+
+/* 未来の地球を入り直した時、赤い熱アニメーションを必ず最初から再生。
+   以前は同じstageKeyが残り、再訪時に既に暗転後の時刻になっていた。 */
+const v262BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v262BaseStageStart();
+
+  if(systems[system]?.futureEra&&systems[system]?.futureStep===2){
+    V234.heatKey='';
+    V234.heatStart=performance.now();
+  }
+
+  if(systems[system]?.name==='🌌 宇宙の最果て'){
+    V261.whiteoutShown=false;
+  }
+
+  return out;
+};
+
+window.__v262State=()=>({
+  cosmicEdge:{
+    active:V260_ORIGIN.active&&systems[system]?.name==='🌌 宇宙の最果て',
+    elapsed:V260_ORIGIN.edgeStart?Math.round(performance.now()-V260_ORIGIN.edgeStart):0,
+    whiteout:V261.whiteoutShown
+  },
+  futureHeat:{
+    step:systems[system]?.futureStep||0,
+    key:V234.heatKey,
+    elapsed:V234.heatStart?Number(((performance.now()-V234.heatStart)/1000).toFixed(1)):0
+  }
+});
+/* === /v262 === */
 
 
 })();
@@ -23567,7 +23671,7 @@ window.__v261State=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v261</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v262</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -24038,11 +24142,11 @@ window.__v261State=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v261';
+  window.INUBOSHI_GAME_VERSION='v262';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v261<small>SPAGHETTI HUD + FLOWER DISTANCE + WHITEOUT + DOG BONE RAIN + FUTURE BH / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v262<small>COSMIC EDGE TIMING FIX + FUTURE RED HEAT HOLD / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
