@@ -2499,7 +2499,7 @@ name:'💙 R136a1',distance:'地球から約16.3万光年',desc:'知られてい
 {name:'🌌 宇宙の最果て',distance:'距離は定義できない（ゲーム演出）',desc:'ゲーム上の架空表現。観測可能な宇宙のさらに先へ進み、星も光も消えていくBONUS STAGEの入口',theme:'milky',postEarendel:true,theoretical:true,stages:[
 {name:'🌌 宇宙の最果て',distance:'距離は定義できない（ゲーム演出）',desc:'架空演出：遠ざかる星が徐々に消え、完全な暗闇の先でビッグバンの光が始まる',goodColor:'#dce8ff',sky:['#030610','#000108'],ground:'#252938',ground2:'#080a10',planet:'#11182a',event:'COSMIC EDGE',eventText:'🌌 星が遠ざかり、宇宙が真っ暗になっていく…',gravity:.42,jump:17.6}
 ]},
-{name:'⚫ ブラックホール',distance:'地球からの距離は測定不能',desc:'光も逃げられない重力領域',theme:'blackhole',stages:[
+{name:'⚫ ブラックホール',distance:'地球から約129億光年',desc:'エアレンデル付近にある、光も逃げられない強重力領域',theme:'blackhole',stages:[
 {name:'🕳️ ブラックホール内部',desc:'事象の地平面を越えた、光も戻れない内部',goodColor:'#d9b6ff',sky:['#000','#15051e'],ground:'#27212f',ground2:'#09070c',planet:'#000',event:'GRAVITY WELL',eventText:'重力でジャンプ軌道がゆがむ！',gravity:.72,jump:18.3}
 ]}
 ];
@@ -6139,7 +6139,7 @@ let v67InsuranceGraceUntil=0;
 
 /* === v72 pacing / solar-route / UI cleanup === */
 (function(){
-  const V72_SOLAR_LAST=9; // Earth..Neptune after v60 sort
+  const V72_SOLAR_LAST=10; // Earth..Neptune after v60 sort + Europa
   const v72PrevStageStart=stageStart;
   stageStart=function(){
     v72PrevStageStart();
@@ -8620,6 +8620,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         secret:!!sys.secret,
         dream:!!sys.dream,
         blackHole:si===BLACK_HOLE_SYSTEM,
+        futureEra:!!sys.futureEra,
+        futureStep:sys.futureStep||0,
+        epoch:!!sys.epoch,
+        hypothesis:!!sys.hypothesis,
+        endHypothesis:!!sys.endHypothesis,
+        v177Formation:!!sys.v177Formation,
+        v170EarthBirth:!!sys.v170EarthBirth,
+        v177EarthHistory:!!sys.v177EarthHistory,
         stages:(sys.stages||[]).map((st,ti)=>({
           si,ti,
           name:st.name,
@@ -12272,7 +12280,6 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const panels=[
       {x:.13,y:.22,w:.24,h:.20,type:'street'},
       {x:.58,y:.12,w:.22,h:.20,type:'moon'},
-      {x:.31,y:.48,w:.25,h:.18,type:'radio'},
       {x:.70,y:.48,w:.20,h:.21,type:'dog'}
     ];
     panels.forEach((a,i)=>{
@@ -17274,7 +17281,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   }
 
   function cleanName(s=''){return String(s).replace(/\s+/g,' ').trim();}
-  function v226FutureLabel(step){return ({2:'🌍 50億年後の地球',3:'🥶 地球の氷河期',5:'🌑 星のない地球',6:'🕳️ ブラックホール時代',7:'🌑 暗い宇宙'})[step]||'';}
+  function v226FutureLabel(step){return ({2:'🌍 50億年後の地球',3:'🥶 60億年後の地球',5:'🌑 100兆年後の地球',6:'🕳️ 1正年後の地球',7:'🌑 1ゴーグル年後の地球'})[step]||'';}
   function routeApi(){return window.__v170RouteAPI;}
   function debugApi(){return window.__inuboshiDebugAPI;}
 
@@ -17405,15 +17412,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v293';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v293</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v294';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v294</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v293</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v294</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17430,9 +17437,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <button class="v172QuickBtn" data-v172-quick="finalEarth">🌃 現代の地球<small>現在の地球へ</small></button>
       </div></div>
       <div class="v193QuickGroup v193FutureGroup"><b>🔮 未来の地球</b><div class="v172Quick">
-        <button class="v172QuickBtn" data-v172-quick="future2">🌍 50億年後の地球<small>現在から約50億年後</small></button>
-        <button class="v172QuickBtn" data-v172-quick="future3">🥶 60億年後の地球<small>現在から約60億年後</small></button>
-        <button class="v172QuickBtn" data-v172-quick="future5">🌑 100兆年後の地球<small>現在から約100兆年後</small></button>
+        <button class="v172QuickBtn" data-v172-quick="future2">🌍 50億年後の地球<small>🌍 地球から 0 km</small></button>
+        <button class="v172QuickBtn" data-v172-quick="future3">🥶 60億年後の地球<small>🌍 地球から 0 km</small></button>
+        <button class="v172QuickBtn" data-v172-quick="future5">🌑 100兆年後の地球<small>🌍 地球から 0 km</small></button>
       </div></div>
       <div class="v193QuickGroup v193SecretStarGroup"><b>🧩 隠し星</b><div class="v172Quick">
         <button class="v172QuickBtn" data-v172-quick="mothra">🦋 モスラ<small>重力レンズで見える怪獣スター</small></button>
@@ -17450,11 +17457,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       '📡 宇宙背景放射（CMB）','🌑 暗黒時代','🌅 宇宙の夜明け','🔥 再電離時代'
     ];
     const distantOrder=[
-      '🐶 プロキオン','🦅 アルタイル','😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🌀 PSR J1748-2446ad','🪐 スティーブンソン2-18',
-      '🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル'
+      '🪐 プロキシマ・ケンタウリb','🐶 プロキオン','🦅 アルタイル','😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🌀 PSR J1748-2446ad','🪐 スティーブンソン2-18',
+      '🕳️ いて座A*','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル'
     ];
     const solarStageOrder=[
-      '🌍 地球','🌙 月','🔴 火星','🟠 木星','🪐 土星','🩵 天王星','🔵 海王星',
+      '🌍 地球','🌙 月','🔴 火星','🟠 木星','🧊 エウロパ','🪐 土星','🩵 天王星','🔵 海王星',
       '☀️ 太陽','☿ 水星','♀ 金星','⭐ シリウス','💠 ベガ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス'
     ];
     function v178SysOrder(sys){
@@ -17504,7 +17511,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         b.dataset.ti=st.ti;
         const displayStageName=(sys?.futureEra&&v226FutureLabel(sys.futureStep))||st.name;
         b.dataset.search=cleanName(`${displaySysName} ${displayStageName} ${st.distance} ${st.desc} ${st.stageLabel||''}`).toLowerCase();
-        b.innerHTML=`${cleanName(displayStageName)}<small>${cleanName(st.stageLabel||st.distance||sys.distance||'')}</small>`;
+        const displayDistance=sys?.futureEra?'🌍 地球から 0 km':(st.stageLabel||st.distance||sys.distance||'');
+        b.innerHTML=`${cleanName(displayStageName)}<small>${cleanName(displayDistance)}</small>`;
         b.addEventListener('click',()=>jumpStage(Number(b.dataset.si),Number(b.dataset.ti)));
         grid.appendChild(b);
       });
@@ -17968,7 +17976,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v293';
+window.INUBOSHI_GAME_VERSION='v294';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -18000,11 +18008,11 @@ for(const sys of systems){
 const V215_FUTURE={
   1:{title:'☀️ 明るくなる太陽',time:'20億年後',group:'確認用',local:0,total:2,desc:'この段階は通常ルートでは通らない。'},
   2:{title:'🌍 50億年後の地球',time:'50億年後',group:'🌍 地球の未来',local:1,total:2,desc:'巨大化した太陽の熱で、地球は海も大気も保てない灼熱の世界になる。'},
-  3:{title:'🥶 地球の氷河期',time:'60億年後',group:'🌍 地球の未来',local:2,total:2,desc:'太陽が白色矮星になって光と熱が弱まり、地球は凍りついた寒い世界になる。'},
+  3:{title:'🥶 60億年後の地球',time:'60億年後',group:'🌍 地球の未来',local:2,total:2,desc:'太陽が白色矮星になって光と熱が弱まり、地球は凍りついた寒い世界になる。'},
   4:{title:'（非表示）',time:'14兆年後',group:'🌌 宇宙全体の未来',local:0,total:3,desc:'この段階は通常ルートではスキップされる。'},
-  5:{title:'🌑 星のない地球',time:'100兆年後',group:'🌌 宇宙全体の未来',local:1,total:3,desc:'星が輝く時代が終わり、地球の空はほとんど真っ黒になる。'},
-  6:{title:'🕳️ ブラックホール時代',time:'1正年後',group:'🌌 宇宙全体の未来',local:2,total:3,desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。'},
-  7:{title:'🌑 暗い宇宙',time:'1グーゴル年後',group:'🌌 宇宙全体の未来',local:3,total:3,desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。'}
+  5:{title:'🌑 100兆年後の地球',time:'100兆年後',group:'🌌 宇宙全体の未来',local:1,total:3,desc:'星が輝く時代が終わり、地球の空はほとんど真っ黒になる。'},
+  6:{title:'🕳️ 1正年後の地球',time:'1正年後',group:'🌌 宇宙全体の未来',local:2,total:3,desc:'星はほぼ消え、ブラックホールなどの暗い天体が宇宙に残る。'},
+  7:{title:'🌑 1ゴーグル年後の地球',time:'1グーゴル年後',group:'🌌 宇宙全体の未来',local:3,total:3,desc:'巨大ブラックホールさえ消え、宇宙はほとんど光のない状態へ向かう。'}
 };
 
 function v215IsEarendel(){return S()?.name==='✨ エアレンデル';}
@@ -19157,7 +19165,7 @@ const V254_FATE_META={
   origin:{icon:'⭐',name:'星を追った',route:'💥 宇宙の始まり',color:'#ffe67a'},
   home:{icon:'🦴',name:'骨を追った',route:'🏠 地球へ帰る',color:'#aef5ff'},
   unknown:{icon:'👽',name:'未知を追った',route:'🌸 異世界の星',color:'#d6a7ff'},
-  end:{icon:'☠️',name:'危険を追った',route:'🌑 宇宙の終わり',color:'#ff8fae'}
+  end:{icon:'🏠',name:'危険を追った',route:'🏠 地球への帰還',color:'#ff8fae'}
 };
 const V254_FATE={
   points:{origin:0,home:0,unknown:0,end:0},
@@ -19342,8 +19350,8 @@ function v254DrawFateGates(){
   if(system!==BLACK_HOLE_SYSTEM||p.x<whiteHoleX-760)return;
   const winner=V254_FATE.winner||v254Winner();
   const keys=['origin','home','unknown','end'];
-  const labels={origin:'始まり',home:'地球',unknown:'異世界',end:'終わり'};
-  const icons={origin:'💥',home:'🏠',unknown:'🌸',end:'🌑'};
+  const labels={origin:'始まり',home:'地球',unknown:'異世界',end:'帰還'};
+  const icons={origin:'💥',home:'🏠',unknown:'🌸',end:'🏠'};
   const y=Math.max(92,H*.20);
   const left=W*.12,right=W*.88;
   const step=(right-left)/3;
@@ -19989,7 +19997,7 @@ window.__v256State=()=>({
 
 const V257_STAGE2_META={
   origin:{icon:'🌌',title:'宇宙の最果てへ',sub:'COSMIC EDGE → ORIGIN'},
-  end:{icon:'🌑',title:'宇宙の終わりへ',sub:'END OF UNIVERSE ROUTE'},
+  end:{icon:'🏠',title:'地球への帰還',sub:'RETURN TO EARTH'},
   home:{icon:'🏠',title:'地球へ帰る',sub:'HOME ROUTE'},
   unknown:{icon:'🌸',title:'異世界の星へ',sub:'ANOTHER WORLD ROUTE'}
 };
@@ -23780,7 +23788,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v293';
+window.INUBOSHI_GAME_VERSION='v294';
 
 /* 追加天体。既存system番号をずらさないため、独立ステージは末尾へ安全に追加する。 */
 const v293Europa={
@@ -23834,9 +23842,23 @@ V263_DISTANCE_LY['🕳️ いて座A*']=27000;
 V244_PERSONALITY_STARS.add('🧊 エウロパ');
 V244_PERSONALITY_STARS.add('🪐 プロキシマ・ケンタウリb');
 V244_PERSONALITY_STARS.add('🕳️ いて座A*');
+Object.assign(V244_STAR_HINTS,{
+  '🧊 エウロパ':'🧊 木星の衛星。氷の下に広大な塩水の海があるかも！',
+  '🪐 プロキシマ・ケンタウリb':'🔴 最も近い恒星を11.2日で回る、地球質量級の系外惑星！',
+  '🕳️ いて座A*':'🌀 天の川銀河の中心。太陽約400万個分の質量を持つ巨大ブラックホール！'
+});
 V286_TYPE_MAP['🧊 エウロパ']='木星の氷衛星';
 V286_TYPE_MAP['🪐 プロキシマ・ケンタウリb']='スーパーアース型系外惑星';
 V286_TYPE_MAP['🕳️ いて座A*']='超大質量ブラックホール';
+
+/* 追加天体を「隠し一覧からの直行」だけでなく、通常の星ルートにも組み込む。 */
+function v293InsertRouteBefore(name,before){
+  if(V252_ROUTE.includes(name))return;
+  const at=V252_ROUTE.indexOf(before);
+  V252_ROUTE.splice(at<0?V252_ROUTE.length:at,0,name);
+}
+v293InsertRouteBefore('🪐 プロキシマ・ケンタウリb','🐶 プロキオン');
+v293InsertRouteBefore('🕳️ いて座A*','🧲 SGR 1806-20');
 
 Object.assign(V283_SHORT_DESC,{
   '🧊 エウロパ':'木星を回る氷の衛星で、氷殻の下に広大な海があると考えられる',
@@ -23942,13 +23964,58 @@ Object.assign(V215_FUTURE,{
   3:{...V215_FUTURE[3],title:'🥶 60億年後の地球'},
   5:{...V215_FUTURE[5],title:'🌑 100兆年後の地球'},
   6:{...V215_FUTURE[6],title:'🕳️ 1正年後の地球'},
-  7:{...V215_FUTURE[7],title:'🌑 1グーゴル年後の地球'}
+  7:{...V215_FUTURE[7],title:'🌑 1ゴーグル年後の地球'}
 });
 v226FutureLabel=function(step){return ({
   2:'🌍 50億年後の地球',3:'🥶 60億年後の地球',5:'🌑 100兆年後の地球',
-  6:'🕳️ 1正年後の地球',7:'🌑 1グーゴル年後の地球'
+  6:'🕳️ 1正年後の地球',7:'🌑 1ゴーグル年後の地球'
 })[step]||'';};
 V257_STAGE2_META.end={icon:'🏠',title:'地球への帰還',sub:'RETURN TO EARTH'};
+
+/* 通常のワームホールルートに、距離順で追加2天体を差し込む。
+   既存のdeepWarpCountを増やさない中間停車にし、後続ルートの番号を壊さない。 */
+const v293BaseWarpTo=warpTo;
+function v293WarpExtra(targetName,title,nextText,subText){
+  if(paused)return false;
+  const si=systems.findIndex(s=>s?.name===targetName);
+  if(si<0)return false;
+  paused=true;
+  trans.style.display='grid';
+  warpDog.textContent=playerDog;
+  warpDog.className='spin';
+  transTitle.innerHTML=title;
+  nextEl.textContent=nextText;
+  subEl.textContent=subText;
+  setTimeout(()=>{
+    system=si;stage=0;camera=0;p.x=115;p.vy=0;
+    furthestRank=Math.max(furthestRank,systemDistanceRank[si]??0);
+    try{stageStart();}finally{
+      trans.style.display='none';trans.style.background='';trans.classList?.remove('on');
+      warpDog.className='';paused=false;
+    }
+    showToast(`${targetName} へ到着！`,1750);
+  },1250);
+  return true;
+}
+warpTo=function(black){
+  if(!black&&!V256_ORIGIN.active&&system===0&&deepWarpCount===0){
+    return v293WarpExtra(
+      '🪐 プロキシマ・ケンタウリb',
+      '🔴 PROXIMA CENTAURI b',
+      '太陽系に最も近い系外惑星へ。',
+      'NEAREST EXOPLANET'
+    );
+  }
+  if(!black&&!V256_ORIGIN.active&&S()?.name==='🪐 スティーブンソン2-18'&&deepWarpCount===12){
+    return v293WarpExtra(
+      '🕳️ いて座A*',
+      '🌀 SAGITTARIUS A*',
+      '天の川銀河の中心へ。',
+      'GALACTIC CENTER'
+    );
+  }
+  return v293BaseWarpTo(black);
+};
 
 /* 宇宙の最果ては、最初の1フレームから完全な暗闇で始める。 */
 v260DrawCosmicEdge=function(){
@@ -24001,7 +24068,7 @@ function v293NormalizeVisibleUi(){
     if(sys?.futureEra){
       const f=V215_FUTURE[sys.futureStep||0];
       if(f){
-        astroInfo.innerHTML=`<b>${f.title}</b>${f.desc}`+
+        astroInfo.innerHTML=`<b>${f.title}</b><br>${f.desc}`+
           `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span>`+
           `<span class="distanceHint">${v215GravityLine(st)}</span>`;
       }
@@ -24030,6 +24097,7 @@ window.__v293Audit=()=>({
   earthRecipeButton:!!document.getElementById('v270InlineRecipeBtn'),
   futureTitle:systems[system]?.futureEra?V215_FUTURE[systems[system].futureStep]?.title:null
 });
+window.__v294Audit=window.__v293Audit;
 /* === /v293 === */
 
 
@@ -27058,7 +27126,7 @@ window.__v293Audit=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v293</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v294</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -27186,11 +27254,11 @@ window.__v293Audit=()=>({
           // 未来編は今の画面上の呼び名に統一
           const sysName=cleanName(sys.name);
           const futureLabel={
-            '🔴 赤色巨星の太陽':'🌍 未来の地球',
+            '🔴 赤色巨星の太陽':'🌍 50億年後の地球',
             '⚪ 太陽の死（白色矮星）':'🥶 60億年後の地球',
             '🔴 最後の恒星たち':'🌑 100兆年後の地球',
             '🕳️ ブラックホール時代':'🕳️ 1正年後の地球',
-            '🌑 暗い宇宙':'🌑 1グーゴル年後の地球'
+            '🌑 暗い宇宙':'🌑 1ゴーグル年後の地球'
           }[sysName];
           if(futureLabel)displayName=futureLabel;
 
@@ -27198,7 +27266,7 @@ window.__v293Audit=()=>({
 
           const d=document.createElement('span');
           d.className='v150JumpDist';
-          d.textContent=cleanName(st.distance||sys.distance||'');
+          d.textContent=futureLabel?'🌍 地球から 0 km':cleanName(st.distance||sys.distance||'');
 
           row.append(n,d);
           row.dataset.search=(
@@ -27503,7 +27571,8 @@ window.__v293Audit=()=>({
   position:absolute;z-index:14;display:none;pointer-events:none;transform:translate(-50%,-50%);text-align:center;color:#eaffff;
   filter:drop-shadow(0 0 12px rgba(104,239,255,.95))
 }
-#v204EarRadio.on,#v204EarWorm.on{display:block!important}
+#v204EarRadio.on{display:none!important;visibility:hidden!important;opacity:0!important}
+#v204EarWorm.on{display:block!important}
 .v204RadioEmoji{font-size:74px;line-height:1;animation:v204RadioBob .6s ease-in-out infinite alternate}
 .v204RadioTag,.v204WormTag{margin-top:2px;padding:6px 10px;border:1.5px solid rgba(143,243,255,.82);border-radius:999px;background:rgba(6,17,31,.92);font:1000 10px/1 system-ui;white-space:nowrap;box-shadow:0 0 20px rgba(86,231,255,.42)}
 #v204EarRadio:before,#v204EarRadio:after{content:"";position:absolute;left:50%;top:31px;width:90px;height:90px;border:2px solid rgba(122,239,255,.55);border-radius:50%;transform:translate(-50%,-50%) scale(.4);animation:v204RadioWave 1.1s ease-out infinite}
@@ -27529,11 +27598,11 @@ window.__v293Audit=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v293';
+  window.INUBOSHI_GAME_VERSION='v294';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v293<small>ATTACHED FIXES + 3 NEW OBJECTS / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v294<small>FULL RE-AUDIT + ROUTE INTEGRATION / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
