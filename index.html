@@ -2104,57 +2104,53 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 </style>
 
 
-<style id="v290RecipeAdditions">
-/* ブラックホール専用レシピ */
-.v290BhIntro{
-  margin:0 0 10px;padding:11px 12px;border-radius:14px;
-  background:linear-gradient(135deg,rgba(91,55,159,.16),rgba(5,8,18,.72));
-  border:1px solid rgba(180,147,255,.20);
-  color:rgba(255,255,255,.84);font:760 9.5px/1.65 system-ui;
+<style id="v292FinalFixes">
+/* エアレンデルの古いトランシーバーは完全非表示 */
+#v204EarRadio{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
 }
-.v290BhTypes{
+
+/* ブラックホール専用レシピ */
+.v292BhIntro{
+  margin:0 0 11px;padding:11px 12px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(103,66,174,.16),rgba(4,7,16,.76));
+  border:1px solid rgba(188,158,255,.18);
+  color:rgba(255,255,255,.82);font:760 9.4px/1.65 system-ui;
+}
+.v292BhTypes{
   display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px;
 }
-.v290BhType{
-  padding:10px;border-radius:12px;background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.085);
+.v292BhType{
+  position:relative;overflow:hidden;padding:10px 10px 15px;border-radius:12px;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.085);
 }
-.v290BhType b{
-  display:block;color:#fff;font:950 9px/1.25 system-ui;
+.v292BhType b{display:block;color:#fff;font:950 9px/1.3 system-ui}
+.v292BhType span{display:block;margin-top:5px;color:rgba(255,255,255,.64);font:720 7.8px/1.5 system-ui}
+.v292BhType>i{
+  position:absolute;left:10px;bottom:7px;height:4px;border-radius:999px;
+  background:linear-gradient(90deg,#77dfff,#ae8dff,#ff8ccb);
 }
-.v290BhType span{
-  display:block;margin-top:5px;color:rgba(255,255,255,.66);
-  font:720 8px/1.5 system-ui;
+.v292BhType.theory>i{opacity:.45}
+.v292BhFacts{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;
 }
-.v290BhScale{
-  height:6px;margin-top:8px;border-radius:999px;overflow:hidden;
-  background:rgba(255,255,255,.08);
+.v292BhFacts>div{
+  padding:9px;border-radius:11px;background:rgba(112,198,255,.045);
+  border:1px solid rgba(141,210,255,.10);
 }
-.v290BhScale i{
-  display:block;height:100%;border-radius:999px;
-  background:linear-gradient(90deg,#7bdfff,#b48cff,#ff86cc);
-}
-.v290BhFacts{
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;
-}
-.v290BhFact{
-  padding:9px;border-radius:11px;background:rgba(116,196,255,.045);
-  border:1px solid rgba(142,210,255,.10);
-}
-.v290BhFact small{
-  display:block;color:#acdfff;font:850 7.5px/1.2 system-ui;
-}
-.v290BhFact b{
-  display:block;margin-top:4px;color:#fff;font:900 8.7px/1.35 system-ui;
-}
-.v290BhWarning{
+.v292BhFacts small{display:block;color:#acdfff;font:850 7.4px/1.2 system-ui}
+.v292BhFacts b{display:block;margin-top:4px;color:#fff;font:900 8.5px/1.4 system-ui}
+.v292BhNote{
   margin-top:10px;padding:9px 10px;border-radius:11px;
-  background:rgba(255,210,109,.06);border:1px solid rgba(255,217,123,.13);
-  color:rgba(255,255,255,.60);font:720 7.7px/1.5 system-ui;
+  background:rgba(255,211,117,.055);border:1px solid rgba(255,220,136,.12);
+  color:rgba(255,255,255,.55);font:700 7.5px/1.5 system-ui;
 }
 @media(max-width:560px){
-  .v290BhTypes{grid-template-columns:1fr}
-  .v290BhFacts{grid-template-columns:1fr 1fr}
+  .v292BhTypes{grid-template-columns:1fr}
+  .v292BhFacts{grid-template-columns:1fr 1fr}
 }
 </style>
 
@@ -2500,7 +2496,7 @@ name:'💙 R136a1',distance:'地球から約16.3万光年',desc:'知られてい
 {name:'🌝 笑う月の星',distance:'約350億光年先（架空設定）',desc:'架空設定：花の星よりさらに遠く、笑う月が空間を漂う第二の異世界',theme:'cloud',secret:true,postEarendel:true,theoretical:true,secretKey:'moon',stages:[
 {name:'🌝 笑う月の星',distance:'約350億光年先（架空設定）',desc:'架空設定：花の星の先にある、笑う月が飛び交う異世界ステージ',goodColor:'#fff2a4',sky:['#070715','#30305b'],ground:'#c8c5ab',ground2:'#66647d',planet:'#fff2a4',event:'MOON PARTY',eventText:'🌝 月たちが踊り出す！',gravity:.30,jump:19.0}
 ]},
-{name:'🌌 宇宙の最果て',distance:'距離は定義できない（ゲーム演出）',desc:'ゲーム上の架空表現。観測可能な宇宙のさらに先へ進み、星も光も消えていくSTAGE 2の入口',theme:'milky',postEarendel:true,theoretical:true,stages:[
+{name:'🌌 宇宙の最果て',distance:'距離は定義できない（ゲーム演出）',desc:'ゲーム上の架空表現。観測可能な宇宙のさらに先へ進み、星も光も消えていくBONUS STAGEの入口',theme:'milky',postEarendel:true,theoretical:true,stages:[
 {name:'🌌 宇宙の最果て',distance:'距離は定義できない（ゲーム演出）',desc:'架空演出：遠ざかる星が徐々に消え、完全な暗闇の先でビッグバンの光が始まる',goodColor:'#dce8ff',sky:['#030610','#000108'],ground:'#252938',ground2:'#080a10',planet:'#11182a',event:'COSMIC EDGE',eventText:'🌌 星が遠ざかり、宇宙が真っ暗になっていく…',gravity:.42,jump:17.6}
 ]},
 {name:'⚫ ブラックホール',distance:'地球からの距離は測定不能',desc:'光も逃げられない重力領域',theme:'blackhole',stages:[
@@ -3031,7 +3027,7 @@ function warpTo(black){if(paused||systems[system].dream)return;paused=true;trans
     trans.style.display='none';trans.classList?.remove('on');
     trans.style.background='';warpDog.className='';paused=false;
   }
-  if(black)showToast('⚫ ブラックホール内部へ！',1200);
+  if(black)showToast('⚫ ブラックホールへ！',1200);
  },1550)
 }
 function whiteHoleEscape(){if(paused||whiteHoleTriggered)return;whiteHoleTriggered=true;whiteHoleEscaped=true;checkHomeRoute();paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spaghetti';transTitle.innerHTML='⚪ WHITE HOLE!';nextEl.textContent='びよーーーん → パァン！！';subEl.textContent='BLACK HOLE EXIT / WHITE HOLE';setTimeout(()=>{const base=Math.max(1,furthestRank);const choices=systems.map((s,i)=>({s,i,r:systemDistanceRank[i]??0})).filter(o=>o.i!==BLACK_HOLE_SYSTEM&&!o.s.secret&&!o.s.dream&&o.r>=base);choices.sort((a,b)=>a.r-b.r);const pick=choices[0];system=pick?.i??0;stage=system===0?0:Math.floor(Math.random()*systems[system].stages.length);playerDog='🐕';morphUntil=0;stageStart();trans.style.display='none';warpDog.className='';paused=false;showToast('⚪ ホワイトホールから脱出！ 帰還はまだ選ばない。',1700)},1600)}
@@ -12310,7 +12306,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         for(let k=0;k<4;k++){
           ctx.beginPath();ctx.arc(x+w*.28,y+h*.55,9+k*10,-.8,.8);ctx.stroke();
         }
-        ctx.fillStyle='#fff';ctx.font='900 9px system-ui';ctx.fillText('📻 ……きこえる？',x+w*.48,y+h*.56);
+        /* v292: black-hole faint radio text removed */
       }else{
         ctx.font='38px system-ui';ctx.fillText('🐕',x+w*.42,y+h*.65);
         ctx.globalAlpha*=.55;ctx.font='26px system-ui';ctx.fillText('🐕',x+w*.62,y+h*.42);
@@ -14254,6 +14250,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '☀️ 太陽':{age:'約46億歳',remaining:'約50億年（主系列の残り）',pct:46,phase:'主系列｜一生のほぼ半分'},
     '⭐ シリウス':{age:'約2.4億歳',remaining:'A星は約7〜8億年級',pct:24,phase:'A星はまだ主系列前半〜中盤'},
     '🐶 プロキオン':{age:'約19億歳',remaining:'数億年級（核融合星として）',pct:78,phase:'主系列を離れかけた後半'},
+    '🖖 40エリダヌス座A':{age:'数十億歳級',remaining:'100億年以上の可能性',pct:30,phase:'K型主系列星｜まだ長く安定して光る'},
     '🦅 アルタイル':{age:'約10億〜12億歳級',remaining:'数億年級',pct:58,phase:'主系列｜中盤くらい'},
     '😈 アルゴル':{age:'数億歳級',remaining:'数億年級',pct:55,phase:'近接連星｜相互作用しながら進化'},
     '🕰️ メトシェラ星':{age:'約127億歳級',remaining:'数十億年級の可能性',pct:88,phase:'低金属準巨星｜宇宙の古参'},
@@ -14628,6 +14625,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       mass:{main:'A星 約1.5太陽質量',sub:'連星系'},
       light:{main:'A星 約7太陽光度',sub:'白黄色に明るい'}
     },
+    '🖖 40エリダヌス座A':{
+      size:{main:'半径 約0.81太陽',sub:'太陽より少し小さいK型主系列星'},
+      mass:{main:'約0.78太陽質量',sub:'太陽より軽い'},
+      light:{main:'約0.46太陽光度',sub:'太陽の半分弱ほどの明るさ'}
+    },
     '🦅 アルタイル':{
       size:{main:'半径 約1.8太陽',sub:'高速自転で赤道がふくらむ'},
       mass:{main:'約1.8太陽質量',sub:'A型主系列星'},
@@ -14718,6 +14720,11 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       mass:{main:'約10〜20太陽質量級',sub:'巨大だが密度はかなり低い'},
       light:{main:'約40万〜50万太陽光度',sub:'本来かなり明るい赤色超巨星'}
     },
+    '🌀 PSR J1748-2446ad':{
+      size:{main:'半径 約10km級',sub:'都市ほどの大きさの中性子星'},
+      mass:{main:'約1.4太陽質量級',sub:'極小サイズに恒星級の質量'},
+      light:{main:'可視光では極暗い',sub:'主に電波パルスで観測される'}
+    },
     '🧲 SGR 1806-20':{
       size:{main:'半径 約10km',sub:'星の残骸として極小'},
       mass:{main:'約1.4太陽質量',sub:'中性子星／マグネター'},
@@ -14804,6 +14811,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '☀️ 太陽':{main:'ゆっくり',sub:'赤道で約25日',known:true},
     '⭐ シリウス':{main:'やや高速',sub:'A星は約5日',known:true},
     '🐶 プロキオン':{main:'ややゆっくり',sub:'十数日〜数十日級',known:false},
+    '🖖 40エリダヌス座A':{main:'ゆっくり',sub:'約40日級',known:false},
     '🦅 アルタイル':{main:'超高速',sub:'約9時間',known:true},
     '😈 アルゴル':{main:'高速',sub:'約2.9日級',known:true},
     '🕰️ メトシェラ星':{main:'ゆっくり',sub:'古い低質量星らしい穏やかな回転',known:false},
@@ -14858,7 +14866,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '🐕 VYおおいぬ座星':{size:100,light:88,spin:8},
     '💥 イータ・カリーナ':{size:38,light:94,spin:18},
     '🪐 スティーブンソン2-18':{size:100,light:86,spin:8},
-    '🌀 PSR J1748-2446ad':{size:3,light:82,spin:100},
+    '🌀 PSR J1748-2446ad':{size:3,light:4,spin:100},
     '🧲 SGR 1806-20':{size:4,light:98,spin:100},
     '💙 R136a1':{size:36,light:100,spin:0},
     '✨ S Doradus':{size:58,light:90,spin:0},
@@ -15132,6 +15140,57 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       </section>`;
   }
 
+  function v292BlackHoleRecipeHTML(){
+    return `
+      <div class="v292BhIntro">
+        ブラックホールは、質量や大きさ・でき方によっていくつかの種類に分けられる。
+        事象の地平面より内側からは、光さえ外へ戻れない。
+      </div>
+
+      <div class="v179SectionLabel">🕳️ ブラックホールの種類</div>
+      <div class="v292BhTypes">
+        <div class="v292BhType">
+          <b>⭐ 恒星質量ブラックホール</b>
+          <span>重い恒星の最期にできる。太陽の数倍〜数十倍級。</span>
+          <i style="width:26%"></i>
+        </div>
+        <div class="v292BhType">
+          <b>⚫ 中間質量ブラックホール</b>
+          <span>恒星質量と超大質量の中間。数百〜数万太陽質量級。</span>
+          <i style="width:48%"></i>
+        </div>
+        <div class="v292BhType">
+          <b>🌌 超大質量ブラックホール</b>
+          <span>銀河中心に多く、太陽の数百万〜数百億倍級。</span>
+          <i style="width:88%"></i>
+        </div>
+        <div class="v292BhType theory">
+          <b>💥 原始ブラックホール</b>
+          <span>宇宙初期にできた可能性がある仮説上のタイプ。未確認。</span>
+          <i style="width:64%"></i>
+        </div>
+      </div>
+
+      <div class="v179SectionLabel">🔍 何が起きる？</div>
+      <div class="v292BhFacts">
+        <div><small>⚫ 事象の地平面</small><b>越えると外へ戻れない境界</b></div>
+        <div><small>🍝 潮汐力</small><b>重力差で体が引き伸ばされる</b></div>
+        <div><small>💿 降着円盤</small><b>周囲のガスが高温で輝く</b></div>
+        <div><small>✨ ホーキング放射</small><b>理論上は非常にゆっくり蒸発</b></div>
+      </div>
+
+      <div class="v175RecipePoint">
+        <b>🌀 回転でも分類される</b>
+        <span>回転なしはシュヴァルツシルト型、回転ありはカー型と呼ばれる。</span>
+      </div>
+
+      <div class="v292BhNote">
+        ※ゲーム内の「ブラックホール内部を歩く」「ホワイトホールから出る」は架空演出。
+        実際の内部は直接観測できていない。
+      </div>
+    `;
+  }
+
   function renderContextRecipe(){
     const panel=document.getElementById('v162RecipePanel');
     const body=panel?.querySelector('.v162RecipeBody');
@@ -15140,10 +15199,20 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const btn=document.getElementById('v162RecipeBtn');
     if(!body||!head||!sub||!btn)return;
 
+    const isBlackHoleRecipe=(system===BLACK_HOLE_SYSTEM || systems[system]?.name==='⚫ ブラックホール' || S()?.name==='🕳️ ブラックホール内部');
+    if(isBlackHoleRecipe){
+      btn.classList.remove('v168RecipeOff');
+      btn.innerHTML='<b>🕳️ ブラックホールを見る <span class="v242RecipeArrow">＋</span></b><small>種類・しくみ・ゲーム演出との違い</small>';
+      head.textContent='🕳️ ブラックホール';
+      sub.textContent='種類・事象の地平面・潮汐力';
+      body.innerHTML=v292BlackHoleRecipeHTML();
+      return;
+    }
+
     const er=eraRecipe();
     const sr=specialRecipeForSystem();
     const nr=recipeForStage();
-    const hideBtn=!!(system===BLACK_HOLE_SYSTEM||systems[system]?.dream||systems[system]?.secret);
+    const hideBtn=!!(systems[system]?.dream||systems[system]?.secret);
     btn.classList.toggle('v168RecipeOff',hideBtn);
 
     if(er||sr){
@@ -15389,7 +15458,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       }else{
         system=0;stage=0;paused=false;stageStart();
       }
-      showToast('⏩ ……未来の地球。',1250);
+      showToast('⏩ ……50億年後の地球。',1250);
     },1280);
   }
 
@@ -17205,7 +17274,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   }
 
   function cleanName(s=''){return String(s).replace(/\s+/g,' ').trim();}
-  function v226FutureLabel(step){return ({2:'🌍 未来の地球',3:'🥶 地球の氷河期',5:'🌑 星のない地球',6:'🕳️ ブラックホール時代',7:'🌑 暗い宇宙'})[step]||'';}
+  function v226FutureLabel(step){return ({2:'🌍 50億年後の地球',3:'🥶 地球の氷河期',5:'🌑 星のない地球',6:'🕳️ ブラックホール時代',7:'🌑 暗い宇宙'})[step]||'';}
   function routeApi(){return window.__v170RouteAPI;}
   function debugApi(){return window.__inuboshiDebugAPI;}
 
@@ -17261,7 +17330,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         apply();
       }
       try{syncHUD(true);}catch(e){try{syncHUD();}catch(_) {}}
-      showToast('⚫ ブラックホール内部へ！ ホワイトホールを目指そう',1300);
+      showToast('⚫ ブラックホールへ！ ホワイトホールを目指そう',1300);
     },120);
     return true;
   }
@@ -17336,15 +17405,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v291';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v291</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v292';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v292</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v291</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v292</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17353,7 +17422,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <button class="v172QuickBtn" data-v172-quick="returnEarth">❄️ 帰還地球・氷河期<small>帰還直後の地球</small></button>
         <button class="v172QuickBtn" data-v172-quick="forward">💫 ビッグバンから<small>Big Bang → 再電離</small></button>
         <button class="v172QuickBtn" data-v172-quick="formation">🌌 銀河〜太陽系<small>銀河 → 天の川 → 太陽系</small></button>
-        <button class="v172QuickBtn" data-v172-quick="blackhole">⚫ ブラックホール内部<small>特殊ルート｜ホワイトホールまで進める</small></button>
+        <button class="v172QuickBtn" data-v172-quick="blackhole">⚫ ブラックホール<small>特殊ルート｜ホワイトホールまで進める</small></button>
       </div></div>
       <div class="v193QuickGroup"><b>🌍 地球の歴史</b><div class="v172Quick">
         <button class="v172QuickBtn" data-v172-quick="birth">🌋 地球誕生<small>原始地球が育つ</small></button>
@@ -17361,7 +17430,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
         <button class="v172QuickBtn" data-v172-quick="finalEarth">🌃 現代の地球<small>現在の地球へ</small></button>
       </div></div>
       <div class="v193QuickGroup v193FutureGroup"><b>🔮 未来の地球</b><div class="v172Quick">
-        <button class="v172QuickBtn" data-v172-quick="future2">🌍 未来の地球<small>現在から約50億年後</small></button>
+        <button class="v172QuickBtn" data-v172-quick="future2">🌍 50億年後の地球<small>現在から約50億年後</small></button>
         <button class="v172QuickBtn" data-v172-quick="future3">🥶 地球の氷河期<small>現在から約60億年後</small></button>
         <button class="v172QuickBtn" data-v172-quick="future5">🌑 星のない地球<small>現在から約100兆年後</small></button>
       </div></div>
@@ -17899,7 +17968,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v291';
+window.INUBOSHI_GAME_VERSION='v292';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -17930,7 +17999,7 @@ for(const sys of systems){
 
 const V215_FUTURE={
   1:{title:'☀️ 明るくなる太陽',time:'20億年後',group:'確認用',local:0,total:2,desc:'この段階は通常ルートでは通らない。'},
-  2:{title:'🌍 未来の地球',time:'50億年後',group:'🌍 地球の未来',local:1,total:2,desc:'巨大化した太陽の熱で、地球は海も大気も保てない灼熱の世界になる。'},
+  2:{title:'🌍 50億年後の地球',time:'50億年後',group:'🌍 地球の未来',local:1,total:2,desc:'巨大化した太陽の熱で、地球は海も大気も保てない灼熱の世界になる。'},
   3:{title:'🥶 地球の氷河期',time:'60億年後',group:'🌍 地球の未来',local:2,total:2,desc:'太陽が白色矮星になって光と熱が弱まり、地球は凍りついた寒い世界になる。'},
   4:{title:'（非表示）',time:'14兆年後',group:'🌌 宇宙全体の未来',local:0,total:3,desc:'この段階は通常ルートではスキップされる。'},
   5:{title:'🌑 星のない地球',time:'100兆年後',group:'🌌 宇宙全体の未来',local:1,total:3,desc:'星が輝く時代が終わり、地球の空はほとんど真っ黒になる。'},
@@ -17999,13 +18068,13 @@ function v215WarpFuture(){
   V215.futureWarping=true;paused=true;
   trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spin';
   transTitle.innerHTML='🌀 EARTH RESCUE WORMHOLE';
-  nextEl.textContent='🌍 未来の地球へ';
+  nextEl.textContent='🌍 50億年後の地球へ';
   subEl.textContent='EARENDEL → SCORCHED EARTH';
   setTimeout(()=>{
     system=target;stage=0;camera=0;p.x=115;p.vy=0;
     stageStart();paused=false;syncHUD();
     trans.style.display='none';warpDog.className='';V215.futureWarping=false;
-    showToast('🌍 未来の地球へ到着！',1700);
+    showToast('🌍 50億年後の地球へ到着！',1700);
   },1400);
 }
 
@@ -18182,10 +18251,10 @@ stageStart=function(){
     V215.lastHudKey='';
     V215.lastCountKey='';
     if(v215IsEarendel()){
-      V215.radioDone=false;V215.signalActive=false;V215.futureWarping=false;
+      V215.radioDone=true;V215.signalActive=false;V215.futureWarping=false;
       wormholeActive=false;blackHoleActive=true;
       blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
-      showToast('📻 SOSの先に、ブラックホールが待っている。',1500);
+      showToast('✨ 最も遠い個別星に到達した。',1500);
     }
   }
   v215SyncControlsAndCounts(true);
@@ -18924,7 +18993,7 @@ function v252EnterBlackHole(source='direct'){
     }
     window.__v170ForwardCosmic=false;
     v252StartBlackHoleWorld(si);
-    showToast('⚫ ブラックホール内部へ！ 右のホワイトホールを目指そう',1400);
+    showToast('⚫ ブラックホールへ！ 右のホワイトホールを目指そう',1400);
     return true;
   }finally{
     V252_BH.entering=false;
@@ -19234,7 +19303,7 @@ stageStart=function(){
     blackHoleActive=true;
     wormholeActive=false;
     blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
-    setTimeout(()=>showToast('✨ エアレンデルの先に、必ずブラックホールが待っている。',1700),520);
+    setTimeout(()=>showToast('✨ 最も遠い個別星に到達した。',1500),520);
   }
   return out;
 };
@@ -19517,7 +19586,7 @@ function v256DrawMethuselahGround(){
 }
 
 /* -----------------------------------------------------------
-   2) STAGE 2 表示：エアレンデルの先でブラックホールが開く
+   2) BONUS STAGE 表示：エアレンデルの先でブラックホールが開く
    ----------------------------------------------------------- */
 const V256_CHAPTER={
   stage2Shown:false,
@@ -19549,7 +19618,7 @@ const V256_CHAPTER={
   el.innerHTML=`
     <div class="v256ChapterInner">
       <div class="v256Clear">STAGE 1 CLEAR　✨ EARENDEL</div>
-      <div class="v256Num">STAGE 2</div>
+      <div class="v256Num">BONUS STAGE</div>
       <div class="v256Name">⚫ 星の先へ</div>
       <div class="v256Sub">BEYOND THE STARS / BLACK HOLE</div>
     </div>`;
@@ -19565,7 +19634,7 @@ function v256OpenStage2(){
 
   const el=document.getElementById('v256ChapterOverlay');
   el?.classList.add('on');
-  missionEl.textContent='STAGE 2｜⚫ 星の先へ';
+  missionEl.textContent='BONUS STAGE｜⚫ 星の先へ';
   eventEl.textContent='エアレンデルの先に、ブラックホールが開いた';
 
   setTimeout(()=>{
@@ -19573,7 +19642,7 @@ function v256OpenStage2(){
     V256_CHAPTER.opening=false;
     blackHoleActive=true;
     paused=false;
-    showToast('⚫ STAGE 2｜ブラックホールへ',1350);
+    showToast('⚫ BONUS STAGE｜ブラックホールへ',1350);
   },2100);
 }
 
@@ -19835,7 +19904,7 @@ stageStart=function(){
 
 const v256BaseUpdate=update;
 update=function(now,dt){
-  // エアレンデル：ブラックホールは STAGE 2 開幕までは隠す。
+  // エアレンデル：ブラックホールは BONUS STAGE 開幕までは隠す。
   if(S()?.name==='✨ エアレンデル'&&!V256_CHAPTER.stage2Shown){
     blackHoleActive=false;
   }
@@ -19848,8 +19917,8 @@ update=function(now,dt){
       if(!paused&&p.x>=V256_CHAPTER.stage2X)v256OpenStage2();
     }else if(!V256_CHAPTER.opening){
       blackHoleActive=true;
-      missionEl.textContent='STAGE 2｜⚫ 星の先へ';
-      eventEl.textContent='ブラックホール内部へ進む';
+      missionEl.textContent='BONUS STAGE｜⚫ 星の先へ';
+      eventEl.textContent='ブラックホールへ進む';
     }
   }
 
@@ -19916,7 +19985,7 @@ window.__v256State=()=>({
 /* === /v256 === */
 
 
-/* === v257: EARENDEL → BLACK HOLE WALK → QUIET WHITE HOLE → STAGE 2 === */
+/* === v257: EARENDEL → BLACK HOLE WALK → QUIET WHITE HOLE → BONUS STAGE === */
 
 const V257_STAGE2_META={
   origin:{icon:'🌌',title:'宇宙の最果てへ',sub:'COSMIC EDGE → ORIGIN'},
@@ -19930,7 +19999,7 @@ const V257_FLOW={
   menuVariant:null
 };
 
-/* v256ではエアレンデル途中でSTAGE 2を出していたが、
+/* v256ではエアレンデル途中でBONUS STAGEを出していたが、
    v257では「ホワイトホールを出たあと」にだけ出す。 */
 v256OpenStage2=function(){ return false; };
 
@@ -19958,14 +20027,14 @@ function v257ShowStage2(kind,target,done){
   const sub=el.querySelector('.v256Sub');
 
   if(clear)clear.textContent='⚪ WHITE HOLE EXIT';
-  if(num)num.textContent='STAGE 2';
+  if(num)num.textContent='BONUS STAGE';
   if(name)name.textContent=`${meta.icon} ${meta.title}`;
   if(sub)sub.textContent=`BLACK HOLE の向こう側 / ${meta.sub}`;
 
   V257_FLOW.stage2=true;
   paused=true;
   el.classList.add('on');
-  missionEl.textContent=`STAGE 2｜${meta.icon} ${meta.title}`;
+  missionEl.textContent=`BONUS STAGE｜${meta.icon} ${meta.title}`;
   eventEl.textContent='ブラックホールの向こう側';
 
   setTimeout(()=>{
@@ -20045,7 +20114,7 @@ v252EnterBlackHole=function(source='direct'){
     try{blackHoleWormholes.length=0}catch(e){}
     whiteHoleTriggered=false;
     V257_FLOW.exiting=false;
-    missionEl.textContent='⚫ ブラックホール内部を進む';
+    missionEl.textContent='⚫ ブラックホールを進む';
     eventEl.textContent='遠くに静かな白い出口がある';
   }
   return ok;
@@ -20059,7 +20128,7 @@ window.__v242EnterBlackHole=v252EnterBlackHole;
 window.__v217GoBlackHole=v252EnterBlackHole;
 if(window.__v170RouteAPI)window.__v170RouteAPI.blackHole=()=>v252EnterBlackHole('route-api');
 
-/* ホワイトホールを「出る」→ 白フラッシュ → STAGE 2 → 運命ルート。
+/* ホワイトホールを「出る」→ 白フラッシュ → BONUS STAGE → 運命ルート。
    ブラックホール内で4択表示はしない。 */
 whiteHoleEscape=function(){
   if(paused||whiteHoleTriggered||V257_FLOW.exiting)return;
@@ -20100,13 +20169,13 @@ whiteHoleEscape=function(){
       whiteHoleTriggered=false;
       V257_FLOW.exiting=false;
       V256_CHAPTER.stage2Shown=true;
-      showToast(`STAGE 2｜${meta.icon} ${meta.title}`,1700);
+      showToast(`BONUS STAGE｜${meta.icon} ${meta.title}`,1700);
     });
   },720);
 };
 
 /* エアレンデルでは最初からブラックホールが見える。
-   STAGE 2はまだ始まっていないので、表示は「この先の入口」とする。 */
+   BONUS STAGEはまだ始まっていないので、表示は「この先の入口」とする。 */
 const v257BaseStageStart=stageStart;
 stageStart=function(){
   const out=v257BaseStageStart();
@@ -20116,7 +20185,7 @@ stageStart=function(){
     blackHoleActive=true;
     wormholeActive=false;
     blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
-    missionEl.textContent='✨ エアレンデルの先にブラックホールが見える';
+    missionEl.textContent='✨ 最も遠い個別星に到達した';
     eventEl.textContent='入りたいなら、自分から近づく';
   }
   return out;
@@ -20133,15 +20202,15 @@ update=function(now,dt){
     blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
     V215.wormX=999999;
     V215.wormEl?.classList.remove('on');
-    missionEl.textContent='✨ エアレンデルの先にブラックホールが見える';
-    eventEl.textContent='自分から入ると、その先へ進める';
+    missionEl.textContent='✨ 最も遠い個別星に到達した';
+    eventEl.textContent='宇宙誕生から10億年以内の星';
   }
 
   if(system===BLACK_HOLE_SYSTEM&&!paused){
     // 中盤を越えたあたりから「出口がある」ことを伝える。
     const q=Math.max(0,Math.min(1,p.x/whiteHoleX));
     if(q>.42&&q<.78){
-      missionEl.textContent=`⚫ ブラックホール内部を進む ${Math.floor(q*100)}%`;
+      missionEl.textContent=`⚫ ブラックホールを進む ${Math.floor(q*100)}%`;
       eventEl.textContent='遠くに白い光が見えてきた';
     }else if(q>=.78){
       missionEl.textContent=`⚫ 出口まで ${Math.max(0,100-Math.floor(q*100))}%`;
@@ -20153,7 +20222,7 @@ update=function(now,dt){
 };
 
 /* -----------------------------------------------------------
-   隠しメニュー用：STAGE 2 の全パターンへ直接テスト移動
+   隠しメニュー用：BONUS STAGE の全パターンへ直接テスト移動
    ----------------------------------------------------------- */
 function v257MenuStage2(kind,variant=null){
   if(!V257_STAGE2_META[kind])return false;
@@ -20163,7 +20232,7 @@ function v257MenuStage2(kind,variant=null){
   V254_FATE.winner=kind;
   V254_FATE.last=kind;
 
-  // テスト時も見た目は本番と同じSTAGE 2表示を通す。
+  // テスト時も見た目は本番と同じBONUS STAGE表示を通す。
   const target=v257Stage2Target(kind,variant);
   const meta=V257_STAGE2_META[kind];
 
@@ -20180,7 +20249,7 @@ function v257MenuStage2(kind,variant=null){
       console.error('[v257 MENU STAGE2]',e);
       paused=false;
     }
-    showToast(`TEST｜STAGE 2 ${meta.icon} ${meta.title}`,1500);
+    showToast(`TEST｜BONUS STAGE ${meta.icon} ${meta.title}`,1500);
   });
   return true;
 }
@@ -20276,7 +20345,7 @@ v252EnterBlackHole=function(source='direct'){
   // 通常プレイで入れるのはエアレンデルだけ。
   if(!isEarendel&&!debug){
     blackHoleActive=false;
-    showToast('⚫ 最終ブラックホールはエアレンデルの先にある',1250);
+    showToast('✨ 最遠級の星のさらに先へ進む。',1250);
     return false;
   }
 
@@ -20311,9 +20380,9 @@ v252EnterBlackHole=function(source='direct'){
     V258_BH.entering=false;
 
     if(ok&&system===BLACK_HOLE_SYSTEM){
-      missionEl.textContent='⚫ ブラックホール内部を進む';
+      missionEl.textContent='⚫ ブラックホールを進む';
       eventEl.textContent=V258_BH.finalMode
-        ? 'この先のホワイトホールが STAGE 2 への出口'
+        ? 'この先のホワイトホールが BONUS STAGE への出口'
         : 'TEST MODE｜出口から元の星へ戻る';
     }
   },1050);
@@ -20670,7 +20739,7 @@ function v259DrawEarendelBlackHole(){
   ctx.font='850 8px system-ui';
   ctx.shadowBlur=0;
   ctx.globalAlpha=.72;
-  ctx.fillText('エアレンデルの先に開いた入口',sx,y-107);
+  ctx.fillText('',sx,y-107);
   ctx.restore();
 }
 
@@ -20877,8 +20946,8 @@ stageStart=function(){
     V259_EAR_BH.firstSeen=false;
     blackHoleActive=true;
     blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
-    missionEl.textContent='✨ エアレンデルの先にブラックホールが見える';
-    eventEl.textContent='近づいて、自分から入る';
+    missionEl.textContent='✨ 最も遠い個別星に到達した';
+    eventEl.textContent='宇宙誕生から10億年以内の星';
   }
 
   const idx=v259CurrentAltIndex();
@@ -21051,7 +21120,7 @@ v259GoNextAltWorld=function(){
 
 /* -----------------------------------------------------------
    C) 宇宙の始まりルート：
-      WH出口 → STAGE 2「宇宙の最果て」
+      WH出口 → BONUS STAGE「宇宙の最果て」
       → 徐々に暗闇 → 一点 → ピカッ → BIG BANG
       → 以後は3秒ごとの自動時代モンタージュ
    ----------------------------------------------------------- */
@@ -21103,7 +21172,7 @@ function v260OriginEraIndex(){
 function v260EraBanner(entry){
   if(!entry)return;
   showToast(`${entry.label}｜3秒`,900);
-  missionEl.textContent=`STAGE 2｜${entry.label}`;
+  missionEl.textContent=`BONUS STAGE｜${entry.label}`;
   eventEl.textContent='宇宙の始まりを3秒ずつ体験する';
 }
 
@@ -21219,7 +21288,7 @@ stageStart=function(){
     V260_ORIGIN.edgeStart=performance.now();
     V260_ORIGIN.montage=false;
     V260_ORIGIN.index=-1;
-    missionEl.textContent='STAGE 2｜🌌 宇宙の最果て';
+    missionEl.textContent='BONUS STAGE｜🌌 宇宙の最果て';
     eventEl.textContent='星が少しずつ遠ざかり、真っ暗になっていく';
   }
 
@@ -21347,7 +21416,7 @@ update=function(now,dt){
     const pct=Math.max(0,Math.min(100,Math.round(q*100)));
     missionEl.textContent=`🌀 スパゲッティー化 ${pct}%`;
     eventEl.textContent=pct<78
-      ? '⚫ ブラックホール内部｜体が縦に引き伸ばされる…'
+      ? '⚫ ブラックホール｜体が縦に引き伸ばされる…'
       : '⚪ 出口のホワイトホールが近い';
   }
 
@@ -21707,7 +21776,7 @@ function v263DistanceForCurrent(){
   const stageName=S()?.name||'';
 
   if(system===BLACK_HOLE_SYSTEM){
-    return {special:'測定不能',label:'ブラックホール内部',pos:.88};
+    return {ly:12900000000,label:'⚫ ブラックホール',pos:.95};
   }
   if(sysName==='🌌 宇宙の最果て'){
     return {special:'距離を定義できない',label:'宇宙の最果て',pos:.96};
@@ -23640,242 +23709,74 @@ window.__v289EarthInfo=()=>({
 /* === /v289 === */
 
 
-/* === v290: BLACK HOLE RECIPE + 40 ERI / PSR VISUALS === */
+/* === v292: FINAL VISIBLE-TEXT NORMALIZER === */
+function v292NormalizeVisibleUi(){
+  try{
+    const name=S()?.name||'';
 
-/* 40エリダヌス座A：星の一生図を追加 */
-V187_STAR_LIFE['🖖 40エリダヌス座A']={
-  age:'数十億歳級',
-  remaining:'100億年以上の可能性',
-  pct:30,
-  phase:'K型主系列星｜まだ長く安定して光る'
-};
+    if(name==='✨ エアレンデル'){
+      V215.radioDone=true;
+      V215.radioEl?.classList.remove('on');
+      missionEl.textContent='✨ 最も遠い個別星に到達した';
+      eventEl.textContent='宇宙誕生から10億年以内の星';
+    }
 
-/* 40エリダヌス座A：大きさ・明るさ・自転の図を追加 */
-V188_STAR_METRICS['🖖 40エリダヌス座A']={
-  size:{main:'半径 約0.81太陽',sub:'太陽より少し小さいK型星'},
-  mass:{main:'約0.78太陽質量',sub:'太陽より軽い'},
-  light:{main:'約0.46太陽光度',sub:'太陽の半分弱ほどの光度'}
-};
-V189_STAR_SPIN['🖖 40エリダヌス座A']={
-  main:'ゆっくり',
-  sub:'約40日級',
-  known:false
-};
-V189_METRIC_VIZ['🖖 40エリダヌス座A']={
-  size:10,
-  light:7,
-  spin:14
-};
+    if(system===BLACK_HOLE_SYSTEM){
+      const m=(missionEl?.textContent||'')
+        .replace(/ブラックホール内部/g,'ブラックホール');
+      if(m)missionEl.textContent=m;
 
-/* PSR J1748-2446ad：大きさ・明るさの図を追加 */
-V188_STAR_METRICS['🌀 PSR J1748-2446ad']={
-  size:{main:'半径 約10km級',sub:'都市ほどの大きさの中性子星'},
-  mass:{main:'約1.4太陽質量級',sub:'極小サイズに恒星級の質量'},
-  light:{main:'可視光では極暗い',sub:'主に電波パルスで観測される'}
-};
-/* 既存の自転100は維持、明るさは「可視光」の感覚へ合わせる */
-V189_METRIC_VIZ['🌀 PSR J1748-2446ad']={
-  size:2,
-  light:4,
-  spin:100
-};
+      const e=(eventEl?.textContent||'')
+        .replace(/ブラックホール内部/g,'ブラックホール');
+      if(e)eventEl.textContent=e;
 
-/* PSRの「恒星としての一生は終了」も図として見せる */
-V187_STAR_LIFE['🌀 PSR J1748-2446ad']={
-  age:'恒星としてはすでに死亡',
-  remaining:'中性子星として長く残る',
-  pct:100,
-  phase:'超新星後の残骸｜ミリ秒パルサー'
-};
+      astroInfo.innerHTML=
+        `<b>🕳️ ブラックホール</b>`+
+        `<span class="v277TypeLine">ブラックホール</span>`+
+        `エアレンデルの先にある、光も戻れない強重力領域`+
+        `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">129億光年</span></span>`+
+        `<span class="distanceHint">🍝 潮汐力で体が引き伸ばされる</span>`;
 
-/* ブラックホール専用の説明 */
-function v290BlackHoleRecipeHTML(){
-  return `
-    <div class="v290BhIntro">
-      ブラックホールは「何でできているか」より、
-      <b>質量・大きさ・でき方</b>で分類すると分かりやすい天体。
-      事象の地平面より内側からは、光さえ外へ戻れない。
-    </div>
+      if(typeof v270EnsureInlineRecipeButton==='function')v270EnsureInlineRecipeButton();
+    }
 
-    <div class="v179SectionLabel">🕳️ ブラックホールの種類</div>
-    <div class="v290BhTypes">
-      <div class="v290BhType">
-        <b>⭐ 恒星質量ブラックホール</b>
-        <span>重い恒星の最期にできる。太陽の数倍〜数十倍級。</span>
-        <div class="v290BhScale"><i style="width:28%"></i></div>
-      </div>
-      <div class="v290BhType">
-        <b>⚫ 中間質量ブラックホール</b>
-        <span>恒星質量と超大質量の中間。数百〜数万太陽質量級の候補。</span>
-        <div class="v290BhScale"><i style="width:48%"></i></div>
-      </div>
-      <div class="v290BhType">
-        <b>🌌 超大質量ブラックホール</b>
-        <span>銀河中心に多い。太陽の数百万〜数百億倍級。</span>
-        <div class="v290BhScale"><i style="width:88%"></i></div>
-      </div>
-      <div class="v290BhType">
-        <b>💥 原始ブラックホール</b>
-        <span>宇宙初期にできた可能性がある仮説上のタイプ。まだ未確認。</span>
-        <div class="v290BhScale"><i style="width:64%;opacity:.48"></i></div>
-      </div>
-    </div>
-
-    <div class="v179SectionLabel">🔍 ブラックホールのしくみ</div>
-    <div class="v290BhFacts">
-      <div class="v290BhFact"><small>⚫ 事象の地平面</small><b>越えると外へ戻れない境界</b></div>
-      <div class="v290BhFact"><small>🍝 潮汐力</small><b>場所ごとの重力差で引き伸ばされる</b></div>
-      <div class="v290BhFact"><small>💿 降着円盤</small><b>周囲のガスが高温で明るく輝く</b></div>
-      <div class="v290BhFact"><small>✨ ホーキング放射</small><b>理論上は非常にゆっくり蒸発する</b></div>
-    </div>
-
-    <div class="v175RecipePoint">
-      <b>🌀 回転でも種類が変わる</b>
-      <span>理論上、回転なしはシュヴァルツシルト型、回転ありはカー型と呼ばれる。</span>
-    </div>
-
-    <div class="v290BhWarning">
-      ※ゲーム内の「内部を歩く」「ホワイトホールから出る」演出は架空表現。
-      実際のブラックホール内部を直接観測した例はない。
-    </div>
-  `;
+    if(systems[system]?.futureEra && systems[system]?.futureStep===2){
+      const b=astroInfo?.querySelector('b');
+      if(b)b.textContent='🌍 50億年後の地球';
+    }
+  }catch(e){}
 }
 
-/* ブラックホールでもレシピを開けるようにする */
-const v290BaseRenderContextRecipe=renderContextRecipe;
-renderContextRecipe=function(){
-  if(system===BLACK_HOLE_SYSTEM || systems[system]?.name==='⚫ ブラックホール'){
-    const panel=document.getElementById('v162RecipePanel');
-    const body=panel?.querySelector('.v162RecipeBody');
-    const head=panel?.querySelector('.v162RecipeHead strong');
-    const sub=panel?.querySelector('.v162RecipeHead small');
-    const btn=document.getElementById('v162RecipeBtn');
-    if(!body||!head||!sub||!btn)return;
-
-    btn.classList.remove('v168RecipeOff');
-    btn.innerHTML='<b>🕳️ ブラックホールを見る <span class="v242RecipeArrow">＋</span></b>';
-    head.textContent='🕳️ ブラックホール';
-    sub.textContent='種類・しくみ・ゲーム演出との違い';
-    body.innerHTML=v290BlackHoleRecipeHTML();
-    return;
-  }
-  return v290BaseRenderContextRecipe();
-};
-
-window.__v290RecipeDebug=()=>({
-  version:window.INUBOSHI_GAME_VERSION,
-  eridaniLife:V187_STAR_LIFE['🖖 40エリダヌス座A'],
-  eridaniMetrics:V188_STAR_METRICS['🖖 40エリダヌス座A'],
-  eridaniSpin:V189_STAR_SPIN['🖖 40エリダヌス座A'],
-  psrMetrics:V188_STAR_METRICS['🌀 PSR J1748-2446ad'],
-  psrViz:V189_METRIC_VIZ['🌀 PSR J1748-2446ad']
-});
-/* === /v290 === */
-
-
-/* === v291: RECIPE VISUALS RESTORED + BLACK HOLE PANEL FIX ===
-   v290でデータは足していたが、レシピ本体に
-   ・距離図
-   ・星の一生図
-   ・大きさ / 明るさ / 自転 図
-   が差し込まれていなかったので、ここで表示を復活。
-   あわせてブラックホール専用レシピも確実に表示する。
-*/
-
-v175DetailHTML=function(isEra){
-  const base=isEra?V175_ERA_DETAIL[systems[system]?.name]:V175_OBJECT_DETAIL[S()?.name];
-  const star=!isEra?V179_STAR_INFO[S()?.name]:null;
-  const d=star?{...(base||{}),...star}:base;
-  if(!d)return '';
-
-  const objectName=S()?.name||systems[system]?.name||'';
-  const bodyPhoto=!isEra?V180_BODY_PHOTOS[objectName]:null;
-  const photo=star?.photo||bodyPhoto||(!isEra&&star?v181AutoPhotoFor(objectName):null)||null;
-  const title=isEra
-    ? ((systems[system]?.hypothesis||systems[system]?.endHypothesis)?'📖 この仮説をもっと詳しく':'📖 この時代をもっと詳しく')
-    : star?'⭐ この星をもっと詳しく':'📖 この天体をもっと詳しく';
-  const meta=S()?.distance||systems[system]?.distance||'';
-
-  return `
-    <section class="v175RecipeDetail">
-      <div class="v175RecipeKicker">${title}</div>
-      <h3>${S()?.name||systems[system]?.name||''}</h3>
-      ${meta?`<div class="v175RecipeMeta">${isEra?'⏱️':'📍'} ${meta}</div>`:''}
-
-      ${!isEra?v191SpotlightHTML(objectName):''}
-      ${!isEra?v229ProfileHTML(objectName):''}
-      ${!isEra?v184TempHTML(objectName):''}
-      ${!isEra?v186StarContextHTML(objectName):''}
-      ${!isEra?v223DistanceHTML(objectName):''}
-      ${!isEra?v187LifeHTML(objectName,d):''}
-      ${!isEra?v188MetricsHTML(objectName):''}
-      ${!isEra?v237ConstellationHTML(objectName):''}
-
-      ${photo?v179PhotoHTML(photo,objectName):''}
-
-      ${star?`<div class="v179SectionLabel">⭐ 星の特徴</div>`:''}
-      <p>${d.about||''}</p>
-      ${star?v179FactsHTML(star.facts):''}
-
-      <div class="v175RecipePoint"><b>💡 ここがポイント</b><span>${d.point||''}</span></div>
-
-      ${star&&d.origin?`
-        <div class="v179NameOrigin">
-          <b>🏷️ 名前の由来</b>
-          <span>${d.origin}</span>
-        </div>`:''}
-
-      ${isEra&&d.next?`<div class="v175RecipeNext">${d.next}</div>`:''}
-    </section>`;
-};
-
-const v291BaseRenderContextRecipe=renderContextRecipe;
-renderContextRecipe=function(){
-  const panel=document.getElementById('v162RecipePanel');
-  const body=panel?.querySelector('.v162RecipeBody');
-  const head=panel?.querySelector('.v162RecipeHead strong');
-  const sub=panel?.querySelector('.v162RecipeHead small');
-  const btn=document.getElementById('v162RecipeBtn');
-  if(!body||!head||!sub||!btn)return;
-
-  const sysName=systems[system]?.name||'';
-  const stageName=S()?.name||'';
-  const isBlackHole=(system===BLACK_HOLE_SYSTEM || sysName==='⚫ ブラックホール' || stageName.includes('ブラックホール'));
-
-  if(isBlackHole){
-    btn.classList.remove('v168RecipeOff');
-    btn.style.visibility='visible';
-    btn.style.pointerEvents='auto';
-    btn.innerHTML='<b>🕳️ ブラックホールを見る <span class="v242RecipeArrow">＋</span></b><small>種類・しくみ・ゲーム演出との違い</small>';
-    head.textContent='🕳️ ブラックホール';
-    sub.textContent='4種類 / 事象の地平面 / スパゲッティー化';
-    body.innerHTML=v290BlackHoleRecipeHTML();
-    return;
-  }
-
-  const out=v291BaseRenderContextRecipe();
-  try{
-    // 非ブラックホール時も、開いた瞬間に写真や追加図を確実に描画
-    setTimeout(()=>{
-      v179HydratePhotos(body);
-      if(panel.classList.contains('on')){
-        body.scrollTop=body.scrollTop;
-      }
-    },0);
-  }catch(e){}
+const v292BaseSyncHUD=syncHUD;
+syncHUD=function(force=false){
+  const out=v292BaseSyncHUD(force);
+  v292NormalizeVisibleUi();
   return out;
 };
 
-window.__v291RecipeAudit=()=>({
+const v292BaseUpdate=update;
+update=function(now,dt){
+  const out=v292BaseUpdate(now,dt);
+  v292NormalizeVisibleUi();
+  return out;
+};
+
+const v292BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v292BaseStageStart();
+  requestAnimationFrame(v292NormalizeVisibleUi);
+  return out;
+};
+
+requestAnimationFrame(v292NormalizeVisibleUi);
+
+window.__v292Audit=()=>({
   version:window.INUBOSHI_GAME_VERSION,
-  hasDistanceFn:typeof v223DistanceHTML==='function',
-  hasLifeFn:typeof v187LifeHTML==='function',
-  hasMetricsFn:typeof v188MetricsHTML==='function',
-  eridaniHasLife:!!V187_STAR_LIFE['🖖 40エリダヌス座A'],
-  eridaniHasMetrics:!!V188_STAR_METRICS['🖖 40エリダヌス座A'],
-  psrHasMetrics:!!V188_STAR_METRICS['🌀 PSR J1748-2446ad']
+  earRadioHidden:getComputedStyle(document.getElementById('v204EarRadio')||document.body).display==='none',
+  currentName:S()?.name||'',
+  distance:typeof v263DistanceForCurrent==='function'?v263DistanceForCurrent():null
 });
-/* === /v291 === */
+/* === /v292 === */
 
 
 })();
@@ -26903,12 +26804,12 @@ window.__v291RecipeAudit=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v291</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v292</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
-    <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
+    <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
     <div id="v257Stage2Quick" style="margin:0 14px 12px;padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(7,9,20,.74)">
-      <div style="margin-bottom:8px;color:#d7e8ff;font:1000 10px/1 system-ui;letter-spacing:.04em">STAGE 2｜全ルート確認</div>
+      <div style="margin-bottom:8px;color:#d7e8ff;font:1000 10px/1 system-ui;letter-spacing:.04em">BONUS STAGE｜全ルート確認</div>
       <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px">
         <button type="button" data-v257-stage2="origin" style="padding:9px 6px;border:1px solid rgba(255,226,110,.28);border-radius:10px;background:rgba(70,57,18,.58);color:#fff;font:900 9px/1.2 system-ui">🌌 宇宙の最果て→始まり</button>
         <button type="button" data-v257-stage2="end" style="padding:9px 6px;border:1px solid rgba(255,110,150,.28);border-radius:10px;background:rgba(65,20,38,.58);color:#fff;font:900 9px/1.2 system-ui">🌑 宇宙の終わり</button>
@@ -27374,11 +27275,11 @@ window.__v291RecipeAudit=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v291';
+  window.INUBOSHI_GAME_VERSION='v292';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v291<small>RECIPE VISUALS RESTORED + BLACK HOLE PANEL FIX / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v292<small>WEBARCHIVE FIXES + RECIPE DATA ACTUALLY WIRED / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
