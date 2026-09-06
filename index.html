@@ -17412,15 +17412,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v294';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v294</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v296';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v296</b><br>距離順・ステージ順で、全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v294</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v296</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17457,15 +17457,18 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       '📡 宇宙背景放射（CMB）','🌑 暗黒時代','🌅 宇宙の夜明け','🔥 再電離時代'
     ];
     const distantOrder=[
-      '🪐 プロキシマ・ケンタウリb','🐶 プロキオン','🦅 アルタイル','😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🌀 PSR J1748-2446ad','🪐 スティーブンソン2-18',
-      '🕳️ いて座A*','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1','💙 イカロス','✨ エアレンデル'
+      '🪐 プロキシマ・ケンタウリb','⭐ シリウス','🐶 プロキオン','🖖 40エリダヌス座A','🦅 アルタイル','💠 ベガ',
+      '😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス',
+      '❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🌀 PSR J1748-2446ad','🪐 スティーブンソン2-18',
+      '🕳️ いて座A*','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus','⭐ M31-V1','⭐ M51-DS1',
+      '💙 イカロス','🦋 モスラ','🦖 ゴジラ','✨ エアレンデル'
     ];
     const solarStageOrder=[
-      '🌍 地球','🌙 月','🔴 火星','🟠 木星','🧊 エウロパ','🪐 土星','🩵 天王星','🔵 海王星',
-      '☀️ 太陽','☿ 水星','♀ 金星','⭐ シリウス','💠 ベガ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス'
+      '🌍 地球','🌙 月','♀ 金星','🔴 火星','♂ 火星','☿ 水星','☀️ 太陽','🟠 木星','🧊 エウロパ',
+      '🪐 土星','🩵 天王星','🔵 海王星','⭐ シリウス','💠 ベガ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス'
     ];
     function v178SysOrder(sys){
-      if(sys.name==='☀️ 太陽系・近くの星')return 10;
+      if(sys.v296SolarBodies||sys.name==='☀️ 太陽系・近くの星')return 10;
       let i=distantOrder.indexOf(sys.name);if(i>=0)return 20+i;
       if(sys.futureEra)return 100+(sys.futureStep||0);
       if(sys.endHypothesis&&sys.endKey==='crunch')return 200;
@@ -17483,7 +17486,17 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       if(systems[sys.si]?.hiddenStar)return 630+(['🦋 モスラ','🦖 ゴジラ'].indexOf(sys.name)+1);
       return 700+sys.si;
     }
-    const orderedData=[...data].sort((a,b)=>v178SysOrder(a)-v178SysOrder(b));
+    const v296SolarNames=new Set(solarStageOrder.slice(0,12));
+    const expandedData=data.flatMap(sys=>{
+      if(sys.name!=='☀️ 太陽系・近くの星')return [sys];
+      const bodies=(sys.stages||[]).filter(st=>v296SolarNames.has(st.name));
+      const nearby=(sys.stages||[]).filter(st=>!v296SolarNames.has(st.name));
+      return [
+        {...sys,name:'🌍 地球・太陽系',stages:bodies,v296SolarBodies:true},
+        ...nearby.map(st=>({...sys,name:st.name,distance:st.distance,stages:[st],v296NearbyStar:true}))
+      ];
+    });
+    const orderedData=[...expandedData].sort((a,b)=>v178SysOrder(a)-v178SysOrder(b));
 
     orderedData.forEach(sys=>{
       if(!sys?.stages?.length)return;
@@ -17499,7 +17512,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       grid.className='v172Grid';
 
       const orderedStages=[...sys.stages].sort((a,b)=>{
-        if(sys.name!=='☀️ 太陽系・近くの星')return a.ti-b.ti;
+        if(!sys.v296SolarBodies&&sys.name!=='☀️ 太陽系・近くの星')return a.ti-b.ti;
         const ai=solarStageOrder.indexOf(a.name),bi=solarStageOrder.indexOf(b.name);
         return (ai<0?999:ai)-(bi<0?999:bi);
       });
@@ -17976,7 +17989,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v294';
+window.INUBOSHI_GAME_VERSION='v296';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -23788,7 +23801,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v294';
+window.INUBOSHI_GAME_VERSION='v296';
 
 /* 追加天体。既存system番号をずらさないため、独立ステージは末尾へ安全に追加する。 */
 const v293Europa={
@@ -24098,6 +24111,119 @@ window.__v293Audit=()=>({
   futureTitle:systems[system]?.futureEra?V215_FUTURE[systems[system].futureStep]?.title:null
 });
 window.__v294Audit=window.__v293Audit;
+
+/* === v295: EARTH BUTTON + COMPLETE NEW WORLDS + COSMIC EDGE === */
+window.INUBOSHI_GAME_VERSION='v296';
+const V295_NEW_OBJECTS=new Set(['🧊 エウロパ','🪐 プロキシマ・ケンタウリb','🕳️ いて座A*']);
+
+Object.assign(V238_STAR_ONE_LINE,{
+  '🧊 エウロパ':{title:'🌊 氷の下に海を隠す月',chips:['木星の衛星','地下海'],text:'表面は凍りついているが、内部の熱と木星の潮汐力によって氷の下に巨大な塩水の海が保たれている可能性がある。'},
+  '🪐 プロキシマ・ケンタウリb':{title:'🔴 いちばん近い系外惑星',chips:['約4.25光年','1年は11.2日'],text:'太陽系に最も近い恒星を回る地球質量級惑星。近いけれど、強烈な恒星フレアに耐える大気があるかはまだ分からない。'},
+  '🕳️ いて座A*':{title:'🌀 天の川銀河の中心',chips:['太陽約400万個分','超大質量ブラックホール'],text:'天の川の中心で星と高温ガスを高速で回らせる巨大ブラックホール。黒い本体ではなく、その周囲の光と「影」が撮影された。'}
+});
+Object.assign(V188_STAR_METRICS,{
+  '🧊 エウロパ':{size:{main:'直径 約3,100km',sub:'月より少し小さい'},mass:{main:'地球の約0.8%',sub:'木星の四大衛星の一つ'},light:{main:'自らは光らない',sub:'白い氷が太陽光を強く反射'}},
+  '🪐 プロキシマ・ケンタウリb':{size:{main:'半径は未確定',sub:'地球に近い岩石惑星と考えられる'},mass:{main:'地球の約1.1倍級',sub:'観測で分かるのは主に最小質量'},light:{main:'自らは光らない',sub:'母星の光を受ける系外惑星'}},
+  '🕳️ いて座A*':{size:{main:'事象の地平面 直径約2,400万km級',sub:'観測画像の「影」はさらに大きい'},mass:{main:'約400万太陽質量',sub:'銀河中心の狭い領域に集中'},light:{main:'本体は光らない',sub:'周囲の高温ガスが電波などで輝く'}}
+});
+Object.assign(V189_STAR_SPIN,{
+  '🧊 エウロパ':{main:'同期回転',sub:'約3.5日で自転し、いつもほぼ同じ面を木星へ向ける',known:true},
+  '🪐 プロキシマ・ケンタウリb':{main:'まだ不明',sub:'潮汐固定されている可能性はあるが未確認',known:false},
+  '🕳️ いて座A*':{main:'詳しい回転は研究中',sub:'周囲のガス運動から推定が続く',known:false}
+});
+Object.assign(V189_METRIC_VIZ,{
+  '🧊 エウロパ':{size:8,light:8,spin:22},
+  '🪐 プロキシマ・ケンタウリb':{size:10,light:2,spin:0},
+  '🕳️ いて座A*':{size:72,light:0,spin:0}
+});
+
+const V295_OBJECT_OVERVIEW={
+  '🧊 エウロパ':{lead:'氷・岩石・金属核が層になった天体。表面下には、地球の海を上回る量の液体の水が存在する可能性がある。',facts:[['🧊 表面','水の氷と長い亀裂'],['🌊 氷の下','広大な塩水の海'],['🪨 内部','岩石質マントル＋金属核'],['☢️ 環境','木星磁場による強い放射線']],unknown:'地下海に生命がいる証拠はまだない。氷の厚さや海底の活動も、今後の探査で確かめる段階。'},
+  '🪐 プロキシマ・ケンタウリb':{lead:'太陽系のすぐ隣にある地球質量級惑星。生命居住可能領域にいるが、それだけで水や生命があるとは言えない。',facts:[['🪨 正体','岩石惑星の可能性'],['📅 1年','地球の約11.2日'],['🔴 母星','活動的な赤色矮星'],['🌡️ 表面','大気が不明で温度も未確定']],unknown:'半径・大気・海・表面の姿は直接確認できていない。強いフレアで大気が失われた可能性も、守られている可能性もある。'},
+  '🕳️ いて座A*':{lead:'天の川銀河の中心にある超大質量ブラックホール。周囲の星の軌道を長年追うことで、巨大な質量の存在が確かめられた。',facts:[['⚫ 本体','光も戻れない領域'],['💿 周囲','超高温ガスの降着流'],['⭐ 近くの星','高速で楕円軌道を回る'],['📷 観測','EHTが影を電波で撮像']],unknown:'事象の地平面より内側を直接見ることはできない。正確な回転速度や内部で何が起きるかは研究中。'}
+};
+function v295ObjectOverviewHTML(name){
+  const d=V295_OBJECT_OVERVIEW[name];if(!d)return '';
+  return `<div class="v292BhIntro">${d.lead}</div><div class="v179SectionLabel">🔭 まず知りたい4つ</div><div class="v292BhFacts">${d.facts.map(([k,v])=>`<div><small>${k}</small><b>${v}</b></div>`).join('')}</div><div class="v175RecipePoint"><b>❓ まだ分からないこと</b><span>${d.unknown}</span></div>`;
+}
+
+const v295BaseRenderContextRecipe=renderContextRecipe;
+renderContextRecipe=function(){
+  const name=S()?.name||'';
+  if(V295_NEW_OBJECTS.has(name)){
+    const panel=document.getElementById('v162RecipePanel'),body=panel?.querySelector('.v162RecipeBody');
+    const head=panel?.querySelector('.v162RecipeHead strong'),sub=panel?.querySelector('.v162RecipeHead small');
+    if(body&&head&&sub){
+      head.textContent=`🔭 ${name}`;sub.textContent='特徴・大きさ・環境・観測・名前の由来';
+      const detail=v175DetailHTML(false).replace('⭐ この星をもっと詳しく','🔭 この天体をもっと詳しく').replace('⭐ 星の特徴','🔭 天体の特徴');
+      body.innerHTML=v295ObjectOverviewHTML(name)+detail;setTimeout(()=>v179HydratePhotos(body),0);return;
+    }
+  }
+  return v295BaseRenderContextRecipe();
+};
+
+function v295EnsureRecipeButton(){
+  if(!astroInfo)return;
+  let btn=document.getElementById('v270InlineRecipeBtn');
+  if(!btn){btn=document.createElement('button');btn.id='v270InlineRecipeBtn';btn.type='button';}
+  btn.setAttribute('aria-label','この星はどんなところ？');
+  btn.innerHTML='<span>この星はどんなところ？</span><span class="plus">＋</span>';
+  btn.onclick=e=>{e.preventDefault();e.stopPropagation();try{renderContextRecipe();openRecipe()}catch(err){console.error('[v295 recipe]',err)}};
+  if(btn.parentElement!==astroInfo)astroInfo.appendChild(btn);
+}
+
+function v295NormalizeHud(){
+  const sys=systems[system],st=S();
+  if(sys?.futureEra){
+    const f=V215_FUTURE[sys.futureStep||0];
+    if(f)astroInfo.innerHTML=`<b>${f.title}</b><br>${f.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${v215GravityLine(st)}</span>`;
+  }
+  if(sys?.name==='🌌 宇宙の最果て'){
+    astroInfo.innerHTML='<b>🌌 宇宙の最果て</b><span class="v277TypeLine">観測可能な宇宙の果て</span>現在の地球から見た、観測できる宇宙の半径<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">465億光年</span></span><span class="distanceHint">🌑 最初は光のない完全な暗闇</span>';
+  }
+  v295EnsureRecipeButton();
+}
+
+for(const sys of systems){if(sys?.name==='🌌 宇宙の最果て'){sys.distance='地球から465億光年';for(const st of sys.stages||[])st.distance='465億光年';}}
+v60DistanceByStage['🌌 宇宙の最果て']='465億 光年';
+V263_DISTANCE_LY['🌌 宇宙の最果て']=46500000000;
+const v295BaseDistanceForCurrent=v263DistanceForCurrent;
+v263DistanceForCurrent=function(){return systems[system]?.name==='🌌 宇宙の最果て'?{ly:46500000000,label:'🌌 宇宙の最果て',pos:.96}:v295BaseDistanceForCurrent();};
+
+function v295DrawEuropa(t){
+  const x=W*.79,y=H*.24,r=Math.max(72,Math.min(W,H)*.19);ctx.save();
+  const halo=ctx.createRadialGradient(x,y,r*.72,x,y,r*1.45);halo.addColorStop(0,'rgba(255,213,151,.26)');halo.addColorStop(1,'transparent');ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,r*1.5,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.clip();const j=ctx.createLinearGradient(x-r,y-r,x+r,y+r);j.addColorStop(0,'#f7dfb8');j.addColorStop(.48,'#c98755');j.addColorStop(1,'#6d3f35');ctx.fillStyle=j;ctx.fillRect(x-r,y-r,r*2,r*2);
+  ['#f4d19f','#8f513e','#f1c48c','#b96d48','#f7ddb1','#8b4a3b','#e8ad72'].forEach((c,i)=>{ctx.globalAlpha=.62;ctx.fillStyle=c;ctx.fillRect(x-r,y-r+i*r*.31,r*2,r*.17)});ctx.globalAlpha=.78;ctx.fillStyle='#a94631';ctx.beginPath();ctx.ellipse(x+r*.28,y+r*.28,r*.25,r*.10,-.10,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.save();ctx.strokeStyle='rgba(255,242,211,.70)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='rgba(111,232,255,.38)';ctx.shadowColor='#75e8ff';ctx.shadowBlur=10;for(let i=0;i<7;i++){const yy=H*(.52+i*.045);ctx.beginPath();ctx.moveTo(-20,yy);ctx.lineTo(W*.22,yy-9);ctx.lineTo(W*.43,yy+5);ctx.lineTo(W*.65,yy-7);ctx.stroke()}ctx.restore();
+}
+function v295DrawProxima(t){
+  const x=W*.80,y=H*.27,r=Math.max(82,Math.min(W,H)*.22);ctx.save();const glow=ctx.createRadialGradient(x,y,r*.08,x,y,r*1.7);glow.addColorStop(0,'#fff6d8');glow.addColorStop(.18,'#ff8d60');glow.addColorStop(.50,'rgba(211,37,43,.72)');glow.addColorStop(1,'transparent');ctx.globalAlpha=.86+.08*Math.sin(t*3.2);ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r*1.7,0,Math.PI*2);ctx.fill();
+  const star=ctx.createRadialGradient(x-r*.25,y-r*.25,3,x,y,r);star.addColorStop(0,'#fff5ca');star.addColorStop(.32,'#ff9b58');star.addColorStop(.72,'#d5343d');star.addColorStop(1,'#6d0e25');ctx.fillStyle=star;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(255,174,101,.72)';ctx.shadowColor='#ff493f';ctx.shadowBlur=16;ctx.lineWidth=3;for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(x+r*(.08+i*.08),y-r*(.65+i*.08),r*(.48+i*.17),Math.PI*.98,Math.PI*1.64);ctx.stroke()}ctx.restore();
+}
+function v295DrawSagittarius(t){
+  const x=W*.68,y=H*.28,r=Math.max(48,Math.min(W,H)*.115);ctx.save();for(let i=0;i<34;i++){const a=i*.91+t*(.04+(i%4)*.01),rr=r*1.5+(i%9)*r*.22;ctx.globalAlpha=.18+(i%5)*.08;ctx.fillStyle=i%3===0?'#70dfff':i%3===1?'#ffb25f':'#fff';ctx.beginPath();ctx.arc(x+Math.cos(a)*rr,y+Math.sin(a)*rr*.42,1+(i%3)*.45,0,Math.PI*2);ctx.fill();}
+  ctx.translate(x,y);ctx.rotate(-.16+Math.sin(t*.25)*.025);const halo=ctx.createRadialGradient(0,0,r*.5,0,0,r*2.2);halo.addColorStop(0,'rgba(0,0,0,0)');halo.addColorStop(.35,'rgba(255,112,45,.34)');halo.addColorStop(.62,'rgba(255,202,113,.18)');halo.addColorStop(1,'transparent');ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,r*2.25,0,Math.PI*2);ctx.fill();ctx.shadowColor='#ff8b46';ctx.shadowBlur=28;ctx.lineWidth=Math.max(9,r*.20);const disk=ctx.createLinearGradient(-r*1.7,0,r*1.7,0);disk.addColorStop(0,'#ff642f');disk.addColorStop(.48,'#fff1b6');disk.addColorStop(.55,'#fff');disk.addColorStop(1,'#ee4d2f');ctx.strokeStyle=disk;ctx.beginPath();ctx.ellipse(0,0,r*1.75,r*.38,0,0,Math.PI*2);ctx.stroke();ctx.shadowColor='#000';ctx.shadowBlur=30;ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,r*.72,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(255,244,209,.88)';ctx.shadowColor='#fff3c2';ctx.shadowBlur=14;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*.86,Math.PI*.12,Math.PI*.88);ctx.stroke();ctx.restore();
+}
+drawBackground=function(){v293BaseDrawBackground();const name=S()?.name||'',t=performance.now()/1000;if(name==='🧊 エウロパ')v295DrawEuropa(t);else if(name==='🪐 プロキシマ・ケンタウリb')v295DrawProxima(t);else if(name==='🕳️ いて座A*')v295DrawSagittarius(t);};
+
+const v295BaseStageStart=stageStart;
+stageStart=function(){
+  const edge=systems[system]?.name==='🌌 宇宙の最果て';
+  if(edge){V260_ORIGIN.active=true;V260_ORIGIN.edgeStart=0;V260_ORIGIN.montage=false;V260_ORIGIN.index=-1;V260_ORIGIN.flashLock=false;V261.whiteoutShown=false;}
+  const out=v295BaseStageStart();requestAnimationFrame(v295NormalizeHud);return out;
+};
+const v295BaseDrawPlayer=drawPlayer;
+drawPlayer=function(){if(V260_ORIGIN.active&&systems[system]?.name==='🌌 宇宙の最果て'&&V260_ORIGIN.edgeStart&&performance.now()-V260_ORIGIN.edgeStart<6200)return;return v295BaseDrawPlayer();};
+const v295BaseSyncHUD=syncHUD;
+syncHUD=function(force=false){const out=v295BaseSyncHUD(force);v295NormalizeHud();return out;};
+const v295BaseUpdate=update;
+update=function(now,dt){const out=v295BaseUpdate(now,dt);v295NormalizeHud();return out;};
+requestAnimationFrame(v295NormalizeHud);
+
+window.__v295Audit=()=>({version:window.INUBOSHI_GAME_VERSION,earthRecipeButton:!!document.getElementById('v270InlineRecipeBtn'),newObjectDetails:[...V295_NEW_OBJECTS].map(name=>({name,info:!!V179_STAR_INFO[name],overview:!!V295_OBJECT_OVERVIEW[name],visual:!!V188_STAR_METRICS[name]})),cosmicEdgeValue:V263_DISTANCE_LY['🌌 宇宙の最果て']});
+window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・未来はステージ順',version:window.INUBOSHI_GAME_VERSION});
+/* === /v295 === */
 /* === /v293 === */
 
 
@@ -27126,7 +27252,7 @@ window.__v294Audit=window.__v293Audit;
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v294</span></strong>
+      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v296</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -27188,8 +27314,9 @@ window.__v294Audit=window.__v293Audit;
     // v243: systems の内部プロパティに直接依存せず、
     // debug API が返す名前だけで分類。将来の差し替えでもメニューが空になりにくい。
     const ORIGIN=new Set([
-      '🌑 暗黒時代','🌅 宇宙の夜明け','📡 宇宙背景放射（CMB）',
-      '⚛️ ビッグバン元素合成','🟣 粒子の宇宙','💫 ビッグバン'
+      '💫 ビッグバン','❓ プランク時代','◼️ 大統一時代','💥 インフレーション時代','⚡ 電弱時代',
+      '🟣 粒子の宇宙','🔵 ハドロン時代','🌀 レプトン時代','⚛️ ビッグバン元素合成','✨ 光子時代',
+      '🌤️ 再結合時代（宇宙の晴れ上がり）','📡 宇宙背景放射（CMB）','🌑 暗黒時代','🌅 宇宙の夜明け','🔥 再電離時代'
     ]);
     const FUTURE=new Set([
       '⏩ 太陽が明るくなる未来','🔴 赤色巨星の太陽','⚪ 太陽の死（白色矮星）',
@@ -27203,15 +27330,34 @@ window.__v294Audit=window.__v293Audit;
       '地球誕生','原始地球','冥王代','太古代','原生代','古生代','中生代','新生代',
       '生命','海洋','大気','酸素','全球凍結','恐竜','カンブリア','地球形成'
     ];
-    const SPECIAL_NAMES=new Set(['🦋 モスラ','🦖 ゴジラ','🐾 犬の夢の星','⚫ ブラックホール']);
+    const SPECIAL_NAMES=new Set(['🐾 犬の夢の星','⚫ ブラックホール','🌌 宇宙の最果て','🌸 花の星','🌝 笑う月の星']);
+    const SOLAR_BODIES=new Set(['🌍 地球','🌙 月','♀ 金星','🔴 火星','♂ 火星','☿ 水星','☀️ 太陽','🟠 木星','🧊 エウロパ','🪐 土星','🩵 天王星','🔵 海王星']);
+    const SOLAR_DISTANCE_ORDER=['🌍 地球','🌙 月','♀ 金星','🔴 火星','♂ 火星','☿ 水星','☀️ 太陽','🟠 木星','🧊 エウロパ','🪐 土星','🩵 天王星','🔵 海王星'];
+    const STAR_DISTANCE_ORDER=[
+      '🪐 プロキシマ・ケンタウリb','⭐ シリウス','🐶 プロキオン','🖖 40エリダヌス座A','🦅 アルタイル','💠 ベガ',
+      '😈 アルゴル','🕰️ メトシェラ星','🌾 スピカ','🌟 ポラリス','❤️ アンタレス','🔴 ベテルギウス',
+      '❓ タビーの星','🦢 デネブ','🐕 VYおおいぬ座星','💥 イータ・カリーナ','🌀 PSR J1748-2446ad',
+      '🪐 スティーブンソン2-18','🕳️ いて座A*','🧲 SGR 1806-20','💙 R136a1','✨ S Doradus',
+      '⭐ M31-V1','⭐ M51-DS1','💙 イカロス','🦋 モスラ','🦖 ゴジラ','✨ エアレンデル'
+    ];
+    const ORIGIN_ORDER=[
+      '💫 ビッグバン','❓ プランク時代','◼️ 大統一時代','💥 インフレーション時代','⚡ 電弱時代',
+      '🟣 粒子の宇宙','🔵 ハドロン時代','🌀 レプトン時代','⚛️ ビッグバン元素合成','✨ 光子時代',
+      '🌤️ 再結合時代（宇宙の晴れ上がり）','🌤️ 宇宙の晴れ上がり','📡 宇宙背景放射（CMB）','📡 宇宙背景放射',
+      '🌑 暗黒時代','🌅 宇宙の夜明け','🔥 再電離時代'
+    ];
+    const FUTURE_ORDER=['☀️ 明るくなる太陽','🔴 赤色巨星','⚪ 白色矮星','🌌 星が生まれない宇宙','🔴 最後の赤色矮星','🕳️ ブラックホール時代','🌑 ほとんど何もない宇宙'];
+    const SPECIAL_ORDER=['⚫ ブラックホール','🦋 モスラ','🦖 ゴジラ','🌸 花の星','🌝 笑う月の星','🌌 宇宙の最果て','🐾 犬の夢の星'];
 
-    function categoryFor(sys){
+    function categoryFor(sys,st){
       const name=cleanName(sys.name);
+      const stageName=cleanName(st?.name||name);
+      if(name==='☀️ 太陽系・近くの星')return SOLAR_BODIES.has(stageName)?'🌍 地球・太陽系':'🌟 星ステージ';
+      if(name==='🦋 モスラ'||name==='🦖 ゴジラ')return '🌟 星ステージ';
       if(sys.blackHole||sys.secret||sys.dream||SPECIAL_NAMES.has(name))return '🧩 隠し・特殊';
       if(ORIGIN.has(name))return '🌌 宇宙の始まり';
       if(FUTURE.has(name))return '🔮 未来・宇宙の終わり';
       if(HYP.has(name))return '🧪 仮説';
-      if(name==='☀️ 太陽系・近くの星')return '🌍 地球・太陽系';
       if(HISTORY_HINTS.some(k=>name.includes(k)))return '🌍 地球の歴史';
       return '🌟 星ステージ';
     }
@@ -27227,20 +27373,30 @@ window.__v294Audit=window.__v293Audit;
       '🌍 地球の歴史','🔮 未来・宇宙の終わり','🧪 仮説','🧩 隠し・特殊'
     ];
 
+    function rankIn(order,name,fallback){const i=order.indexOf(cleanName(name));return i<0?fallback:i;}
+    function entryRank(entry,cat){
+      const name=cleanName(entry.st.name||entry.sys.name);
+      if(cat==='🌍 地球・太陽系')return rankIn(SOLAR_DISTANCE_ORDER,name,900)+entry.st.ti/100;
+      if(cat==='🌟 星ステージ')return rankIn(STAR_DISTANCE_ORDER,name,900)+entry.st.ti/100;
+      if(cat==='🌌 宇宙の始まり')return rankIn(ORIGIN_ORDER,name,rankIn(ORIGIN_ORDER,entry.sys.name,900))+entry.st.ti/100;
+      if(cat==='🔮 未来・宇宙の終わり')return rankIn(FUTURE_ORDER,name,rankIn(FUTURE_ORDER,entry.sys.name,entry.sys.futureStep||900))+entry.st.ti/100;
+      if(cat==='🧩 隠し・特殊')return rankIn(SPECIAL_ORDER,entry.sys.name,900)+entry.st.ti/100;
+      return entry.sys.si*1000+entry.st.ti;
+    }
+    const entries=data.flatMap(sys=>(sys.stages||[]).map(st=>({sys,st})));
     let totalRows=0;
 
     categoryOrder.forEach(cat=>{
-      const matching=data.filter(sys=>!shouldHide(sys)&&categoryFor(sys)===cat&&sys.stages?.length);
+      const matching=entries.filter(({sys,st})=>!shouldHide(sys)&&categoryFor(sys,st)===cat).sort((a,b)=>entryRank(a,cat)-entryRank(b,cat));
       if(!matching.length)return;
 
       const group=document.createElement('div');
       group.className='v150JumpGroup';
       group.dataset.category=cat;
-      group.innerHTML=`<span>${cat}</span><small>${matching.reduce((n,s)=>n+(s.stages?.length||0),0)}</small>`;
+      group.innerHTML=`<span>${cat}</span><small>${matching.length}</small>`;
       list.appendChild(group);
 
-      matching.forEach(sys=>{
-        sys.stages.forEach(st=>{
+      matching.forEach(({sys,st})=>{
           const row=document.createElement('button');
           row.type='button';
           row.className='v150JumpRow';
@@ -27288,7 +27444,6 @@ window.__v294Audit=window.__v293Audit;
           list.appendChild(row);
           rows.push({row,group});
           totalRows++;
-        });
       });
     });
 
@@ -27598,11 +27753,11 @@ window.__v294Audit=window.__v293Audit;
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v294';
+  window.INUBOSHI_GAME_VERSION='v296';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v294<small>FULL RE-AUDIT + ROUTE INTEGRATION / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v296<small>DISTANCE + STAGE ORDER / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
