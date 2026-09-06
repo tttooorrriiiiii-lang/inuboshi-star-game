@@ -1474,6 +1474,81 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v272TopLeftStackFix">
+/* v272: 左上の縦並びをちゃんと順番どおりに積む */
+#v263DistanceMap{
+  top:8px!important;
+  left:8px!important;
+  width:min(46%,300px)!important;
+  max-width:300px!important;
+  z-index:13!important;
+}
+#hud{
+  top:60px!important;
+  left:8px!important;
+  width:min(46%,300px)!important;
+  z-index:12!important;
+}
+#mission{
+  top:108px!important;
+  left:8px!important;
+  width:min(46%,300px)!important;
+  max-width:300px!important;
+  z-index:11!important;
+}
+#event{
+  top:154px!important;
+  left:8px!important;
+  width:min(46%,300px)!important;
+  max-width:300px!important;
+  z-index:10!important;
+}
+
+/* 中身がないときは高さを取らない */
+#mission:empty,
+#event:empty{
+  display:none!important;
+}
+
+/* 文字量が増えても潰れにくくする */
+#mission,
+#event{
+  box-sizing:border-box!important;
+  line-height:1.28!important;
+  padding:7px 9px!important;
+  min-height:34px!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+@media(max-width:520px){
+  #v263DistanceMap{
+    top:7px!important;
+    left:7px!important;
+    width:45%!important;
+    max-width:288px!important;
+  }
+  #hud{
+    top:56px!important;
+    left:7px!important;
+    width:45%!important;
+  }
+  #mission{
+    top:100px!important;
+    left:7px!important;
+    width:45%!important;
+    max-width:288px!important;
+  }
+  #event{
+    top:144px!important;
+    left:7px!important;
+    width:45%!important;
+    max-width:288px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -16653,15 +16728,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v271';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v271</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v272';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v272</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v271</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v272</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17216,7 +17291,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v271';
+window.INUBOSHI_GAME_VERSION='v272';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -21774,6 +21849,18 @@ window.__v271RecipeState=()=>({
 /* === /v271 === */
 
 
+/* === v272: TOP-LEFT STACK FIX DEBUG === */
+window.__v272TopLeftState=()=>({
+  distanceTop:getComputedStyle(document.getElementById('v263DistanceMap')).top,
+  hudTop:getComputedStyle(document.getElementById('hud')).top,
+  missionTop:getComputedStyle(document.getElementById('mission')).top,
+  eventTop:getComputedStyle(document.getElementById('event')).top,
+  missionDisplay:getComputedStyle(document.getElementById('mission')).display,
+  eventDisplay:getComputedStyle(document.getElementById('event')).display
+});
+/* === /v272 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -24799,7 +24886,7 @@ window.__v271RecipeState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v271</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v272</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -25270,11 +25357,11 @@ window.__v271RecipeState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v271';
+  window.INUBOSHI_GAME_VERSION='v272';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v271<small>INLINE RECIPE BUTTON OVERLAP FIX / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v272<small>TOP-LEFT HUD STACK FIX / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
