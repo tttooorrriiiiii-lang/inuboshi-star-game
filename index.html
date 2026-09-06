@@ -1424,6 +1424,56 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v271RecipeOverlapFix">
+/* v271: 右上パネル内ボタンを absolute ではなく通常フローに戻して重なり解消 */
+#astroInfo{
+  padding-bottom:10px!important;
+}
+#v270InlineRecipeBtn{
+  position:static!important;
+  right:auto!important;
+  bottom:auto!important;
+  left:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+  margin-top:8px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  padding:7px 10px!important;
+  border-radius:14px!important;
+  text-align:left!important;
+}
+#v270InlineRecipeBtn > span:first-child{
+  display:block!important;
+  min-width:0!important;
+  flex:1 1 auto!important;
+}
+#v270InlineRecipeBtn .sub{
+  display:block!important;
+  margin-top:4px!important;
+  white-space:normal!important;
+  text-align:left!important;
+}
+#v270InlineRecipeBtn .plus{
+  flex:0 0 auto!important;
+  margin-left:6px!important;
+}
+@media(max-width:520px){
+  #astroInfo{
+    padding-bottom:8px!important;
+  }
+  #v270InlineRecipeBtn{
+    margin-top:7px!important;
+    padding:6px 9px!important;
+    border-radius:13px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -16603,15 +16653,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v270';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v270</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v271';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v271</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v270</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v271</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17166,7 +17216,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v270';
+window.INUBOSHI_GAME_VERSION='v271';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -21715,6 +21765,15 @@ window.__v270UiState=()=>({
 /* === /v270 === */
 
 
+/* === v271: INLINE BUTTON OVERLAP FIX DEBUG === */
+window.__v271RecipeState=()=>({
+  astroPaddingBottom:getComputedStyle(document.getElementById('astroInfo')).paddingBottom,
+  recipePosition:getComputedStyle(document.getElementById('v270InlineRecipeBtn')).position,
+  recipeWidth:getComputedStyle(document.getElementById('v270InlineRecipeBtn')).width
+});
+/* === /v271 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -24740,7 +24799,7 @@ window.__v270UiState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v270</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v271</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -25211,11 +25270,11 @@ window.__v270UiState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v270';
+  window.INUBOSHI_GAME_VERSION='v271';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v270<small>INLINE RECIPE BUTTON + LEFT HUD REFLOW / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v271<small>INLINE RECIPE BUTTON OVERLAP FIX / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
