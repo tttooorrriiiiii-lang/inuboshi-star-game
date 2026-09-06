@@ -16428,15 +16428,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v263';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v263</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v266';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v266</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v263</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v266</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16991,7 +16991,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v263';
+window.INUBOSHI_GAME_VERSION='v266';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -20765,11 +20765,15 @@ const V263_DISTANCE_LY={
   '♀ 金星':4.0e-5,
   '♂ 火星':7.5e-5,
   '⭐ シリウス':8.6,
+  '💠 ベガ':25,
+  '🌟 ポラリス':430,
   '🐶 プロキオン':11.5,
   '🖖 40エリダヌス座A':16.3,
   '🦅 アルタイル':16.7,
   '😈 アルゴル':93,
+  '🕰️ メトシェラ星':190,
   '🌾 スピカ':250,
+  '❓ タビーの星':1470,
   '🌟 ポラリス':447,
   '❤️ アンタレス':550,
   '🔴 ベテルギウス':642,
@@ -20901,6 +20905,342 @@ window.__v263DistanceMap=()=>({
   note:'対数スケール。太陽系から数百億光年までを1本のバーに収めるための距離イメージ図。'
 });
 /* === /v263 === */
+
+
+/* === v264: FARTHEST DISTANCE MAP ===
+   距離MAPは「今いる星」ではなく、「これまで到達した最遠地点」を表示。
+   近い星へ戻ってもマーカーは戻らない。
+*/
+const V264_FARTHEST={
+  ly:0,
+  label:'🌍 地球',
+  special:null,
+  initialized:false
+};
+
+function v264CandidateDistance(){
+  const d=v263DistanceForCurrent();
+
+  // 通常距離はそのまま候補
+  if(Number.isFinite(d.ly)){
+    return {ly:d.ly,label:d.label||systems[system]?.name||'現在地',special:null,pos:null};
+  }
+
+  // 架空・特殊領域は最遠扱い用に固定位置を持たせる
+  if(d.special==='距離を定義できない'){
+    return {ly:V263_MAX_LY*1.05,label:d.label||'宇宙の最果て',special:'距離を定義できない',pos:.965};
+  }
+  if(d.special==='測定不能'){
+    // ブラックホール内部は「距離」そのものを更新しない。
+    return null;
+  }
+  if(d.special==='時間を遡行中'){
+    // 始まりルートも距離MAP上では最遠到達値を保持。
+    return null;
+  }
+  return null;
+}
+
+function v264UpdateFarthest(){
+  const c=v264CandidateDistance();
+  if(!c)return;
+
+  if(!V264_FARTHEST.initialized){
+    V264_FARTHEST.initialized=true;
+    V264_FARTHEST.ly=c.ly;
+    V264_FARTHEST.label=c.label;
+    V264_FARTHEST.special=c.special;
+    V264_FARTHEST.pos=c.pos;
+    return;
+  }
+
+  if(c.ly>V264_FARTHEST.ly){
+    V264_FARTHEST.ly=c.ly;
+    V264_FARTHEST.label=c.label;
+    V264_FARTHEST.special=c.special;
+    V264_FARTHEST.pos=c.pos;
+  }
+}
+
+v263UpdateDistanceMap=function(){
+  const box=document.getElementById('v263DistanceMap');
+  const nowEl=document.getElementById('v263DistNow');
+  const marker=document.getElementById('v263DistMarker');
+  const stageEl=document.getElementById('v263DistStage');
+  const scaleEl=document.getElementById('v263DistScale');
+  if(!box||!nowEl||!marker||!stageEl||!scaleEl)return;
+
+  v264UpdateFarthest();
+
+  const f=V264_FARTHEST;
+  let pos=Number.isFinite(f.pos)?f.pos:v263LogPos(f.ly);
+
+  const px=18+pos*calcV263RailWidth();
+  marker.style.left=`${px}px`;
+
+  nowEl.textContent=f.special||v263FormatDistance(f.ly);
+  stageEl.textContent=`最遠到達｜${f.label}`;
+
+  if(f.ly>12900000000){
+    scaleEl.textContent='架空領域';
+  }else{
+    scaleEl.textContent='✨ エアレンデル';
+  }
+
+  const title=box.querySelector('.v263DistTitle');
+  if(title){
+    title.textContent=f.ly>12900000000
+      ?'🌍 FARTHEST DISTANCE｜架空距離'
+      :'🌍 FARTHEST DISTANCE｜対数MAP';
+  }
+};
+
+window.__v264Farthest=()=>({...V264_FARTHEST});
+/* === /v264 === */
+
+
+/* === v265: OUTWARD DISTANCE MAP FIX ===
+   v264の「最遠到達を固定」は撤回。
+   今いる星の距離を表示するが、通常の外向き星ルート中は
+   markerが前の星より左へ戻らないようルート順を基準に進める。
+*/
+const V265_ROUTE=[
+  '🌍 地球',
+  '🐶 プロキオン',
+  '🖖 40エリダヌス座A',
+  '🦅 アルタイル',
+  '😈 アルゴル',
+  '🕰️ メトシェラ星',
+  '🌾 スピカ',
+  '❓ タビーの星',
+  '🦢 デネブ',
+  '🐕 VYおおいぬ座星',
+  '💥 イータ・カリーナ',
+  '🌀 PSR J1748-2446ad',
+  '🪐 スティーブンソン2-18',
+  '🧲 SGR 1806-20',
+  '💙 R136a1',
+  '✨ S Doradus',
+  '⭐ M31-V1',
+  '💙 イカロス',
+  '✨ エアレンデル'
+];
+
+function v265CurrentRouteIndex(){
+  const n=S()?.name||systems[system]?.name||'';
+  return V265_ROUTE.indexOf(n);
+}
+
+function v265RoutePos(){
+  const idx=v265CurrentRouteIndex();
+  if(idx<0)return null;
+  return idx/(V265_ROUTE.length-1);
+}
+
+v263UpdateDistanceMap=function(){
+  const box=document.getElementById('v263DistanceMap');
+  const nowEl=document.getElementById('v263DistNow');
+  const marker=document.getElementById('v263DistMarker');
+  const stageEl=document.getElementById('v263DistStage');
+  const scaleEl=document.getElementById('v263DistScale');
+  if(!box||!nowEl||!marker||!stageEl||!scaleEl)return;
+
+  const d=v263DistanceForCurrent();
+
+  // 通常の星旅では「地球→エアレンデル」の旅順で進める。
+  // これでメトシェラ/タビーのような未登録天体で中央へ戻る現象を防ぐ。
+  let pos=v265RoutePos();
+
+  // 通常ルート外だけ、距離の対数位置へフォールバック。
+  if(pos===null){
+    if(Number.isFinite(d.pos))pos=d.pos;
+    else if(Number.isFinite(d.ly))pos=v263LogPos(d.ly);
+    else pos=.5;
+  }
+
+  const px=18+Math.max(0,Math.min(1,pos))*calcV263RailWidth();
+  marker.style.left=`${px}px`;
+
+  nowEl.textContent=d.special||v263FormatDistance(d.ly);
+  stageEl.textContent=d.label||'現在地';
+
+  if((d.ly||0)>12900000000){
+    scaleEl.textContent='架空領域';
+  }else{
+    scaleEl.textContent='✨ エアレンデル';
+  }
+
+  const title=box.querySelector('.v263DistTitle');
+  if(title){
+    title.textContent=(d.ly||0)>12900000000
+      ?'🌍 EARTH DISTANCE｜架空距離'
+      :'🌍 EARTH DISTANCE｜旅の進行';
+  }
+};
+
+/* v264の最遠固定値は使わない */
+V264_FARTHEST.initialized=false;
+V264_FARTHEST.ly=0;
+V264_FARTHEST.label='🌍 地球';
+V264_FARTHEST.special=null;
+
+window.__v265DistanceDebug=()=>({
+  stage:S()?.name||'',
+  distance:v263DistanceForCurrent(),
+  routeIndex:v265CurrentRouteIndex(),
+  routePos:v265RoutePos()
+});
+/* === /v265 === */
+
+
+/* === v266: HUD CLEANUP + SPACING PASS ===
+   削除:
+   - 左上の現在地バー
+   - 通常時の「ワームホール通過回数」
+   - 通常時の「安全/危険地域」常設表示
+   - 左下のBONE 0/30ゲージ
+   機能自体は残し、必要な瞬間の演出・トーストだけ表示する。
+*/
+(function v266InstallHudCleanup(){
+  if(document.getElementById('v266HudCleanupStyle'))return;
+  const st=document.createElement('style');
+  st.id='v266HudCleanupStyle';
+  st.textContent=`
+    /* 左上：現在地バーは完全に非表示 */
+    #hud #location{display:none!important}
+
+    /* カウンター3つを最上段に揃える */
+    #hud{
+      top:8px!important;
+      left:8px!important;
+      width:min(52%,440px)!important;
+    }
+    #hud .stack{
+      display:grid!important;
+      grid-template-columns:repeat(3,minmax(0,1fr))!important;
+      gap:5px!important;
+      max-width:100%!important;
+      align-items:stretch!important;
+    }
+    #hud #points,#hud #food,#hud #alienHitCount{
+      min-width:0!important;
+      width:auto!important;
+      margin:0!important;
+    }
+
+    /* 通常時のmissionは空なら高さを取らない */
+    #mission:empty{display:none!important}
+    #event:empty{display:none!important}
+
+    /* mission / event を詰めて配置 */
+    #mission{
+      top:55px!important;
+      max-width:52%!important;
+      margin:0!important;
+    }
+    #event{
+      top:91px!important;
+      max-width:54%!important;
+      margin:0!important;
+    }
+
+    /* BONE進捗ゲージは常設しない */
+    #v70BoneHud{display:none!important}
+
+    /* 距離MAPを空いたスペースへ上げる */
+    #v263DistanceMap{
+      top:128px!important;
+      left:8px!important;
+      width:min(60%,360px)!important;
+      margin:0!important;
+    }
+
+    @media(max-width:520px){
+      #hud{
+        top:7px!important;
+        left:7px!important;
+        width:50%!important;
+      }
+      #hud .stack{gap:4px!important}
+      #mission{
+        top:51px!important;
+        max-width:55%!important;
+      }
+      #event{
+        top:86px!important;
+        max-width:57%!important;
+      }
+      #v263DistanceMap{
+        top:120px!important;
+        left:7px!important;
+        width:58%!important;
+      }
+    }
+  `;
+  document.head.appendChild(st);
+})();
+
+/* 通常星ステージの「ワームホール通過 / 危険地域」を消す。
+   物語上意味があるmissionを後段ラッパーが入れた場合はそのまま残る。 */
+const v266BaseSyncHUD=syncHUD;
+syncHUD=function(force=false){
+  v266BaseSyncHUD(force);
+
+  if(!missionEl)return;
+
+  const txt=(missionEl.textContent||'').trim();
+  if(/^🌀\s*ワームホール通過/.test(txt)){
+    missionEl.textContent='';
+  }
+
+  // 危険度は常設しない。危険イベント発生時のevent/toastは残す。
+  if(/^(🟢 安全地帯|🟡 注意地域|🟠 危険地域|🔴 高危険地域|🟣 極危険地域)$/.test(txt)){
+    missionEl.textContent='';
+  }
+};
+
+/* difficultyTierが変わった時の「危険地域に入った」常時トーストも抑える。
+   実際の隕石・カラス・侵略イベントなどの警告は別処理なので残る。 */
+let v266LastDifficultyTier=-1;
+const v266BaseUpdate=update;
+update=function(now,dt){
+  const before=difficultyTier;
+  const out=v266BaseUpdate(now,dt);
+
+  // 通常HUD由来の危険度文言が後から復活した場合も消す。
+  const mt=(missionEl?.textContent||'').trim();
+  if(/^🌀\s*ワームホール通過/.test(mt) ||
+     /^(🟢 安全地帯|🟡 注意地域|🟠 危険地域|🔴 高危険地域|🟣 極危険地域)$/.test(mt)){
+    missionEl.textContent='';
+  }
+
+  // BONE TIME中はゲージの代わりに、開始時の既存バナーだけを使う。
+  const boneHud=document.getElementById('v70BoneHud');
+  if(boneHud)boneHud.style.display='none';
+
+  return out;
+};
+
+/* DOM上はlocationを残す（古いコードの参照切れ防止）が、表示領域はゼロ。 */
+if(locationEl){
+  locationEl.setAttribute('aria-hidden','true');
+}
+
+/* 初期レイアウトも即時反映 */
+requestAnimationFrame(()=>{
+  const boneHud=document.getElementById('v70BoneHud');
+  if(boneHud)boneHud.style.display='none';
+});
+
+window.__v266HudState=()=>({
+  locationHidden:getComputedStyle(locationEl).display==='none',
+  boneHudHidden:document.getElementById('v70BoneHud')
+    ?getComputedStyle(document.getElementById('v70BoneHud')).display==='none'
+    :true,
+  mission:missionEl?.textContent||'',
+  event:eventEl?.textContent||''
+});
+/* === /v266 === */
 
 
 })();
@@ -23928,7 +24268,7 @@ window.__v263DistanceMap=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v263</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v266</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -24399,11 +24739,11 @@ window.__v263DistanceMap=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v263';
+  window.INUBOSHI_GAME_VERSION='v266';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v263<small>EARTH DISTANCE MAP / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v266<small>HUD CLEANUP + SPACING PASS / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
