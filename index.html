@@ -2103,6 +2103,61 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v290RecipeAdditions">
+/* ブラックホール専用レシピ */
+.v290BhIntro{
+  margin:0 0 10px;padding:11px 12px;border-radius:14px;
+  background:linear-gradient(135deg,rgba(91,55,159,.16),rgba(5,8,18,.72));
+  border:1px solid rgba(180,147,255,.20);
+  color:rgba(255,255,255,.84);font:760 9.5px/1.65 system-ui;
+}
+.v290BhTypes{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px;
+}
+.v290BhType{
+  padding:10px;border-radius:12px;background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.085);
+}
+.v290BhType b{
+  display:block;color:#fff;font:950 9px/1.25 system-ui;
+}
+.v290BhType span{
+  display:block;margin-top:5px;color:rgba(255,255,255,.66);
+  font:720 8px/1.5 system-ui;
+}
+.v290BhScale{
+  height:6px;margin-top:8px;border-radius:999px;overflow:hidden;
+  background:rgba(255,255,255,.08);
+}
+.v290BhScale i{
+  display:block;height:100%;border-radius:999px;
+  background:linear-gradient(90deg,#7bdfff,#b48cff,#ff86cc);
+}
+.v290BhFacts{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;
+}
+.v290BhFact{
+  padding:9px;border-radius:11px;background:rgba(116,196,255,.045);
+  border:1px solid rgba(142,210,255,.10);
+}
+.v290BhFact small{
+  display:block;color:#acdfff;font:850 7.5px/1.2 system-ui;
+}
+.v290BhFact b{
+  display:block;margin-top:4px;color:#fff;font:900 8.7px/1.35 system-ui;
+}
+.v290BhWarning{
+  margin-top:10px;padding:9px 10px;border-radius:11px;
+  background:rgba(255,210,109,.06);border:1px solid rgba(255,217,123,.13);
+  color:rgba(255,255,255,.60);font:720 7.7px/1.5 system-ui;
+}
+@media(max-width:560px){
+  .v290BhTypes{grid-template-columns:1fr}
+  .v290BhFacts{grid-template-columns:1fr 1fr}
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -17281,15 +17336,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v289';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v289</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v290';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v290</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v289</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v290</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17844,7 +17899,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v289';
+window.INUBOSHI_GAME_VERSION='v290';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -23585,6 +23640,139 @@ window.__v289EarthInfo=()=>({
 /* === /v289 === */
 
 
+/* === v290: BLACK HOLE RECIPE + 40 ERI / PSR VISUALS === */
+
+/* 40エリダヌス座A：星の一生図を追加 */
+V187_STAR_LIFE['🖖 40エリダヌス座A']={
+  age:'数十億歳級',
+  remaining:'100億年以上の可能性',
+  pct:30,
+  phase:'K型主系列星｜まだ長く安定して光る'
+};
+
+/* 40エリダヌス座A：大きさ・明るさ・自転の図を追加 */
+V188_STAR_METRICS['🖖 40エリダヌス座A']={
+  size:{main:'半径 約0.81太陽',sub:'太陽より少し小さいK型星'},
+  mass:{main:'約0.78太陽質量',sub:'太陽より軽い'},
+  light:{main:'約0.46太陽光度',sub:'太陽の半分弱ほどの光度'}
+};
+V189_STAR_SPIN['🖖 40エリダヌス座A']={
+  main:'ゆっくり',
+  sub:'約40日級',
+  known:false
+};
+V189_METRIC_VIZ['🖖 40エリダヌス座A']={
+  size:10,
+  light:7,
+  spin:14
+};
+
+/* PSR J1748-2446ad：大きさ・明るさの図を追加 */
+V188_STAR_METRICS['🌀 PSR J1748-2446ad']={
+  size:{main:'半径 約10km級',sub:'都市ほどの大きさの中性子星'},
+  mass:{main:'約1.4太陽質量級',sub:'極小サイズに恒星級の質量'},
+  light:{main:'可視光では極暗い',sub:'主に電波パルスで観測される'}
+};
+/* 既存の自転100は維持、明るさは「可視光」の感覚へ合わせる */
+V189_METRIC_VIZ['🌀 PSR J1748-2446ad']={
+  size:2,
+  light:4,
+  spin:100
+};
+
+/* PSRの「恒星としての一生は終了」も図として見せる */
+V187_STAR_LIFE['🌀 PSR J1748-2446ad']={
+  age:'恒星としてはすでに死亡',
+  remaining:'中性子星として長く残る',
+  pct:100,
+  phase:'超新星後の残骸｜ミリ秒パルサー'
+};
+
+/* ブラックホール専用の説明 */
+function v290BlackHoleRecipeHTML(){
+  return `
+    <div class="v290BhIntro">
+      ブラックホールは「何でできているか」より、
+      <b>質量・大きさ・でき方</b>で分類すると分かりやすい天体。
+      事象の地平面より内側からは、光さえ外へ戻れない。
+    </div>
+
+    <div class="v179SectionLabel">🕳️ ブラックホールの種類</div>
+    <div class="v290BhTypes">
+      <div class="v290BhType">
+        <b>⭐ 恒星質量ブラックホール</b>
+        <span>重い恒星の最期にできる。太陽の数倍〜数十倍級。</span>
+        <div class="v290BhScale"><i style="width:28%"></i></div>
+      </div>
+      <div class="v290BhType">
+        <b>⚫ 中間質量ブラックホール</b>
+        <span>恒星質量と超大質量の中間。数百〜数万太陽質量級の候補。</span>
+        <div class="v290BhScale"><i style="width:48%"></i></div>
+      </div>
+      <div class="v290BhType">
+        <b>🌌 超大質量ブラックホール</b>
+        <span>銀河中心に多い。太陽の数百万〜数百億倍級。</span>
+        <div class="v290BhScale"><i style="width:88%"></i></div>
+      </div>
+      <div class="v290BhType">
+        <b>💥 原始ブラックホール</b>
+        <span>宇宙初期にできた可能性がある仮説上のタイプ。まだ未確認。</span>
+        <div class="v290BhScale"><i style="width:64%;opacity:.48"></i></div>
+      </div>
+    </div>
+
+    <div class="v179SectionLabel">🔍 ブラックホールのしくみ</div>
+    <div class="v290BhFacts">
+      <div class="v290BhFact"><small>⚫ 事象の地平面</small><b>越えると外へ戻れない境界</b></div>
+      <div class="v290BhFact"><small>🍝 潮汐力</small><b>場所ごとの重力差で引き伸ばされる</b></div>
+      <div class="v290BhFact"><small>💿 降着円盤</small><b>周囲のガスが高温で明るく輝く</b></div>
+      <div class="v290BhFact"><small>✨ ホーキング放射</small><b>理論上は非常にゆっくり蒸発する</b></div>
+    </div>
+
+    <div class="v175RecipePoint">
+      <b>🌀 回転でも種類が変わる</b>
+      <span>理論上、回転なしはシュヴァルツシルト型、回転ありはカー型と呼ばれる。</span>
+    </div>
+
+    <div class="v290BhWarning">
+      ※ゲーム内の「内部を歩く」「ホワイトホールから出る」演出は架空表現。
+      実際のブラックホール内部を直接観測した例はない。
+    </div>
+  `;
+}
+
+/* ブラックホールでもレシピを開けるようにする */
+const v290BaseRenderContextRecipe=renderContextRecipe;
+renderContextRecipe=function(){
+  if(system===BLACK_HOLE_SYSTEM || systems[system]?.name==='⚫ ブラックホール'){
+    const panel=document.getElementById('v162RecipePanel');
+    const body=panel?.querySelector('.v162RecipeBody');
+    const head=panel?.querySelector('.v162RecipeHead strong');
+    const sub=panel?.querySelector('.v162RecipeHead small');
+    const btn=document.getElementById('v162RecipeBtn');
+    if(!body||!head||!sub||!btn)return;
+
+    btn.classList.remove('v168RecipeOff');
+    btn.innerHTML='<b>🕳️ ブラックホールを見る <span class="v242RecipeArrow">＋</span></b>';
+    head.textContent='🕳️ ブラックホール';
+    sub.textContent='種類・しくみ・ゲーム演出との違い';
+    body.innerHTML=v290BlackHoleRecipeHTML();
+    return;
+  }
+  return v290BaseRenderContextRecipe();
+};
+
+window.__v290RecipeDebug=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  eridaniLife:V187_STAR_LIFE['🖖 40エリダヌス座A'],
+  eridaniMetrics:V188_STAR_METRICS['🖖 40エリダヌス座A'],
+  eridaniSpin:V189_STAR_SPIN['🖖 40エリダヌス座A'],
+  psrMetrics:V188_STAR_METRICS['🌀 PSR J1748-2446ad'],
+  psrViz:V189_METRIC_VIZ['🌀 PSR J1748-2446ad']
+});
+/* === /v290 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -26610,7 +26798,7 @@ window.__v289EarthInfo=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v289</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v290</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -27081,11 +27269,11 @@ window.__v289EarthInfo=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v289';
+  window.INUBOSHI_GAME_VERSION='v290';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v289<small>EARTH TYPE LINE MATCH / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v290<small>BLACK HOLE RECIPE + 40 ERI / PSR RECIPE VISUALS / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
