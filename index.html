@@ -1740,6 +1740,86 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v275HudAndInfoSpacingTune">
+/* v275: 左上の余白をもう少し広げる */
+#hud{
+  gap:12px!important;
+}
+#hud #v263DistanceMap{
+  margin-bottom:2px!important;
+}
+#hud .stack{
+  gap:7px!important;
+}
+#hud #mission,
+#hud #event{
+  padding:8px 10px!important;
+  line-height:1.32!important;
+}
+@media(max-width:520px){
+  #hud{
+    gap:10px!important;
+  }
+  #hud .stack{
+    gap:6px!important;
+  }
+  #hud #mission,
+  #hud #event{
+    padding:7px 9px!important;
+  }
+}
+
+/* v275: 右上の情報テキストを少しゆったり */
+#astroInfo{
+  line-height:1.62!important;
+  padding:12px 12px 14px!important;
+}
+#astroInfo b{
+  display:block!important;
+  margin-bottom:8px!important;
+  line-height:1.15!important;
+}
+#astroInfo .distanceBig{
+  margin-top:9px!important;
+  line-height:1.18!important;
+  text-shadow:0 0 4px rgba(255,255,255,.55),0 0 8px rgba(255,216,74,.28),0 0 10px rgba(86,231,255,.14)!important;
+}
+#astroInfo .distanceBig .distLead{
+  display:block!important;
+  margin-bottom:2px!important;
+  font-size:.92em!important;
+}
+#astroInfo .distanceBig .distValue{
+  display:block!important;
+  letter-spacing:.01em!important;
+  text-shadow:0 0 3px rgba(255,255,255,.42),0 0 6px rgba(255,216,74,.20)!important;
+}
+#astroInfo .distanceHint{
+  margin-top:7px!important;
+  line-height:1.42!important;
+  text-shadow:0 0 4px rgba(86,231,255,.16)!important;
+}
+#astroInfo br{
+  line-height:1.7!important;
+}
+@media(max-width:520px){
+  #astroInfo{
+    padding:11px 11px 13px!important;
+    line-height:1.56!important;
+  }
+  #astroInfo b{
+    margin-bottom:7px!important;
+  }
+  #astroInfo .distanceBig{
+    margin-top:8px!important;
+  }
+  #astroInfo .distanceHint{
+    margin-top:6px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -16918,15 +16998,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v274';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v274</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v275';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v275</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v274</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v275</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17481,7 +17561,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v274';
+window.INUBOSHI_GAME_VERSION='v275';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -22074,6 +22154,17 @@ window.__v274UiState=()=>({
 /* === /v274 === */
 
 
+/* === v275: HUD / INFO PANEL TUNING DEBUG === */
+window.__v275UiState=()=>({
+  hudGap:getComputedStyle(document.getElementById('hud')).gap,
+  stackGap:getComputedStyle(document.querySelector('#hud .stack')).gap,
+  astroLineHeight:getComputedStyle(document.getElementById('astroInfo')).lineHeight,
+  astroPadding:getComputedStyle(document.getElementById('astroInfo')).padding,
+  distShadow:getComputedStyle(document.querySelector('#astroInfo .distanceBig') || document.getElementById('astroInfo')).textShadow
+});
+/* === /v275 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -25099,7 +25190,7 @@ window.__v274UiState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v274</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v275</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -25570,11 +25661,11 @@ window.__v274UiState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v274';
+  window.INUBOSHI_GAME_VERSION='v275';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v274<small>HUD SPACING + RECIPE BUTTON RESTYLE / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v275<small>HUD AIR + INFO PANEL LEADING + SOFTER DIST GLOW / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
