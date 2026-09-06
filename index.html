@@ -16319,15 +16319,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v260';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v260</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v261';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v261</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v260</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v261</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16882,7 +16882,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v260';
+window.INUBOSHI_GAME_VERSION='v261';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -20292,6 +20292,256 @@ window.__v260State=()=>({
 /* === /v260 === */
 
 
+/* === v261: SPAGHETTI / FLOWER HUD / WHITEOUT / DOG DREAM / FUTURE BH === */
+
+const V261={
+  dogBoneAt:0,
+  whiteoutShown:false
+};
+
+/* -----------------------------------------------------------
+   1) ブラックホール内部：スパゲッティー化 ○%
+   犬の縦伸び描画と同じ進行度を使う。
+   ----------------------------------------------------------- */
+const v261BaseUpdate=update;
+update=function(now,dt){
+  const out=v261BaseUpdate(now,dt);
+
+  if(system===BLACK_HOLE_SYSTEM&&!paused){
+    const q=Math.max(0,Math.min(1,p.x/whiteHoleX));
+    const pct=Math.max(0,Math.min(100,Math.round(q*100)));
+    missionEl.textContent=`🌀 スパゲッティー化 ${pct}%`;
+    eventEl.textContent=pct<78
+      ? '⚫ ブラックホール内部｜体が縦に引き伸ばされる…'
+      : '⚪ 出口のホワイトホールが近い';
+  }
+
+  /* ---------------------------------------------------------
+     2) 花の星：右上HUDの距離を大きく
+        「架空」は小さい注釈へ
+     --------------------------------------------------------- */
+  if(systems[system]?.name==='🌸 花の星'){
+    const st=S();
+    locationEl.textContent='🌸 花の星 · 約250億光年';
+    astroInfo.innerHTML=
+      `<b>🌸 花の星</b><br>`+
+      `宇宙じゅうを花びらが漂う、エアレンデルのさらに先の世界`+
+      `<br><span class="distanceBig">`+
+      `<span class="distLead">🌍 地球から</span>`+
+      `<span class="distValue">約250億光年</span>`+
+      `</span>`+
+      `<span class="distanceHint">${v215GravityLine(st)}<br>`+
+      `<small style="opacity:.58;font-size:.82em">※天体・距離はゲーム内の架空設定</small></span>`;
+  }
+
+  /* 犬の夢の星も距離の見せ方を同じ形式にしておく */
+  if(systems[system]?.name==='🐾 犬の夢の星'){
+    const st=S();
+    locationEl.textContent='🐾 犬の夢の星 · 約500億光年';
+    astroInfo.innerHTML=
+      `<b>🐾 犬の夢の星</b><br>`+
+      `花の星を越えた、異世界ルートの最奥`+
+      `<br><span class="distanceBig">`+
+      `<span class="distLead">🌍 地球から</span>`+
+      `<span class="distValue">約500億光年</span>`+
+      `</span>`+
+      `<span class="distanceHint">${v215GravityLine(st)}<br>`+
+      `<small style="opacity:.58;font-size:.82em">※天体・距離はゲーム内の架空設定</small></span>`;
+  }
+
+  /* ---------------------------------------------------------
+     3) 犬の夢の星：実際に取れる骨をいっぱい降らせる
+     --------------------------------------------------------- */
+  if(systems[system]?.name==='🐾 犬の夢の星'&&!paused){
+    if(now>=V261.dogBoneAt){
+      const active=items.filter(x=>x?.v261DogBone&&!x.got).length;
+      if(active<26){
+        const count=active<12?3:2;
+        for(let i=0;i<count;i++){
+          items.push({
+            x:p.x-W*.15+Math.random()*W*1.30,
+            y:-30-Math.random()*120,
+            r:18,
+            got:false,
+            color:'#fff0aa',
+            food:true,
+            fall:true,
+            v261DogBone:true
+          });
+        }
+      }
+      V261.dogBoneAt=now+260;
+      eventEl.textContent='🦴 BONE RAIN｜骨が空からいっぱい降ってくる！';
+    }
+  }
+
+  /* ---------------------------------------------------------
+     4) 宇宙の最果て → BIG BANG直前：
+        約3秒間、完全ホワイトアウト
+     --------------------------------------------------------- */
+  if(V260_ORIGIN.active&&systems[system]?.name==='🌌 宇宙の最果て'&&V260_ORIGIN.edgeStart){
+    const e=now-V260_ORIGIN.edgeStart;
+    if(e>=9000&&!V261.whiteoutShown){
+      V261.whiteoutShown=true;
+      trans.style.display='grid';
+      trans.style.background='#fff';
+      trans.style.color='#fff';
+      warpDog.textContent='';
+      warpDog.className='';
+      transTitle.innerHTML='';
+      nextEl.textContent='';
+      subEl.textContent='';
+    }
+  }
+
+  return out;
+};
+
+/* v260は9秒でBIG BANGへ移動していた。
+   v261は 9秒まで最果て演出 + 3秒ホワイトアウト = 合計12秒。 */
+V260_ORIGIN.edgeDuration=12000;
+
+const v261BaseJumpEra=v260JumpEra;
+v260JumpEra=function(index,now){
+  // ホワイトアウトを解除した瞬間にBIG BANGステージへ。
+  trans.style.display='none';
+  trans.style.background='';
+  trans.style.color='';
+  warpDog.textContent=playerDog;
+  V261.whiteoutShown=false;
+  return v261BaseJumpEra(index,now);
+};
+
+/* 宇宙の最果てに入り直した時はホワイトアウト状態を初期化 */
+const v261BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v261BaseStageStart();
+  if(systems[system]?.name==='🌌 宇宙の最果て'){
+    V261.whiteoutShown=false;
+    trans.style.display='none';
+    trans.style.background='';
+    trans.style.color='';
+  }
+  if(systems[system]?.name==='🐾 犬の夢の星'){
+    V261.dogBoneAt=performance.now()+180;
+  }
+  return out;
+};
+
+/* -----------------------------------------------------------
+   5) 背景演出
+      - 犬の夢の星：星空を追加
+      - 未来のブラックホール時代：紫がかったBHを背景へ
+   drawStageSpecialFX は地面・ビルより前なので背景になる。
+   ----------------------------------------------------------- */
+function v261DrawDogDreamStars(){
+  if(systems[system]?.name!=='🐾 犬の夢の星')return;
+  const now=performance.now(),t=now/1000;
+  ctx.save();
+
+  // 明るい夢世界でも見える、青紫＋白の星
+  for(let i=0;i<72;i++){
+    const x=((i*83+17)%Math.max(1,W));
+    const y=24+((i*47)%Math.max(120,Math.floor(H*.58)));
+    const tw=.34+.46*(.5+.5*Math.sin(t*(.7+(i%5)*.08)+i));
+    ctx.globalAlpha=tw;
+    ctx.fillStyle=i%7===0?'#9c79ff':i%5===0?'#73cfff':'#ffffff';
+    const r=.8+(i%4)*.42;
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+
+    if(i%13===0){
+      ctx.globalAlpha=tw*.72;
+      ctx.strokeStyle='#fff';
+      ctx.lineWidth=.8;
+      ctx.beginPath();
+      ctx.moveTo(x-5,y);ctx.lineTo(x+5,y);
+      ctx.moveTo(x,y-5);ctx.lineTo(x,y+5);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function v261DrawFutureBlackHoles(){
+  const sys=systems[system];
+  if(!sys?.futureEra||sys.futureStep!==6)return;
+
+  const t=performance.now()/1000;
+  const holes=[
+    {x:.77,y:.22,r:72,a:.95},
+    {x:.25,y:.31,r:38,a:.58},
+    {x:.56,y:.12,r:25,a:.42}
+  ];
+
+  ctx.save();
+  for(let k=0;k<holes.length;k++){
+    const h=holes[k],cx=W*h.x,cy=H*h.y;
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate((k%2?-.18:.13)+t*(k===0?.025:-.018));
+
+    const halo=ctx.createRadialGradient(0,0,h.r*.45,0,0,h.r*1.65);
+    halo.addColorStop(0,'rgba(0,0,0,0)');
+    halo.addColorStop(.34,`rgba(91,48,170,${.20*h.a})`);
+    halo.addColorStop(.55,`rgba(176,87,255,${.38*h.a})`);
+    halo.addColorStop(.73,`rgba(80,110,255,${.14*h.a})`);
+    halo.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=halo;
+    ctx.beginPath();ctx.arc(0,0,h.r*1.7,0,Math.PI*2);ctx.fill();
+
+    ctx.shadowColor='#b25cff';
+    ctx.shadowBlur=18*h.a;
+    ctx.strokeStyle=`rgba(199,123,255,${.66*h.a})`;
+    ctx.lineWidth=Math.max(1.2,h.r*.055);
+    ctx.beginPath();
+    ctx.ellipse(0,0,h.r*1.35,h.r*.34,0,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.shadowColor='#000';
+    ctx.shadowBlur=24;
+    ctx.fillStyle='#000';
+    ctx.beginPath();ctx.arc(0,0,h.r*.62,0,Math.PI*2);ctx.fill();
+
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+const v261BaseSpecialFX=drawStageSpecialFX;
+drawStageSpecialFX=function(){
+  v261BaseSpecialFX();
+  v261DrawDogDreamStars();
+  v261DrawFutureBlackHoles();
+};
+
+/* 最果てのHUDもホワイトアウト前まで段階表示 */
+const v261BaseOriginUpdate=update;
+update=function(now,dt){
+  const out=v261BaseOriginUpdate(now,dt);
+
+  if(V260_ORIGIN.active&&systems[system]?.name==='🌌 宇宙の最果て'&&V260_ORIGIN.edgeStart){
+    const e=now-V260_ORIGIN.edgeStart;
+    if(e>=9000&&e<12000){
+      missionEl.textContent='💥 BIG BANG';
+      eventEl.textContent='光で何も見えない――';
+    }
+  }
+  return out;
+};
+
+window.__v261State=()=>({
+  spaghettification:system===BLACK_HOLE_SYSTEM
+    ?Math.round(Math.max(0,Math.min(1,p.x/whiteHoleX))*100)
+    :null,
+  flower:systems[system]?.name==='🌸 花の星',
+  dogDream:systems[system]?.name==='🐾 犬の夢の星',
+  dogBones:items.filter(x=>x?.v261DogBone&&!x.got).length,
+  futureBH:!!(systems[system]?.futureEra&&systems[system]?.futureStep===6),
+  whiteout:V261.whiteoutShown
+});
+/* === /v261 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -23317,7 +23567,7 @@ window.__v260State=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v260</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v261</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -23788,11 +24038,11 @@ window.__v260State=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v260';
+  window.INUBOSHI_GAME_VERSION='v261';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v260<small>BH ENTRY FIX + FUTURE EARTH + UFO ALT ROUTE + COSMIC EDGE MONTAGE / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v261<small>SPAGHETTI HUD + FLOWER DISTANCE + WHITEOUT + DOG BONE RAIN + FUTURE BH / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
