@@ -2043,6 +2043,66 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v283DescMetricHudTune">
+/* 左側パネル：上下の余白を少し増やす */
+#hud{
+  gap:18px!important;
+}
+#hud #v263DistanceMap{
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+#hud .stack .pill{
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+}
+#hud #mission,
+#hud #event{
+  padding-top:10px!important;
+  padding-bottom:10px!important;
+}
+@media(max-width:520px){
+  #hud{
+    gap:15px!important;
+  }
+  #hud #v263DistanceMap{
+    padding-top:7px!important;
+    padding-bottom:7px!important;
+  }
+  #hud .stack .pill{
+    padding-top:7px!important;
+    padding-bottom:7px!important;
+  }
+  #hud #mission,
+  #hud #event{
+    padding-top:9px!important;
+    padding-bottom:9px!important;
+  }
+}
+
+/* 重力 / ジャンプは上下2行のまま、ラベル直後に｜ */
+#astroInfo .distanceHint .v283MetricBlock{
+  display:inline-flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  gap:4px!important;
+}
+#astroInfo .distanceHint .v283MetricRow{
+  display:block!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  font-size:9px!important;
+  line-height:1.15!important;
+}
+@media(max-width:520px){
+  #astroInfo .distanceHint .v283MetricRow{
+    font-size:8.3px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -17221,15 +17281,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v282';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v282</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v283';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v283</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v282</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v283</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17784,7 +17844,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v282';
+window.INUBOSHI_GAME_VERSION='v283';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -22743,6 +22803,111 @@ window.__v282UiState=()=>({
 /* === /v282 === */
 
 
+/* === v283: 25-30 CHAR STAR DESCS + METRIC BARS + LEFT HUD AIR === */
+
+/* 右上カード用：内容を落とさず25〜30文字程度に整えた短文 */
+const V283_SHORT_DESC = {
+  '⭐ シリウス':'地球から見える恒星で最も明るく、白色矮星の伴星も持つ',
+  '🐶 プロキオン':'冬の大三角を作り、白色矮星の伴星を持つ近距離の犬星',
+  '🖖 40エリダヌス座A':'三重星系の主星で、SFのバルカン星の母星候補として有名',
+  '🦅 アルタイル':'七夕の彦星で知られ、高速自転により少し扁平な形をしている',
+  '😈 アルゴル':'伴星が前を横切るたび周期的に暗くなる代表的な食変光星',
+  '🕰️ メトシェラ星':'宇宙初期に生まれたと考えられる、非常に古い低金属量の恒星',
+  '🌾 スピカ':'青白い二つの大質量星が、非常に近い距離で回り合う連星系',
+  '❓ タビーの星':'原因が完全には分からない、大きく不規則な減光で有名な恒星',
+  '🦢 デネブ':'遠方にあるのに肉眼で明るく見える、非常に高光度な青白い超巨星',
+  '🐕 VYおおいぬ座星':'太陽系規模に膨らむ巨大な赤色極超巨星で、激しく物質を放出する',
+  '💥 イータ・カリーナ':'巨大噴火を起こした超大質量連星で、今も非常に不安定な状態にある',
+  '🌀 PSR J1748-2446ad':'毎秒約716回転する、現在知られる中で最速級のミリ秒パルサー',
+  '🪐 スティーブンソン2-18':'太陽の千倍級の半径を持つ可能性がある、最大級の赤色超巨星候補',
+  '🧲 SGR 1806-20':'超強力な磁場を持つマグネターで、巨大ガンマ線フレアを起こした',
+  '💙 R136a1':'太陽の百倍超の質量を持つとされる、極端に明るい大質量星',
+  '✨ S Doradus':'明るさや半径が大きく変化する、高光度青色変光星の代表的天体',
+  '⭐ M31-V1':'周期的に明るさが変わり、銀河までの距離測定史で重要だった変光星',
+  '💙 イカロス':'重力レンズで光が増幅され観測できた、非常に遠方の青色超巨星',
+  '✨ エアレンデル':'宇宙誕生から10億年以内に存在した、最も遠い個別星の一つ',
+  '🌸 花の星':'エアレンデルのさらに先にある、花びらが宇宙を舞う架空の異世界',
+  '🐾 犬の夢の星':'花の星のさらに先にある、骨が降り犬たちが暮らす架空の夢世界'
+};
+
+function v283ShortDesc(name, fallback){
+  if(V283_SHORT_DESC[name]) return V283_SHORT_DESC[name];
+  const clean = String(fallback || '').replace(/\s+/g, ' ').trim();
+  if(clean.length <= 30) return clean;
+  return clean.slice(0, 30);
+}
+
+function v283JumpEmoji(j){
+  if(!Number.isFinite(j)) return '—';
+  if(j <= 10.0) return '⬇️⬇️⬇️';
+  if(j <= 12.0) return '⬇️⬇️';
+  if(j <= 14.0) return '⬇️';
+  if(j < 16.0) return '⬆️';
+  if(j < 18.0) return '⬆️⬆️';
+  return '⬆️⬆️⬆️';
+}
+
+v215GravityLine=function(st){
+  const g=Number.isFinite(st?.gravity)?Number(st.gravity).toFixed(2):'—';
+  const jumpIcons=v283JumpEmoji(st?.jump);
+  return `<span class="v283MetricBlock"><span class="v283MetricRow">🧲 重力｜${g}G</span><span class="v283MetricRow">🐕 ジャンプ｜${jumpIcons}</span></span>`;
+};
+
+v215OrdinaryHud=function(){
+  const st=S(),sys=systems[system];if(!st||!sys)return false;
+  if(system===0&&stage===0)return false;
+  if(sys.futureEra||sys.epoch||sys.hypothesis||sys.endHypothesis||sys.v177EarthHistory||sys.v177Formation||sys.v170EarthBirth||sys.secret||sys.dream||sys.endless)return false;
+  const phase=window.__v170RouteAPI?.state?.().phase||'';
+  if(phase==='returnMoon'||phase==='returnEarth')return false;
+
+  const ear=st.name==='✨ エアレンデル';
+  const rawDist=ear?'129億光年':(typeof v60Distance==='function'?v60Distance():(st.distance||sys.distance||''));
+  const dist=v281CleanApprox(rawDist);
+  const type=st.v155Type?`<span class="v277TypeLine">${st.v155Type}</span>`:'';
+  const rawDesc=ear?V215_STAR_COPY['✨ エアレンデル']:(st.desc||sys.desc||'');
+  const desc=v283ShortDesc(st.name, rawDesc);
+
+  locationEl.textContent=`${st.name} · ${dist}`;
+  astroInfo.innerHTML=`<b>${st.name}</b>${type}${desc}`+
+    `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">${dist}</span></span>`+
+    `<span class="distanceHint">${v215GravityLine(st)}</span>`;
+  return true;
+};
+
+function v283ForceMetricLine(){
+  try{
+    if(!astroInfo)return;
+    const st=typeof S==='function'?S():null;
+    const hint=astroInfo.querySelector('.distanceHint');
+    if(!st||!hint)return;
+    hint.innerHTML=v215GravityLine(st);
+  }catch(e){}
+}
+
+const v283BaseSyncHUD=syncHUD;
+syncHUD=function(force=false){
+  const out=v283BaseSyncHUD(force);
+  v283ForceMetricLine();
+  return out;
+};
+
+const v283BaseUpdate=update;
+update=function(now,dt){
+  const out=v283BaseUpdate(now,dt);
+  v283ForceMetricLine();
+  return out;
+};
+
+requestAnimationFrame(v283ForceMetricLine);
+
+window.__v283UiState=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  sampleDescLen:V283_SHORT_DESC['✨ エアレンデル'].length,
+  metric:(document.querySelector('#astroInfo .distanceHint')?.textContent||'').trim()
+});
+/* === /v283 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -25768,7 +25933,7 @@ window.__v282UiState=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v282</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v283</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -26239,11 +26404,11 @@ window.__v282UiState=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v282';
+  window.INUBOSHI_GAME_VERSION='v283';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v282<small>2-LINE METRICS + JUMP ARROWS + SHORT STAR DESCS / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v283<small>25-30 CHAR STAR DESCS + METRIC BARS + LEFT HUD AIR / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
