@@ -11238,6 +11238,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     ctx.restore();
   }
 
+  /* v253 BH VISUAL CLEANUP: no rectangular memory frames */
   function drawBlackHoleDream(){
     if(system!==BLACK_HOLE_SYSTEM)return;
     const q=Math.max(0,Math.min(1,p.x/Math.max(1,worldLength))),t=performance.now()/1000,gy=groundY();
@@ -11264,8 +11265,14 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       const x=W*a.x,y=H*a.y,w=W*a.w,h=H*a.h;
       ctx.save();
       ctx.globalAlpha=Math.min(.42,.12+(q-i*.08)*.42);
-      ctx.fillStyle='rgba(255,255,255,.035)';ctx.fillRect(x,y,w,h);
-      ctx.strokeStyle=i%2?'#b7a8ff':'#9ddfff';ctx.strokeRect(x,y,w,h);
+      // v253: 四角い「パネル枠」は廃止。記憶だけが空間に浮いて見えるようにする。
+      const gx=x+w*.5,gy2=y+h*.5,gr=Math.max(w,h)*.72;
+      const memGlow=ctx.createRadialGradient(gx,gy2,0,gx,gy2,gr);
+      memGlow.addColorStop(0,i%2?'rgba(183,168,255,.10)':'rgba(157,221,255,.10)');
+      memGlow.addColorStop(.55,'rgba(120,90,180,.025)');
+      memGlow.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=memGlow;
+      ctx.beginPath();ctx.arc(gx,gy2,gr,0,Math.PI*2);ctx.fill();
       if(a.type==='street'){
         ctx.fillStyle='#14182b';ctx.fillRect(x,y+h*.62,w,h*.38);
         for(let k=0;k<5;k++){
@@ -16319,15 +16326,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v252';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v252</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v254';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v254</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v252</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v254</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16882,7 +16889,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v252';
+window.INUBOSHI_GAME_VERSION='v254';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -18029,6 +18036,311 @@ window.__v252QA=()=>({
 
 try{v252ApplyPhysicsHud();}catch(e){}
 /* === /v252 === */
+
+
+/* === v254: FATE ROUTES ===
+   Journey behavior determines the only route that opens after walking through
+   the black-hole interior.
+
+   ⭐ every 5 pickups -> ORIGIN +1
+   🦴 every 3 pickups -> HOME +1
+   👽 / star signal contact -> UNKNOWN +1
+   ☠️ dark fragment -> END +1
+   Each category is capped at +2 per stage, preventing one dense stage from
+   deciding the entire run.
+*/
+const V254_FATE_META={
+  origin:{icon:'⭐',name:'星を追った',route:'💥 宇宙の始まり',color:'#ffe67a'},
+  home:{icon:'🦴',name:'骨を追った',route:'🏠 地球へ帰る',color:'#aef5ff'},
+  unknown:{icon:'👽',name:'未知を追った',route:'🌸 異世界の星',color:'#d6a7ff'},
+  end:{icon:'☠️',name:'危険を追った',route:'🌑 宇宙の終わり',color:'#ff8fae'}
+};
+const V254_FATE={
+  points:{origin:0,home:0,unknown:0,end:0},
+  stages:Object.create(null),
+  last:'origin',
+  locked:false,
+  revealed:false,
+  winner:null
+};
+const V254_THRESH={origin:5,home:3,unknown:1,end:1};
+const V254_DANGER_STARS=new Set([
+  '🔴 ベテルギウス','❤️ アンタレス','🐕 VYおおいぬ座星','💥 イータ・カリーナ',
+  '🌀 PSR J1748-2446ad','🪐 スティーブンソン2-18','🧲 SGR 1806-20',
+  '💙 R136a1','✨ S Doradus'
+]);
+
+function v254StageKey(){
+  return `${systems[system]?.name||system}::${S()?.name||stage}`;
+}
+function v254Bucket(){
+  const key=v254StageKey();
+  if(!V254_FATE.stages[key]){
+    V254_FATE.stages[key]={
+      raw:{origin:0,home:0,unknown:0,end:0},
+      award:{origin:0,home:0,unknown:0,end:0}
+    };
+  }
+  return V254_FATE.stages[key];
+}
+function v254RegisterFate(kind,count=1){
+  if(V254_FATE.locked||system===BLACK_HOLE_SYSTEM||!V254_THRESH[kind])return 0;
+  const b=v254Bucket();
+  b.raw[kind]+=Math.max(0,count);
+  const threshold=V254_THRESH[kind];
+  let gained=0;
+  while(b.award[kind]<2 && b.raw[kind]>=threshold*(b.award[kind]+1)){
+    b.award[kind]++;
+    V254_FATE.points[kind]++;
+    V254_FATE.last=kind;
+    gained++;
+  }
+  return gained;
+}
+function v254Winner(){
+  const p=V254_FATE.points;
+  const max=Math.max(p.origin,p.home,p.unknown,p.end);
+  const tied=['origin','home','unknown','end'].filter(k=>p[k]===max);
+  // 同点なら「最後に追いかけていたもの」が運命を決める。
+  if(tied.includes(V254_FATE.last))return V254_FATE.last;
+  return tied[0]||'origin';
+}
+function v254FateSummary(){
+  const w=v254Winner(),m=V254_FATE_META[w];
+  return {winner:w,meta:m,points:{...V254_FATE.points}};
+}
+
+/* ☠️ fragments appear only on dangerous stars. */
+const v254BaseMakeWorld=makeWorld;
+makeWorld=function(){
+  v254BaseMakeWorld();
+  if(system===BLACK_HOLE_SYSTEM||systems[system]?.futureEra||systems[system]?.epoch)return;
+  const name=S()?.name;
+  if(!V254_DANGER_STARS.has(name))return;
+
+  // 2 per dangerous stage: enough to matter, never enough for one stage to dominate.
+  const ys=[groundY()-145,groundY()-215];
+  const xs=[1180+Math.random()*180,2350+Math.random()*220];
+  for(let i=0;i<2;i++){
+    items.push({
+      x:xs[i],y:ys[i],r:22,got:false,color:'#d39cff',
+      darkFragment:true,food:false,v254Danger:true
+    });
+  }
+};
+
+/* Real pickup tracking. */
+const v254BaseCollectGood=collectGood;
+collectGood=function(it){
+  if(!it)return v254BaseCollectGood(it);
+  if(it.got)return v254BaseCollectGood(it);
+
+  if(it.darkFragment){
+    it.got=true;
+    const gained=v254RegisterFate('end',1);
+    showToast(gained?'☠️ ダークフラグメント GET！　運命が少し暗くなった…':'☠️ ダークフラグメント GET！',1050);
+    syncHUD(true);
+    return;
+  }
+
+  if(it.food){
+    v254RegisterFate('home',1);
+  }else if(!it.rareKind&&!it.v68RadioWave&&!it.magnet){
+    v254RegisterFate('origin',1);
+  }
+  return v254BaseCollectGood(it);
+};
+
+/* Boomerang retrieval counts as actually collecting the star/bone too. */
+const v254BaseBoomerangAward=awardBoomerangFetch;
+awardBoomerangFetch=function(b){
+  if(b?.fetchType==='bone')v254RegisterFate('home',1);
+  else if(b?.fetchType==='star')v254RegisterFate('origin',1);
+  return v254BaseBoomerangAward(b);
+};
+
+/* Any successful alien / dog / themed-star signal contact counts toward UNKNOWN. */
+const v254BaseStartCommunication=startCommunication;
+startCommunication=function(obj){
+  const before=lastAlienTouchAt;
+  const out=v254BaseStartCommunication(obj);
+  if(lastAlienTouchAt>before)v254RegisterFate('unknown',1);
+  return out;
+};
+
+/* ☠️ is a real collectible, not decorative scenery. */
+const v254BaseDrawGood=drawGood;
+drawGood=function(it){
+  if(it?.darkFragment){
+    if(it.got)return;
+    const sx=it.x-camera;
+    if(sx<-80||sx>W+80)return;
+    const now=performance.now(),pulse=.75+.25*Math.sin(now/260);
+    ctx.save();
+    ctx.translate(sx,it.y);
+    ctx.globalAlpha=.18+.10*pulse;
+    ctx.fillStyle='#8b45ff';
+    ctx.shadowColor='#d78cff';ctx.shadowBlur=30;
+    ctx.beginPath();ctx.arc(0,0,30+6*pulse,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;ctx.font='31px system-ui';ctx.textAlign='center';
+    ctx.shadowColor='#ff8fae';ctx.shadowBlur=18;
+    ctx.fillText('☠️',0,11);
+    ctx.restore();
+    return;
+  }
+  return v254BaseDrawGood(it);
+};
+
+/* Earendel always has the black-hole entrance. */
+const v254BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v254BaseStageStart();
+  if(S()?.name==='✨ エアレンデル'){
+    blackHoleActive=true;
+    wormholeActive=false;
+    blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
+    setTimeout(()=>showToast('✨ エアレンデルの先に、必ずブラックホールが待っている。',1700),520);
+  }
+  return out;
+};
+
+/* Freeze the result the moment the player enters the black hole. */
+const v254BaseEnterBH=v252EnterBlackHole;
+v252EnterBlackHole=function(source='direct'){
+  V254_FATE.locked=true;
+  V254_FATE.revealed=false;
+  V254_FATE.winner=v254Winner();
+  const ok=v254BaseEnterBH(source);
+  return ok;
+};
+window.__v252EnterBlackHole=v252EnterBlackHole;
+window.__v248BlackHoleButton=()=>v252EnterBlackHole('legacy-v248');
+window.__v247EnterBlackHole=v252EnterBlackHole;
+window.__v246EnterBlackHole=v252EnterBlackHole;
+window.__v245EnterBlackHole=v252EnterBlackHole;
+window.__v242EnterBlackHole=v252EnterBlackHole;
+window.__v217GoBlackHole=v252EnterBlackHole;
+if(window.__v170RouteAPI)window.__v170RouteAPI.blackHole=()=>v252EnterBlackHole('route-api');
+
+/* Old "black hole / white hole" two-choice modal is replaced by the fate reveal.
+   It does NOT pause movement; the dog keeps walking toward the only open exit. */
+showBlackHoleChoice=function(){
+  if(V254_FATE.revealed)return;
+  V254_FATE.revealed=true;
+  V254_FATE.winner=V254_FATE.winner||v254Winner();
+  const m=V254_FATE_META[V254_FATE.winner];
+  eventEl.textContent=`${m.icon} DESTINY — ${m.route}`;
+  showToast(`あなたがいちばん追いかけたものは―― ${m.icon}　${m.route} が開いた`,2600);
+};
+
+/* Four destinations are visible, but only one is open. */
+function v254DrawFateGates(){
+  if(system!==BLACK_HOLE_SYSTEM||p.x<whiteHoleX-760)return;
+  const winner=V254_FATE.winner||v254Winner();
+  const keys=['origin','home','unknown','end'];
+  const labels={origin:'始まり',home:'地球',unknown:'異世界',end:'終わり'};
+  const icons={origin:'💥',home:'🏠',unknown:'🌸',end:'🌑'};
+  const y=Math.max(92,H*.20);
+  const left=W*.12,right=W*.88;
+  const step=(right-left)/3;
+
+  ctx.save();
+  ctx.textAlign='center';
+  ctx.font='900 8px system-ui';
+  for(let i=0;i<keys.length;i++){
+    const k=keys[i],active=k===winner,x=left+i*step,m=V254_FATE_META[k];
+    ctx.globalAlpha=active?.98:.22;
+    ctx.shadowColor=active?m.color:'transparent';
+    ctx.shadowBlur=active?24:0;
+    ctx.strokeStyle=active?m.color:'rgba(210,220,240,.45)';
+    ctx.lineWidth=active?3:1.2;
+    ctx.beginPath();ctx.arc(x,y,25+(active?4:0),0,Math.PI*2);ctx.stroke();
+    ctx.font='25px system-ui';ctx.fillText(icons[k],x,y+8);
+    ctx.font='900 8px system-ui';ctx.fillStyle=active?'#fff':'#a7a9b8';
+    ctx.fillText(active?`${labels[k]} OPEN`:`🔒 ${labels[k]}`,x,y+43);
+  }
+
+  if(V254_FATE.revealed){
+    const m=V254_FATE_META[winner];
+    ctx.globalAlpha=.92;ctx.fillStyle='#fff';ctx.font='1000 10px system-ui';
+    ctx.fillText(`いちばん追いかけたもの：${m.icon}`,W*.5,y+70);
+  }
+  ctx.restore();
+}
+const v254BaseDrawPortal=drawPortal;
+drawPortal=function(){
+  v254BaseDrawPortal();
+  try{v254DrawFateGates();}catch(e){}
+};
+
+function v254RouteTarget(kind){
+  let name='';
+  if(kind==='origin')name='🌑 暗黒時代';
+  else if(kind==='end')name='🔴 赤色巨星の太陽';
+  else if(kind==='unknown'){
+    // UNKNOWN is deliberately a little mysterious: flower world or dog world.
+    name=(V254_FATE.points.unknown%2===0)?'🐾 犬の星':'🌸 秘密の花銀河';
+  }
+
+  if(kind==='home')return {si:0,ti:0,name:'🌍 地球',kind};
+
+  const si=systems.findIndex(s=>s?.name===name);
+  if(si>=0)return {si,ti:0,name,kind};
+  return {si:0,ti:0,name:'🌍 地球',kind:'home'};
+}
+
+/* White hole now obeys the journey result. No manual route selection. */
+whiteHoleEscape=function(){
+  if(paused||whiteHoleTriggered)return;
+  whiteHoleTriggered=true;whiteHoleEscaped=true;checkHomeRoute();
+
+  const kind=V254_FATE.winner||v254Winner();
+  const m=V254_FATE_META[kind];
+  const pick=v254RouteTarget(kind);
+
+  paused=true;
+  trans.style.display='grid';
+  warpDog.textContent=playerDog;
+  warpDog.className='spin';
+  transTitle.innerHTML=`${m.icon} YOUR ROUTE`;
+  nextEl.textContent=`${m.route}`;
+  subEl.textContent=`⭐${V254_FATE.points.origin}　🦴${V254_FATE.points.home}　👽${V254_FATE.points.unknown}　☠️${V254_FATE.points.end}`;
+
+  setTimeout(()=>{
+    system=pick.si;stage=pick.ti;camera=0;playerDog='🐕';morphUntil=0;
+    if(kind==='home')returnFromDogStar=true;
+    if(kind==='origin'){
+      const ri=V252_ROUTE.indexOf('🌑 暗黒時代');
+      if(ri>=0)deepWarpCount=Math.max(deepWarpCount,ri+1);
+    }
+    paused=false;
+    try{stageStart();}catch(e){
+      console.error('[v254 FATE ROUTE stageStart]',e);
+      system=0;stage=0;camera=0;paused=false;
+      try{stageStart();}catch(_){}
+    }
+    trans.style.display='none';trans.style.background='';trans.classList?.remove('on');warpDog.className='';
+    whiteHoleTriggered=false;
+    showToast(`${m.icon} ${m.route} へ`,1800);
+    V252_BH.originName='';V252_BH.originWarp=deepWarpCount;
+  },1450);
+};
+
+/* Small internal QA hooks; nothing is shown in the normal UI. */
+window.__v254FateState=()=>({
+  points:{...V254_FATE.points},
+  last:V254_FATE.last,
+  locked:V254_FATE.locked,
+  revealed:V254_FATE.revealed,
+  winner:V254_FATE.winner||v254Winner(),
+  stageCount:Object.keys(V254_FATE.stages).length
+});
+window.__v254SetFate=(kind,value)=>{
+  if(!(kind in V254_FATE.points))return false;
+  V254_FATE.points[kind]=Math.max(0,Number(value)||0);
+  V254_FATE.last=kind;V254_FATE.winner=null;return true;
+};
+/* === /v254 === */
 
 
 })();
@@ -21056,7 +21368,7 @@ try{v252ApplyPhysicsHud();}catch(e){}
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v252</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v254</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">直接移動 → ブラックホール内部へ</small></button>
@@ -21508,11 +21820,11 @@ try{v252ApplyPhysicsHud();}catch(e){}
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v252';
+  window.INUBOSHI_GAME_VERSION='v254';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v252<small>STABILITY PASS / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v254<small>FATE ROUTES / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
