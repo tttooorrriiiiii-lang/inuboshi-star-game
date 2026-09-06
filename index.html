@@ -1474,14 +1474,14 @@ name:'💙 R136a1',distance:'地球から約16.3万光年',desc:'知られてい
 {name:'⚠️ 真空崩壊',distance:'量子場理論上の可能性',desc:'現在の真空が準安定なら、より安定な真空の泡が生まれ広がる可能性',theme:'endhyp',endHypothesis:true,endKey:'vacuum',theoretical:true,stages:[
 {name:'⚠️ 真空崩壊',distance:'発生時刻は予測不能',desc:'新しい真空の泡が広がり、粒子や力の性質まで変わる可能性がある',goodColor:'#b7ffcf',sky:['#020807','#103322'],ground:'#0b2016',ground2:'#010403',planet:'#84e6a5',event:'END HYPOTHESIS',eventText:'Coleman–De Luccia（1980）などの真空崩壊研究',gravity:.30,jump:19.1}
 ]},
-{name:'🐾 犬の星',distance:'観測不能のさらに先',desc:'宇宙の最終地点。夢みたいに犬だらけの世界',theme:'dreamdog',postEarendel:true,theoretical:true,dream:true,final:true,stages:[
-{name:'🌈 犬だらけの夢世界',distance:'観測不能のさらに先',desc:'犬たちが空にも地上にもあふれる最終地点',goodColor:'#ffd8ff',sky:['#f6efff','#bfeeff'],ground:'#ffe8f8',ground2:'#b9a8ff',planet:'#fff7ff',event:'DOG PARADE',eventText:'🐕🐩🦮 犬がどこまでも続いている！',gravity:.30,jump:18.8}
+{name:'🐾 犬の夢の星',distance:'約500億光年先（架空設定）',desc:'架空設定：エアレンデルよりはるか先、犬の夢が宇宙そのものになったような世界',theme:'dreamdog',postEarendel:true,theoretical:true,dream:true,final:true,stages:[
+{name:'🐾 犬の夢の星',distance:'約500億光年先（架空設定）',desc:'架空設定：花の星、笑う月の星を越えた異世界ルートの最奥。犬たちが空にも地上にもあふれる',goodColor:'#ffd8ff',sky:['#f6efff','#bfeeff'],ground:'#ffe8f8',ground2:'#b9a8ff',planet:'#fff7ff',event:'DOG PARADE',eventText:'🐕🐩🦮 犬がどこまでも続いている！',gravity:.30,jump:18.8}
 ]},
-{name:'🌸 秘密の花銀河',distance:'???',desc:'宇宙人だけが知る秘密領域',theme:'andromeda',secret:true,secretKey:'flower',stages:[
-{name:'🌸 花吹雪星',desc:'花びらが宇宙を漂う秘密ステージ',goodColor:'#ff9ddb',sky:['#18051b','#5d174d'],ground:'#bd78a7',ground2:'#673552',planet:'#ff8ed1',event:'SECRET BLOOM',eventText:'🌸 宇宙いっぱいに花が降る！',gravity:.42,jump:18.0}
+{name:'🌸 花の星',distance:'約250億光年先（架空設定）',desc:'架空設定：エアレンデルのさらに先にある、宇宙じゅうを花が漂う最初の異世界',theme:'andromeda',secret:true,postEarendel:true,theoretical:true,secretKey:'flower',stages:[
+{name:'🌸 花の星',distance:'約250億光年先（架空設定）',desc:'架空設定：エアレンデルよりさらに遠い、花びらが宇宙を漂う異世界ステージ',goodColor:'#ff9ddb',sky:['#18051b','#5d174d'],ground:'#bd78a7',ground2:'#673552',planet:'#ff8ed1',event:'SECRET BLOOM',eventText:'🌸 宇宙いっぱいに花が降る！',gravity:.42,jump:18.0}
 ]},
-{name:'🌝 笑う月の裏側',distance:'???',desc:'月の向こうの秘密領域',theme:'cloud',secret:true,secretKey:'moon',stages:[
-{name:'🌝 ムーンフェイス',desc:'笑う月が飛び交う秘密ステージ',goodColor:'#fff2a4',sky:['#070715','#30305b'],ground:'#c8c5ab',ground2:'#66647d',planet:'#fff2a4',event:'MOON PARTY',eventText:'🌝 月たちが踊り出す！',gravity:.30,jump:19.0}
+{name:'🌝 笑う月の星',distance:'約350億光年先（架空設定）',desc:'架空設定：花の星よりさらに遠く、笑う月が空間を漂う第二の異世界',theme:'cloud',secret:true,postEarendel:true,theoretical:true,secretKey:'moon',stages:[
+{name:'🌝 笑う月の星',distance:'約350億光年先（架空設定）',desc:'架空設定：花の星の先にある、笑う月が飛び交う異世界ステージ',goodColor:'#fff2a4',sky:['#070715','#30305b'],ground:'#c8c5ab',ground2:'#66647d',planet:'#fff2a4',event:'MOON PARTY',eventText:'🌝 月たちが踊り出す！',gravity:.30,jump:19.0}
 ]},
 {name:'⚫ ブラックホール',distance:'地球からの距離は測定不能',desc:'光も逃げられない重力領域',theme:'blackhole',stages:[
 {name:'🕳️ ブラックホール内部',desc:'事象の地平面を越えた、光も戻れない内部',goodColor:'#d9b6ff',sky:['#000','#15051e'],ground:'#27212f',ground2:'#09070c',planet:'#000',event:'GRAVITY WELL',eventText:'重力でジャンプ軌道がゆがむ！',gravity:.72,jump:18.3}
@@ -1496,13 +1496,13 @@ let alienContacts=0,alienRideUntil=0,secretUnlocked=false,nextSecretEvent=900,se
 let dogWorldBounceUntil=0,wormholeActive=false,blackHoleActive=false,blackHoleY=0,difficultyTier=0,lastDifficultyTier=-1,whiteHoleTriggered=false,expansionWarpCount=0,dreamReached=false,nextLoreAt=760,deepWarpCount=0,rocketLaunched=false,alienHitTotal=0,cosmicCharge=0,cosmicPowerReady=false,cosmicPowerUntil=0,cosmicBonus=0,returnFromDogStar=false,lastAlienTouchAt=0,alienContactFlashUntil=0,doghouseFed=false;
 const p={x:115,y:100,vy:0,w:54,h:55,on:false};let items=[],hazards=[],aliens=[],morphs=[],swarm=[],shootingStars=[],gasClouds=[],fallingStars=[],boneShots=[],earthWalkers=[];let portalX=3050;const rocketX=2860,blackHoleX=3220,worldLength=3500,blackHoleWormholes=[1450,2750],whiteHoleX=3320;
 const wormholeEnabled=()=>wormholeActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
-const blackHoleEnabled=()=>blackHoleActive&&!(system===0&&stage===0)&&system!==BLACK_HOLE_SYSTEM;
+const blackHoleEnabled=()=>blackHoleActive&&S()?.name==='✨ エアレンデル'&&system!==BLACK_HOLE_SYSTEM;
 const rankByName={
 '☀️ 太陽系・近くの星':0,
 '🐶 プロキオン':0.10,'🖖 40エリダヌス座A':0.11,'🦅 アルタイル':0.12,'😈 アルゴル':0.14,'🕰️ メトシェラ星':0.16,'🌾 スピカ':0.18,'🐶 ゴメイサ':0.20,'🐕 アダーラ':0.30,'🐕 ミルザム':0.40,
 '❓ タビーの星':1,'🦢 デネブ':1.10,'🐕 ウェズン':1.20,'🐕 アルドラ':1.40,'🐕 VYおおいぬ座星':2,'💥 イータ・カリーナ':3,'🌀 PSR J1748-2446ad':3.45,'🪐 スティーブンソン2-18':3.6,'🧲 SGR 1806-20':4,'💙 R136a1':5,'✨ S Doradus':6,'⭐ M31-V1':7,'💫 AF Andromedae':8,'🟢 ロマーノ星 GR 290':9,'🌠 M33 Var C':10,'⭐ M51-DS1':11,'🎨 Warhol':12,
 '💙 イカロス':13,'🦋 モスラ':14,'❤️ クイユル':15,'🦖 ゴジラ':16,'🔷 Abell 2744 LS1':17,'💠 MACS J0647 LS1':18,'✨ エアレンデル':19,
-'🔥 再電離時代':20,'🌅 宇宙の夜明け':21,'🌑 暗黒時代':22,'🌤️ 再結合時代（宇宙の晴れ上がり）':23,'📡 宇宙背景放射（CMB）':24,'✨ 光子時代':25,'⚛️ ビッグバン元素合成':26,'🌀 レプトン時代':27,'🔵 ハドロン時代':28,'🟣 粒子の宇宙':29,'⚡ 電弱時代':30,'💥 インフレーション時代':31,'◼️ 大統一時代':32,'❓ プランク時代':33,'💫 ビッグバン':34,'🔁 ビッグバウンス':35,'♻️ 循環宇宙':36,'🫧 永遠のインフレーション':37,'◯ 無境界仮説':38,'⏩ 太陽が明るくなる未来':40,'🔴 赤色巨星の太陽':41,'⚪ 太陽の死（白色矮星）':42,'🌌 星形成の終わり':43,'🔴 最後の恒星たち':44,'🕳️ ブラックホール時代':45,'🌑 暗い宇宙':46,'🥶 熱的死／ビッグフリーズ':47,'💥 ビッグリップ':48,'🔻 ビッグクランチ':49,'⚠️ 真空崩壊':50,'🐾 犬の星':60
+'🔥 再電離時代':20,'🌅 宇宙の夜明け':21,'🌑 暗黒時代':22,'🌤️ 再結合時代（宇宙の晴れ上がり）':23,'📡 宇宙背景放射（CMB）':24,'✨ 光子時代':25,'⚛️ ビッグバン元素合成':26,'🌀 レプトン時代':27,'🔵 ハドロン時代':28,'🟣 粒子の宇宙':29,'⚡ 電弱時代':30,'💥 インフレーション時代':31,'◼️ 大統一時代':32,'❓ プランク時代':33,'💫 ビッグバン':34,'🔁 ビッグバウンス':35,'♻️ 循環宇宙':36,'🫧 永遠のインフレーション':37,'◯ 無境界仮説':38,'⏩ 太陽が明るくなる未来':40,'🔴 赤色巨星の太陽':41,'⚪ 太陽の死（白色矮星）':42,'🌌 星形成の終わり':43,'🔴 最後の恒星たち':44,'🕳️ ブラックホール時代':45,'🌑 暗い宇宙':46,'🥶 熱的死／ビッグフリーズ':47,'💥 ビッグリップ':48,'🔻 ビッグクランチ':49,'⚠️ 真空崩壊':50,'🌸 花の星':61,'🌝 笑う月の星':62,'🐾 犬の夢の星':63
 };
 const systemDistanceRank=systems.map(s=>s.secret?99:s.name==='⚫ ブラックホール'?98:(rankByName[s.name]??0));
 const S=()=>systems[system].stages[stage],groundY=()=>H-120,playerRect=()=>({x:p.x,y:p.y,w:p.w,h:p.h}),itemRect=i=>({x:i.x-i.r,y:i.y-i.r,w:i.r*2,h:i.r*2}),rectHit=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
@@ -1769,7 +1769,7 @@ function startCommunication(obj){
  setTimeout(()=>comm.classList.remove('on'),2200);
  syncHUD()
 }
-function secretWarp(kind){if(paused)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spin';transTitle.innerHTML=`${kind==='flower'?'🌸':'🌝'} SECRET FOUND!`;nextEl.textContent=kind==='flower'?'🌸 秘密の花銀河':'🌝 笑う月の裏側';subEl.textContent='SECRET STAGE UNLOCKED';setTimeout(()=>{system=kind==='flower'?SECRET_FLOWER_SYSTEM:SECRET_MOON_SYSTEM;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false},1250)}
+function secretWarp(kind){if(paused)return;paused=true;trans.style.display='grid';warpDog.textContent=playerDog;warpDog.className='spin';transTitle.innerHTML=`${kind==='flower'?'🌸':'🌝'} SECRET FOUND!`;nextEl.textContent=kind==='flower'?'🌸 花の星｜約250億光年（架空）':'🌝 笑う月の星｜約350億光年（架空）';subEl.textContent='SECRET STAGE UNLOCKED';setTimeout(()=>{system=kind==='flower'?SECRET_FLOWER_SYSTEM:SECRET_MOON_SYSTEM;stage=0;stageStart();trans.style.display='none';warpDog.className='';paused=false},1250)}
 function activateBig(){if(big)return;big=true;bigUntil=performance.now()+8000;invincibleUntil=Math.max(invincibleUntil,bigUntil);bigBanner.style.display='block';setTimeout(()=>bigBanner.style.display='none',1100);syncHUD()}
 function endBig(){big=false;syncHUD()}
 function triggerCosmic(kind){const s=S();if(kind==='stars'){eventEl.textContent='🌠 COSMIC EVENT ✦ 星の流星群！';showToast('🌠 星の流星群！！');for(let i=0;i<35;i++)shootingStars.push({x:W+Math.random()*W*.9,y:40+Math.random()*H*.62,vx:7+Math.random()*7,vy:1.8+Math.random()*3,len:25+Math.random()*55,a:.45+Math.random()*.55})}else{eventEl.textContent='🫧 COSMIC EVENT ✦ 宇宙ガス接近！';showToast('🫧 宇宙ガスが流れてきた！');for(let i=0;i<8;i++)gasClouds.push({x:W+80+i*105,y:70+Math.random()*H*.5,vx:.45+Math.random()*.8,r:70+Math.random()*100,a:.10+Math.random()*.10,color:i%2?s.goodColor:'#d693ff'})}setTimeout(syncHUD,2200)}
@@ -3650,7 +3650,7 @@ const v60DistanceByStage={
  '🌍 地球':'0 km','🌙 月':'約38.4万 km','♀ 金星':'約4,100万 km','🔴 火星':'約5,500万 km','☿ 水星':'約7,700万 km','☀️ 太陽':'約1.50億 km','🟠 木星':'約5.9億 km','🪐 土星':'約12億 km','🩵 天王星':'約26億 km','🔵 海王星':'約43億 km',
  '⭐ シリウス':'約8.6 光年','🐶 プロキオン':'約11.5 光年','🖖 40エリダヌス座A':'約16.3 光年','🦅 アルタイル':'約16.7 光年','💠 ベガ':'約25 光年','😈 アルゴル':'約93 光年','🐶 ゴメイサ':'約162 光年','🕰️ メトシェラ星':'約190 光年','🌾 スピカ':'約250 光年','🌟 ポラリス':'約430 光年','🐕 アダーラ':'約430 光年','🐕 ミルザム':'約500 光年','❤️ アンタレス':'約550 光年','🔴 ベテルギウス':'約640 光年',
  '❓ タビーの星':'約1,470 光年','🦢 デネブ':'約1,400〜2,600 光年','🐕 ウェズン':'約1,600 光年','🐕 アルドラ':'約2,000 光年','🐕 VYおおいぬ座星':'約5,000 光年','💥 イータ・カリーナ':'約7,500 光年','🌀 PSR J1748-2446ad':'約1.8万 光年','🪐 スティーブンソン2-18':'約2万 光年','🧲 SGR 1806-20':'約5万 光年',
- '🌸 花吹雪星':'ゲーム内 約129億 光年','🌝 ムーンフェイス':'約38.4万 km（秘密領域）'
+ '🌸 花の星':'ゲーム内 約129億 光年','🌝 笑う月の星':'約38.4万 km（秘密領域）'
 };
 function v60FormatDistance(raw){
  raw=String(raw||'').replace(/^地球から\s*/,'').trim();
@@ -16316,15 +16316,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v257';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v257</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v259';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v259</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v257</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v259</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -16879,7 +16879,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v257';
+window.INUBOSHI_GAME_VERSION='v259';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -18276,7 +18276,7 @@ function v254RouteTarget(kind){
   else if(kind==='end')name='🔴 赤色巨星の太陽';
   else if(kind==='unknown'){
     // UNKNOWN is deliberately a little mysterious: flower world or dog world.
-    name=(V254_FATE.points.unknown%2===0)?'🐾 犬の星':'🌸 秘密の花銀河';
+    name=(V254_FATE.points.unknown%2===0)?'🐾 犬の夢の星':'🌸 花の星';
   }
 
   if(kind==='home')return {si:0,ti:0,name:'🌍 地球',kind};
@@ -18900,7 +18900,7 @@ function v257Stage2Target(kind,variant=null){
   if(kind==='home')return {si:0,ti:0,name:'🌍 地球',kind};
 
   if(kind==='unknown'&&variant){
-    const name=variant==='dog'?'🐾 犬の星':'🌸 秘密の花銀河';
+    const name=variant==='dog'?'🐾 犬の夢の星':'🌸 花の星';
     const si=systems.findIndex(s=>s?.name===name);
     if(si>=0)return {si,ti:0,name,kind,variant};
   }
@@ -19159,6 +19159,745 @@ window.__v257State=()=>({
   stage2:V257_FLOW.stage2
 });
 /* === /v257 === */
+
+
+/* === v258: EARENDEL-ONLY BLACK HOLE + SWIRL ENTRY + ELEMENT STAR BIRTH === */
+
+/* -----------------------------------------------------------
+   1) ブラックホール入口
+   通常プレイではエアレンデルだけ。
+   隠しメニュー直行は「テストモード」で、出口から元の星へ戻る。
+   ----------------------------------------------------------- */
+const V258_BH={
+  entering:false,
+  finalMode:false,
+  demoMode:false,
+  returnSystem:0,
+  returnStage:0,
+  source:''
+};
+
+(function v258InstallBHSwirlStyle(){
+  if(document.getElementById('v258BHSwirlStyle'))return;
+  const st=document.createElement('style');
+  st.id='v258BHSwirlStyle';
+  st.textContent=`
+    #transition.v258BHSwirl{
+      overflow:hidden;
+      background:radial-gradient(circle at 50% 48%,rgba(20,4,35,.35) 0 16%,rgba(0,0,0,.96) 58%,#000 100%)!important;
+    }
+    #transition.v258BHSwirl:before,
+    #transition.v258BHSwirl:after{
+      content:"";position:absolute;left:50%;top:50%;pointer-events:none;border-radius:50%;
+      transform:translate(-50%,-50%);
+    }
+    #transition.v258BHSwirl:before{
+      width:min(92vw,620px);height:min(92vw,620px);
+      background:repeating-conic-gradient(
+        from 0deg,
+        rgba(121,73,255,.05) 0deg 12deg,
+        rgba(255,78,196,.42) 18deg 24deg,
+        rgba(85,225,255,.22) 30deg 36deg,
+        rgba(0,0,0,0) 44deg 60deg
+      );
+      -webkit-mask:radial-gradient(circle,transparent 0 14%,#000 19% 53%,transparent 70%);
+      mask:radial-gradient(circle,transparent 0 14%,#000 19% 53%,transparent 70%);
+      animation:v258BHSpin 1.15s linear infinite;
+      filter:blur(2px);
+      opacity:.9;
+    }
+    #transition.v258BHSwirl:after{
+      width:170px;height:170px;background:#000;
+      box-shadow:0 0 32px #000,0 0 58px rgba(155,86,255,.55),0 0 95px rgba(255,75,195,.28);
+      animation:v258BHPulse .72s ease-in-out infinite alternate;
+    }
+    #transition.v258BHSwirl> *{position:relative;z-index:2}
+    #transition.v258BHSwirl #warpDog{animation:v258DogSpiral .85s ease-in-out infinite}
+    @keyframes v258BHSpin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+    @keyframes v258BHPulse{to{transform:translate(-50%,-50%) scale(.82)}}
+    @keyframes v258DogSpiral{
+      0%{transform:rotate(0deg) scale(1)}
+      50%{transform:rotate(190deg) scale(.72)}
+      100%{transform:rotate(360deg) scale(1)}
+    }
+  `;
+  document.head.appendChild(st);
+})();
+
+function v258IsBHDebugSource(source=''){
+  return /hidden|menu|legacy|debug|route-api|direct/i.test(String(source));
+}
+
+const v258BaseEnterBH=v252EnterBlackHole;
+v252EnterBlackHole=function(source='direct'){
+  if(V258_BH.entering||system===BLACK_HOLE_SYSTEM)return false;
+
+  const isEarendel=S()?.name==='✨ エアレンデル';
+  const debug=v258IsBHDebugSource(source);
+
+  // 通常プレイで入れるのはエアレンデルだけ。
+  if(!isEarendel&&!debug){
+    blackHoleActive=false;
+    showToast('⚫ 最終ブラックホールはエアレンデルの先にある',1250);
+    return false;
+  }
+
+  V258_BH.finalMode=isEarendel&&!debug;
+  V258_BH.demoMode=debug;
+  V258_BH.returnSystem=system;
+  V258_BH.returnStage=stage;
+  V258_BH.source=source;
+  V258_BH.entering=true;
+
+  // 隠しメニューから入る場合は先に閉じる。
+  document.getElementById('v150JumpPanel')?.classList.remove('on');
+  document.getElementById('v150JumpPanel')?.setAttribute('aria-hidden','true');
+
+  paused=true;
+  trans.style.display='grid';
+  trans.style.background='';
+  trans.classList.add('v258BHSwirl');
+  warpDog.textContent=playerDog;
+  warpDog.className='';
+  transTitle.innerHTML='⚫ BLACK HOLE';
+  nextEl.textContent='ぐるぐる……時空がねじれる';
+  subEl.textContent=V258_BH.finalMode?'EARENDEL → BEYOND THE STARS':'BLACK HOLE TEST';
+
+  setTimeout(()=>{
+    trans.classList.remove('v258BHSwirl');
+    trans.style.display='none';
+    trans.style.background='';
+    paused=false;
+
+    const ok=v258BaseEnterBH(source);
+    V258_BH.entering=false;
+
+    if(ok&&system===BLACK_HOLE_SYSTEM){
+      missionEl.textContent='⚫ ブラックホール内部を進む';
+      eventEl.textContent=V258_BH.finalMode
+        ? 'この先のホワイトホールが STAGE 2 への出口'
+        : 'TEST MODE｜出口から元の星へ戻る';
+    }
+  },1050);
+
+  return true;
+};
+window.__v252EnterBlackHole=v252EnterBlackHole;
+window.__v248BlackHoleButton=()=>v252EnterBlackHole('hidden-menu');
+window.__v247EnterBlackHole=v252EnterBlackHole;
+window.__v246EnterBlackHole=v252EnterBlackHole;
+window.__v245EnterBlackHole=v252EnterBlackHole;
+window.__v242EnterBlackHole=v252EnterBlackHole;
+window.__v217GoBlackHole=v252EnterBlackHole;
+if(window.__v170RouteAPI)window.__v170RouteAPI.blackHole=()=>v252EnterBlackHole('route-api');
+
+/* エアレンデル以外では、古い処理が blackHoleActive を立てても最終的に消す。 */
+const v258BaseUpdateBHGuard=update;
+update=function(now,dt){
+  if(system!==BLACK_HOLE_SYSTEM&&S()?.name!=='✨ エアレンデル'){
+    blackHoleActive=false;
+  }
+  const out=v258BaseUpdateBHGuard(now,dt);
+  if(system!==BLACK_HOLE_SYSTEM&&S()?.name!=='✨ エアレンデル'){
+    blackHoleActive=false;
+  }
+  return out;
+};
+
+/* 隠しメニューからのブラックホールテストはSTAGE2へ行かず、元の星に戻る。 */
+const v258BaseWhiteHoleEscape=whiteHoleEscape;
+whiteHoleEscape=function(){
+  if(V258_BH.demoMode){
+    if(paused||whiteHoleTriggered||V257_FLOW.exiting)return;
+    whiteHoleTriggered=true;
+    V257_FLOW.exiting=true;
+    paused=true;
+
+    trans.style.display='grid';
+    trans.style.background='rgba(255,255,255,.97)';
+    warpDog.textContent=playerDog;
+    warpDog.className='';
+    transTitle.innerHTML='⚪';
+    nextEl.textContent='ホワイトホールを抜ける';
+    subEl.textContent='TEST MODE → RETURN';
+
+    setTimeout(()=>{
+      system=V258_BH.returnSystem;
+      stage=V258_BH.returnStage;
+      camera=0;p.x=115;p.vy=0;
+      paused=false;
+      try{stageStart();}catch(e){console.error('[v258 BH TEST RETURN]',e)}
+      trans.style.display='none';trans.style.background='';
+      whiteHoleTriggered=false;
+      V257_FLOW.exiting=false;
+      V258_BH.demoMode=false;
+      V258_BH.finalMode=false;
+      showToast('⚪ ブラックホールテスト終了｜元の星へ戻った',1400);
+    },900);
+    return;
+  }
+
+  // 本番のSTAGE2ルートはエアレンデルから入った時だけ。
+  if(V258_BH.finalMode)return v258BaseWhiteHoleEscape();
+
+  // 想定外状態なら安全に地球へ戻す。
+  V258_BH.demoMode=true;
+  V258_BH.returnSystem=0;
+  V258_BH.returnStage=0;
+  return whiteHoleEscape();
+};
+
+/* -----------------------------------------------------------
+   2) 元素合成を「最初の星の材料集め」にする
+   H + He を集め、その材料が宇宙の夜明けで星になる。
+   ----------------------------------------------------------- */
+const V258_ELEMENTS={
+  H:0,
+  He:0,
+  targetH:6,
+  targetHe:2,
+  ready:false,
+  birthStart:0,
+  birthAnnounced:false
+};
+
+function v258ElementReady(){
+  return V258_ELEMENTS.H>=V258_ELEMENTS.targetH&&V258_ELEMENTS.He>=V258_ELEMENTS.targetHe;
+}
+function v258ElementHUD(){
+  return `⚛️ H ${Math.min(V258_ELEMENTS.H,V258_ELEMENTS.targetH)}/${V258_ELEMENTS.targetH}　He ${Math.min(V258_ELEMENTS.He,V258_ELEMENTS.targetHe)}/${V258_ELEMENTS.targetHe}`;
+}
+
+const v258BaseMakeWorld=makeWorld;
+makeWorld=function(){
+  v258BaseMakeWorld();
+
+  if(S()?.name!=='⚛️ ビッグバン元素合成')return;
+
+  // 既存の汎用星に加え、実際に取る元素アイテムを置く。
+  const gy=groundY();
+  const elems=[
+    ['H',720,gy-95],['H',920,gy-165],['He',1130,gy-125],
+    ['H',1360,gy-205],['H',1580,gy-105],['He',1810,gy-185],
+    ['H',2040,gy-135],['H',2280,gy-220],['He',2510,gy-120],
+    ['H',2740,gy-175]
+  ];
+  for(const [kind,x,y] of elems){
+    items.push({
+      x,y,r:21,got:false,food:false,
+      v258Element:kind,
+      color:kind==='H'?'#a9eaff':'#ffd69a'
+    });
+  }
+};
+
+const v258BaseCollectGood=collectGood;
+collectGood=function(it){
+  if(it?.v258Element&&!it.got){
+    it.got=true;
+    if(it.v258Element==='H')V258_ELEMENTS.H++;
+    else V258_ELEMENTS.He++;
+
+    const justReady=!V258_ELEMENTS.ready&&v258ElementReady();
+    V258_ELEMENTS.ready=v258ElementReady();
+
+    if(justReady){
+      showToast('🌟 最初の星の材料がそろった！ H＋Heを未来へ運ぶ',1800);
+      eventEl.textContent='FIRST STAR MATERIAL COMPLETE';
+    }else{
+      showToast(`${it.v258Element==='H'?'H':'He'} GET！　${v258ElementHUD()}`,850);
+    }
+    syncHUD(true);
+    return;
+  }
+  return v258BaseCollectGood(it);
+};
+
+const v258BaseDrawGood=drawGood;
+drawGood=function(it){
+  if(it?.v258Element){
+    if(it.got)return;
+    const sx=it.x-camera;
+    if(sx<-80||sx>W+80)return;
+
+    const isH=it.v258Element==='H';
+    const t=performance.now()/1000;
+    ctx.save();
+    ctx.translate(sx,it.y);
+    const r=19+Math.sin(t*2.1+it.x*.01)*2;
+    ctx.globalAlpha=.18;
+    ctx.fillStyle=isH?'#77ddff':'#ffc47a';
+    ctx.shadowColor=ctx.fillStyle;
+    ctx.shadowBlur=22;
+    ctx.beginPath();ctx.arc(0,0,r+10,0,Math.PI*2);ctx.fill();
+
+    ctx.globalAlpha=.92;
+    ctx.strokeStyle=isH?'#bcefff':'#ffe1b0';
+    ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.stroke();
+
+    ctx.fillStyle='#fff';
+    ctx.font='1000 13px system-ui';
+    ctx.textAlign='center';
+    ctx.fillText(isH?'H':'He',0,5);
+    ctx.restore();
+    return;
+  }
+  return v258BaseDrawGood(it);
+};
+
+function v258DrawFirstStarBirth(){
+  if(S()?.name!=='🌅 宇宙の夜明け'||!V258_ELEMENTS.ready)return;
+  if(!V258_ELEMENTS.birthStart)V258_ELEMENTS.birthStart=performance.now();
+
+  const elapsed=performance.now()-V258_ELEMENTS.birthStart;
+  const q=Math.max(0,Math.min(1,elapsed/5200));
+  const cx=W*.78,cy=H*.28;
+  ctx.save();
+
+  // 集めたH/Heが雲として集まり、重力で中心へ落ちていく。
+  for(let i=0;i<18;i++){
+    const isH=i%4!==0;
+    const a=i*.89+elapsed*.00018*(i%2?1:-1);
+    const startR=145+(i%5)*22;
+    const rr=startR*(1-q*.78);
+    const x=cx+Math.cos(a)*rr;
+    const y=cy+Math.sin(a)*rr*.55;
+    ctx.globalAlpha=.20+.35*(1-q);
+    ctx.fillStyle=isH?'#b9efff':'#ffd9a0';
+    ctx.font='900 8px system-ui';
+    ctx.textAlign='center';
+    ctx.fillText(isH?'H':'He',x,y);
+  }
+
+  // 中心星はだんだん点火。
+  const starQ=Math.max(0,(q-.28)/.72);
+  if(starQ>0){
+    const rr=8+starQ*58;
+    const rg=ctx.createRadialGradient(cx,cy,1,cx,cy,rr);
+    rg.addColorStop(0,'#fff');
+    rg.addColorStop(.18,'#fff7c9');
+    rg.addColorStop(.48,'rgba(136,225,255,.82)');
+    rg.addColorStop(1,'rgba(110,190,255,0)');
+    ctx.globalAlpha=.95;
+    ctx.fillStyle=rg;
+    ctx.beginPath();ctx.arc(cx,cy,rr,0,Math.PI*2);ctx.fill();
+  }
+
+  ctx.globalAlpha=.74;
+  ctx.fillStyle='#fff';
+  ctx.font='1000 9px system-ui';
+  ctx.textAlign='center';
+  ctx.fillText(q<.55?'H＋Heのガスが集まる……':'🌟 FIRST STAR',cx,cy+98);
+  ctx.restore();
+
+  if(q>=.82&&!V258_ELEMENTS.birthAnnounced){
+    V258_ELEMENTS.birthAnnounced=true;
+    showToast('🌟 集めたH＋Heから、最初の星が生まれた！',1900);
+    eventEl.textContent='COSMIC DAWN｜FIRST STAR BORN';
+  }
+}
+
+const v258BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v258BaseStageStart();
+
+  if(S()?.name==='⚛️ ビッグバン元素合成'){
+    missionEl.textContent='⚛️ 最初の星の材料を集める';
+    eventEl.textContent=v258ElementHUD();
+  }
+  if(S()?.name==='🌅 宇宙の夜明け'&&V258_ELEMENTS.ready){
+    V258_ELEMENTS.birthStart=performance.now();
+    V258_ELEMENTS.birthAnnounced=false;
+    missionEl.textContent='🌅 集めた元素から最初の星をつくる';
+    eventEl.textContent='H＋Heが重力で集まり始める';
+  }
+  return out;
+};
+
+const v258BaseUpdateElements=update;
+update=function(now,dt){
+  const out=v258BaseUpdateElements(now,dt);
+
+  if(S()?.name==='⚛️ ビッグバン元素合成'){
+    missionEl.textContent=V258_ELEMENTS.ready?'🌟 最初の星の材料がそろった':'⚛️ 最初の星の材料を集める';
+    eventEl.textContent=v258ElementHUD();
+  }
+  return out;
+};
+
+const v258BaseSpecialFX=drawStageSpecialFX;
+drawStageSpecialFX=function(){
+  v258BaseSpecialFX();
+  v258DrawFirstStarBirth();
+};
+
+/* QA */
+window.__v258State=()=>({
+  blackHole:{
+    finalMode:V258_BH.finalMode,
+    demoMode:V258_BH.demoMode,
+    entering:V258_BH.entering,
+    source:V258_BH.source
+  },
+  elements:{
+    H:V258_ELEMENTS.H,
+    He:V258_ELEMENTS.He,
+    ready:V258_ELEMENTS.ready,
+    starBorn:V258_ELEMENTS.birthAnnounced
+  }
+});
+/* === /v258 === */
+
+
+/* === v259: VISIBLE EARENDEL BLACK HOLE + FICTIONAL FAR-WORLD CHAIN === */
+
+/* -----------------------------------------------------------
+   1) エアレンデルのブラックホールを「見てから入る」
+   ----------------------------------------------------------- */
+const V259_EAR_BH={
+  seenAt:0,
+  firstSeen:false
+};
+
+function v259DrawEarendelBlackHole(){
+  if(S()?.name!=='✨ エアレンデル'||system===BLACK_HOLE_SYSTEM)return;
+  const sx=blackHoleX-camera;
+  if(sx<-420||sx>W+520)return;
+
+  if(!V259_EAR_BH.seenAt){
+    V259_EAR_BH.seenAt=performance.now();
+    V259_EAR_BH.firstSeen=true;
+  }
+
+  const t=performance.now()/1000;
+  const y=blackHoleY||Math.max(150,Math.min(groundY()-145,H*.43));
+  const pulse=1+Math.sin(t*.9)*.025;
+
+  ctx.save();
+  ctx.translate(sx,y);
+
+  // 大きな重力レンズの霞。遠くからでも「ブラックホールがある」と分かる。
+  const outer=ctx.createRadialGradient(0,0,48,0,0,188*pulse);
+  outer.addColorStop(0,'rgba(0,0,0,0)');
+  outer.addColorStop(.32,'rgba(119,71,255,.09)');
+  outer.addColorStop(.52,'rgba(255,92,205,.18)');
+  outer.addColorStop(.72,'rgba(82,230,255,.08)');
+  outer.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=outer;
+  ctx.beginPath();ctx.arc(0,0,190*pulse,0,Math.PI*2);ctx.fill();
+
+  // 降着円盤
+  ctx.save();
+  ctx.rotate(-.11+Math.sin(t*.42)*.025);
+  ctx.shadowColor='#d58dff';
+  ctx.shadowBlur=32;
+  for(let i=0;i<6;i++){
+    const rr=92+i*13;
+    ctx.globalAlpha=.30-i*.025;
+    ctx.strokeStyle=i%2?'#6fe9ff':'#ff79d1';
+    ctx.lineWidth=5-i*.42;
+    ctx.beginPath();
+    ctx.ellipse(0,0,rr*1.34,rr*.30,0,0,Math.PI*2);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // 光を飲み込む中心
+  ctx.globalAlpha=1;
+  ctx.shadowColor='#000';
+  ctx.shadowBlur=38;
+  ctx.fillStyle='#000';
+  ctx.beginPath();
+  ctx.arc(0,0,72,0,Math.PI*2);
+  ctx.fill();
+
+  // 重力レンズの白い縁
+  ctx.shadowColor='#fff';
+  ctx.shadowBlur=16;
+  ctx.strokeStyle='rgba(255,255,255,.76)';
+  ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(0,0,76,-2.78,-.34);ctx.stroke();
+  ctx.beginPath();ctx.arc(0,0,76,.34,2.78);ctx.stroke();
+
+  ctx.restore();
+
+  ctx.save();
+  ctx.textAlign='center';
+  ctx.fillStyle='#fff';
+  ctx.font='1000 11px system-ui';
+  ctx.shadowColor='#b37cff';
+  ctx.shadowBlur=12;
+  ctx.fillText('⚫ BLACK HOLE',sx,y-123);
+  ctx.font='850 8px system-ui';
+  ctx.shadowBlur=0;
+  ctx.globalAlpha=.72;
+  ctx.fillText('エアレンデルの先に開いた入口',sx,y-107);
+  ctx.restore();
+}
+
+/* 既存の70px / 150px当たり判定が先に発火しても、
+   ブラックホールが画面に見えてから少し経つまでは入らない。 */
+const v259BaseEnterBH=v252EnterBlackHole;
+v252EnterBlackHole=function(source='direct'){
+  const isEar=S()?.name==='✨ エアレンデル';
+  const gameplaySource=/portal|earendel-final/i.test(String(source));
+
+  if(isEar&&gameplaySource){
+    const sx=blackHoleX-camera;
+    const visibleLongEnough=V259_EAR_BH.seenAt&&performance.now()-V259_EAR_BH.seenAt>=850;
+    const clearlyOnScreen=sx>90&&sx<W*.80;
+
+    if(!visibleLongEnough||!clearlyOnScreen){
+      blackHoleActive=true;
+      return false;
+    }
+  }
+  return v259BaseEnterBH(source);
+};
+window.__v252EnterBlackHole=v252EnterBlackHole;
+window.__v248BlackHoleButton=()=>v252EnterBlackHole('hidden-menu');
+window.__v247EnterBlackHole=v252EnterBlackHole;
+window.__v246EnterBlackHole=v252EnterBlackHole;
+window.__v245EnterBlackHole=v252EnterBlackHole;
+window.__v242EnterBlackHole=v252EnterBlackHole;
+window.__v217GoBlackHole=v252EnterBlackHole;
+if(window.__v170RouteAPI)window.__v170RouteAPI.blackHole=()=>v252EnterBlackHole('route-api');
+
+/* -----------------------------------------------------------
+   2) 異世界ルート
+   250億光年 → 350億光年 → 500億光年
+   ※すべてゲーム内の架空設定
+   ----------------------------------------------------------- */
+const V259_ALTWORLD={
+  active:false,
+  index:0,
+  portalX:3260,
+  moving:false,
+  route:[
+    {name:'🌸 花の星',distance:'約250億光年先',icon:'🌸'},
+    {name:'🌝 笑う月の星',distance:'約350億光年先',icon:'🌝'},
+    {name:'🐾 犬の夢の星',distance:'約500億光年先',icon:'🐾'}
+  ]
+};
+
+function v259SystemIndex(name){
+  return systems.findIndex(s=>s?.name===name);
+}
+
+/* 本番のUNKNOWNルートは必ず花の星から始まる。
+   hidden-menu の variant 指定は単体テストとしてその星へ直行。 */
+const v259BaseStage2Target=v257Stage2Target;
+v257Stage2Target=function(kind,variant=null){
+  if(kind!=='unknown')return v259BaseStage2Target(kind,variant);
+
+  let name='🌸 花の星';
+  if(variant==='moon')name='🌝 笑う月の星';
+  else if(variant==='dog')name='🐾 犬の夢の星';
+
+  const si=v259SystemIndex(name);
+  if(si<0)return v259BaseStage2Target(kind,variant);
+
+  // variantなし＝本番ルート。花→月→犬を順に進む。
+  V259_ALTWORLD.active=!variant;
+  V259_ALTWORLD.index=Math.max(0,V259_ALTWORLD.route.findIndex(x=>x.name===name));
+  V259_ALTWORLD.moving=false;
+
+  return {si,ti:0,name,kind,variant};
+};
+
+/* v254側からunknownを直接選ばれても、必ず花の星を入口にする。 */
+const v259BaseRouteTarget=v254RouteTarget;
+v254RouteTarget=function(kind){
+  if(kind==='unknown'){
+    const si=v259SystemIndex('🌸 花の星');
+    if(si>=0){
+      V259_ALTWORLD.active=true;
+      V259_ALTWORLD.index=0;
+      V259_ALTWORLD.moving=false;
+      return {si,ti:0,name:'🌸 花の星',kind};
+    }
+  }
+  return v259BaseRouteTarget(kind);
+};
+
+function v259CurrentAltIndex(){
+  return V259_ALTWORLD.route.findIndex(x=>x.name===systems[system]?.name);
+}
+
+function v259DrawAltPortal(){
+  if(!V259_ALTWORLD.active)return;
+  const idx=v259CurrentAltIndex();
+  if(idx<0||idx>=V259_ALTWORLD.route.length-1)return;
+
+  const sx=V259_ALTWORLD.portalX-camera;
+  if(sx<-160||sx>W+160)return;
+  const gy=groundY(),t=performance.now()/1000;
+  const next=V259_ALTWORLD.route[idx+1];
+
+  ctx.save();
+  ctx.translate(sx,gy-120);
+  ctx.rotate(t*.58);
+  ctx.shadowColor='#d99cff';
+  ctx.shadowBlur=28;
+  for(let i=0;i<5;i++){
+    ctx.globalAlpha=.34-i*.04;
+    ctx.strokeStyle=i%2?'#95edff':'#ff9cdc';
+    ctx.lineWidth=3.5;
+    ctx.beginPath();
+    ctx.ellipse(0,0,38+i*11,17+i*5,.18,0,Math.PI*1.78);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  ctx.save();
+  ctx.textAlign='center';
+  ctx.fillStyle='#fff';
+  ctx.font='1000 9px system-ui';
+  ctx.fillText(`🌀 さらに先へ → ${next.icon}`,sx,gy-194);
+  ctx.font='850 7px system-ui';
+  ctx.globalAlpha=.70;
+  ctx.fillText(`${next.distance}（架空設定）`,sx,gy-180);
+  ctx.restore();
+}
+
+function v259GoNextAltWorld(){
+  if(V259_ALTWORLD.moving)return;
+  const idx=v259CurrentAltIndex();
+  if(idx<0||idx>=V259_ALTWORLD.route.length-1)return;
+
+  const next=V259_ALTWORLD.route[idx+1];
+  const si=v259SystemIndex(next.name);
+  if(si<0)return;
+
+  V259_ALTWORLD.moving=true;
+  paused=true;
+  trans.style.display='grid';
+  trans.style.background='radial-gradient(circle at 50% 50%,rgba(143,91,255,.24),#020108 68%,#000)';
+  warpDog.textContent=playerDog;
+  warpDog.className='spin';
+  transTitle.innerHTML=`${next.icon} FARTHER`;
+  nextEl.textContent=`${systems[system].name} → ${next.name}`;
+  subEl.textContent=`${next.distance} / FICTIONAL WORLD`;
+
+  setTimeout(()=>{
+    system=si;stage=0;camera=0;p.x=115;p.vy=0;
+    V259_ALTWORLD.index=idx+1;
+    try{stageStart();}catch(e){console.error('[v259 ALT WORLD]',e)}
+    trans.style.display='none';
+    trans.style.background='';
+    warpDog.className='';
+    paused=false;
+    V259_ALTWORLD.moving=false;
+
+    showToast(`${next.icon} ${next.name}｜${next.distance}（架空設定）`,1800);
+  },1250);
+}
+
+const v259BaseUpdate=update;
+update=function(now,dt){
+  // 異世界ルート中は古い秘密ステージの通常宇宙復帰ワームホールを止める。
+  if(V259_ALTWORLD.active&&v259CurrentAltIndex()>=0){
+    wormholeActive=false;
+    blackHoleActive=false;
+  }
+
+  const out=v259BaseUpdate(now,dt);
+
+  if(V259_ALTWORLD.active){
+    const idx=v259CurrentAltIndex();
+    if(idx>=0){
+      wormholeActive=false;
+      blackHoleActive=false;
+
+      const current=V259_ALTWORLD.route[idx];
+      missionEl.textContent=`${current.icon} 異世界ルート｜${current.distance}（架空）`;
+
+      if(idx<V259_ALTWORLD.route.length-1){
+        eventEl.textContent=`エアレンデルよりさらに先へ｜次は ${V259_ALTWORLD.route[idx+1].name}`;
+        if(!paused&&p.x>=V259_ALTWORLD.portalX-58){
+          p.x=V259_ALTWORLD.portalX-58;
+          v259GoNextAltWorld();
+          return;
+        }
+      }else{
+        eventEl.textContent='🐾 異世界ルート最奥｜犬の夢の世界';
+        if(p.x>worldLength-120)p.x=worldLength-120;
+      }
+    }
+  }
+
+  return out;
+};
+
+const v259BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v259BaseStageStart();
+
+  if(S()?.name==='✨ エアレンデル'){
+    V259_EAR_BH.seenAt=0;
+    V259_EAR_BH.firstSeen=false;
+    blackHoleActive=true;
+    blackHoleY=Math.max(150,Math.min(groundY()-145,H*.43));
+    missionEl.textContent='✨ エアレンデルの先にブラックホールが見える';
+    eventEl.textContent='近づいて、自分から入る';
+  }
+
+  const idx=v259CurrentAltIndex();
+  if(V259_ALTWORLD.active&&idx>=0){
+    const world=V259_ALTWORLD.route[idx];
+    wormholeActive=false;
+    blackHoleActive=false;
+    missionEl.textContent=`${world.icon} ${world.name}｜${world.distance}（架空設定）`;
+
+    if(idx<V259_ALTWORLD.route.length-1){
+      eventEl.textContent=`さらに先の架空世界へ進む`;
+    }else{
+      eventEl.textContent='🐕 エアレンデルのはるか先、異世界ルートの最奥';
+    }
+  }
+
+  return out;
+};
+
+const v259BaseDrawPortal=drawPortal;
+drawPortal=function(){
+  v259BaseDrawPortal();
+
+  // 既存BHが何らかの上書きで見えなくても、この専用グラフィックを最後に描く。
+  if(S()?.name==='✨ エアレンデル'&&system!==BLACK_HOLE_SYSTEM){
+    v259DrawEarendelBlackHole();
+  }
+
+  v259DrawAltPortal();
+};
+
+/* hidden menu の異世界テストを整理 */
+window.__v259AltJump=(which='flower')=>{
+  const name=which==='dog'?'🐾 犬の夢の星':which==='moon'?'🌝 笑う月の星':'🌸 花の星';
+  const si=v259SystemIndex(name);
+  if(si<0)return false;
+  V259_ALTWORLD.active=false; // 単体確認
+  system=si;stage=0;camera=0;p.x=115;p.vy=0;paused=false;
+  try{stageStart();}catch(e){return false}
+  return true;
+};
+
+window.__v259State=()=>({
+  earendelBH:{
+    seenAt:V259_EAR_BH.seenAt,
+    blackHoleX,
+    blackHoleY,
+    screenX:blackHoleX-camera
+  },
+  altworld:{
+    active:V259_ALTWORLD.active,
+    index:v259CurrentAltIndex(),
+    current:systems[system]?.name||'',
+    route:V259_ALTWORLD.route.map(x=>({...x}))
+  }
+});
+/* === /v259 === */
 
 
 })();
@@ -22186,18 +22925,19 @@ window.__v257State=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v257</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v259</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
-    <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部へ<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">直接移動 → ブラックホール内部へ</small></button>
+    <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
     <div id="v257Stage2Quick" style="margin:0 14px 12px;padding:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(7,9,20,.74)">
       <div style="margin-bottom:8px;color:#d7e8ff;font:1000 10px/1 system-ui;letter-spacing:.04em">STAGE 2｜全ルート確認</div>
       <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px">
         <button type="button" data-v257-stage2="origin" style="padding:9px 6px;border:1px solid rgba(255,226,110,.28);border-radius:10px;background:rgba(70,57,18,.58);color:#fff;font:900 9px/1.2 system-ui">💥 宇宙の始まり</button>
         <button type="button" data-v257-stage2="end" style="padding:9px 6px;border:1px solid rgba(255,110,150,.28);border-radius:10px;background:rgba(65,20,38,.58);color:#fff;font:900 9px/1.2 system-ui">🌑 宇宙の終わり</button>
         <button type="button" data-v257-stage2="home" style="padding:9px 6px;border:1px solid rgba(150,235,255,.28);border-radius:10px;background:rgba(18,50,65,.58);color:#fff;font:900 9px/1.2 system-ui">🏠 地球へ帰る</button>
-        <button type="button" data-v257-stage2="flower" style="padding:9px 6px;border:1px solid rgba(231,150,255,.28);border-radius:10px;background:rgba(60,27,70,.58);color:#fff;font:900 9px/1.2 system-ui">🌸 異世界・花</button>
-        <button type="button" data-v257-stage2="dog" style="grid-column:1/-1;padding:9px 6px;border:1px solid rgba(255,188,226,.28);border-radius:10px;background:rgba(71,31,61,.58);color:#fff;font:900 9px/1.2 system-ui">🐾 異世界・犬</button>
+        <button type="button" data-v257-stage2="flower" style="padding:9px 6px;border:1px solid rgba(231,150,255,.28);border-radius:10px;background:rgba(60,27,70,.58);color:#fff;font:900 9px/1.2 system-ui">🌸 異世界ルート<br><small>花→月→犬</small></button>
+        <button type="button" data-v257-stage2="moon" style="padding:9px 6px;border:1px solid rgba(255,235,155,.28);border-radius:10px;background:rgba(63,56,25,.58);color:#fff;font:900 9px/1.2 system-ui">🌝 笑う月<br><small>単体テスト</small></button>
+        <button type="button" data-v257-stage2="dog" style="grid-column:1/-1;padding:9px 6px;border:1px solid rgba(255,188,226,.28);border-radius:10px;background:rgba(71,31,61,.58);color:#fff;font:900 9px/1.2 system-ui">🐾 犬の夢の星<br><small>単体テスト</small></button>
       </div>
     </div>
     <input id="v150JumpSearch" type="search" autocomplete="off" placeholder="検索：月 / アルゴル / ビッグバン / 氷河期…">
@@ -22263,7 +23003,7 @@ window.__v257State=()=>({
       '地球誕生','原始地球','冥王代','太古代','原生代','古生代','中生代','新生代',
       '生命','海洋','大気','酸素','全球凍結','恐竜','カンブリア','地球形成'
     ];
-    const SPECIAL_NAMES=new Set(['🦋 モスラ','🦖 ゴジラ','🐾 犬の星','⚫ ブラックホール']);
+    const SPECIAL_NAMES=new Set(['🦋 モスラ','🦖 ゴジラ','🐾 犬の夢の星','⚫ ブラックホール']);
 
     function categoryFor(sys){
       const name=cleanName(sys.name);
@@ -22420,8 +23160,9 @@ window.__v257State=()=>({
   document.querySelectorAll('[data-v257-stage2]').forEach(b=>{
     b.addEventListener('click',()=>{
       const raw=b.dataset.v257Stage2||'';
-      if(raw==='flower')window.__v257Stage2Jump?.('unknown','flower');
-      else if(raw==='dog')window.__v257Stage2Jump?.('unknown','dog');
+      if(raw==='flower')window.__v257Stage2Jump?.('unknown');
+      else if(raw==='moon')window.__v259AltJump?.('moon');
+      else if(raw==='dog')window.__v259AltJump?.('dog');
       else window.__v257Stage2Jump?.(raw);
       close(false);
     });
@@ -22657,11 +23398,11 @@ window.__v257State=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v257';
+  window.INUBOSHI_GAME_VERSION='v259';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v257<small>BH WALK → QUIET WHITE HOLE → STAGE 2 / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v259<small>VISIBLE EARENDEL BH + FICTIONAL FAR-WORLD CHAIN / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
