@@ -1686,6 +1686,60 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v274HudSpacingAndRecipeRestyle">
+/* v274: 左上に呼吸をつくる */
+#hud{
+  gap:10px!important;
+}
+#hud #v263DistanceMap{
+  margin-bottom:1px!important;
+}
+#hud .stack{
+  margin:0!important;
+}
+#hud #mission,
+#hud #event{
+  margin:0!important;
+}
+@media(max-width:520px){
+  #hud{
+    gap:8px!important;
+  }
+}
+
+/* v274: 「この星はどんな所？」をカード内で目立つ別色ボタンに */
+#v270InlineRecipeBtn{
+  background:linear-gradient(135deg, rgba(28,96,145,.97), rgba(71,48,153,.95))!important;
+  border:1.6px solid rgba(166,241,255,.95)!important;
+  box-shadow:0 0 14px rgba(85,217,255,.26)!important;
+  color:#ffffff!important;
+  min-height:36px!important;
+}
+#v270InlineRecipeBtn:hover,
+#v270InlineRecipeBtn:active{
+  transform:translateY(0)!important;
+  filter:brightness(1.04)!important;
+}
+#v270InlineRecipeBtn > span:first-child{
+  font:900 9.2px/1.2 system-ui!important;
+  letter-spacing:.02em!important;
+}
+#v270InlineRecipeBtn .plus{
+  color:#ffe58a!important;
+  font-size:15px!important;
+  text-shadow:0 0 10px rgba(255,234,151,.25)!important;
+}
+@media(max-width:520px){
+  #v270InlineRecipeBtn{
+    min-height:34px!important;
+  }
+  #v270InlineRecipeBtn > span:first-child{
+    font-size:8.8px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -16864,15 +16918,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v273';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v273</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v274';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v274</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v273</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v274</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17427,7 +17481,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v273';
+window.INUBOSHI_GAME_VERSION='v274';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -21924,8 +21978,8 @@ function v270EnsureInlineRecipeButton(){
     btn=document.createElement('button');
     btn.id='v270InlineRecipeBtn';
     btn.type='button';
-    btn.setAttribute('aria-label','この星のデータを見る');
-    btn.innerHTML='<span>📘 この星のデータを見る</span><span class="plus">＋</span>';
+    btn.setAttribute('aria-label','この星はどんな所？');
+    btn.innerHTML='<span>この星はどんな所？</span><span class="plus">＋</span>';
     btn.addEventListener('click',e=>{
       e.preventDefault();
       e.stopPropagation();
@@ -22008,6 +22062,16 @@ window.__v273HudFlow=()=>({
   recipeText:document.getElementById('v270InlineRecipeBtn')?.textContent||''
 });
 /* === /v273 === */
+
+
+/* === v274: HUD SPACING + RECIPE BUTTON RESTYLE DEBUG === */
+window.__v274UiState=()=>({
+  hudGap:getComputedStyle(document.getElementById('hud')).gap,
+  recipeText:document.getElementById('v270InlineRecipeBtn')?.textContent || '',
+  recipeBg:getComputedStyle(document.getElementById('v270InlineRecipeBtn')).backgroundImage,
+  recipeBorder:getComputedStyle(document.getElementById('v270InlineRecipeBtn')).borderTopColor
+});
+/* === /v274 === */
 
 
 })();
@@ -25035,7 +25099,7 @@ window.__v273HudFlow=()=>({
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v273</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v274</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -25436,7 +25500,7 @@ window.__v273HudFlow=()=>({
 </div>
 
 
-<button id="v162RecipeBtn" type="button" aria-label="この星のデータを見る">📘 この星のデータを見る ＋</button>
+<button id="v162RecipeBtn" type="button" aria-label="この星はどんな所？">この星はどんな所？ ＋</button>
 
 <div id="v162RecipePeek" aria-hidden="true"></div>
 
@@ -25506,11 +25570,11 @@ window.__v273HudFlow=()=>({
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v273';
+  window.INUBOSHI_GAME_VERSION='v274';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v273<small>REAL FLOW HUD STACK + RECIPE COPY CLEANUP / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v274<small>HUD SPACING + RECIPE BUTTON RESTYLE / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
