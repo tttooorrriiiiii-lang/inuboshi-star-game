@@ -17281,15 +17281,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v284';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v284</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v285';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v285</b><br>帰還ルート・地球史・未来の地球・隠し星・全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v284</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v285</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -17844,7 +17844,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v284';
+window.INUBOSHI_GAME_VERSION='v285';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -23054,6 +23054,184 @@ window.__v284WindStars=()=>['🔵 海王星','💙 R136a1','✨ S Doradus','💥
 /* === /v284 === */
 
 
+/* === v285: DENSE FAST WIND + NO LABEL + GROUND ROCKS ===
+   - 旧v248の「ふにゃ風」「背景ラベル」「薄い飛び岩/キラキラ」を停止
+   - v251風をさらに本数多め・速度高め・直線中心へ
+   - 地面付近を前から高速で転がる岩を追加
+*/
+v248WindCfg=function(){ return null; };
+v248DrawSlowStellarWind=function(){ /* disabled by v285 */ };
+
+function v285IsWindStage(){
+  return !!v251WindCfg(S()?.name);
+}
+
+v251DrawWindOverlay=function(){
+  const cfg=v251WindCfg(S()?.name);
+  if(!cfg)return;
+
+  const gy=groundY();
+  const now=performance.now();
+  const t=now/1000;
+
+  ctx.save();
+
+  // 1) 画面上〜犬の高さまで、ひたすら直線の風を大量に走らせる
+  for(let i=0;i<56;i++){
+    const band=i/55;
+    const y=34 + band*(Math.max(110, gy-42)) + Math.sin(t*1.4+i*0.37)*(1.2+cfg.strength*0.8);
+    const speed=420 + cfg.strength*320 + (i%6)*30;
+    const cycle=W+1500;
+    const head=((i*97 - t*speed)%cycle + cycle)%cycle - 760;
+    const len=150 + (i%7)*28 + cfg.strength*170;
+
+    ctx.globalAlpha=0.085 + (i%5)*0.016;
+    ctx.strokeStyle=cfg.line;
+    ctx.lineWidth=1.0 + (i%4)*0.36;
+    ctx.beginPath();
+    ctx.moveTo(head+len,y);
+    ctx.lineTo(head,y);
+    ctx.stroke();
+  }
+
+  // 2) 短い高速 streak を増やしてスピード感を底上げ
+  for(let i=0;i<110;i++){
+    const y=26 + (i*11 % Math.max(120, gy-20));
+    const speed=610 + cfg.strength*360 + (i%9)*32;
+    const cycle=W+980;
+    const head=((i*43 - t*speed)%cycle + cycle)%cycle - 340;
+    const len=34 + (i%6)*13 + cfg.strength*34;
+
+    ctx.globalAlpha=0.028 + (i%4)*0.010;
+    ctx.strokeStyle=i%4===0 ? '#ffffff' : cfg.line;
+    ctx.lineWidth=i%5===0 ? 0.95 : 0.72;
+    ctx.beginPath();
+    ctx.moveTo(head+len,y);
+    ctx.lineTo(head,y);
+    ctx.stroke();
+  }
+
+  // 3) 地面近くの低い風帯を厚めに
+  for(let i=0;i<18;i++){
+    const y=gy-128+i*9+Math.sin(t*1.6+i*0.5)*1.8;
+    const speed=500 + cfg.strength*320 + i*10;
+    const cycle=W+760;
+    const head=((i*79 - t*speed)%cycle + cycle)%cycle - 260;
+    const len=120 + (i%5)*22 + cfg.strength*78;
+
+    ctx.globalAlpha=0.072 + (i%4)*0.014;
+    ctx.strokeStyle=cfg.line;
+    ctx.lineWidth=1.25;
+    ctx.beginPath();
+    ctx.moveTo(head+len,y);
+    ctx.lineTo(head,y);
+    ctx.stroke();
+  }
+
+  // 4) 画面手前の極薄ライン
+  for(let i=0;i<32;i++){
+    const y=gy-154 + (i%16)*7;
+    const speed=760 + cfg.strength*420 + i*14;
+    const cycle=W+600;
+    const head=((i*57 - t*speed)%cycle + cycle)%cycle - 180;
+    const len=56 + (i%5)*12;
+
+    ctx.globalAlpha=0.018 + (i%3)*0.008;
+    ctx.strokeStyle='#ffffff';
+    ctx.lineWidth=0.9;
+    ctx.beginPath();
+    ctx.moveTo(head+len,y);
+    ctx.lineTo(head,y);
+    ctx.stroke();
+  }
+
+  // 背景説明テキストは描かない
+  ctx.restore();
+};
+
+function v285SpawnGroundRock(now){
+  const s=S();
+  if(!s || !v285IsWindStage()) return;
+  if(now < (window.__v285NextRockAt||0)) return;
+
+  const gy=groundY();
+  const strong = (v251WindCfg(s.name)?.strength||0.8);
+  hazards.push({
+    x:p.x+W+90+Math.random()*150,
+    y:gy-44-(Math.random()*6),
+    w:40,h:40,
+    got:false,
+    symbol:'🪨',
+    windRoll:true,
+    spin:Math.random()*Math.PI*2,
+    vx:-(3.6 + strong*2.7 + Math.random()*1.3),
+    vy:0,
+    bob:Math.random()*Math.PI*2
+  });
+  window.__v285NextRockAt = now + 900 + Math.random()*900;
+}
+
+function v285MoveGroundRocks(now,dt){
+  if(!hazards || !hazards.length) return;
+  const gy=groundY();
+  for(const h of hazards){
+    if(!h || h.got || !h.windRoll) continue;
+    h.x += (h.vx||-4.8)*dt;
+    h.spin = (h.spin||0) + 0.25*dt;
+    h.y = gy-42 + Math.sin((now/90)+(h.bob||0))*2.2;
+    if(!big && rectHit(playerRect(),{x:h.x,y:h.y,w:h.w,h:h.h})) hitHazard(h);
+  }
+  hazards = hazards.filter(h => !h.windRoll || (h.x > p.x-260 && !h.got));
+}
+
+const v285PrevDrawHazard = drawHazard;
+drawHazard=function(h){
+  if(h && h.windRoll){
+    const sx=h.x-camera;
+    if(sx<-110 || sx>W+110 || h.got) return;
+    ctx.save();
+    ctx.translate(sx+h.w/2, h.y+h.h/2);
+    ctx.rotate(h.spin||0);
+    ctx.globalAlpha=.96;
+    ctx.shadowColor='#dccbb4';
+    ctx.shadowBlur=10;
+    ctx.font='38px system-ui';
+    ctx.fillText('🪨',-19,15);
+
+    // 後ろに細い地面スピード線
+    ctx.globalAlpha=.12;
+    ctx.strokeStyle='#efe8d8';
+    ctx.lineWidth=1.2;
+    for(let i=0;i<3;i++){
+      const yy=-6+i*6;
+      ctx.beginPath();
+      ctx.moveTo(18,yy);
+      ctx.lineTo(78+i*12,yy);
+      ctx.stroke();
+    }
+    ctx.restore();
+    return;
+  }
+  v285PrevDrawHazard(h);
+};
+
+const v285BaseUpdate = update;
+update=function(now,dt){
+  const out=v285BaseUpdate(now,dt);
+  try{v285SpawnGroundRock(now)}catch(e){console.error('[v285 spawn rock]',e)}
+  try{v285MoveGroundRocks(now,dt)}catch(e){console.error('[v285 move rock]',e)}
+  return out;
+};
+
+window.__v285WindState=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  windy:v285IsWindStage(),
+  windStageName:S()?.name||'',
+  rockCount:hazards.filter(h=>h.windRoll).length
+});
+/* === /v285 === */
+
+
 })();
 </script>
 <style id="v65-earth-radio-contact-style">
@@ -26079,7 +26257,7 @@ window.__v284WindStars=()=>['🔵 海王星','💙 R136a1','✨ S Doradus','💥
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v284</span></strong>
+      <strong>🐾 隠しメニュー｜カテゴリから移動 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v285</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール内部（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -26550,11 +26728,11 @@ window.__v284WindStars=()=>['🔵 海王星','💙 R136a1','✨ S Doradus','💥
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v284';
+  window.INUBOSHI_GAME_VERSION='v285';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v284<small>NEPTUNE WIND + STRONGER HORIZONTAL STORM / 2026-09-06</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v285<small>DENSE FAST WIND + NO LABEL + GROUND ROCKS / 2026-09-06</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
