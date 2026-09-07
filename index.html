@@ -23866,7 +23866,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v306';
+window.INUBOSHI_GAME_VERSION='v307';
 
 /* v304: v168のレシピモジュールから、完成処理が使う参照を正式に受け取る。 */
 const v304RecipeInternals=window.__v304RecipeInternals;
@@ -24340,7 +24340,9 @@ function v295EnsureRecipeButton(){
     if(panel){panel.classList.add('on');panel.setAttribute('aria-hidden','false');}
     try{renderContextRecipe()}catch(err){console.error('[v304 recipe render]',err)}
     /* v306: v162の古いMutationObserverが0ms後に旧レシピを描き直すため、最後にもう一度現在版を描画して勝たせる。 */
-    setTimeout(()=>{try{renderContextRecipe()}catch(err){console.error('[v306 recipe final render]',err)}},40);
+    [40,120,260].forEach(delay=>setTimeout(()=>{
+      try{renderContextRecipe()}catch(err){console.error('[v307 recipe final render]',err)}
+    },delay));
   };
   if(btn.parentElement!==astroInfo)astroInfo.appendChild(btn);
 }
@@ -24610,7 +24612,7 @@ window.__v300Audit=()=>({
 /* === /v300 === */
 
 /* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
-window.INUBOSHI_GAME_VERSION='v306';
+window.INUBOSHI_GAME_VERSION='v307';
 
 function v302EarthDetailHTML(future=false){
   const sys=systems[system]||{},st=S()||{};
@@ -24901,7 +24903,7 @@ v263DistanceForCurrent=function(){
     : V305_CORE.v263DistanceForCurrent();
 };
 
-window.INUBOSHI_GAME_VERSION='v306';
+window.INUBOSHI_GAME_VERSION='v307';
 v305NormalizeWorld();v305NormalizeUi();
 
 window.__v305Audit={
@@ -24920,7 +24922,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 /* === /v293 === */
 
 /* === v306: ROUTE CLEANUP / BONE SPREAD / RECIPE PHOTO / ROCK DAMAGE === */
-window.INUBOSHI_GAME_VERSION='v306';
+window.INUBOSHI_GAME_VERSION='v307';
 
 const V306_FLOW={
   moving:false,
@@ -24950,18 +24952,63 @@ function v306BonePlayableEnd(){
 function v306SpreadBones(){
   const bones=items.filter(it=>it?.food&&!it?.got);
   if(!bones.length)return;
+
   const start=180,end=Math.max(680,v306BonePlayableEnd()),span=Math.max(500,end-start);
   const gy=groundY();
-  const lanes=bones.length>=56?5:bones.length>=36?4:3;
-  const cols=Math.max(1,Math.ceil(bones.length/lanes));
-  const colGap=cols<=1?span:span/(cols-1);
+  const name=S()?.name||'';
+
+  /* stageごとに見た目はランダム、リロードでは暴れない seeded random */
+  let seed=2166136261;
+  const seedText=`${system}:${stage}:${name}:${bones.length}`;
+  for(let i=0;i<seedText.length;i++){
+    seed^=seedText.charCodeAt(i);
+    seed=Math.imul(seed,16777619)>>>0;
+  }
+  const rnd=()=>{
+    seed=(seed+0x6D2B79F5)>>>0;
+    let t=seed;
+    t=Math.imul(t^(t>>>15),t|1);
+    t^=t+Math.imul(t^(t>>>7),t|61);
+    return ((t^(t>>>14))>>>0)/4294967296;
+  };
+
+  const placed=[];
+  const minGap=bones.length>=56?54:bones.length>=36?62:70;
+
   bones.forEach((it,i)=>{
-    const col=Math.floor(i/lanes),lane=i%lanes;
-    /* 同じ縦列に固めず、各レーンを左右にもずらして散らす。 */
-    const laneOffset=(lane-(lanes-1)/2)*Math.min(34,colGap*.14);
-    const jitter=((i*37+system*19+stage*11)%35)-17;
-    it.x=Math.max(start,Math.min(end,start+col*colGap+laneOffset+jitter));
-    it.y=gy-40-lane*43-((col+lane)%2)*7;
+    let chosen=null;
+
+    /* 斜め列・水平列にならないよう、x/yとも完全に連続値で候補を作る */
+    for(let tries=0;tries<150;tries++){
+      const x=start+rnd()*span;
+
+      /* 地面近くを少し多めにしつつ、空中にも自然に散らす */
+      const lift=34+Math.pow(rnd(),0.78)*155;
+      const y=gy-lift;
+
+      /* 入口・出口の真上だけは避ける */
+      const nearPortal=(systems[system]?.name==='🌌 宇宙の最果て' && Math.abs(x-V306_FLOW.edgePortalX)<105) ||
+                       (systems[system]?.name==='🌸 花の星' && V306_FLOW.fromBonus && Math.abs(x-V306_FLOW.flowerPortalX)<105);
+      if(nearPortal)continue;
+
+      const ok=placed.every(p0=>{
+        const dx=x-p0.x,dy=(y-p0.y)*1.15;
+        return dx*dx+dy*dy>minGap*minGap;
+      });
+      if(ok){chosen={x,y};break;}
+    }
+
+    if(!chosen){
+      /* 高密度時の最後の保険も、規則列にはせずランダム */
+      chosen={
+        x:start+rnd()*span,
+        y:gy-(36+rnd()*150)
+      };
+    }
+
+    placed.push(chosen);
+    it.x=chosen.x;
+    it.y=chosen.y;
     it.r=Math.min(it.r||18,16);
     it.inert=false;
   });
@@ -25034,7 +25081,110 @@ function v306BulbHTML(name){
 function v306MetricCard(label,main,sub,visual=''){
   return `<div class="v229ProfileCard"><div class="v229ProfileLabel">${label}</div>${visual}<strong>${main||'未確定'}</strong>${sub?`<small>${sub}</small>`:''}</div>`;
 }
+
+function v307SagittariusDetailHTML(){
+  const photoSrc='https://cdn.eso.org/images/large/eso2208-eht-mwa.jpg';
+  const fallback=v306PhotoFallbackData('いて座A*');
+
+  return `<section class="v175RecipeDetail v307SagittariusDetail">
+    <div class="v175RecipeKicker">🔭 この天体をもっと詳しく</div>
+    <h3>🕳️ いて座A*</h3>
+    <div class="v175RecipeMeta">📍 地球から約2.7万光年</div>
+
+    <div class="v191Spotlight">
+      <div class="v191SpotlightTitle">🌀 天の川銀河の中心</div>
+      <div class="v191SpotlightChips">
+        <span>太陽約400万個分</span>
+        <span>超大質量ブラックホール</span>
+      </div>
+      <div class="v191SpotlightText">
+        天の川の中心で星と高温ガスを高速で回らせる巨大ブラックホール。
+        黒い本体ではなく、その周囲の光と「影」が撮影された。
+      </div>
+    </div>
+
+    <div class="v179PhotoCard v307SagPhoto">
+      <div class="v179PhotoLink">
+        <img class="v179PhotoImg"
+             src="${photoSrc}"
+             alt="EHT観測画像｜いて座A*"
+             onerror="this.onerror=null;this.src='${fallback}'"
+             style="display:block;opacity:1">
+      </div>
+      <div class="v179PhotoMeta">
+        <b>📷 EHT観測画像｜いて座A*</b>
+        <span>EHT Collaboration / ESO</span>
+        <small>※中央の暗部はブラックホール本体の「影」</small>
+      </div>
+    </div>
+
+    <div class="v229StarProfile">
+      <div class="v229ProfileCard">
+        <div class="v229ProfileLabel">📏 大きさ</div>
+        <div class="v217SizeViz">
+          <div class="v217SizeCompare">
+            <span class="v217SunRef"></span>
+            <span class="v217SizeOrb" style="--orb:58px"></span>
+          </div>
+          <div class="v217SizeLabels"><span>太陽</span><span>事象の地平面</span></div>
+        </div>
+        <strong>直径 約2,400万km級</strong>
+        <small>観測画像の「影」はさらに大きい</small>
+      </div>
+
+      <div class="v229ProfileCard">
+        <div class="v229ProfileLabel">💡 明るさ</div>
+        ${v306BulbHTML('🕳️ いて座A*')}
+        <strong>本体は光らない</strong>
+        <small>周囲の高温ガスが電波などで輝く</small>
+      </div>
+
+      <div class="v229ProfileCard">
+        <div class="v229ProfileLabel">🌀 回転</div>
+        <div class="v217SpinViz unknown">
+          <div class="v217SpinStage"><span class="v217SpinOrb"></span><b>？</b></div>
+          <div class="v217SpinScale"><span>研究中</span><span>未確定</span><span>高速?</span></div>
+        </div>
+        <strong>詳しい回転は研究中</strong>
+        <small>周囲のガス運動から推定が続く</small>
+      </div>
+    </div>
+
+    <div class="v179SectionLabel">🔭 天体の特徴</div>
+    <p>
+      天の川銀河の中心にある超大質量ブラックホール。質量は太陽の約400万倍。
+      ブラックホール自体は暗いが、周囲の高温ガスが作るリング状の光と、
+      その中央の「影」が電波望遠鏡で撮像された。
+    </p>
+
+    <div class="v179Facts">
+      <div class="v179Fact"><small>種類</small><b>超大質量ブラックホール</b></div>
+      <div class="v179Fact"><small>質量</small><b>太陽の約400万倍</b></div>
+      <div class="v179Fact"><small>距離</small><b>約2.7万光年</b></div>
+      <div class="v179Fact"><small>初画像</small><b>EHT・2022年発表</b></div>
+    </div>
+
+    <div class="v175RecipePoint">
+      <b>💡 ここがポイント</b>
+      <span>
+        天の川の星々は、この巨大天体を含む銀河中心の質量のまわりを公転している。
+        近くのガスは光速に近い速さで動き、見え方が数分単位で変わる。
+      </span>
+    </div>
+
+    <div class="v179NameOrigin">
+      <b>🏷️ 名前の由来</b>
+      <span>
+        いて座方向の強い電波源 Sagittarius A の中でも、
+        特に刺激された状態を示す記号「*（スター）」が付けられた名称。
+        恒星という意味の星印ではない。
+      </span>
+    </div>
+  </section>`;
+}
+
 function v306NewObjectDetailHTML(name){
+  if(name==='🕳️ いて座A*')return v307SagittariusDetailHTML();
   const star=V179_STAR_INFO[name];
   const m=V188_STAR_METRICS[name]||{};
   const sp=V189_STAR_SPIN[name]||{};
@@ -25174,8 +25324,8 @@ function v306DrawPortal(spec){
   ctx.restore();
   ctx.save();ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='1000 9px system-ui';ctx.fillText(`🌀 ${spec.label}`,sx,gy-174);ctx.restore();
 }
-function v306Go(target){
-  if(V306_FLOW.moving||paused)return;
+function v306Go(target,force=false){
+  if(V306_FLOW.moving||(paused&&!force))return;
   let si=-1,ti=0,title='',next='',toastText='';
   if(target==='edge'){
     si=v306SystemIndex('🌌 宇宙の最果て');title='🌌 BONUS STAGE';next='宇宙の最果てへ';toastText='🌌 BONUS STAGE｜宇宙の最果て';V306_FLOW.futureActive=false;V306_FLOW.fromBonus=true;
@@ -25202,8 +25352,8 @@ function v306Go(target){
 V257_STAGE2_META.origin={icon:'🌌',title:'宇宙の最果て',sub:'COSMIC EDGE'};
 V257_STAGE2_META.end={icon:'🌏',title:'未来の地球',sub:'FUTURE EARTH'};
 window.__v257Stage2Jump=(kind)=>{
-  if(kind==='origin'){v306Go('edge');return true;}
-  if(kind==='end'){v306Go('future');return true;}
+  if(kind==='origin'){v306Go('edge',true);return true;}
+  if(kind==='end'){v306Go('future',true);return true;}
   return false;
 };
 function v306TrimBonusMenu(){
@@ -25261,15 +25411,46 @@ v304UpdateGroundRockCollision=function(now){
   if(!v298ShouldDrawGroundRocks())return;
   const key=v304GroundRockStageKey();if(key!==v304RockStageKey)v304ResetGroundRocks();
   if(now<v304RockGraceUntil||now<invincibleUntil||big)return;
-  const gy=groundY(),left=p.x,right=p.x+p.w,bottom=p.y+p.h;if(bottom<gy-30)return;
+
+  const gy=groundY(),left=p.x,right=p.x+p.w,bottom=p.y+p.h;
+  if(bottom<gy-30)return;
+
   for(let i=0;i<V304_GROUND_ROCK_XS.length;i++){
     const rx=V304_GROUND_ROCK_XS[i],rw=34+(i%3)*8;
     if(right>rx-rw*.55&&left<rx+rw*.55){
-      v304RockGraceUntil=now+1100;v304RockHits.add(i);
-      invincibleUntil=now+1050;spillStars(3);if(food>0)spillBones(1);
-      p.vy=-Math.max(9.5,(S()?.jump||15)*.68);p.on=false;jumps=Math.max(1,jumps);p.x=Math.max(0,p.x-22);shake=Math.max(shake,11);
-      wrap.style.boxShadow='inset 0 0 90px rgba(255,120,70,.72)';setTimeout(()=>{if(performance.now()>invincibleUntil-450)wrap.style.boxShadow=''},500);
-      showToast('🪨 イタッ！ 岩ダメージ｜⭐−3 🦴−1',900);syncHUD(true);break;
+      v304RockGraceUntil=now+1100;
+      v304RockHits.add(i);
+      invincibleUntil=now+1050;
+
+      /* 岩だけは共通 spillStars() を使わない。
+         あれは "STAR LOST / 星が5個こぼれた！" を表示するため。 */
+      const lostStars=Math.min(3,points);
+      points=Math.max(0,points-lostStars);
+      starTotal=Math.max(0,starTotal-lostStars);
+      for(let k=0;k<lostStars;k++){
+        fallingStars.push({
+          x:p.x+20+(Math.random()-.5)*28,
+          y:p.y+18,
+          vx:-3+Math.random()*6,
+          vy:-6-Math.random()*4,
+          life:64+Math.random()*24
+        });
+      }
+      if(food>0){
+        food=Math.max(0,food-1);
+        try{spillBones(1)}catch(e){}
+      }
+
+      p.vy=-Math.max(9.5,(S()?.jump||15)*.68);
+      p.on=false;
+      jumps=Math.max(1,jumps);
+      p.x=Math.max(0,p.x-22);
+      shake=Math.max(shake,11);
+
+      /* 文字は「イタッ！」だけ。星がこぼれた説明は出さない。 */
+      showToast('🪨 イタッ！',650);
+      syncHUD(true);
+      break;
     }
   }
 };
@@ -25328,7 +25509,7 @@ drawPlayer=function(){
 function v306FinalUi(){v306ReorderCounters();v306SyncFutureRadio();v306TrimBonusMenu();}
 requestAnimationFrame(v306FinalUi);setTimeout(v306FinalUi,250);
 
-window.INUBOSHI_GAME_VERSION='v306';
+window.INUBOSHI_GAME_VERSION='v307';
 window.__v306Audit={
   state:()=>({version:window.INUBOSHI_GAME_VERSION,stage:S()?.name,system:systems[system]?.name,bones:items.filter(x=>x?.food&&!x.got).length,bonus:{future:V306_FLOW.futureActive,fromBonus:V306_FLOW.fromBonus},portal:v306PortalSpec(),radioHidden:systems[system]?.futureEra?getComputedStyle(document.getElementById('v63RadioBadge')).display:'n/a'}),
   jump:name=>window.__v304Audit.jump(name),
@@ -28362,7 +28543,7 @@ window.__v306Audit={
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v306</span></strong>
+      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v307</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -28864,11 +29045,11 @@ window.__v306Audit={
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v306';
+  window.INUBOSHI_GAME_VERSION='v307';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v306<small>BONUS ROUTE / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v307<small>RANDOM BONES / BONUS FIX / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
@@ -28924,6 +29105,44 @@ document.addEventListener('click',function(e){
 .v299SpinUnknown .v217SpinStage{position:relative}
 .v299SpinUnknown .v217SpinStage>b{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:1000 19px/1 system-ui}
 </style>
+
+
+<script id="v307-final-guard">
+(()=>{
+  const isSag=()=>{
+    const a=document.getElementById('v263DistStage')?.textContent||'';
+    const b=document.getElementById('astroInfo')?.textContent||'';
+    return (a+b).includes('いて座A');
+  };
+
+  function reinforceSag(){
+    if(!isSag())return;
+    const panel=document.getElementById('v162RecipePanel');
+    if(!panel?.classList.contains('on'))return;
+    const body=panel.querySelector('.v162RecipeBody');
+    if(!body)return;
+
+    /* v307本体側が描いた詳細が旧Observerに消された場合だけ、
+       再度現在のボタンをクリックして最終描画を走らせる。 */
+    if(!body.querySelector('.v307SagittariusDetail')){
+      const btn=document.getElementById('v270InlineRecipeBtn');
+      if(btn && !btn.dataset.v307Retrying){
+        btn.dataset.v307Retrying='1';
+        setTimeout(()=>{
+          try{btn.click()}catch(e){}
+          delete btn.dataset.v307Retrying;
+        },40);
+      }
+    }
+  }
+
+  const panel=document.getElementById('v162RecipePanel');
+  if(panel){
+    new MutationObserver(()=>setTimeout(reinforceSag,300))
+      .observe(panel,{attributes:true,attributeFilter:['class']});
+  }
+})();
+</script>
 
 </body>
 </html>
