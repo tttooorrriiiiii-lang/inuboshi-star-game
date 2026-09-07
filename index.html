@@ -28074,5 +28074,133 @@ document.addEventListener('click',function(e){
 .v299SpinUnknown .v217SpinStage>b{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:1000 19px/1 system-ui}
 </style>
 
+
+<!-- === v300 EARTH RECIPE BUTTON HARD FIX ===
+  最初の地球だけ、astroInfo.innerHTML の再描画で消えない独立ボタンを使用。
+  クリック時は既存の v270InlineRecipeBtn をプロキシして、既存レシピ内容をそのまま開く。
+-->
+<style id="v300EarthRecipeHardFixStyle">
+#v300EarthRecipeBtnHard{
+  display:none;
+  position:absolute;
+  z-index:24;
+  right:8px;
+  width:min(47%,252px);
+  min-height:36px;
+  box-sizing:border-box;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 11px;
+  border:1.6px solid rgba(166,241,255,.95);
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(28,96,145,.97),rgba(71,48,153,.95));
+  color:#fff;
+  box-shadow:0 0 14px rgba(85,217,255,.26),0 8px 26px rgba(0,0,0,.28);
+  font:900 9.2px/1.2 system-ui;
+  letter-spacing:.02em;
+  text-align:left;
+  cursor:pointer;
+  pointer-events:auto;
+}
+#v300EarthRecipeBtnHard.on{display:flex!important}
+#v300EarthRecipeBtnHard .plus{
+  flex:0 0 auto;
+  color:#ffe58a;
+  font-size:15px;
+  line-height:1;
+  font-weight:1000;
+  text-shadow:0 0 10px rgba(255,234,151,.25);
+}
+#v300EarthRecipeBtnHard:active{filter:brightness(1.08)}
+@media(max-width:520px){
+  #v300EarthRecipeBtnHard{
+    right:5px;
+    width:47%;
+    max-width:252px;
+    min-height:34px;
+    padding:7px 9px;
+    font-size:8.8px;
+  }
+}
+</style>
+
+<button id="v300EarthRecipeBtnHard" type="button" aria-label="この星はどんなところ？">
+  <span>この星はどんなところ？</span><span class="plus">＋</span>
+</button>
+
+<script id="v300EarthRecipeHardFixScript">
+(()=>{
+  const hardBtn=document.getElementById('v300EarthRecipeBtnHard');
+  const astro=document.getElementById('astroInfo');
+  if(!hardBtn||!astro)return;
+
+  function isFirstEarth(){
+    try{
+      const a=window.__v300Audit?.();
+      return a?.stage==='🌍 地球' &&
+        (document.getElementById('v263DistNow')?.textContent||'').includes('0');
+    }catch(e){
+      return false;
+    }
+  }
+
+  function positionHardButton(){
+    const top=(astro.offsetTop||8)+(astro.offsetHeight||0)+8;
+    hardBtn.style.top=Math.min(top, innerHeight-122)+'px';
+  }
+
+  function syncEarthButton(){
+    const on=isFirstEarth();
+    hardBtn.classList.toggle('on',on);
+    hardBtn.setAttribute('aria-hidden',on?'false':'true');
+
+    const inline=document.getElementById('v270InlineRecipeBtn');
+    if(inline){
+      if(on){
+        inline.style.setProperty('display','none','important');
+      }else{
+        inline.style.removeProperty('display');
+      }
+    }
+    if(on)positionHardButton();
+  }
+
+  hardBtn.addEventListener('click',e=>{
+    e.preventDefault();
+    e.stopPropagation();
+
+    // 既存の文脈別レシピ処理をそのまま使う。
+    const inline=document.getElementById('v270InlineRecipeBtn');
+    if(inline){
+      inline.click();
+      return;
+    }
+    const legacy=document.getElementById('v162RecipeBtn');
+    if(legacy){
+      legacy.click();
+      return;
+    }
+    try{ window.__v163OpenCosmicRecipe?.(); }catch(err){
+      console.error('[v300 Earth recipe hard fix]',err);
+    }
+  });
+
+  if(window.ResizeObserver){
+    new ResizeObserver(positionHardButton).observe(astro);
+  }
+  addEventListener('resize',positionHardButton);
+
+  // 古いHUD処理が毎フレーム astroInfo を作り直しても、
+  // 独立ボタン側は消えない。状態だけ軽く追従させる。
+  const timer=setInterval(syncEarthButton,120);
+  addEventListener('beforeunload',()=>clearInterval(timer),{once:true});
+
+  requestAnimationFrame(syncEarthButton);
+  setTimeout(syncEarthButton,350);
+})();
+</script>
+<!-- === /v300 EARTH RECIPE BUTTON HARD FIX === -->
+
 </body>
 </html>
