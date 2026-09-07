@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v306</title>
+<title>犬星くん GALAXY TOUR v309</title>
 <!-- v204: core-scope runtime fix / Earendel HUD+radio / future city / universal 3 buttons / top-left material counts -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -2243,6 +2243,19 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
   .v308FeatureGrid{grid-template-columns:1fr}
 }
 </style>
+
+
+<!-- v309 DETAIL ORDER:
+1 写真
+2 一言
+3 特徴
+4 大きさ
+5 💡明るさ
+6 回転
+7 距離
+8 名前の由来
+9 ここがすごい
+-->
 
 </head>
 <body>
@@ -23938,7 +23951,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v308';
+window.INUBOSHI_GAME_VERSION='v309';
 
 /* v304: v168のレシピモジュールから、完成処理が使う参照を正式に受け取る。 */
 const v304RecipeInternals=window.__v304RecipeInternals;
@@ -24684,7 +24697,7 @@ window.__v300Audit=()=>({
 /* === /v300 === */
 
 /* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
-window.INUBOSHI_GAME_VERSION='v308';
+window.INUBOSHI_GAME_VERSION='v309';
 
 function v302EarthDetailHTML(future=false){
   const sys=systems[system]||{},st=S()||{};
@@ -24975,7 +24988,7 @@ v263DistanceForCurrent=function(){
     : V305_CORE.v263DistanceForCurrent();
 };
 
-window.INUBOSHI_GAME_VERSION='v308';
+window.INUBOSHI_GAME_VERSION='v309';
 v305NormalizeWorld();v305NormalizeUi();
 
 window.__v305Audit={
@@ -24994,7 +25007,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 /* === /v293 === */
 
 /* === v306: ROUTE CLEANUP / BONE SPREAD / RECIPE PHOTO / ROCK DAMAGE === */
-window.INUBOSHI_GAME_VERSION='v308';
+window.INUBOSHI_GAME_VERSION='v309';
 
 const V306_FLOW={
   moving:false,
@@ -25581,7 +25594,7 @@ drawPlayer=function(){
 function v306FinalUi(){v306ReorderCounters();v306SyncFutureRadio();v306TrimBonusMenu();}
 requestAnimationFrame(v306FinalUi);setTimeout(v306FinalUi,250);
 
-window.INUBOSHI_GAME_VERSION='v308';
+window.INUBOSHI_GAME_VERSION='v309';
 window.__v306Audit={
   state:()=>({version:window.INUBOSHI_GAME_VERSION,stage:S()?.name,system:systems[system]?.name,bones:items.filter(x=>x?.food&&!x.got).length,bonus:{future:V306_FLOW.futureActive,fromBonus:V306_FLOW.fromBonus},portal:v306PortalSpec(),radioHidden:systems[system]?.futureEra?getComputedStyle(document.getElementById('v63RadioBadge')).display:'n/a'}),
   jump:name=>window.__v304Audit.jump(name),
@@ -25589,7 +25602,7 @@ window.__v306Audit={
 };
 
 /* === v308: COMPLETE STANDARD DETAIL / FIXED PHOTOS / ORPHAN CLEANUP === */
-window.INUBOSHI_GAME_VERSION='v308';
+window.INUBOSHI_GAME_VERSION='v309';
 
 /* ----------------------------------------------------------
    1) REMOVE ORPHAN DETAIL DATA
@@ -26198,6 +26211,16 @@ renderContextRecipe=function(){
   sub.textContent='写真 → 一言 → 特徴 → 大きさ → 明るさ → 回転 → 距離 → 名前の由来 → ここがすごい';
   bodyEl.innerHTML=v308DetailHTML(model);
 };
+
+/* v309: the detail panel DOM is declared later in the HTML.
+   Expose the common renderer so a true end-of-body guard can repaint
+   after all legacy recipe scripts have finished. */
+window.__v309RenderUnifiedDetail=()=>{
+  try{ renderContextRecipe(); return true; }
+  catch(err){ console.error('[v309 unified detail]',err); return false; }
+};
+window.__v309DetailOrder='写真 → 一言 → 特徴 → 大きさ → 💡明るさ → 回転 → 距離 → 名前の由来 → ここがすごい';
+
 
 /* Old observers can rewrite the panel after opening. Repaint v308 last. */
 function v308RepaintOpenPanel(){
@@ -29832,11 +29855,11 @@ window.__v308Audit=()=>{
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v308';
+  window.INUBOSHI_GAME_VERSION='v309';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v308<small>STANDARD DETAILS / FIXED PHOTOS / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v309<small>DETAIL ORDER HARD FIX / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
@@ -29894,40 +29917,79 @@ document.addEventListener('click',function(e){
 </style>
 
 
-<script id="v307-final-guard">
+
+
+<script id="v309-detail-order-final-guard">
 (()=>{
-  const isSag=()=>{
-    const a=document.getElementById('v263DistStage')?.textContent||'';
-    const b=document.getElementById('astroInfo')?.textContent||'';
-    return (a+b).includes('いて座A');
-  };
+  const ORDER='写真 → 一言 → 特徴 → 大きさ → 💡明るさ → 回転 → 距離 → 名前の由来 → ここがすごい';
+  let repainting=false;
 
-  function reinforceSag(){
-    if(!isSag())return;
-    const panel=document.getElementById('v162RecipePanel');
-    if(!panel?.classList.contains('on'))return;
-    const body=panel.querySelector('.v162RecipeBody');
-    if(!body)return;
+  function panel(){
+    return document.getElementById('v162RecipePanel');
+  }
 
-    /* v307本体側が描いた詳細が旧Observerに消された場合だけ、
-       再度現在のボタンをクリックして最終描画を走らせる。 */
-    if(!body.querySelector('.v307SagittariusDetail')){
-      const btn=document.getElementById('v270InlineRecipeBtn');
-      if(btn && !btn.dataset.v307Retrying){
-        btn.dataset.v307Retrying='1';
-        setTimeout(()=>{
-          try{btn.click()}catch(e){}
-          delete btn.dataset.v307Retrying;
-        },40);
-      }
+  function isOpen(p){
+    if(!p)return false;
+    return p.classList.contains('on') || p.getAttribute('aria-hidden')==='false';
+  }
+
+  function needsUnifiedRender(){
+    const p=panel();
+    if(!isOpen(p))return false;
+    const body=p.querySelector('.v162RecipeBody');
+    const sub=p.querySelector('.v162RecipeHead small');
+    if(!body||!sub)return false;
+
+    /* Old recipes have v175/v179/v217/v229 etc. Unified recipe always has v308Detail. */
+    if(!body.querySelector('.v308Detail'))return true;
+
+    /* Also force the visible order label itself. */
+    if((sub.textContent||'').trim()!==ORDER)return true;
+    return false;
+  }
+
+  function repaint(){
+    if(repainting || !needsUnifiedRender())return;
+    if(typeof window.__v309RenderUnifiedDetail!=='function')return;
+
+    repainting=true;
+    try{
+      window.__v309RenderUnifiedDetail();
+
+      const p=panel();
+      const sub=p?.querySelector('.v162RecipeHead small');
+      if(sub)sub.textContent=ORDER;
+    }finally{
+      setTimeout(()=>{repainting=false},25);
     }
   }
 
-  const panel=document.getElementById('v162RecipePanel');
-  if(panel){
-    new MutationObserver(()=>setTimeout(reinforceSag,300))
-      .observe(panel,{attributes:true,attributeFilter:['class']});
+  function repaintBurst(){
+    /* Old handlers/observers rewrite at different timings. Always be last. */
+    [0,40,100,220,420].forEach(ms=>setTimeout(repaint,ms));
   }
+
+  document.addEventListener('click',e=>{
+    const target=e.target?.closest?.(
+      '#v270InlineRecipeBtn,#v162RecipeBtn,[aria-label*="この星"],[aria-label*="どんな"]'
+    );
+    if(target)repaintBurst();
+  },true);
+
+  const p=panel();
+  if(p){
+    new MutationObserver(()=>{
+      if(isOpen(p))setTimeout(repaint,30);
+    }).observe(p,{
+      subtree:true,
+      childList:true,
+      attributes:true,
+      attributeFilter:['class','aria-hidden']
+    });
+  }
+
+  /* Final safety net: only does work if an old renderer replaced the unified panel. */
+  setInterval(repaint,300);
 })();
 </script>
 
