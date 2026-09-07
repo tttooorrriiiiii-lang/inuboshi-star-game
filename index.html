@@ -9230,7 +9230,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const out=v157PrevStageStart();
 
     if(v157IsEra()){
-      items=[];
+      items=items.filter(it=>it?.food&&!it?.got);
       hazards=[];
       aliens=[];
       morphs=[];
@@ -9248,7 +9248,8 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
       try{v99WhiteHoleActive=false;}catch(e){}
       try{v94SatellitePending=false;}catch(e){}
 
-      v157BuildMatter();
+      // v301: 宇宙の始まり編は浮遊する元素・粒子記号を使わず、骨だけにする。
+      v157Matter=[];
       wrap.classList.add('v157EraMode');
     }else{
       v157Matter=[];
@@ -9276,7 +9277,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     if(!v157IsEra())return;
 
     // 後段ラッパーが追加した通常物も毎フレーム除去しておく。
-    items=[];
+    items=items.filter(it=>it?.food&&!it?.got);
     hazards=[];
     aliens=[];
     morphs=[];
@@ -9511,7 +9512,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   // 初期表示が宇宙史だった場合にも確実に構築。
   if(v157IsEra()){
-    v157BuildMatter();
+    v157Matter=[];
     wrap.classList.add('v157EraMode');
   }
 })();
@@ -9619,7 +9620,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const out=prevStageStart();
 
     if(v159IsHyp()){
-      items=[];hazards=[];aliens=[];morphs=[];swarm=[];
+      items=items.filter(it=>it?.food&&!it?.got);hazards=[];aliens=[];morphs=[];swarm=[];
       shootingStars=[];gasClouds=[];secretPickups=[];satellites=[];
       bosses=[];fallingStars=[];boneShots=[];
 
@@ -9654,7 +9655,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     prevUpdate(now,dt);
     if(!v159IsHyp())return;
 
-    items=[];hazards=[];aliens=[];morphs=[];swarm=[];
+    items=items.filter(it=>it?.food&&!it?.got);hazards=[];aliens=[];morphs=[];swarm=[];
     shootingStars=[];gasClouds=[];secretPickups=[];satellites=[];
     bosses=[];fallingStars=[];boneShots=[];
 
@@ -10046,7 +10047,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     const out=v160PrevStageStart();
 
     if(v160IsFrozenEarth()||(v160IsFuture()&&v160FutureStep()>=4)||v160IsEnd()){
-      items=[];hazards=[];aliens=[];morphs=[];swarm=[];
+      items=items.filter(it=>it?.food&&!it?.got);hazards=[];aliens=[];morphs=[];swarm=[];
       shootingStars=[];gasClouds=[];secretPickups=[];satellites=[];
       bosses=[];fallingStars=[];boneShots=[];earthWalkers=[];
 
@@ -16291,7 +16292,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
   function inBirth(){return V170.phase==='earthBirth'&&system===V170.birthSystem;}
 
   function clearNormal(){
-    items=[];hazards=[];aliens=[];morphs=[];swarm=[];
+    items=items.filter(it=>it?.food&&!it?.got);hazards=[];aliens=[];morphs=[];swarm=[];
     shootingStars=[];gasClouds=[];secretPickups=[];satellites=[];
     bosses=[];fallingStars=[];boneShots=[];earthWalkers=[];
   }
@@ -17447,15 +17448,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v300';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v300</b><br>距離順・ステージ順で、全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v301';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v301</b><br>距離順・ステージ順で、全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v300</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v301</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -18017,7 +18018,7 @@ const V215={
   lastCountKey:'',
   lastHudKey:''
 };
-window.INUBOSHI_GAME_VERSION='v300';
+window.INUBOSHI_GAME_VERSION='v301';
 
 const V215_STAR_COPY={
   '☀️ 太陽':'地球を照らしている、いちばん身近な星。太陽系の中心にいる。',
@@ -23727,12 +23728,19 @@ function v289RenderEarthInfo(){
   const type='岩石惑星';
   const desc='液体の海と生命をもち、大気に包まれた太陽系第三惑星';
 
-  astroInfo.innerHTML=
-    `<b>🌍 地球</b>`+
-    `<span class="v277TypeLine">${type}</span>`+
-    `${desc}`+
-    `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span>`+
-    `<span class="distanceHint">${v215GravityLine(st)}</span>`;
+  const title=astroInfo.querySelector(':scope > b')?.textContent||'';
+  const typeNow=astroInfo.querySelector('.v277TypeLine')?.textContent||'';
+  const distanceNow=astroInfo.querySelector('.distValue')?.textContent||'';
+  if(title!=='🌍 地球'||typeNow!==type||distanceNow!=='0 km'){
+    astroInfo.innerHTML=
+      `<b>🌍 地球</b>`+
+      `<span class="v277TypeLine">${type}</span>`+
+      `${desc}`+
+      `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span>`+
+      `<span class="distanceHint">${v215GravityLine(st)}</span>`;
+  }
+  // 地球情報を描き直しても、詳細ボタンを同じ処理内で必ず戻す。
+  if(typeof v270EnsureInlineRecipeButton==='function')v270EnsureInlineRecipeButton();
 }
 
 const v289BaseSyncHUD=syncHUD;
@@ -23830,7 +23838,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v300';
+window.INUBOSHI_GAME_VERSION='v301';
 
 /* 追加天体。既存system番号をずらさないため、独立ステージは末尾へ安全に追加する。 */
 const v293Europa={
@@ -24136,7 +24144,7 @@ window.__v293Audit=()=>({
 window.__v294Audit=window.__v293Audit;
 
 /* === v295: EARTH BUTTON + COMPLETE NEW WORLDS + COSMIC EDGE === */
-window.INUBOSHI_GAME_VERSION='v300';
+window.INUBOSHI_GAME_VERSION='v301';
 const V295_NEW_OBJECTS=new Set(['🧊 エウロパ','🪐 プロキシマ・ケンタウリb','🕳️ いて座A*']);
 
 Object.assign(V238_STAR_ONE_LINE,{
@@ -24258,9 +24266,25 @@ function v295EnsureRecipeButton(){
   const label=sys.futureEra?'この地球はどんなところ？':V295_NEW_OBJECTS.has(name)?'この天体はどんなところ？':'この星はどんなところ？';
   let btn=document.getElementById('v270InlineRecipeBtn');
   if(!btn){btn=document.createElement('button');btn.id='v270InlineRecipeBtn';btn.type='button';}
+  // v270時代の古いclickリスナーは汎用「宇宙レシピ」を再生成する。
+  // ノードを一度だけ複製して古いリスナーを完全に外し、最終ハンドラだけに統一する。
+  if(btn.dataset.v301Bound!=='1'){
+    const clean=btn.cloneNode(true);
+    clean.dataset.v301Bound='1';
+    btn.replaceWith(clean);
+    btn=clean;
+  }
   btn.setAttribute('aria-label',label);
   if(btn.dataset.v299Label!==label){btn.dataset.v299Label=label;btn.innerHTML=`<span>${label}</span><span class="plus">＋</span>`;}
-  btn.onclick=e=>{e.preventDefault();e.stopPropagation();try{renderContextRecipe();openRecipe()}catch(err){console.error('[v295 recipe]',err)}};
+  btn.onclick=e=>{
+    e.preventDefault();e.stopPropagation();
+    try{
+      // openRecipe() は古い汎用パネルを先に生成するため、必ずその後で
+      // 現在の地球・未来地球・追加天体の詳細へ差し替える。
+      openRecipe();
+      renderContextRecipe();
+    }catch(err){console.error('[v301 recipe]',err)}
+  };
   if(btn.parentElement!==astroInfo)astroInfo.appendChild(btn);
 }
 
@@ -24269,11 +24293,15 @@ function v295NormalizeHud(){
   if(sys?.futureEra){
     const f=V215_FUTURE[sys.futureStep||0];
     const key=f?`future-${sys.futureStep}-${f.title}`:'';
-    if(f&&astroInfo.dataset.v299HudKey!==key){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML=`<b>${f.title}</b><br>${f.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${v215GravityLine(st)}</span>`;}
+    const titleNow=astroInfo.querySelector(':scope > b')?.textContent||'';
+    const distanceNow=astroInfo.querySelector('.distValue')?.textContent||'';
+    if(f&&(astroInfo.dataset.v299HudKey!==key||titleNow!==f.title||distanceNow!=='0 km')){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML=`<b>${f.title}</b><br>${f.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${v215GravityLine(st)}</span>`;}
   }
   if(sys?.name==='🌌 宇宙の最果て'){
     const key='cosmic-edge-465';
-    if(astroInfo.dataset.v299HudKey!==key){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML='<b>🌌 宇宙の最果て</b><span class="v277TypeLine">観測可能な宇宙の果て</span>現在の地球から見た、観測できる宇宙の半径<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">465億光年</span></span><span class="distanceHint">🌑 最初は光のない完全な暗闇</span>';}
+    const titleNow=astroInfo.querySelector(':scope > b')?.textContent||'';
+    const distanceNow=astroInfo.querySelector('.distValue')?.textContent||'';
+    if(astroInfo.dataset.v299HudKey!==key||titleNow!=='🌌 宇宙の最果て'||distanceNow!=='465億光年'){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML='<b>🌌 宇宙の最果て</b><span class="v277TypeLine">観測可能な宇宙の果て</span>現在の地球から見た、観測できる宇宙の半径<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">465億光年</span></span><span class="distanceHint">🌑 最初は光のない完全な暗闇</span>';}
   }
   v295EnsureRecipeButton();
 }
@@ -24429,7 +24457,7 @@ window.__v298Audit=()=>({
 
 /* === v300: FINAL STABILITY CONTRACT ===
    後付け処理の順番に左右されず、ステージ開始時と更新後の最終状態を統一する。 */
-window.INUBOSHI_GAME_VERSION='v300';
+window.INUBOSHI_GAME_VERSION='v301';
 
 function v300StabilizeWorld(){
   if(v298BoneOnlyEra())items=items.filter(it=>it?.food&&!it?.v258Element);
@@ -24448,6 +24476,8 @@ const v300BaseStageStart=stageStart;
 stageStart=function(){
   if(astroInfo)delete astroInfo.dataset.v299HudKey;
   const out=v300BaseStageStart();
+  // 旧ステージ開始処理が取得物を消した後、最後に必要数を保証する。
+  v298AddBonesToTarget();
   v300StabilizeWorld();
   v300StabilizeUi(true);
   requestAnimationFrame(()=>{v300StabilizeWorld();v300StabilizeUi(true)});
@@ -27511,7 +27541,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v300</span></strong>
+      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v301</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -28013,11 +28043,11 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v300';
+  window.INUBOSHI_GAME_VERSION='v301';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v300<small>STABILITY PASS / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v301<small>OVERRIDE CLEANUP / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
@@ -28073,134 +28103,6 @@ document.addEventListener('click',function(e){
 .v299SpinUnknown .v217SpinStage{position:relative}
 .v299SpinUnknown .v217SpinStage>b{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:1000 19px/1 system-ui}
 </style>
-
-
-<!-- === v300 EARTH RECIPE BUTTON HARD FIX ===
-  最初の地球だけ、astroInfo.innerHTML の再描画で消えない独立ボタンを使用。
-  クリック時は既存の v270InlineRecipeBtn をプロキシして、既存レシピ内容をそのまま開く。
--->
-<style id="v300EarthRecipeHardFixStyle">
-#v300EarthRecipeBtnHard{
-  display:none;
-  position:absolute;
-  z-index:24;
-  right:8px;
-  width:min(47%,252px);
-  min-height:36px;
-  box-sizing:border-box;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:8px 11px;
-  border:1.6px solid rgba(166,241,255,.95);
-  border-radius:14px;
-  background:linear-gradient(135deg,rgba(28,96,145,.97),rgba(71,48,153,.95));
-  color:#fff;
-  box-shadow:0 0 14px rgba(85,217,255,.26),0 8px 26px rgba(0,0,0,.28);
-  font:900 9.2px/1.2 system-ui;
-  letter-spacing:.02em;
-  text-align:left;
-  cursor:pointer;
-  pointer-events:auto;
-}
-#v300EarthRecipeBtnHard.on{display:flex!important}
-#v300EarthRecipeBtnHard .plus{
-  flex:0 0 auto;
-  color:#ffe58a;
-  font-size:15px;
-  line-height:1;
-  font-weight:1000;
-  text-shadow:0 0 10px rgba(255,234,151,.25);
-}
-#v300EarthRecipeBtnHard:active{filter:brightness(1.08)}
-@media(max-width:520px){
-  #v300EarthRecipeBtnHard{
-    right:5px;
-    width:47%;
-    max-width:252px;
-    min-height:34px;
-    padding:7px 9px;
-    font-size:8.8px;
-  }
-}
-</style>
-
-<button id="v300EarthRecipeBtnHard" type="button" aria-label="この星はどんなところ？">
-  <span>この星はどんなところ？</span><span class="plus">＋</span>
-</button>
-
-<script id="v300EarthRecipeHardFixScript">
-(()=>{
-  const hardBtn=document.getElementById('v300EarthRecipeBtnHard');
-  const astro=document.getElementById('astroInfo');
-  if(!hardBtn||!astro)return;
-
-  function isFirstEarth(){
-    try{
-      const a=window.__v300Audit?.();
-      return a?.stage==='🌍 地球' &&
-        (document.getElementById('v263DistNow')?.textContent||'').includes('0');
-    }catch(e){
-      return false;
-    }
-  }
-
-  function positionHardButton(){
-    const top=(astro.offsetTop||8)+(astro.offsetHeight||0)+8;
-    hardBtn.style.top=Math.min(top, innerHeight-122)+'px';
-  }
-
-  function syncEarthButton(){
-    const on=isFirstEarth();
-    hardBtn.classList.toggle('on',on);
-    hardBtn.setAttribute('aria-hidden',on?'false':'true');
-
-    const inline=document.getElementById('v270InlineRecipeBtn');
-    if(inline){
-      if(on){
-        inline.style.setProperty('display','none','important');
-      }else{
-        inline.style.removeProperty('display');
-      }
-    }
-    if(on)positionHardButton();
-  }
-
-  hardBtn.addEventListener('click',e=>{
-    e.preventDefault();
-    e.stopPropagation();
-
-    // 既存の文脈別レシピ処理をそのまま使う。
-    const inline=document.getElementById('v270InlineRecipeBtn');
-    if(inline){
-      inline.click();
-      return;
-    }
-    const legacy=document.getElementById('v162RecipeBtn');
-    if(legacy){
-      legacy.click();
-      return;
-    }
-    try{ window.__v163OpenCosmicRecipe?.(); }catch(err){
-      console.error('[v300 Earth recipe hard fix]',err);
-    }
-  });
-
-  if(window.ResizeObserver){
-    new ResizeObserver(positionHardButton).observe(astro);
-  }
-  addEventListener('resize',positionHardButton);
-
-  // 古いHUD処理が毎フレーム astroInfo を作り直しても、
-  // 独立ボタン側は消えない。状態だけ軽く追従させる。
-  const timer=setInterval(syncEarthButton,120);
-  addEventListener('beforeunload',()=>clearInterval(timer),{once:true});
-
-  requestAnimationFrame(syncEarthButton);
-  setTimeout(syncEarthButton,350);
-})();
-</script>
-<!-- === /v300 EARTH RECIPE BUTTON HARD FIX === -->
 
 </body>
 </html>
