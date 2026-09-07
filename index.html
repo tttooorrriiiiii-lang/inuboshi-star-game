@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v309</title>
+<title>犬星くん GALAXY TOUR v310</title>
 <!-- v204: core-scope runtime fix / Earendel HUD+radio / future city / universal 3 buttons / top-left material counts -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -15224,6 +15224,10 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❤️ クイユル':{title:'❤️ JWSTで見えた赤い超遠方星',chips:['重力レンズ','超遠方'],text:'重力レンズとJWSTによって見えるようになった、遠い宇宙の赤い星候補。'},
   };
 
+  /* v310: expose the old star-summary maps for the unified renderer. */
+  window.__V191_STAR_SPOTLIGHT=V191_STAR_SPOTLIGHT;
+  window.__V238_STAR_ONE_LINE=V238_STAR_ONE_LINE;
+
   function v191SpotlightHTML(name=''){
     const x=V191_STAR_SPOTLIGHT[name]||V238_STAR_ONE_LINE[name];
     if(!x)return '';
@@ -23951,7 +23955,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v309';
+window.INUBOSHI_GAME_VERSION='v310';
 
 /* v304: v168のレシピモジュールから、完成処理が使う参照を正式に受け取る。 */
 const v304RecipeInternals=window.__v304RecipeInternals;
@@ -24697,7 +24701,7 @@ window.__v300Audit=()=>({
 /* === /v300 === */
 
 /* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
-window.INUBOSHI_GAME_VERSION='v309';
+window.INUBOSHI_GAME_VERSION='v310';
 
 function v302EarthDetailHTML(future=false){
   const sys=systems[system]||{},st=S()||{};
@@ -24988,7 +24992,7 @@ v263DistanceForCurrent=function(){
     : V305_CORE.v263DistanceForCurrent();
 };
 
-window.INUBOSHI_GAME_VERSION='v309';
+window.INUBOSHI_GAME_VERSION='v310';
 v305NormalizeWorld();v305NormalizeUi();
 
 window.__v305Audit={
@@ -25007,7 +25011,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 /* === /v293 === */
 
 /* === v306: ROUTE CLEANUP / BONE SPREAD / RECIPE PHOTO / ROCK DAMAGE === */
-window.INUBOSHI_GAME_VERSION='v309';
+window.INUBOSHI_GAME_VERSION='v310';
 
 const V306_FLOW={
   moving:false,
@@ -25594,7 +25598,7 @@ drawPlayer=function(){
 function v306FinalUi(){v306ReorderCounters();v306SyncFutureRadio();v306TrimBonusMenu();}
 requestAnimationFrame(v306FinalUi);setTimeout(v306FinalUi,250);
 
-window.INUBOSHI_GAME_VERSION='v309';
+window.INUBOSHI_GAME_VERSION='v310';
 window.__v306Audit={
   state:()=>({version:window.INUBOSHI_GAME_VERSION,stage:S()?.name,system:systems[system]?.name,bones:items.filter(x=>x?.food&&!x.got).length,bonus:{future:V306_FLOW.futureActive,fromBonus:V306_FLOW.fromBonus},portal:v306PortalSpec(),radioHidden:systems[system]?.futureEra?getComputedStyle(document.getElementById('v63RadioBadge')).display:'n/a'}),
   jump:name=>window.__v304Audit.jump(name),
@@ -25602,7 +25606,7 @@ window.__v306Audit={
 };
 
 /* === v308: COMPLETE STANDARD DETAIL / FIXED PHOTOS / ORPHAN CLEANUP === */
-window.INUBOSHI_GAME_VERSION='v309';
+window.INUBOSHI_GAME_VERSION='v310';
 
 /* ----------------------------------------------------------
    1) REMOVE ORPHAN DETAIL DATA
@@ -26028,7 +26032,7 @@ function v308BuildModel(){
   const spin=V189_STAR_SPIN[name]||{};
   const special=V308_SPECIAL[name]||{};
   const body=v308BodyInfo(name)||{};
-  const oneLine=V238_STAR_ONE_LINE[name]||V191_STAR_SPOTLIGHT[name]||{};
+  const oneLine=(window.__V238_STAR_ONE_LINE?.[name])||(window.__V191_STAR_SPOTLIGHT?.[name])||{};
   const facts=star.facts||[];
 
   let model={
@@ -29855,11 +29859,11 @@ window.__v308Audit=()=>{
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v309';
+  window.INUBOSHI_GAME_VERSION='v310';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v309<small>DETAIL ORDER HARD FIX / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v310<small>UNIFIED DETAIL RUNTIME FIX / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
