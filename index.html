@@ -2172,6 +2172,78 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 }
 </style>
 
+
+<style id="v308-standard-detail-style">
+.v308Detail{display:block}
+.v308PhotoCard{
+  overflow:hidden;border-radius:16px;border:1px solid rgba(159,220,255,.17);
+  background:rgba(255,255,255,.04);margin:0 0 14px
+}
+.v308PhotoCard>a,.v308PhotoCard>div:first-child{display:block}
+.v308PhotoCard img{
+  display:block;width:100%;height:210px;object-fit:cover;background:#050817
+}
+.v308PhotoCard.noPhoto img{object-fit:cover;opacity:.94}
+.v308PhotoMeta{padding:10px 11px 11px}
+.v308PhotoMeta em{
+  display:inline-block;margin:0 0 6px;padding:3px 7px;border-radius:999px;
+  background:rgba(120,218,255,.09);border:1px solid rgba(130,220,255,.14);
+  color:#aeeaff;font:900 7px/1 system-ui;font-style:normal
+}
+.v308PhotoMeta b{display:block;color:#fff;font:950 10px/1.3 system-ui}
+.v308PhotoMeta span{display:block;margin-top:4px;color:rgba(255,255,255,.58);font:750 8px/1.4 system-ui}
+.v308PhotoMeta small{display:block;margin-top:5px;color:rgba(255,255,255,.42);font:700 7.3px/1.45 system-ui}
+.v308SectionTitle{margin:15px 0 7px;color:#bfe9ff;font:950 9px/1.2 system-ui;letter-spacing:.04em}
+.v308OneLine{
+  padding:11px 12px;border-radius:13px;
+  background:linear-gradient(135deg,rgba(255,218,108,.09),rgba(105,154,255,.08));
+  border:1px solid rgba(255,231,150,.16);color:#fff3bf;font:900 10.5px/1.55 system-ui
+}
+.v308About{margin:0;color:rgba(255,255,255,.82);font:760 9.2px/1.65 system-ui}
+.v308FeatureGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}
+.v308FeatureGrid>div{
+  padding:9px;border-radius:11px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.075)
+}
+.v308FeatureGrid small{display:block;color:#9edfff;font:850 7.2px/1.2 system-ui}
+.v308FeatureGrid b{display:block;margin-top:4px;color:#fff;font:900 8.4px/1.4 system-ui}
+.v308MetricGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:15px}
+.v308MetricCard{
+  min-width:0;padding:9px 7px;border-radius:13px;background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.085);text-align:center
+}
+.v308MetricTitle{margin-bottom:6px;color:#c9ecff;font:900 8px/1.2 system-ui;text-align:left}
+.v308MetricCard strong{display:block;margin-top:6px;color:#fff;font:950 8.5px/1.35 system-ui}
+.v308MetricCard small{display:block;margin-top:4px;color:rgba(255,255,255,.48);font:700 6.8px/1.4 system-ui}
+.v308DistanceCard{
+  display:flex;align-items:center;gap:10px;margin-top:12px;padding:11px 12px;
+  border-radius:13px;background:linear-gradient(135deg,rgba(103,195,255,.09),rgba(147,104,255,.07));
+  border:1px solid rgba(153,216,255,.15)
+}
+.v308DistanceCard span{color:#aee7ff;font:900 8px/1.2 system-ui}
+.v308DistanceCard b{margin-left:auto;color:#fff0ae;font:1000 10px/1.3 system-ui;text-align:right}
+.v308TextCard,.v308WowCard{
+  margin-top:10px;padding:11px 12px;border-radius:13px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)
+}
+.v308TextCard b,.v308WowCard b{display:block;color:#d8edff;font:950 9px/1.25 system-ui}
+.v308TextCard span,.v308WowCard span{display:block;margin-top:6px;color:rgba(255,255,255,.76);font:750 8.5px/1.6 system-ui}
+.v308WowCard{
+  background:linear-gradient(135deg,rgba(255,206,78,.08),rgba(255,119,200,.06));
+  border-color:rgba(255,223,123,.13)
+}
+.v308WowCard b{color:#ffe8a0}
+@media(max-width:560px){
+  .v308PhotoCard img{height:180px}
+  .v308MetricGrid{grid-template-columns:1fr}
+  .v308MetricCard{display:grid;grid-template-columns:88px 1fr;column-gap:9px;align-items:center;text-align:left}
+  .v308MetricTitle{grid-column:1/-1}
+  .v308MetricCard>.v217SizeViz,.v308MetricCard>.v217LightViz,.v308MetricCard>.v217SpinViz{grid-row:2/4}
+  .v308MetricCard strong{margin-top:0}
+  .v308FeatureGrid{grid-template-columns:1fr}
+}
+</style>
+
 </head>
 <body>
 <div id="wrap" tabindex="0"><div id="bootCheck" style="position:absolute;z-index:999;inset:0;display:grid;place-items:center;background:#03040b;color:#fff;font:900 14px system-ui;letter-spacing:.08em">LOADING GALAXY… ✦</div>
@@ -23866,7 +23938,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v307';
+window.INUBOSHI_GAME_VERSION='v308';
 
 /* v304: v168のレシピモジュールから、完成処理が使う参照を正式に受け取る。 */
 const v304RecipeInternals=window.__v304RecipeInternals;
@@ -24612,7 +24684,7 @@ window.__v300Audit=()=>({
 /* === /v300 === */
 
 /* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
-window.INUBOSHI_GAME_VERSION='v307';
+window.INUBOSHI_GAME_VERSION='v308';
 
 function v302EarthDetailHTML(future=false){
   const sys=systems[system]||{},st=S()||{};
@@ -24903,7 +24975,7 @@ v263DistanceForCurrent=function(){
     : V305_CORE.v263DistanceForCurrent();
 };
 
-window.INUBOSHI_GAME_VERSION='v307';
+window.INUBOSHI_GAME_VERSION='v308';
 v305NormalizeWorld();v305NormalizeUi();
 
 window.__v305Audit={
@@ -24922,7 +24994,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 /* === /v293 === */
 
 /* === v306: ROUTE CLEANUP / BONE SPREAD / RECIPE PHOTO / ROCK DAMAGE === */
-window.INUBOSHI_GAME_VERSION='v307';
+window.INUBOSHI_GAME_VERSION='v308';
 
 const V306_FLOW={
   moving:false,
@@ -25509,12 +25581,727 @@ drawPlayer=function(){
 function v306FinalUi(){v306ReorderCounters();v306SyncFutureRadio();v306TrimBonusMenu();}
 requestAnimationFrame(v306FinalUi);setTimeout(v306FinalUi,250);
 
-window.INUBOSHI_GAME_VERSION='v307';
+window.INUBOSHI_GAME_VERSION='v308';
 window.__v306Audit={
   state:()=>({version:window.INUBOSHI_GAME_VERSION,stage:S()?.name,system:systems[system]?.name,bones:items.filter(x=>x?.food&&!x.got).length,bonus:{future:V306_FLOW.futureActive,fromBonus:V306_FLOW.fromBonus},portal:v306PortalSpec(),radioHidden:systems[system]?.futureEra?getComputedStyle(document.getElementById('v63RadioBadge')).display:'n/a'}),
   jump:name=>window.__v304Audit.jump(name),
   detail:name=>{const h=v306NewObjectDetailHTML(name);return {name,length:h.length,bulb:h.includes('v217BulbGlass'),photo:h.includes('v179PhotoCard'),facts:h.includes('v179Facts'),origin:h.includes('名前の由来')}}
 };
+
+/* === v308: COMPLETE STANDARD DETAIL / FIXED PHOTOS / ORPHAN CLEANUP === */
+window.INUBOSHI_GAME_VERSION='v308';
+
+/* ----------------------------------------------------------
+   1) REMOVE ORPHAN DETAIL DATA
+   ---------------------------------------------------------- */
+const V308_ORPHANS=[
+  '🐶 ゴメイサ','🐕 アダーラ','🐕 ミルザム','🐕 ウェズン','🐕 アルドラ',
+  '💫 AF Andromedae','🟢 ロマーノ星 GR 290','🌠 M33 Var C','🎨 Warhol',
+  '❤️ クイユル','🔷 Abell 2744 LS1','💠 MACS J0647 LS1'
+];
+for(const name of V308_ORPHANS){
+  for(const store of [
+    V179_STAR_INFO,
+    (typeof V181_AUTO_PHOTO_QUERY!=='undefined'?V181_AUTO_PHOTO_QUERY:null),
+    (typeof V188_STAR_METRICS!=='undefined'?V188_STAR_METRICS:null),
+    (typeof V189_STAR_SPIN!=='undefined'?V189_STAR_SPIN:null),
+    (typeof V187_STAR_LIFE!=='undefined'?V187_STAR_LIFE:null),
+    (typeof V238_STAR_ONE_LINE!=='undefined'?V238_STAR_ONE_LINE:null),
+    (typeof V191_STAR_SPOTLIGHT!=='undefined'?V191_STAR_SPOTLIGHT:null),
+    (typeof V244_STAR_HINTS!=='undefined'?V244_STAR_HINTS:null),
+    (typeof rankByName!=='undefined'?rankByName:null)
+  ]){
+    try{if(store&&Object.prototype.hasOwnProperty.call(store,name))delete store[name]}catch(e){}
+  }
+  try{DOG_STAR_NAMES?.delete(name)}catch(e){}
+  try{V244_PERSONALITY_STARS?.delete(name)}catch(e){}
+}
+
+/* ----------------------------------------------------------
+   2) FIXED PHOTOS
+   - observation images where available
+   - representative field image when the object itself is unresolved
+   - no automatic Wikipedia lookup in the v308 panel
+   ---------------------------------------------------------- */
+const V308_FILE=(name)=>'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(name);
+
+const V308_FIXED_PHOTOS={
+  '🐶 プロキオン':{
+    src:V308_FILE('Procyon - through a small telescope.jpg'),
+    page:'https://commons.wikimedia.org/wiki/File:Procyon_-_through_a_small_telescope.jpg',
+    label:'望遠鏡撮影｜プロキオン',
+    credit:'Kjmiller84 / Wikimedia Commons',
+    note:'※望遠鏡では恒星はほぼ点光源として写る。'
+  },
+  '🖖 40エリダヌス座A':{
+    src:V308_FILE('40 Eridani.png'),
+    page:'https://commons.wikimedia.org/wiki/File:40_Eridani.png',
+    label:'望遠鏡撮影｜40エリダヌス星系',
+    credit:'Azhikerdude / Wikimedia Commons',
+    note:'※A・B・Cからなる三重星系の観測写真。'
+  },
+  '🦅 アルタイル':{
+    src:V308_FILE('Altair.jpg'),
+    page:'https://commons.wikimedia.org/wiki/File:Altair.jpg',
+    label:'観測画像｜アルタイル',
+    credit:'NASA / JPL / Caltech / Steve Golden',
+    note:'※恒星の観測画像。'
+  },
+  '😈 アルゴル':{
+    src:V308_FILE('Algol.png'),
+    page:'https://commons.wikimedia.org/wiki/File:Algol.png',
+    label:'想像図｜アルゴル三重星系',
+    credit:'Pablo Carlos Budassi / Wikimedia Commons',
+    note:'※連星の姿を分解した直接写真ではないため、想像図として表示。',
+    direct:false
+  },
+  '🌾 スピカ':{
+    src:V308_FILE('Spica DSS.png'),
+    page:'https://commons.wikimedia.org/wiki/File:Spica_DSS.png',
+    label:'DSS観測｜スピカ',
+    credit:'Digitized Sky Survey / Roberto Mura',
+    note:'※星野観測画像。'
+  },
+  '🕰️ メトシェラ星':{
+    src:V308_FILE('Oldest star in solar neighbourhood.jpg'),
+    page:'https://commons.wikimedia.org/wiki/File:Oldest_star_in_solar_neighbourhood.jpg',
+    label:'DSS観測｜HD 140283',
+    credit:'DSS / STScI / AAO / ESA-Hubble',
+    note:'※メトシェラ星を含む実観測画像。'
+  },
+  '🦢 デネブ':{
+    src:V308_FILE('Deneb DSS.png'),
+    page:'https://commons.wikimedia.org/wiki/File:Deneb_DSS.png',
+    label:'DSS観測｜デネブ',
+    credit:'Digitized Sky Survey / Roberto Mura',
+    note:'※星野観測画像。'
+  },
+  '🌀 PSR J1748-2446ad':{
+    src:V308_FILE('Location of PSR J1748-2446ad.png'),
+    page:'https://commons.wikimedia.org/wiki/File:Location_of_PSR_J1748-2446ad.png',
+    label:'観測領域｜PSR J1748-2446adの位置',
+    credit:'GALEX data / Zellfaze / Wikimedia Commons',
+    note:'※パルサー本体はこの画像では見えない。位置を示した観測領域画像。',
+    direct:false
+  },
+  '🪐 スティーブンソン2-18':{
+    src:V308_FILE('Stephenson 2-18 zoomed in, 2MASS survey, 2003.png'),
+    page:'https://commons.wikimedia.org/wiki/File:Stephenson_2-18_zoomed_in,_2MASS_survey,_2003.png',
+    label:'2MASS観測｜スティーブンソン2-18',
+    credit:'2MASS / Aladin Lite',
+    note:'※赤外線サーベイの観測画像。'
+  },
+  '🧲 SGR 1806-20':{
+    src:V308_FILE('SGR 1806-20 positon.jpg'),
+    page:'https://commons.wikimedia.org/wiki/File:SGR_1806-20_positon.jpg',
+    label:'NASA観測領域｜SGR 1806-20の位置',
+    credit:'NASA / Wikimedia Commons',
+    note:'※マグネターの位置を示した観測画像。',
+    direct:false
+  },
+  '✨ S Doradus':{
+    src:V308_FILE('Eso9931d.jpg'),
+    page:'https://commons.wikimedia.org/wiki/File:Eso9931d.jpg',
+    label:'ESO観測領域｜S Doradusを含む領域',
+    credit:'ESO / Wikimedia Commons',
+    note:'※S Doradusを含む大マゼラン雲の観測領域。恒星表面の直接画像ではない。',
+    direct:false
+  },
+  '⭐ M51-DS1':{
+    src:'https://science.nasa.gov/wp-content/uploads/2023/04/potw1738a.jpg',
+    page:'https://science.nasa.gov/asset/hubble/hubble-acs-visible-image-of-m51/',
+    label:'Hubble観測｜M51',
+    credit:'NASA / ESA / Hubble Heritage Team',
+    note:'※M51-DS1単体の表面写真ではなく、所属銀河M51の観測画像。',
+    direct:false
+  },
+  '🦖 ゴジラ':{
+    src:'https://cdn.spacetelescope.org/archives/images/screen/heic1920a.jpg',
+    page:'https://esahubble.org/images/heic1920a/',
+    label:'Hubble観測｜Sunburst Arc',
+    credit:'ESA/Hubble / NASA / Rivera-Thorsen et al.',
+    note:'※ゴジラが存在する重力レンズ銀河の観測画像。恒星単体の直接写真ではない。',
+    direct:false
+  }
+};
+
+/* ----------------------------------------------------------
+   3) BASE DATA FOR SOLAR-SYSTEM OBJECTS
+   ---------------------------------------------------------- */
+const V308_BODY_INFO={
+  '🌍 地球':{
+    one:'液体の海と多様な生命がある、犬星くんの出発地点。',
+    about:'太陽から3番目を回る岩石惑星。表面の大部分を液体の海が覆い、現在確認されている範囲では生命が存在する唯一の天体。',
+    size:['直径 約12,742km','岩石惑星'],
+    light:['自らは光らない','太陽光を反射'],
+    spin:['約24時間で1回転','地球の自転'],
+    origin:'「Earth／地球」は土地・大地を表す古い言葉に由来する名称。日本語の「地球」は球形の大地という意味。',
+    wow:'宇宙をめぐった犬が最後に帰ってくる基準点。距離表示の0kmはここ。',
+    photo:V180_BODY_PHOTOS['🌍 地球']
+  },
+  '🌙 月':{
+    one:'地球の唯一の自然衛星。低重力でジャンプが大きく変わる。',
+    about:'地球の周囲を回る自然衛星。大気が非常に薄く、表面には衝突でできたクレーターが多く残る。',
+    size:['直径 約3,475km','地球の約1/4'],
+    light:['自らは光らない','太陽光を反射'],
+    spin:['約27.3日で1回転','公転とほぼ同期'],
+    origin:'日本語の「月」は古くから夜空の月を指す固有の名称。英語 Moon も地球の衛星を表す古い語。',
+    wow:'自転と公転がほぼ同期しているため、地球からはほぼ同じ面を見続ける。',
+    photo:V180_BODY_PHOTOS['🌙 月']
+  },
+  '☿ 水星':{
+    one:'太陽に最も近く、昼夜の温度差が極端な小さな岩石惑星。',
+    about:'太陽に最も近い惑星。ほとんど大気がなく、クレーターの多い表面がむき出しになっている。',
+    size:['直径 約4,879km','太陽系で最小の惑星'],
+    light:['自らは光らない','太陽光を反射'],
+    spin:['約58.6日で1回転','公転は約88日'],
+    origin:'Mercury はローマ神話の俊足の神メルクリウスに由来する。',
+    wow:'太陽に最も近いのに、厚い大気がないため夜側は非常に冷える。',
+    photo:V180_BODY_PHOTOS['☿ 水星']
+  },
+  '♀ 金星':{
+    one:'厚い二酸化炭素大気に包まれた、太陽系で最も高温な惑星。',
+    about:'地球と似た大きさの岩石惑星だが、厚い二酸化炭素大気の強烈な温室効果で表面は灼熱。',
+    size:['直径 約12,104km','地球とほぼ同じ大きさ'],
+    light:['非常に明るく見える','厚い雲が太陽光を強く反射'],
+    spin:['約243日で1回転','多くの惑星と逆向き'],
+    origin:'Venus はローマ神話の愛と美の女神ウェヌスに由来する。',
+    wow:'1日の自転周期が1年の公転周期より長く、しかも逆向きに回る。',
+    photo:V180_BODY_PHOTOS['♀ 金星']
+  },
+  '🔴 火星':{
+    one:'酸化鉄で赤く見える、昔の水の痕跡が残る岩石惑星。',
+    about:'地球の外側を回る岩石惑星。赤い色は表面の酸化鉄による。谷や鉱物から、過去に液体の水があった証拠が見つかっている。',
+    size:['直径 約6,779km','地球の約半分'],
+    light:['自らは光らない','赤い地表が太陽光を反射'],
+    spin:['約24時間37分で1回転','地球の1日に近い'],
+    origin:'Mars はローマ神話の軍神マルスに由来する。',
+    wow:'太陽系最大級の火山オリンポス山と、巨大峡谷マリネリス峡谷を持つ。',
+    photo:V180_BODY_PHOTOS['🔴 火星']
+  },
+  '🟠 木星':{
+    one:'太陽系最大。巨大な縞模様と大赤斑を持つガス惑星。',
+    about:'水素とヘリウムを主成分とする太陽系最大の惑星。大赤斑は地球より大きい巨大嵐として知られる。',
+    size:['直径 約139,820km','地球の約11倍'],
+    light:['自らはほぼ光らない','太陽光を反射'],
+    spin:['約9時間56分で1回転','太陽系の惑星で最速級'],
+    origin:'Jupiter はローマ神話の最高神ユピテルに由来する。',
+    wow:'巨大なのに自転が非常に速く、赤道方向に少しふくらんでいる。',
+    photo:V180_BODY_PHOTOS['🟠 木星']
+  },
+  '🪐 土星':{
+    one:'氷と岩石の粒でできた巨大なリングを持つガス惑星。',
+    about:'水素とヘリウムを主成分とする巨大惑星。リングは一枚板ではなく、無数の氷や岩石の粒が軌道を回っている。',
+    size:['直径 約116,460km','地球の約9倍'],
+    light:['自らはほぼ光らない','リングも太陽光を反射'],
+    spin:['約10時間33分で1回転','非常に高速'],
+    origin:'Saturn はローマ神話の農耕神サトゥルヌスに由来する。',
+    wow:'平均密度が水より小さいほど低密度な巨大惑星。',
+    photo:V180_BODY_PHOTOS['🪐 土星']
+  },
+  '🩵 天王星':{
+    one:'自転軸がほぼ横倒しになった、青緑色の氷惑星。',
+    about:'メタンを含む大気で青緑色に見える氷惑星。大きな衝突などが原因と考えられる極端な自転軸の傾きが特徴。',
+    size:['直径 約50,724km','地球の約4倍'],
+    light:['自らは光らない','メタンを含む大気が光を反射'],
+    spin:['約17時間で1回転','横倒しに近い自転軸'],
+    origin:'Uranus はギリシャ神話の天空神ウラノスに由来する。',
+    wow:'約98度傾いた自転軸のため、季節によって極が長期間太陽を向く。',
+    photo:V180_BODY_PHOTOS['🩵 天王星']
+  },
+  '🔵 海王星':{
+    one:'太陽系最遠の惑星。超高速の風が吹く青い氷惑星。',
+    about:'太陽から最も遠い惑星。大気では太陽系でも最速級の強風が観測される。',
+    size:['直径 約49,244km','地球の約4倍'],
+    light:['自らは光らない','大気が太陽光を反射'],
+    spin:['約16時間で1回転','高速自転'],
+    origin:'Neptune はローマ神話の海神ネプトゥヌスに由来する。',
+    wow:'太陽から非常に遠いのに、大気では音速を超える級の風が吹く。',
+    photo:V180_BODY_PHOTOS['🔵 海王星']
+  },
+  '☀️ 太陽':{
+    one:'太陽系の質量のほとんどを占める、地球を照らす恒星。',
+    about:'水素の核融合でエネルギーを生むG型主系列星。太陽系の惑星はこの星の重力の周囲を回る。',
+    size:['直径 約139万km','地球の約109倍'],
+    light:['1太陽光度','太陽系の光の基準'],
+    spin:['赤道付近 約25日','緯度で回転速度が違う'],
+    origin:'「太陽」は東アジアで古くから用いられる名称。英語 Sun もゲルマン系の古い語に由来する。',
+    wow:'毎秒大量の水素をヘリウムへ変え、そのわずかな質量差を光と熱として放っている。',
+    photo:V180_BODY_PHOTOS['☀️ 太陽']
+  }
+};
+
+/* ----------------------------------------------------------
+   4) EXTRA DETAIL FOR FORMATION / EARTH HISTORY / FUTURE / BONUS
+   ---------------------------------------------------------- */
+const V308_SPECIAL={
+  '🌌 銀河が育つ':{
+    one:'小さな銀河が合体と星形成を繰り返し、大きな銀河へ育つ時代。',
+    origin:'ステージ名は、初期宇宙で銀河が成長していく現象をそのまま表した説明名。',
+    wow:'現在の巨大銀河も、最初から完成形だったのではなく、長い合体と星形成の歴史を持つ。',
+    size:['銀河スケール','単一の大きさではない'],light:['星形成で光源が増える','銀河ごとに異なる'],spin:['銀河ごとに回転','形成と合体で変化']
+  },
+  '🌌 天の川銀河が成長':{
+    one:'私たちの天の川銀河が星形成や小銀河との合体で現在の姿へ近づく。',
+    origin:'「天の川」は夜空を横切る淡い光の帯の日本語名。Milky Way も乳白色の帯に由来する。',
+    wow:'犬星くんの地球も、こうして長い時間をかけて育った銀河の中にある。',
+    size:['銀河全体のスケール','単一の星より桁違いに巨大'],light:['多数の恒星の光','星形成で変化'],spin:['銀河円盤として回転','星ごとに公転速度が異なる']
+  },
+  '☀️ 太陽系誕生':{
+    one:'ガスと塵の円盤から太陽と惑星の材料が集まり始める。',
+    origin:'「太陽系」は太陽と、その重力に結びついた惑星・小天体をまとめた名称。',
+    wow:'地球・月・犬の散歩道まで、最初は同じガスと塵の円盤にあった材料から始まった。',
+    size:['原始惑星系円盤','単一の天体サイズではない'],light:['若い太陽が主な光源','塵は光を散乱・放射'],spin:['円盤全体が回転','惑星の公転方向のもと']
+  },
+  '🌋 原始地球':{
+    one:'岩石や金属の衝突と合体で、熱い若い地球が成長していく。',
+    origin:'「原始地球」は形成直後の若い地球を指す説明名。',
+    wow:'完成した青い地球から始まったのではなく、衝突で熱を持つ荒々しい惑星から始まった。',
+    size:['形成途中の地球','現在の地球へ成長'],light:['自らは恒星のように光らない','高温部は熱放射'],spin:['形成中から自転','衝突で変化しうる']
+  },
+  '🌕 月ができる':{
+    one:'若い地球への巨大衝突から月が生まれたと考える「巨大衝突説」の時代。',
+    origin:'ステージ名は地球の衛星「月」が形成される出来事を表す説明名。',
+    wow:'月の誕生は地球の自転や海の潮汐、その後の環境にも大きく関わる。',
+    earthHistory:true
+  },
+  '🌊 海ができる':{
+    one:'地球が冷え、水蒸気が雨になり、液体の海が広がっていく。',
+    origin:'地球表面に海洋が形成されていく出来事を表す説明名。',
+    wow:'現在の青い地球を特徴づける大量の液体の水が、長い冷却のあとに広がった。',
+    earthHistory:true
+  },
+  '🦠 最初の生命':{
+    one:'海の中に非常に単純な生命が存在していた証拠が残る時代。',
+    origin:'最古級の生命活動が確認される時代を表したステージ名。',
+    wow:'生命の起源そのものは未解明。ここは「どう始まったか」がまだ大きな謎として残る。',
+    earthHistory:true
+  },
+  '🫧 酸素が増える':{
+    one:'光合成生物の活動で酸素が増え、海・大気・鉱物が大きく変化する。',
+    origin:'約24億年前ごろの大酸化イベントを分かりやすくしたステージ名。',
+    wow:'今は当たり前の酸素も、地球史では環境を激変させた強烈な変化だった。',
+    earthHistory:true
+  },
+  '🪸 複雑な生命が増える':{
+    one:'多細胞生物が増え、海の生態系が急速に複雑になっていく。',
+    origin:'多細胞生物の多様化が目立つ時代を説明するステージ名。',
+    wow:'生命が単純な微生物中心の世界から、多様な体のつくりを持つ生物へ広がる。',
+    earthHistory:true
+  },
+  '🌿 生き物が陸へ':{
+    one:'植物や動物が海だけでなく陸上へ進出し、生態系が広がる。',
+    origin:'生命圏が陸上へ拡大していく出来事を表す説明名。',
+    wow:'それまでほぼ生物のいなかった陸地が、植物や動物の暮らす世界へ変わった。',
+    earthHistory:true
+  },
+  '🦖 恐竜の時代':{
+    one:'恐竜が長期間繁栄し、最後は大規模な大量絶滅を迎える。',
+    origin:'中生代の代表的な陸上動物である恐竜を中心にしたゲーム上の時代名。',
+    wow:'恐竜は一瞬のブームではなく、1億年以上にわたって多様な姿で繁栄した。',
+    earthHistory:true
+  },
+  '🐒 哺乳類と人類':{
+    one:'恐竜絶滅後に哺乳類が多様化し、その一系統から人類が現れる。',
+    origin:'哺乳類の多様化から人類登場までをまとめたゲーム上の時代名。',
+    wow:'宇宙138億年規模で見ると、人類がいる時間は最後のごくわずかな部分。',
+    earthHistory:true
+  },
+  '🏘️ 農耕と都市':{
+    one:'農耕と定住が広がり、集落・都市・文字を持つ社会が生まれる。',
+    origin:'人類史の農耕・定住・都市化をまとめたゲーム上の時代名。',
+    wow:'地球46億年の歴史に比べれば、都市のある世界はほとんど一瞬の出来事。',
+    earthHistory:true
+  },
+  '🌃 現代':{
+    one:'科学技術と都市が広がった現在の地球。最初の夜の散歩道へ戻る。',
+    origin:'犬星ゲームの「いま」を示す時代名。',
+    wow:'宇宙の始まりから地球史を全部通ったあと、普通の夜の散歩がいちばん新しい世界になる。',
+    earthHistory:true
+  },
+  '🌌 宇宙の最果て':{
+    one:'観測可能な宇宙の限界を、ゲームでは完全な暗闇として歩くBONUS STAGE。',
+    about:'「宇宙の端に壁がある」という意味ではない。地球から届く光によって観測できる範囲には限界があり、ゲームではその“見える限界”を最果てとして演出している。',
+    origin:'「宇宙の最果て」はゲーム内の演出名。標準宇宙論で確認された物理的な壁の名前ではない。',
+    wow:'どれだけ遠くを見ても、見えているのは光が届くことのできた範囲だけ。見えない先が「無い」とは限らない。',
+    size:['観測可能領域のスケール','単一の天体ではない'],light:['冒頭は完全な暗闇','ゲーム演出'],spin:['対象外','天体そのものではない'],
+    distance:'🌏 地球から465億光年',
+    noDirect:true
+  },
+  '🌸 花の星':{
+    one:'宇宙の最果て／未来ルートから帰還する途中に通る、花が漂う架空世界。',
+    about:'犬星ゲームの異世界ブリッジ。現実の天文学で確認された惑星ではなく、2つの宇宙ルートを現代地球へ戻すための架空ステージ。',
+    origin:'花が宇宙いっぱいに漂う見た目から付けたゲーム内の架空名。',
+    wow:'難しい宇宙の終盤を抜けたあと、急に花だらけの世界へ出る「犬星らしい脱力ポイント」。',
+    size:['架空設定','物理サイズは設定していない'],light:['花と星の光','架空演出'],spin:['架空設定','未設定'],
+    distance:'約250億光年先（架空設定）',
+    noDirect:true
+  },
+  '🕳️ ブラックホール内部':{
+    one:'事象の地平面を越えた先を、ゲーム用に歩ける空間として表現した特殊ステージ。',
+    about:'現実のブラックホール内部を外から観測することはできず、ゲーム画面は一般相対論のイメージをもとにした架空表現。',
+    origin:'光も外へ戻れなくなる領域を「ブラックホール内部」とした説明名。',
+    wow:'現実には内部から情報を持ち帰れない。犬が歩いて帰ってくる部分は完全にゲーム表現。',
+    size:['ブラックホールごとに異なる','このステージは内部の架空表現'],
+    light:['直接光は届かない','周囲の物質は外側で輝く'],
+    spin:['ブラックホールごとに異なる','回転するタイプもある'],
+    noDirect:true
+  }
+};
+
+const V308_FUTURE_BASE={
+  1:{one:'太陽がゆっくり明るくなり、地球環境が現在より厳しくなる。',wow:'主系列星の太陽も完全に同じ明るさではなく、超長期では少しずつ変化する。'},
+  2:{one:'巨大化した太陽の熱で、地球は海も大気も保てない灼熱世界へ。',wow:'赤色巨星になる太陽は、今の太陽とは比較にならないほど大きく膨張する。'},
+  3:{one:'太陽が白色矮星へ変わったあと、地球は光と熱を失った世界へ。',wow:'太陽の最後は超新星ではなく、外層を失って白色矮星の核を残す。'},
+  4:{one:'新しい星を作る材料が減り、宇宙の星形成が終わりへ近づく。',wow:'宇宙の星も永遠に補充されるわけではない。'},
+  5:{one:'寿命の長い小さな星も消えていき、夜空の光源がほぼなくなる。',wow:'現在の満天の星は、宇宙史全体では永遠に続く景色ではない。'},
+  6:{one:'恒星がほぼ消え、ブラックホールなどが目立つ超遠未来。',wow:'ブラックホールさえホーキング放射で永遠ではないと考えられている。'},
+  7:{one:'巨大ブラックホールまで消えたあとを想定する、ほとんど光のない遠未来。',wow:'この先の姿は暗黒エネルギーの性質など未解明の物理にも左右される。'}
+};
+
+/* ----------------------------------------------------------
+   5) STANDARD DETAIL MODEL
+   ---------------------------------------------------------- */
+function v308Escape(v=''){
+  return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function v308FactValue(facts,keys){
+  if(!Array.isArray(facts))return '';
+  const row=facts.find(x=>Array.isArray(x)&&keys.some(k=>String(x[0]).includes(k)));
+  return row?String(row[1]||''):'';
+}
+function v308CurrentName(){return S()?.name||systems[system]?.name||'この天体';}
+function v308CurrentDistance(){
+  const sys=systems[system]||{},st=S()||{};
+  if(sys.futureEra)return '🌏 地球から0km';
+  if(sys.v177EarthHistory||sys.v170EarthBirth)return '🌏 地球から0km';
+  return st.distance||sys.distance||'距離データなし';
+}
+function v308FuturePhoto(){
+  const base=V180_BODY_PHOTOS['🌍 地球'];
+  return {
+    ...base,
+    label:'基準写真｜現在の地球',
+    note:'※未来の地球を撮影した実写真は存在しないため、現在の地球写真を基準として表示。未来の姿はゲーム内の予測イメージ。',
+    direct:false,
+    future:true
+  };
+}
+function v308PlaceholderData(name,label='直接画像なし'){
+  const safe=String(name||'OBJECT').replace(/[<>&"]/g,'');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520">
+    <defs><radialGradient id="g"><stop stop-color="#273765"/><stop offset="1" stop-color="#060815"/></radialGradient></defs>
+    <rect width="960" height="520" fill="url(#g)"/>
+    <g fill="#fff" opacity=".55">${Array.from({length:26},(_,i)=>`<circle cx="${45+(i*149)%900}" cy="${38+(i*83)%440}" r="${1+i%3}"/>`).join('')}</g>
+    <text x="480" y="245" text-anchor="middle" fill="#dff7ff" font-family="sans-serif" font-size="34" font-weight="700">${safe}</text>
+    <text x="480" y="298" text-anchor="middle" fill="#9fc9dc" font-family="sans-serif" font-size="22">${label}</text>
+  </svg>`;
+  return 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+}
+function v308PhotoFor(name,data){
+  if(data?.photo)return data.photo;
+  if(V308_FIXED_PHOTOS[name])return V308_FIXED_PHOTOS[name];
+  if(V180_BODY_PHOTOS[name])return V180_BODY_PHOTOS[name];
+  if(V179_STAR_INFO[name]?.photo)return V179_STAR_INFO[name].photo;
+  return null;
+}
+function v308BodyInfo(name){
+  return V308_BODY_INFO[name]||null;
+}
+function v308BuildModel(){
+  const name=v308CurrentName(),sys=systems[system]||{},st=S()||{};
+  const star=V179_STAR_INFO[name]||{};
+  const metric=V188_STAR_METRICS[name]||{};
+  const spin=V189_STAR_SPIN[name]||{};
+  const special=V308_SPECIAL[name]||{};
+  const body=v308BodyInfo(name)||{};
+  const oneLine=V238_STAR_ONE_LINE[name]||V191_STAR_SPOTLIGHT[name]||{};
+  const facts=star.facts||[];
+
+  let model={
+    name,
+    one:special.one||body.one||oneLine.title||oneLine.text||st.desc||sys.desc||'このステージの特徴をまとめた情報。',
+    about:special.about||body.about||star.about||st.desc||sys.desc||'このステージの情報。',
+    features:facts.length?facts.slice(0,6):[
+      ['ステージ',name],
+      ['分類',st.v155Type||sys.theme||'宇宙ステージ'],
+      ['特徴',st.eventText||st.event||'固有演出あり']
+    ],
+    size:special.size||body.size||[
+      metric.size?.main||v308FactValue(facts,['大きさ','直径','半径'])||'未測定／対象外',
+      metric.size?.sub||'分かっている範囲を表示'
+    ],
+    light:special.light||body.light||[
+      metric.light?.main||v308FactValue(facts,['光度','明るさ'])||'未測定／対象外',
+      metric.light?.sub||'観測・分類から分かる範囲'
+    ],
+    spin:special.spin||body.spin||[
+      spin.main||spin.value||v308FactValue(facts,['自転','回転','周期'])||'未測定／対象外',
+      spin.sub||spin.note||'詳しい回転が不明な場合は未測定と表示'
+    ],
+    distance:special.distance||v308CurrentDistance(),
+    origin:special.origin||body.origin||star.origin||'この名称は天体名・現象名・ゲーム内ステージ名として使われている。',
+    wow:special.wow||body.wow||star.point||oneLine.text||st.eventText||st.desc||'このステージならではの特徴がある。',
+    photo:null,
+    noDirect:!!special.noDirect,
+    future:false
+  };
+
+  if(sys.futureEra){
+    const f=V215_FUTURE[sys.futureStep||0]||{};
+    const ex=V308_FUTURE_BASE[sys.futureStep||0]||{};
+    model.name=f.title||name;
+    model.one=ex.one||f.desc||st.desc;
+    model.about=f.desc||st.desc;
+    model.features=[
+      ['時代',f.time||'遠未来'],
+      ['場所','地球そのもの（ゲーム上の観測地点）'],
+      ['距離','🌏 地球から0km'],
+      ['注意','未来の地球がそのまま残る保証はなく、ゲーム上の観測視点を含む']
+    ];
+    model.size=['地球サイズを基準表示','遠未来に地球が存続するかは未確定'];
+    model.light=[
+      sys.futureStep<=2?'太陽の光が強く変化':sys.futureStep===3?'白色矮星の弱い光':'周囲の恒星光が減少',
+      '未来の環境を示すゲーム表現'
+    ];
+    model.spin=['地球として自転を表現','超遠未来の実状態は未確定'];
+    model.distance='🌏 地球から0km';
+    model.origin='「○年後の地球」は現在の地球と同じ場所を、時間だけ進めて観測するゲーム内ステージ名。';
+    model.wow=ex.wow||f.desc;
+    model.photo=v308FuturePhoto();
+    model.future=true;
+  }
+
+  if(special.earthHistory){
+    model.about=st.desc||special.one;
+    model.features=[
+      ['時代',st.distance||'地球史'],
+      ['場所','地球'],
+      ['出来事',st.eventText||st.event||'地球環境の大変化'],
+      ['距離','🌏 地球から0km']
+    ];
+    model.size=['地球の直径 約12,742kmを基準','このステージは地球史の出来事'];
+    model.light=['自らは光らない','太陽光と当時の環境で見え方が変化'];
+    model.spin=['地球として自転','時代により自転速度は変化してきた'];
+    model.distance='🌏 地球から0km';
+    model.noDirect=true;
+  }
+
+  model.photo=v308PhotoFor(name,model);
+  if(model.noDirect&&!model.photo)model.photo=null;
+  return model;
+}
+
+/* ----------------------------------------------------------
+   6) STANDARD VISUALS
+   ---------------------------------------------------------- */
+function v308BulbClass(text=''){
+  const s=String(text);
+  if(/自らは光らない|対象外|未測定|ほとんど光|直接光は届かない/.test(s))return 'dim';
+  if(/100万|極端|超高|非常に明|強烈|圧倒/.test(s))return 'dazzling';
+  if(/1000|万倍|高光度|強く/.test(s))return 'ultra';
+  if(/明る|太陽光度|反射/.test(s))return 'bright';
+  return 'mid';
+}
+function v308PhotoHTML(model){
+  const p=model.photo;
+  if(!p){
+    return `<div class="v308PhotoCard noPhoto">
+      <img src="${v308PlaceholderData(model.name,'直接画像なし')}" alt="${v308Escape(model.name)}｜直接画像なし">
+      <div class="v308PhotoMeta"><b>📷 直接画像なし</b><span>この時代・架空世界・観測不能領域を直接撮影した写真はありません。</span><small>ゲーム内の背景は説明用の視覚表現です。</small></div>
+    </div>`;
+  }
+  const fallback=v308PlaceholderData(model.name,'画像を取得できませんでした');
+  const direct=p.direct===false?'<em>直接画像なし</em>':'<em>観測画像</em>';
+  const linkOpen=p.page?`<a href="${v308Escape(p.page)}" target="_blank" rel="noopener noreferrer">`:'<div>';
+  const linkClose=p.page?'</a>':'</div>';
+  return `<div class="v308PhotoCard">
+    ${linkOpen}<img src="${v308Escape(p.src)}" alt="${v308Escape(p.label||model.name)}" onerror="this.onerror=null;this.src='${fallback}'">${linkClose}
+    <div class="v308PhotoMeta">${direct}<b>📷 ${v308Escape(p.label||model.name)}</b><span>${v308Escape(p.credit||'観測画像')}</span>${p.note?`<small>${v308Escape(p.note)}</small>`:''}</div>
+  </div>`;
+}
+function v308FeatureHTML(features=[]){
+  return `<div class="v308FeatureGrid">${features.slice(0,6).map(([k,v])=>`<div><small>${v308Escape(k)}</small><b>${v308Escape(v)}</b></div>`).join('')}</div>`;
+}
+function v308DetailHTML(model){
+  const lightClass=v308BulbClass(model.light?.[0]);
+  return `<section class="v308Detail">
+    ${v308PhotoHTML(model)}
+
+    <div class="v308SectionTitle">💬 一言でいうと</div>
+    <div class="v308OneLine">${v308Escape(model.one)}</div>
+
+    <div class="v308SectionTitle">🔭 特徴</div>
+    <p class="v308About">${v308Escape(model.about)}</p>
+    ${v308FeatureHTML(model.features)}
+
+    <div class="v308MetricGrid">
+      <div class="v308MetricCard">
+        <div class="v308MetricTitle">📏 大きさ</div>
+        <div class="v217SizeViz ${String(model.size?.[0]).includes('未測定')?'unknown':''}">
+          <div class="v217SizeCompare"><span class="v217SunRef"></span><span class="v217SizeOrb" style="--orb:42px"></span></div>
+          <div class="v217SizeLabels"><span>基準</span><span>この天体</span></div>
+        </div>
+        <strong>${v308Escape(model.size?.[0]||'未測定／対象外')}</strong>
+        <small>${v308Escape(model.size?.[1]||'空欄なし')}</small>
+      </div>
+
+      <div class="v308MetricCard">
+        <div class="v308MetricTitle">💡 明るさ</div>
+        <div class="v217LightViz ${lightClass}">
+          <div class="v217Bulb"><span class="v217BulbGlass"></span><span class="v217BulbBase"></span></div>
+          <div class="v217LightScale"><span>暗い</span><span>基準</span><span>明るい</span></div>
+        </div>
+        <strong>${v308Escape(model.light?.[0]||'未測定／対象外')}</strong>
+        <small>${v308Escape(model.light?.[1]||'空欄なし')}</small>
+      </div>
+
+      <div class="v308MetricCard">
+        <div class="v308MetricTitle">🌀 回転</div>
+        <div class="v217SpinViz ${/未測定|対象外/.test(String(model.spin?.[0]))?'unknown':''}">
+          <div class="v217SpinStage"><span class="v217SpinOrb"></span><span class="v217SpinRing" style="--spin-dur:2.4s"></span></div>
+          <div class="v217SpinScale"><span>ゆっくり</span><span>回転</span><span>速い</span></div>
+        </div>
+        <strong>${v308Escape(model.spin?.[0]||'未測定／対象外')}</strong>
+        <small>${v308Escape(model.spin?.[1]||'空欄なし')}</small>
+      </div>
+    </div>
+
+    <div class="v308DistanceCard">
+      <span>🌏 距離</span><b>${v308Escape(model.distance||'距離データなし')}</b>
+    </div>
+
+    <div class="v308TextCard">
+      <b>🏷️ 名前の由来</b>
+      <span>${v308Escape(model.origin||'由来データなし')}</span>
+    </div>
+
+    <div class="v308WowCard">
+      <b>✨ ここがすごい</b>
+      <span>${v308Escape(model.wow||'このステージならではの特徴がある。')}</span>
+    </div>
+  </section>`;
+}
+
+/* ----------------------------------------------------------
+   7) ONE RENDERER FOR EVERY CURRENT STAGE
+   ---------------------------------------------------------- */
+renderContextRecipe=function(){
+  const panel=document.getElementById('v162RecipePanel');
+  const bodyEl=panel?.querySelector('.v162RecipeBody');
+  const head=panel?.querySelector('.v162RecipeHead strong');
+  const sub=panel?.querySelector('.v162RecipeHead small');
+  if(!panel||!bodyEl||!head||!sub)return;
+
+  const model=v308BuildModel();
+  head.textContent=model.name;
+  sub.textContent='写真 → 一言 → 特徴 → 大きさ → 明るさ → 回転 → 距離 → 名前の由来 → ここがすごい';
+  bodyEl.innerHTML=v308DetailHTML(model);
+};
+
+/* Old observers can rewrite the panel after opening. Repaint v308 last. */
+function v308RepaintOpenPanel(){
+  const panel=document.getElementById('v162RecipePanel');
+  if(!panel?.classList.contains('on'))return;
+  const bodyEl=panel.querySelector('.v162RecipeBody');
+  if(!bodyEl)return;
+  if(!bodyEl.querySelector('.v308Detail'))renderContextRecipe();
+}
+const v308Panel=document.getElementById('v162RecipePanel');
+if(v308Panel){
+  new MutationObserver(()=>setTimeout(v308RepaintOpenPanel,80))
+    .observe(v308Panel,{subtree:true,childList:true,attributes:true,attributeFilter:['class']});
+}
+
+/* Make the same button available even for secret / formation / history stages. */
+function v308EnsureInfoButton(){
+  if(!astroInfo)return;
+  let btn=document.getElementById('v270InlineRecipeBtn');
+  if(!btn && typeof v270EnsureInlineRecipeButton==='function'){
+    try{v270EnsureInlineRecipeButton()}catch(e){}
+    btn=document.getElementById('v270InlineRecipeBtn');
+  }
+  if(!btn){
+    btn=document.createElement('button');
+    btn.type='button';
+    btn.id='v270InlineRecipeBtn';
+    astroInfo.appendChild(btn);
+  }else if(btn.parentElement!==astroInfo){
+    astroInfo.appendChild(btn);
+  }
+  btn.style.setProperty('display','flex','important');
+  btn.style.setProperty('visibility','visible','important');
+  btn.style.setProperty('opacity','1','important');
+  btn.style.setProperty('pointer-events','auto','important');
+  btn.removeAttribute('hidden');
+  btn.disabled=false;
+  btn.innerHTML='<span>この星はどんなところ？</span><span class="plus">＋</span>';
+  btn.onclick=e=>{
+    e.preventDefault();e.stopPropagation();
+    renderContextRecipe();
+    openRecipe();
+    [50,150,320].forEach(ms=>setTimeout(()=>{try{renderContextRecipe()}catch(err){}},ms));
+  };
+}
+const v308BaseSyncHUD=syncHUD;
+syncHUD=function(force=false){
+  const out=v308BaseSyncHUD(force);
+  try{v308EnsureInfoButton()}catch(e){}
+  return out;
+};
+const v308BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v308BaseStageStart();
+  try{v308EnsureInfoButton()}catch(e){}
+  requestAnimationFrame(()=>{try{v308EnsureInfoButton()}catch(e){}});
+  return out;
+};
+v308EnsureInfoButton();
+
+/* Audit: creates delayed formation/history systems too, then checks every stage model. */
+window.__v308Audit=()=>{
+  try{if(typeof ensureFormationSystem==='function')ensureFormationSystem()}catch(e){}
+  try{if(typeof ensureBirthSystem==='function')ensureBirthSystem()}catch(e){}
+  try{if(typeof ensureEarthHistorySystem==='function')ensureEarthHistorySystem()}catch(e){}
+  const oldSystem=system,oldStage=stage;
+  const list=[];
+  for(let si=0;si<systems.length;si++){
+    for(let ti=0;ti<(systems[si]?.stages?.length||0);ti++){
+      system=si;stage=ti;
+      const m=v308BuildModel();
+      const h=v308DetailHTML(m);
+      list.push({
+        system:systems[si]?.name,
+        stage:S()?.name,
+        photo:!!h.includes('v308PhotoCard'),
+        one:!!m.one,
+        features:Array.isArray(m.features)&&m.features.length>0,
+        size:!!m.size?.[0],
+        light:!!m.light?.[0],
+        spin:!!m.spin?.[0],
+        distance:!!m.distance,
+        origin:!!m.origin,
+        wow:!!m.wow,
+        directImage:!!m.photo&&m.photo.direct!==false
+      });
+    }
+  }
+  system=oldSystem;stage=oldStage;
+  return {
+    version:'v308',
+    total:list.length,
+    blanks:list.filter(x=>!(x.photo&&x.one&&x.features&&x.size&&x.light&&x.spin&&x.distance&&x.origin&&x.wow)),
+    orphanStillPresent:V308_ORPHANS.filter(n=>
+      systems.some(s=>s?.name===n||(s?.stages||[]).some(st=>st?.name===n))||
+      !!V179_STAR_INFO[n]
+    ),
+    fixedPhotoCount:Object.keys(V308_FIXED_PHOTOS).length,
+    list
+  };
+};
+/* === /v308 === */
+
+
 /* === /v306 === */
 
 
@@ -29045,11 +29832,11 @@ window.__v306Audit={
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v307';
+  window.INUBOSHI_GAME_VERSION='v308';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v307<small>RANDOM BONES / BONUS FIX / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v308<small>STANDARD DETAILS / FIXED PHOTOS / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
