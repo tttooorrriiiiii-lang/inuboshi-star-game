@@ -10773,6 +10773,9 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
 
   function spawnComponents(){
     V162.components=[];
+    // v302: 宇宙の始まり・終わり編は、浮遊する元素／宇宙成分を全廃。
+    // この別系統が残っていたため、v157だけ止めても記号が再出現していた。
+    return;
     const route=componentRouteKind();
     if(!route)return;
     const pool=weightedTypesForStage();
@@ -17448,15 +17451,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v301';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v301</b><br>距離順・ステージ順で、全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v302';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v302</b><br>距離順・ステージ順で、全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v301</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v302</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -23731,12 +23734,12 @@ function v289RenderEarthInfo(){
   const title=astroInfo.querySelector(':scope > b')?.textContent||'';
   const typeNow=astroInfo.querySelector('.v277TypeLine')?.textContent||'';
   const distanceNow=astroInfo.querySelector('.distValue')?.textContent||'';
-  if(title!=='🌍 地球'||typeNow!==type||distanceNow!=='0 km'){
+  if(title!=='🌍 地球'||typeNow!==type||distanceNow!=='0km'){
     astroInfo.innerHTML=
       `<b>🌍 地球</b>`+
       `<span class="v277TypeLine">${type}</span>`+
       `${desc}`+
-      `<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span>`+
+      `<br><span class="distanceBig"><span class="distLead">🌏地球から</span><span class="distValue">0km</span></span>`+
       `<span class="distanceHint">${v215GravityLine(st)}</span>`;
   }
   // 地球情報を描き直しても、詳細ボタンを同じ処理内で必ず戻す。
@@ -23997,7 +24000,7 @@ renderContextRecipe=function(){
         <div class="v292BhIntro">${f.desc}</div>
         <div class="v292BhFacts">
           <div><small>⏳ 時代</small><b>${f.time}</b></div>
-          <div><small>🌍 現在地</small><b>地球から 0 km</b></div>
+      <div><small>🌏 現在地</small><b>🌏地球から0km</b></div>
           <div><small>☀️ 主な変化</small><b>${earthFacts[0]}</b></div>
           <div><small>🌌 見える世界</small><b>${earthFacts[1]}</b></div>
         </div>
@@ -24295,19 +24298,19 @@ function v295NormalizeHud(){
     const key=f?`future-${sys.futureStep}-${f.title}`:'';
     const titleNow=astroInfo.querySelector(':scope > b')?.textContent||'';
     const distanceNow=astroInfo.querySelector('.distValue')?.textContent||'';
-    if(f&&(astroInfo.dataset.v299HudKey!==key||titleNow!==f.title||distanceNow!=='0 km')){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML=`<b>${f.title}</b><br>${f.desc}<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">0 km</span></span><span class="distanceHint">${v215GravityLine(st)}</span>`;}
+    if(f&&(astroInfo.dataset.v299HudKey!==key||titleNow!==f.title||distanceNow!=='0km')){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML=`<b>${f.title}</b><br>${f.desc}<br><span class="distanceBig"><span class="distLead">🌏地球から</span><span class="distValue">0km</span></span><span class="distanceHint">${v215GravityLine(st)}</span>`;}
   }
   if(sys?.name==='🌌 宇宙の最果て'){
     const key='cosmic-edge-465';
     const titleNow=astroInfo.querySelector(':scope > b')?.textContent||'';
     const distanceNow=astroInfo.querySelector('.distValue')?.textContent||'';
-    if(astroInfo.dataset.v299HudKey!==key||titleNow!=='🌌 宇宙の最果て'||distanceNow!=='465億光年'){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML='<b>🌌 宇宙の最果て</b><span class="v277TypeLine">観測可能な宇宙の果て</span>現在の地球から見た、観測できる宇宙の半径<br><span class="distanceBig"><span class="distLead">🌍 地球から</span><span class="distValue">465億光年</span></span><span class="distanceHint">🌑 最初は光のない完全な暗闇</span>';}
+    if(astroInfo.dataset.v299HudKey!==key||titleNow!=='🌌 宇宙の最果て'||distanceNow!=='465億年'){astroInfo.dataset.v299HudKey=key;astroInfo.innerHTML='<b>🌌 宇宙の最果て</b><span class="v277TypeLine">観測可能な宇宙の果て</span>現在の地球から見た、観測できる宇宙の半径<br><span class="distanceBig"><span class="distLead">🌏地球から</span><span class="distValue">465億年</span></span><span class="distanceHint">🌑 最初は光のない完全な暗闇</span>';}
   }
   v295EnsureRecipeButton();
 }
 
-for(const sys of systems){if(sys?.name==='🌌 宇宙の最果て'){sys.distance='地球から465億光年';for(const st of sys.stages||[])st.distance='465億光年';}}
-v60DistanceByStage['🌌 宇宙の最果て']='465億 光年';
+for(const sys of systems){if(sys?.name==='🌌 宇宙の最果て'){sys.distance='地球から465億年';for(const st of sys.stages||[])st.distance='465億年';}}
+v60DistanceByStage['🌌 宇宙の最果て']='465億年';
 V263_DISTANCE_LY['🌌 宇宙の最果て']=46500000000;
 const v295BaseDistanceForCurrent=v263DistanceForCurrent;
 v263DistanceForCurrent=function(){return systems[system]?.name==='🌌 宇宙の最果て'?{ly:46500000000,label:'🌌 宇宙の最果て',pos:.96}:v295BaseDistanceForCurrent();};
@@ -24357,10 +24360,10 @@ function v298StrongWindStage(){
 
 function v298BoneTarget(){
   const sys=systems[system]||{};
-  if(system===0&&stage===0)return 64;
-  if(v298BoneOnlyEra())return 52;
-  if(sys.dream||isDogStarStage())return 42;
-  return 20;
+  if(system===0&&stage===0)return 72;
+  if(v298BoneOnlyEra())return 64;
+  if(sys.dream||isDogStarStage())return 56;
+  return 44;
 }
 
 function v298AddBonesToTarget(){
@@ -24401,31 +24404,30 @@ function v298ShouldDrawGroundRocks(){
   if(system===0&&stage===0)return false;
   if(v298StrongWindStage()||v298BoneOnlyEra())return false;
   if(system===BLACK_HOLE_SYSTEM||sys.secret||sys.dream||sys.endless)return false;
-  if(sys.v177Formation||sys.v177EarthHistory||sys.v170EarthBirth)return false;
   return true;
 }
 
 function v298DrawGroundRocks(){
   if(!v298ShouldDrawGroundRocks())return;
   const gy=groundY();
-  const xs=[390,735,1080,1445,1810,2185,2555,2915,3260];
+  const xs=[265,510,790,1080,1370,1650,1945,2220,2505,2780,3060,3320];
   ctx.save();
-  ctx.textAlign='center';ctx.textBaseline='alphabetic';
   for(let i=0;i<xs.length;i++){
     const sx=xs[i]-camera;
     if(sx<-80||sx>W+80)continue;
-    const size=25+(i%3)*5;
-    ctx.globalAlpha=.22;
-    ctx.fillStyle='#000';
-    ctx.beginPath();ctx.ellipse(sx,gy+3,size*.46,5,0,0,Math.PI*2);ctx.fill();
-    ctx.globalAlpha=.92;
-    ctx.shadowColor='rgba(0,0,0,.32)';ctx.shadowBlur=5;
-    ctx.font=`${size}px system-ui`;
-    ctx.fillText('🪨',sx,gy+3);
-    if(i%3===1){
-      ctx.globalAlpha=.55;ctx.font=`${Math.max(15,size-10)}px system-ui`;
-      ctx.fillText('🪨',sx+22,gy+2);
-    }
+    const w=25+(i%3)*8,h=14+(i%2)*5;
+    ctx.globalAlpha=.28;ctx.fillStyle='#000';
+    ctx.beginPath();ctx.ellipse(sx,gy+4,w*.58,5,0,0,Math.PI*2);ctx.fill();
+    const rock=ctx.createLinearGradient(sx-w*.5,gy-h,sx+w*.5,gy+2);
+    rock.addColorStop(0,'rgba(225,230,240,.94)');
+    rock.addColorStop(.42,'rgba(128,137,151,.98)');
+    rock.addColorStop(1,'rgba(55,60,70,.98)');
+    ctx.globalAlpha=.96;ctx.fillStyle=rock;ctx.strokeStyle='rgba(20,23,29,.65)';ctx.lineWidth=1.2;
+    ctx.beginPath();
+    ctx.moveTo(sx-w*.52,gy);ctx.lineTo(sx-w*.34,gy-h*.62);ctx.lineTo(sx-w*.05,gy-h);
+    ctx.lineTo(sx+w*.37,gy-h*.62);ctx.lineTo(sx+w*.53,gy);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.globalAlpha=.48;ctx.strokeStyle='#fff';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(sx-w*.27,gy-h*.57);ctx.lineTo(sx-w*.04,gy-h*.80);ctx.lineTo(sx+w*.18,gy-h*.57);ctx.stroke();
   }
   ctx.restore();
 }
@@ -24509,6 +24511,117 @@ window.__v300Audit=()=>({
   }))
 });
 /* === /v300 === */
+
+/* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
+window.INUBOSHI_GAME_VERSION='v302';
+
+function v302EarthDetailHTML(future=false){
+  const sys=systems[system]||{},st=S()||{};
+  const f=future?V215_FUTURE[sys.futureStep||0]:null;
+  const title=f?.title||'🌍 地球';
+  const futureFacts={
+    2:['太陽が赤色巨星へ近づく','海と大気を失う灼熱世界','地球そのものが残るかは未確定'],
+    3:['太陽は白色矮星へ','光と熱が大幅に弱まる','凍結した地球を描く予測ステージ'],
+    5:['新しい恒星がほぼ生まれない','夜空から星が消えていく','地球の存続はゲーム上の視点'],
+    6:['宇宙の主役はブラックホール','通常の恒星はほぼ消滅','極端な遠未来の理論的イメージ'],
+    7:['ブラックホールも蒸発後','冷たく希薄な暗い宇宙','現在の理論を延長した仮説']
+  }[sys.futureStep]||['現在の地球','海・大気・生命がある','太陽系第三惑星'];
+  return `<section class="v175RecipeDetail v302EarthDetail">
+    <div class="v175RecipeKicker">🌏 この地球をもっと詳しく</div>
+    <h3>${title}</h3>
+    <div class="v175RecipeMeta">🌏地球から0km</div>
+    <div class="v292BhIntro">${f?.desc||'岩石でできた太陽系第三惑星。液体の海・大気・生命が確認されている、いま私たちがいる天体。'}</div>
+    <div class="v179SectionLabel">🌍 地球の基本情報</div>
+    <div class="v292BhFacts">
+      <div><small>種類</small><b>岩石惑星</b></div>
+      <div><small>直径</small><b>約12,742km</b></div>
+      <div><small>重力</small><b>基準 1G</b></div>
+      <div><small>表面</small><b>海と陸地</b></div>
+    </div>
+    ${future?`<div class="v179SectionLabel">⏳ ${f.time}の変化</div><div class="v292BhFacts"><div><small>太陽</small><b>${futureFacts[0]}</b></div><div><small>地球の環境</small><b>${futureFacts[1]}</b></div></div>`:''}
+    <div class="v175RecipePoint"><b>💡 ここがポイント</b><span>${future?futureFacts[2]:'表面に液体の水が長期間存在し、多様な生命が確認されている唯一の天体。月とともに太陽の周りを回っている。'}</span></div>
+    ${future?'<div class="v179NameOrigin"><b>🔭 科学とゲームの境目</b><span>遠未来の姿は確定した映像ではなく、現在の恒星進化と宇宙論をもとにした予測・仮説を含む。</span></div>':''}
+  </section>`;
+}
+
+function v302NewObjectDetailHTML(name){
+  const star=V179_STAR_INFO[name],photo=star?.photo||V180_BODY_PHOTOS[name]||null;
+  if(!star)return '<div class="v162RecipeNote">この天体の情報を準備中。</div>';
+  return `<section class="v175RecipeDetail v302CompleteObject">
+    <div class="v175RecipeKicker">🔭 この天体をもっと詳しく</div>
+    <h3>${name}</h3>
+    <div class="v175RecipeMeta">📍 ${S()?.distance||systems[system]?.distance||''}</div>
+    ${v191SpotlightHTML(name)}
+    ${v297ObjectProfileHTML(name)}
+    ${v295ObjectOverviewHTML(name)}
+    ${v184TempHTML(name)}
+    ${v186StarContextHTML(name)}
+    ${v297LocationHTML(name)}
+    ${photo?v179PhotoHTML(photo,name):''}
+    <div class="v179SectionLabel">🔭 天体の特徴</div>
+    <p>${star.about||''}</p>
+    ${v179FactsHTML(star.facts||[])}
+    <div class="v175RecipePoint"><b>💡 ここがポイント</b><span>${star.point||''}</span></div>
+    <div class="v179NameOrigin"><b>🏷️ 名前の由来</b><span>${star.origin||''}</span></div>
+  </section>`;
+}
+
+const v302BaseRenderContextRecipe=renderContextRecipe;
+renderContextRecipe=function(){
+  const name=S()?.name||'',sys=systems[system]||{};
+  const panel=document.getElementById('v162RecipePanel'),body=panel?.querySelector('.v162RecipeBody');
+  const head=panel?.querySelector('.v162RecipeHead strong'),sub=panel?.querySelector('.v162RecipeHead small');
+  if(body&&head&&sub&&V295_NEW_OBJECTS.has(name)){
+    head.textContent=`🔭 ${name}`;sub.textContent='特徴・大きさ・環境・位置・観測・名前の由来';
+    body.innerHTML=v302NewObjectDetailHTML(name);
+    setTimeout(()=>v179HydratePhotos(body),0);
+    return;
+  }
+  if(body&&head&&sub&&(sys.futureEra||(system===0&&stage===0))){
+    const future=!!sys.futureEra;
+    head.textContent=future?'🌏 未来の地球':'🌏 地球';
+    sub.textContent=future?'未来の環境・地球の基本情報':'海・大気・生命・大きさ・重力';
+    body.innerHTML=v302EarthDetailHTML(future);
+    return;
+  }
+  return v302BaseRenderContextRecipe();
+};
+
+function v302FinalUi(){
+  v289RenderEarthInfo();
+  v295NormalizeHud();
+  v295EnsureRecipeButton();
+}
+
+const v302BaseStageStart=stageStart;
+stageStart=function(){
+  const out=v302BaseStageStart();
+  v298AddBonesToTarget();
+  v300StabilizeWorld();
+  v302FinalUi();
+  requestAnimationFrame(v302FinalUi);
+  return out;
+};
+
+const v302BaseUpdate=update;
+update=function(now,dt){
+  const out=v302BaseUpdate(now,dt);
+  v300StabilizeWorld();
+  v302FinalUi();
+  return out;
+};
+
+window.__v302Audit=()=>({
+  version:window.INUBOSHI_GAME_VERSION,
+  stage:S()?.name||'',
+  hud:(astroInfo?.textContent||'').trim(),
+  recipeButton:document.getElementById('v270InlineRecipeBtn')?.textContent||'',
+  bones:items.filter(it=>it?.food&&!it?.got).length,
+  otherPickups:v298BoneOnlyEra()?items.filter(it=>!it?.food&&!it?.got).length:null,
+  rocks:v298ShouldDrawGroundRocks(),
+  wind:v298StrongWindStage()
+});
+/* === /v302 === */
 
 window.__v295Audit=()=>({version:window.INUBOSHI_GAME_VERSION,earthRecipeButton:!!document.getElementById('v270InlineRecipeBtn'),newObjectDetails:[...V295_NEW_OBJECTS].map(name=>({name,info:!!V179_STAR_INFO[name],overview:!!V295_OBJECT_OVERVIEW[name],visual:!!V188_STAR_METRICS[name]})),cosmicEdgeValue:V263_DISTANCE_LY['🌌 宇宙の最果て']});
 window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・未来はステージ順',version:window.INUBOSHI_GAME_VERSION});
@@ -27541,7 +27654,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v301</span></strong>
+      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v302</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -28043,11 +28156,11 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v301';
+  window.INUBOSHI_GAME_VERSION='v302';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v301<small>OVERRIDE CLEANUP / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v302<small>EXACT FIX / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
