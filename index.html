@@ -17451,15 +17451,15 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     // Existing menu is no longer only endings.
     const head=card.querySelector('.v62DevHead b');
     const sub=card.querySelector('.v62DevSub');
-    if(head)head.textContent='🐾 隠しステージメニュー｜v302';
-    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v302</b><br>距離順・ステージ順で、全ステージをここから確認。';
+    if(head)head.textContent='🐾 隠しステージメニュー｜v303';
+    if(sub)sub.innerHTML='<b style="color:#bff8ff">GAME VERSION v303</b><br>距離順・ステージ順で、全ステージをここから確認。';
 
     const data=debugApi()?.list?.()||[];
     const flat=data.filter(sys=>!(sys?.futureEra&&sys.futureStep===1)).flatMap(sys=>(sys.stages||[]));
     const block=document.createElement('section');
     block.className='v172StageBlock';
     block.innerHTML=`
-      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v302</div>
+      <div style="margin:0 0 10px;padding:7px 10px;border:1px solid rgba(126,239,255,.35);border-radius:10px;background:rgba(86,231,255,.08);color:#bff8ff;font:1000 10px/1.2 system-ui;text-align:center">GAME VERSION v303</div>
       <div class="v172StageTitle"><b>🚀 全ステージ移動</b><span class="v172Count">${flat.length} STAGES</span></div>
       <input class="v172Search" type="search" inputmode="search" placeholder="ステージ名を検索　例：月 / エアレンデル / ビッグバン">
       <div class="v193QuickGroup"><b>🚀 帰還・宇宙ルート</b><div class="v172Quick">
@@ -24281,12 +24281,9 @@ function v295EnsureRecipeButton(){
   if(btn.dataset.v299Label!==label){btn.dataset.v299Label=label;btn.innerHTML=`<span>${label}</span><span class="plus">＋</span>`;}
   btn.onclick=e=>{
     e.preventDefault();e.stopPropagation();
-    try{
-      // openRecipe() は古い汎用パネルを先に生成するため、必ずその後で
-      // 現在の地球・未来地球・追加天体の詳細へ差し替える。
-      openRecipe();
-      renderContextRecipe();
-    }catch(err){console.error('[v301 recipe]',err)}
+    // 古い汎用パネル側が失敗しても、専用詳細の描画は必ず別処理で実行する。
+    try{openRecipe()}catch(err){console.error('[v303 recipe open]',err)}
+    try{renderContextRecipe()}catch(err){console.error('[v303 recipe render]',err)}
   };
   if(btn.parentElement!==astroInfo)astroInfo.appendChild(btn);
 }
@@ -24330,7 +24327,13 @@ function v295DrawSagittarius(t){
   const x=W*.68,y=H*.28,r=Math.max(48,Math.min(W,H)*.115);ctx.save();for(let i=0;i<34;i++){const a=i*.91+t*(.04+(i%4)*.01),rr=r*1.5+(i%9)*r*.22;ctx.globalAlpha=.18+(i%5)*.08;ctx.fillStyle=i%3===0?'#70dfff':i%3===1?'#ffb25f':'#fff';ctx.beginPath();ctx.arc(x+Math.cos(a)*rr,y+Math.sin(a)*rr*.42,1+(i%3)*.45,0,Math.PI*2);ctx.fill();}
   ctx.translate(x,y);ctx.rotate(-.16+Math.sin(t*.25)*.025);const halo=ctx.createRadialGradient(0,0,r*.5,0,0,r*2.2);halo.addColorStop(0,'rgba(0,0,0,0)');halo.addColorStop(.35,'rgba(255,112,45,.34)');halo.addColorStop(.62,'rgba(255,202,113,.18)');halo.addColorStop(1,'transparent');ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,r*2.25,0,Math.PI*2);ctx.fill();ctx.shadowColor='#ff8b46';ctx.shadowBlur=28;ctx.lineWidth=Math.max(9,r*.20);const disk=ctx.createLinearGradient(-r*1.7,0,r*1.7,0);disk.addColorStop(0,'#ff642f');disk.addColorStop(.48,'#fff1b6');disk.addColorStop(.55,'#fff');disk.addColorStop(1,'#ee4d2f');ctx.strokeStyle=disk;ctx.beginPath();ctx.ellipse(0,0,r*1.75,r*.38,0,0,Math.PI*2);ctx.stroke();ctx.shadowColor='#000';ctx.shadowBlur=30;ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,r*.72,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(255,244,209,.88)';ctx.shadowColor='#fff3c2';ctx.shadowBlur=14;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*.86,Math.PI*.12,Math.PI*.88);ctx.stroke();ctx.restore();
 }
-drawBackground=function(){v293BaseDrawBackground();const name=S()?.name||'',t=performance.now()/1000;if(name==='🧊 エウロパ')v295DrawEuropa(t);else if(name==='🪐 プロキシマ・ケンタウリb')v295DrawProxima(t);else if(name==='🕳️ いて座A*')v295DrawSagittarius(t);};
+drawBackground=function(){
+  try{v293BaseDrawBackground()}catch(err){console.error('[v303 old background]',err)}
+  const name=S()?.name||'',t=performance.now()/1000;
+  if(name==='🧊 エウロパ')v295DrawEuropa(t);
+  else if(name==='🪐 プロキシマ・ケンタウリb')v295DrawProxima(t);
+  else if(name==='🕳️ いて座A*')v295DrawSagittarius(t);
+};
 
 const v295BaseStageStart=stageStart;
 stageStart=function(){
@@ -24434,8 +24437,8 @@ function v298DrawGroundRocks(){
 
 const v298BaseGround=drawGround;
 drawGround=function(){
-  v298BaseGround();
-  v298DrawGroundRocks();
+  try{v298BaseGround()}catch(err){console.error('[v303 old ground]',err)}
+  finally{v298DrawGroundRocks()}
 };
 
 const v298BaseUpdate=update;
@@ -24513,7 +24516,7 @@ window.__v300Audit=()=>({
 /* === /v300 === */
 
 /* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
-window.INUBOSHI_GAME_VERSION='v302';
+window.INUBOSHI_GAME_VERSION='v303';
 
 function v302EarthDetailHTML(future=false){
   const sys=systems[system]||{},st=S()||{};
@@ -24588,27 +24591,44 @@ renderContextRecipe=function(){
 };
 
 function v302FinalUi(){
-  v289RenderEarthInfo();
-  v295NormalizeHud();
-  v295EnsureRecipeButton();
+  for(const fn of [v289RenderEarthInfo,v295NormalizeHud,v295EnsureRecipeButton]){
+    try{fn()}catch(err){console.error('[v303 final ui]',err)}
+  }
 }
 
 const v302BaseStageStart=stageStart;
 stageStart=function(){
-  const out=v302BaseStageStart();
-  v298AddBonesToTarget();
-  v300StabilizeWorld();
-  v302FinalUi();
-  requestAnimationFrame(v302FinalUi);
+  let out;
+  try{out=v302BaseStageStart()}catch(err){console.error('[v303 old stageStart]',err)}
+  finally{
+    try{v300StabilizeWorld();v298AddBonesToTarget()}catch(err){console.error('[v303 final world start]',err)}
+    v302FinalUi();
+    requestAnimationFrame(v302FinalUi);
+  }
   return out;
 };
 
 const v302BaseUpdate=update;
 update=function(now,dt){
-  const out=v302BaseUpdate(now,dt);
-  v300StabilizeWorld();
-  v302FinalUi();
+  let out;
+  try{out=v302BaseUpdate(now,dt)}catch(err){
+    if(!window.__v303LastUpdateError||now-window.__v303LastUpdateError>3000){
+      window.__v303LastUpdateError=now;console.error('[v303 contained old update]',err);
+    }
+  }finally{
+    try{v300StabilizeWorld();v298AddBonesToTarget()}catch(err){console.error('[v303 final world update]',err)}
+    v302FinalUi();
+  }
   return out;
+};
+
+// 宇宙の最果ては旧描画が失敗しても、最後に必ず黒い開始演出を重ねる。
+const v303BaseFallingStars=drawFallingStars;
+drawFallingStars=function(){
+  try{v303BaseFallingStars()}catch(err){console.error('[v303 old foreground]',err)}
+  if(systems[system]?.name==='🌌 宇宙の最果て'){
+    try{v260DrawCosmicEdge()}catch(err){console.error('[v303 cosmic edge]',err)}
+  }
 };
 
 window.__v302Audit=()=>({
@@ -27654,7 +27674,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v302</span></strong>
+      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v303</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -28156,11 +28176,11 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v302';
+  window.INUBOSHI_GAME_VERSION='v303';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v302<small>EXACT FIX / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v303<small>FAIL-SAFE FIX / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
