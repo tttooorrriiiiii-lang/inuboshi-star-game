@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v310</title>
+<title>犬星くん GALAXY TOUR v313</title>
 <!-- v204: core-scope runtime fix / Earendel HUD+radio / future city / universal 3 buttons / top-left material counts -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -2245,17 +2245,81 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
 </style>
 
 
-<!-- v309 DETAIL ORDER:
+<!-- v311 DETAIL ORDER:
 1 写真
 2 一言
 3 特徴
-4 大きさ
-5 💡明るさ
-6 回転
-7 距離
-8 名前の由来
-9 ここがすごい
+4 大きさ / 💡明るさ / 回転（横並び）
+5 表面温度（データがある場合）
+6 星の一生（恒星データがある場合）
+7 星座・所属（データがある場合）
+8 地球からの距離
+9 条件付きプロフィール：👀肉眼で見える / 👥多重星 / 💥超新星候補
+10 名前の由来
+11 ここがすごい
 -->
+
+
+<style id="v311-restored-star-info-style">
+/* 大きさ・明るさ・回転はPC/SPとも必ず横3列 */
+.v311MetricGrid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+.v311OptionalTitle{
+  margin:14px 0 7px;
+  color:#ffe6a2;
+  font:950 9px/1.2 system-ui;
+  letter-spacing:.03em;
+}
+.v311FlexibleProfile{
+  grid-template-columns:repeat(var(--v311-cards,3),minmax(0,1fr))!important;
+}
+@media(max-width:560px){
+  .v311MetricGrid{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  .v311MetricGrid .v308MetricCard{
+    display:block!important;
+    min-width:0!important;
+    padding:7px 4px!important;
+    text-align:center!important;
+  }
+  .v311MetricGrid .v308MetricTitle{
+    grid-column:auto!important;
+    margin-bottom:4px!important;
+    font-size:7px!important;
+  }
+  .v311MetricGrid .v217SizeViz,
+  .v311MetricGrid .v217LightViz,
+  .v311MetricGrid .v217SpinViz{
+    min-height:62px!important;
+    padding:4px 2px!important;
+    transform:none!important;
+  }
+  .v311MetricGrid .v217SizeCompare{height:43px!important}
+  .v311MetricGrid .v217Bulb{transform:scale(.78)!important;height:48px!important}
+  .v311MetricGrid .v217SpinStage{transform:scale(.82)!important;height:48px!important}
+  .v311MetricGrid .v308MetricCard strong{
+    margin-top:4px!important;
+    font-size:7.2px!important;
+    line-height:1.28!important;
+  }
+  .v311MetricGrid .v308MetricCard small{
+    font-size:5.9px!important;
+    line-height:1.3!important;
+  }
+  .v311FlexibleProfile{
+    grid-template-columns:repeat(var(--v311-cards,3),minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  .v311FlexibleProfile .v229ProfileCard{
+    min-width:0!important;
+    padding:8px 5px!important;
+  }
+}
+</style>
 
 </head>
 <body>
@@ -15224,7 +15288,7 @@ if(v63IsOpeningEarth()){missionEl.textContent='🐕 いつもの散歩';eventEl.
     '❤️ クイユル':{title:'❤️ JWSTで見えた赤い超遠方星',chips:['重力レンズ','超遠方'],text:'重力レンズとJWSTによって見えるようになった、遠い宇宙の赤い星候補。'},
   };
 
-  /* v310: expose the old star-summary maps for the unified renderer. */
+  /* v311: expose the old star-summary maps for the unified renderer. */
   window.__V191_STAR_SPOTLIGHT=V191_STAR_SPOTLIGHT;
   window.__V238_STAR_ONE_LINE=V238_STAR_ONE_LINE;
 
@@ -23955,7 +24019,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v310';
+window.INUBOSHI_GAME_VERSION='v313';
 
 /* v304: v168のレシピモジュールから、完成処理が使う参照を正式に受け取る。 */
 const v304RecipeInternals=window.__v304RecipeInternals;
@@ -24701,7 +24765,7 @@ window.__v300Audit=()=>({
 /* === /v300 === */
 
 /* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
-window.INUBOSHI_GAME_VERSION='v310';
+window.INUBOSHI_GAME_VERSION='v313';
 
 function v302EarthDetailHTML(future=false){
   const sys=systems[system]||{},st=S()||{};
@@ -24992,7 +25056,7 @@ v263DistanceForCurrent=function(){
     : V305_CORE.v263DistanceForCurrent();
 };
 
-window.INUBOSHI_GAME_VERSION='v310';
+window.INUBOSHI_GAME_VERSION='v313';
 v305NormalizeWorld();v305NormalizeUi();
 
 window.__v305Audit={
@@ -25011,7 +25075,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 /* === /v293 === */
 
 /* === v306: ROUTE CLEANUP / BONE SPREAD / RECIPE PHOTO / ROCK DAMAGE === */
-window.INUBOSHI_GAME_VERSION='v310';
+window.INUBOSHI_GAME_VERSION='v313';
 
 const V306_FLOW={
   moving:false,
@@ -25598,7 +25662,7 @@ drawPlayer=function(){
 function v306FinalUi(){v306ReorderCounters();v306SyncFutureRadio();v306TrimBonusMenu();}
 requestAnimationFrame(v306FinalUi);setTimeout(v306FinalUi,250);
 
-window.INUBOSHI_GAME_VERSION='v310';
+window.INUBOSHI_GAME_VERSION='v313';
 window.__v306Audit={
   state:()=>({version:window.INUBOSHI_GAME_VERSION,stage:S()?.name,system:systems[system]?.name,bones:items.filter(x=>x?.food&&!x.got).length,bonus:{future:V306_FLOW.futureActive,fromBonus:V306_FLOW.fromBonus},portal:v306PortalSpec(),radioHidden:systems[system]?.futureEra?getComputedStyle(document.getElementById('v63RadioBadge')).display:'n/a'}),
   jump:name=>window.__v304Audit.jump(name),
@@ -25606,7 +25670,7 @@ window.__v306Audit={
 };
 
 /* === v308: COMPLETE STANDARD DETAIL / FIXED PHOTOS / ORPHAN CLEANUP === */
-window.INUBOSHI_GAME_VERSION='v310';
+window.INUBOSHI_GAME_VERSION='v313';
 
 /* ----------------------------------------------------------
    1) REMOVE ORPHAN DETAIL DATA
@@ -25626,6 +25690,10 @@ for(const name of V308_ORPHANS){
     (typeof V238_STAR_ONE_LINE!=='undefined'?V238_STAR_ONE_LINE:null),
     (typeof V191_STAR_SPOTLIGHT!=='undefined'?V191_STAR_SPOTLIGHT:null),
     (typeof V244_STAR_HINTS!=='undefined'?V244_STAR_HINTS:null),
+    (typeof V184_TEMP_INFO!=='undefined'?V184_TEMP_INFO:null),
+    (typeof V186_STAR_CONTEXT!=='undefined'?V186_STAR_CONTEXT:null),
+    (typeof V229_STAR_PROFILE!=='undefined'?V229_STAR_PROFILE:null),
+    (typeof V237_CONSTELLATIONS!=='undefined'?V237_CONSTELLATIONS:null),
     (typeof rankByName!=='undefined'?rankByName:null)
   ]){
     try{if(store&&Object.prototype.hasOwnProperty.call(store,name))delete store[name]}catch(e){}
@@ -26140,9 +26208,111 @@ function v308PhotoHTML(model){
 function v308FeatureHTML(features=[]){
   return `<div class="v308FeatureGrid">${features.slice(0,6).map(([k,v])=>`<div><small>${v308Escape(k)}</small><b>${v308Escape(v)}</b></div>`).join('')}</div>`;
 }
+/* v311: restore the useful pre-unification parts instead of recreating them.
+   Existing components reused:
+   - v184TempHTML          : surface temperature
+   - v187LifeHTML          : stellar-life gauge
+   - v237ConstellationHTML : constellation mini map
+   - v223DistanceHTML      : distance comparison
+   - v230* visual helpers  : magnitude / multiplicity / fate
+*/
+
+function v311TemperatureHTML(name=''){
+  try{return typeof v184TempHTML==='function'?v184TempHTML(name):''}catch(e){return ''}
+}
+
+function v311LifeHTML(name=''){
+  try{
+    const life=(typeof V187_STAR_LIFE!=='undefined'?V187_STAR_LIFE[name]:null);
+    const ctx=(typeof V186_STAR_CONTEXT!=='undefined'?V186_STAR_CONTEXT[name]:null);
+    if(!life&&!ctx?.life)return '';
+    return v187LifeHTML(name,ctx||null);
+  }catch(e){return ''}
+}
+
+function v311ConstellationAndHomeHTML(name=''){
+  try{
+    const constellation=(typeof v237ConstellationHTML==='function'?v237ConstellationHTML(name):'');
+    const ctx=(typeof V186_STAR_CONTEXT!=='undefined'?V186_STAR_CONTEXT[name]:null);
+    const home=ctx?.home?`<div class="v186StarContext">
+      <div class="v186ContextRow"><span>🌌 星座・所属</span><b>${v179Esc(ctx.home)}</b></div>
+    </div>`:'';
+    return constellation+home;
+  }catch(e){return ''}
+}
+
+function v311DistanceHTML(name='',fallback=''){
+  try{
+    const old=(typeof v223DistanceHTML==='function'?v223DistanceHTML(name):'');
+    if(old)return old;
+  }catch(e){}
+  return `<div class="v308DistanceCard"><span>🌏 地球からの距離</span><b>${v308Escape(fallback||'距離データなし')}</b></div>`;
+}
+
+/* Conditional profile:
+   👀 only when the star is naked-eye visible
+   👥 only when it is actually a multiple-star system
+   💥 only for supernova candidates
+   Uses the old visual components/data rather than rebuilding them. */
+function v311ConditionalProfileHTML(name=''){
+  try{
+    /* Reuse the ORIGINAL pre-unification profile renderer itself.
+       We do not recreate its data. We render the old 3 cards, then keep only
+       the cards that are meaningful for this star. */
+    const oldHTML=(typeof v229ProfileHTML==='function'?v229ProfileHTML(name):'');
+    if(!oldHTML)return '';
+
+    const box=document.createElement('div');
+    box.innerHTML=oldHTML;
+
+    const keep=[];
+    for(const card of [...box.querySelectorAll('.v229ProfileCard')]){
+      const label=(card.querySelector('.v229ProfileLabel')?.textContent||'').trim();
+      const strong=(card.querySelector('strong')?.textContent||'').trim();
+      const all=(card.textContent||'').trim();
+
+      if(label.includes('何等星')){
+        /* User wants magnitude only when the object is naked-eye visible. */
+        const invisible=!!card.querySelector('.v230MagInvisible') || /肉眼では見えない|肉眼ではかなり厳しい/.test(all);
+        if(!invisible)keep.push(card.outerHTML);
+        continue;
+      }
+
+      if(label.includes('何重星')){
+        /* Only multiple systems / confirmed companion cases. */
+        const multiple=/2重|3重|二重|三重|連星|複数|伴星あり/.test(strong);
+        if(multiple)keep.push(card.outerHTML);
+        continue;
+      }
+
+      if(label.includes('最後どうなる')){
+        /* Use the ORIGINAL card's classification.
+           Do not match text like "超新星にはならない". */
+        if(card.classList.contains('supernova'))keep.push(card.outerHTML);
+      }
+    }
+
+    if(!keep.length)return '';
+    return `<div class="v311OptionalTitle">🌟 この星だけの追加プロフィール</div>
+      <div class="v229StarProfile v311FlexibleProfile" style="--v311-cards:${keep.length}" aria-label="条件付き星プロフィール">
+        ${keep.join('')}
+      </div>`;
+  }catch(e){
+    console.error('[v312 old profile reuse]',e);
+    return '';
+  }
+}
+
 function v308DetailHTML(model){
   const lightClass=v308BulbClass(model.light?.[0]);
-  return `<section class="v308Detail">
+  const name=v308CurrentName();
+  const tempHTML=v311TemperatureHTML(name);
+  const lifeHTML=v311LifeHTML(name);
+  const constellationHTML=v311ConstellationAndHomeHTML(name);
+  const distanceHTML=v311DistanceHTML(name,model.distance);
+  const conditionalHTML=v311ConditionalProfileHTML(name);
+
+  return `<section class="v308Detail v311Detail">
     ${v308PhotoHTML(model)}
 
     <div class="v308SectionTitle">💬 一言でいうと</div>
@@ -26152,7 +26322,7 @@ function v308DetailHTML(model){
     <p class="v308About">${v308Escape(model.about)}</p>
     ${v308FeatureHTML(model.features)}
 
-    <div class="v308MetricGrid">
+    <div class="v308MetricGrid v311MetricGrid">
       <div class="v308MetricCard">
         <div class="v308MetricTitle">📏 大きさ</div>
         <div class="v217SizeViz ${String(model.size?.[0]).includes('未測定')?'unknown':''}">
@@ -26160,7 +26330,7 @@ function v308DetailHTML(model){
           <div class="v217SizeLabels"><span>基準</span><span>この天体</span></div>
         </div>
         <strong>${v308Escape(model.size?.[0]||'未測定／対象外')}</strong>
-        <small>${v308Escape(model.size?.[1]||'空欄なし')}</small>
+        <small>${v308Escape(model.size?.[1]||'')}</small>
       </div>
 
       <div class="v308MetricCard">
@@ -26170,7 +26340,7 @@ function v308DetailHTML(model){
           <div class="v217LightScale"><span>暗い</span><span>基準</span><span>明るい</span></div>
         </div>
         <strong>${v308Escape(model.light?.[0]||'未測定／対象外')}</strong>
-        <small>${v308Escape(model.light?.[1]||'空欄なし')}</small>
+        <small>${v308Escape(model.light?.[1]||'')}</small>
       </div>
 
       <div class="v308MetricCard">
@@ -26180,13 +26350,15 @@ function v308DetailHTML(model){
           <div class="v217SpinScale"><span>ゆっくり</span><span>回転</span><span>速い</span></div>
         </div>
         <strong>${v308Escape(model.spin?.[0]||'未測定／対象外')}</strong>
-        <small>${v308Escape(model.spin?.[1]||'空欄なし')}</small>
+        <small>${v308Escape(model.spin?.[1]||'')}</small>
       </div>
     </div>
 
-    <div class="v308DistanceCard">
-      <span>🌏 距離</span><b>${v308Escape(model.distance||'距離データなし')}</b>
-    </div>
+    ${tempHTML}
+    ${lifeHTML}
+    ${constellationHTML}
+    ${distanceHTML}
+    ${conditionalHTML}
 
     <div class="v308TextCard">
       <b>🏷️ 名前の由来</b>
@@ -26223,7 +26395,7 @@ window.__v309RenderUnifiedDetail=()=>{
   try{ renderContextRecipe(); return true; }
   catch(err){ console.error('[v309 unified detail]',err); return false; }
 };
-window.__v309DetailOrder='写真 → 一言 → 特徴 → 大きさ → 💡明るさ → 回転 → 距離 → 名前の由来 → ここがすごい';
+window.__v309DetailOrder='写真 → 一言 → 特徴 → 大きさ/💡明るさ/回転 → 温度 → 星の一生 → 星座・所属 → 距離 → 条件付きプロフィール → 名前の由来 → ここがすごい';
 
 
 /* Old observers can rewrite the panel after opening. Repaint v308 last. */
@@ -29859,11 +30031,11 @@ window.__v308Audit=()=>{
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v310';
+  window.INUBOSHI_GAME_VERSION='v313';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v310<small>UNIFIED DETAIL RUNTIME FIX / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v313<small>RESTORED OLD CARDS / CONDITIONAL FIX / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
@@ -29925,7 +30097,7 @@ document.addEventListener('click',function(e){
 
 <script id="v309-detail-order-final-guard">
 (()=>{
-  const ORDER='写真 → 一言 → 特徴 → 大きさ → 💡明るさ → 回転 → 距離 → 名前の由来 → ここがすごい';
+  const ORDER='写真 → 一言 → 特徴 → 大きさ/💡明るさ/回転 → 温度 → 星の一生 → 星座・所属 → 距離 → 条件付きプロフィール → 名前の由来 → ここがすごい';
   let repainting=false;
 
   function panel(){
