@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>犬星くん GALAXY TOUR v316</title>
+<title>犬星くん GALAXY TOUR v317</title>
 <!-- v204: core-scope runtime fix / Earendel HUD+radio / future city / universal 3 buttons / top-left material counts -->
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -2318,6 +2318,45 @@ html,body,#wrap{margin:0!important;padding:0!important;top:0!important}
     min-width:0!important;
     padding:8px 5px!important;
   }
+}
+</style>
+
+
+<style id="v317-future-qa-style">
+#v316QaRoutes .v317FutureQaTitle{
+  margin:12px 0 7px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.10);
+  color:#ffd1a8;
+  font:1000 8px/1.2 system-ui;
+  letter-spacing:.04em;
+}
+#v316QaRoutes .v317FutureQaGrid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;
+}
+#v316QaRoutes .v317FutureQaGrid button{
+  min-height:44px;
+  padding:7px 6px;
+  border:1px solid rgba(255,146,103,.30);
+  border-radius:10px;
+  background:linear-gradient(180deg,rgba(78,28,18,.76),rgba(32,13,14,.78));
+  color:#fff;
+  font:900 7.5px/1.25 system-ui;
+  text-align:left;
+}
+#v316QaRoutes .v317FutureQaGrid button span{
+  display:inline-block;
+  margin-right:5px;
+  padding:2px 4px;
+  border-radius:999px;
+  background:rgba(255,255,255,.10);
+  color:#ffd8bb;
+  font:1000 6px/1 system-ui;
+}
+@media(max-width:520px){
+  #v316QaRoutes .v317FutureQaGrid{grid-template-columns:1fr 1fr}
 }
 </style>
 
@@ -24018,7 +24057,7 @@ window.__v292Audit=()=>({
 
 
 /* === v293: ATTACHED FIXES + EUROPA / PROXIMA b / SAGITTARIUS A* === */
-window.INUBOSHI_GAME_VERSION='v316';
+window.INUBOSHI_GAME_VERSION='v317';
 
 /* v304: v168のレシピモジュールから、完成処理が使う参照を正式に受け取る。 */
 const v304RecipeInternals=window.__v304RecipeInternals;
@@ -24764,7 +24803,7 @@ window.__v300Audit=()=>({
 /* === /v300 === */
 
 /* === v302: EXACT VISIBLE COPY + COMPLETE DETAIL PANELS === */
-window.INUBOSHI_GAME_VERSION='v316';
+window.INUBOSHI_GAME_VERSION='v317';
 
 function v302EarthDetailHTML(future=false){
   const sys=systems[system]||{},st=S()||{};
@@ -25055,7 +25094,7 @@ v263DistanceForCurrent=function(){
     : V305_CORE.v263DistanceForCurrent();
 };
 
-window.INUBOSHI_GAME_VERSION='v316';
+window.INUBOSHI_GAME_VERSION='v317';
 v305NormalizeWorld();v305NormalizeUi();
 
 window.__v305Audit={
@@ -25074,7 +25113,7 @@ window.__v296MenuOrder=()=>({mode:'天体は距離順／宇宙史・地球史・
 /* === /v293 === */
 
 /* === v306: ROUTE CLEANUP / BONE SPREAD / RECIPE PHOTO / ROCK DAMAGE === */
-window.INUBOSHI_GAME_VERSION='v316';
+window.INUBOSHI_GAME_VERSION='v317';
 
 const V306_FLOW={
   moving:false,
@@ -25661,7 +25700,7 @@ drawPlayer=function(){
 function v306FinalUi(){v306ReorderCounters();v306SyncFutureRadio();v306TrimBonusMenu();}
 requestAnimationFrame(v306FinalUi);setTimeout(v306FinalUi,250);
 
-window.INUBOSHI_GAME_VERSION='v316';
+window.INUBOSHI_GAME_VERSION='v317';
 window.__v306Audit={
   state:()=>({version:window.INUBOSHI_GAME_VERSION,stage:S()?.name,system:systems[system]?.name,bones:items.filter(x=>x?.food&&!x.got).length,bonus:{future:V306_FLOW.futureActive,fromBonus:V306_FLOW.fromBonus},portal:v306PortalSpec(),radioHidden:systems[system]?.futureEra?getComputedStyle(document.getElementById('v63RadioBadge')).display:'n/a'}),
   jump:name=>window.__v304Audit.jump(name),
@@ -25669,7 +25708,7 @@ window.__v306Audit={
 };
 
 /* === v308: COMPLETE STANDARD DETAIL / FIXED PHOTOS / ORPHAN CLEANUP === */
-window.INUBOSHI_GAME_VERSION='v316';
+window.INUBOSHI_GAME_VERSION='v317';
 
 /* ----------------------------------------------------------
    1) REMOVE ORPHAN DETAIL DATA
@@ -26508,7 +26547,7 @@ window.__v308Audit=()=>{
    IMPORTANT: this code lives INSIDE the original game IIFE,
    so it can safely access system/stage/update/stageStart/p/etc.
    ========================================================= */
-window.INUBOSHI_GAME_VERSION='v316';
+window.INUBOSHI_GAME_VERSION='v317';
 window.__v316RouteLock=false;
 
 const V316_SAVE_KEY='inuboshi-v316-bonus';
@@ -26908,23 +26947,124 @@ drawPlayer=function(){
 };
 
 
-function v316EnsureQa(){
-  const panel=document.getElementById('v150JumpPanel');if(!panel)return;
-  let box=document.getElementById('v316QaRoutes');if(!box){box=document.createElement('div');box.id='v316QaRoutes';box.innerHTML=`<div class="v316QaTitle">v316｜新ルート確認</div><div class="v316QaGrid"><button type="button" data-v316qa="main">🐾 MAIN TOUR<br>まとめ画面</button><button type="button" data-v316qa="origin">💥 宇宙の始まり</button><button type="button" data-v316qa="edge">🌌 宇宙の最果て</button><button type="button" data-v316qa="future">☀️ 未来の太陽系</button></div>`;const old=document.getElementById('v257Stage2Quick');old?.parentNode?.insertBefore(box,old)}
-  box.querySelectorAll('[data-v316qa]').forEach(b=>b.onclick=()=>{document.getElementById('v150JumpPanel')?.classList.remove('on');paused=false;b.dataset.v316qa==='main'?v316ShowMain():v316StartBonus(b.dataset.v316qa)});
-  const old=document.getElementById('v257Stage2Quick');if(old)old.style.setProperty('display','none','important');
+
+/* v317: direct QA access to every future-solar stage.
+   This bypasses the broken sequential transition and lets each stage be tested alone. */
+function v317JumpFutureStage(index){
+  index=Math.max(0,Math.min(V316_FUTURE_STAGES.length-1,Number(index)||0));
+
+  const si=v316EnsureFutureSystem();
+  if(si<0||!systems[si]?.stages?.[index])return false;
+
+  V316.active='future';
+  V316.flowerRun=false;
+  V316.futureIndex=index;
+  V316.moving=false;
+  window.__v316RouteLock=true;
+  window.__v170ForwardCosmic=false;
+  wrap.classList.remove('v314OriginBonus');
+
+  v316CloseOverlay();
+  const jumpEnd=index===V316_FUTURE_STAGES.length-1?1850:1500;
+  const ok=v316Jump(
+    si,
+    index,
+    `☀️ FUTURE QA｜${V316_FUTURE_STAGES[index].name}`,
+    jumpEnd
+  );
+  if(!ok)return false;
+
+  /* stageStart and old systems may have touched state; force the future state once more. */
+  V316.active='future';
+  V316.futureIndex=index;
+  V316.moving=false;
+  paused=false;
+  window.__v316RouteLock=true;
+  wormholeActive=false;
+  blackHoleActive=false;
+  v316QuietStage();
+  v316ScatterBones(jumpEnd);
+
+  v316SetBadge(`☀️ 未来の太陽系｜${index+1} / ${V316_FUTURE_STAGES.length}｜QA直行`);
+  missionEl.textContent=[
+    '🌍 最初の地球との違いを見る',
+    '🌙 同じ月から変わった地球と太陽を見る',
+    '🔴 昔来た火星を未来で再訪',
+    '🪐 土星の象徴だった輪がない',
+    '🔴 巨大化した太陽そのものへ',
+    '⚪ 活動を終えた太陽の上を歩く'
+  ][index]||'☀️ 未来の太陽系';
+  eventEl.textContent=`QA直行｜未来の太陽系 ${index+1} / ${V316_FUTURE_STAGES.length}`;
+
+  return true;
 }
-function v316Init(){v316EnsureShell();v316EnsureFutureSystem();v316InstallFutureDetails();v316EnsureQa();const ver=document.getElementById('v213MenuVersion');if(ver)ver.textContent='v316'}
+window.__v317FutureStage=(index)=>v317JumpFutureStage(index);
+
+function v316EnsureQa(){
+  const panel=document.getElementById('v150JumpPanel');
+  if(!panel)return;
+
+  let box=document.getElementById('v316QaRoutes');
+  if(!box){
+    box=document.createElement('div');
+    box.id='v316QaRoutes';
+    const old=document.getElementById('v257Stage2Quick');
+    old?.parentNode?.insertBefore(box,old);
+  }
+
+  box.innerHTML=`
+    <div class="v316QaTitle">v317｜新ルート確認</div>
+    <div class="v316QaGrid">
+      <button type="button" data-v316qa="main">🐾 MAIN TOUR<br>まとめ画面</button>
+      <button type="button" data-v316qa="origin">💥 宇宙の始まり</button>
+      <button type="button" data-v316qa="edge">🌌 宇宙の最果て</button>
+      <button type="button" data-v316qa="future">☀️ 未来の太陽系<br>1から通し</button>
+    </div>
+
+    <div class="v317FutureQaTitle">☀️ 未来の太陽系｜各ステージ直行</div>
+    <div class="v317FutureQaGrid">
+      ${V316_FUTURE_STAGES.map((s,i)=>`
+        <button type="button" data-v317future="${i}">
+          <span>${i+1}/6</span>${s.name}
+        </button>`).join('')}
+    </div>
+  `;
+
+  box.querySelectorAll('[data-v316qa]').forEach(b=>{
+    b.onclick=()=>{
+      document.getElementById('v150JumpPanel')?.classList.remove('on');
+      paused=false;
+      b.dataset.v316qa==='main'
+        ? v316ShowMain()
+        : v316StartBonus(b.dataset.v316qa);
+    };
+  });
+
+  box.querySelectorAll('[data-v317future]').forEach(b=>{
+    b.onclick=()=>{
+      const i=Number(b.dataset.v317future)||0;
+      document.getElementById('v150JumpPanel')?.classList.remove('on');
+      paused=false;
+      v317JumpFutureStage(i);
+    };
+  });
+
+  const old=document.getElementById('v257Stage2Quick');
+  if(old)old.style.setProperty('display','none','important');
+}
+function v316Init(){v316EnsureShell();v316EnsureFutureSystem();v316InstallFutureDetails();v316EnsureQa();const ver=document.getElementById('v213MenuVersion');if(ver)ver.textContent='v317'}
 if(document.readyState==='loading')addEventListener('DOMContentLoaded',v316Init,{once:true});else setTimeout(v316Init,0);
 
 window.__v316StartBonus=v316StartBonus;
 window.__v316OpenMain=v316ShowMain;
 window.__v316OpenHub=v316ShowHub;
-window.__v316State=()=>({version:'v316',active:V316.active,originIndex:V316.originIndex,futureIndex:V316.futureIndex,system,stage,name:v316StageName(),x:p.x,paused,wormholeActive:!!wormholeActive,blackHoleActive:!!blackHoleActive,completed:{...V316.completed},futureSystem:V316.futureSystem});
+window.__v316State=()=>({version:'v317',active:V316.active,originIndex:V316.originIndex,futureIndex:V316.futureIndex,system,stage,name:v316StageName(),x:p.x,paused,wormholeActive:!!wormholeActive,blackHoleActive:!!blackHoleActive,completed:{...V316.completed},futureSystem:V316.futureSystem});
 window.__v316TestAdvance=()=>{if(V316.active==='origin')v316AdvanceOrigin();else if(V316.active==='future')v316AdvanceFuture();else if(V316.active==='edge')v316Complete('edge');};
 window.__v316TestSetX=(x)=>{p.x=Number(x)||0;paused=false;return p.x};
 window.__v316TestStartFlower=()=>v316StartFlower();
 /* === /v316 === */
+
+
 
 })();
 </script>
@@ -29951,7 +30091,7 @@ window.__v316TestStartFlower=()=>v316StartFlower();
 <div id="v150JumpPanel" aria-hidden="true">
   <div id="v150JumpCard">
     <div id="v150JumpHead">
-      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v316</span></strong>
+      <strong>🐾 隠しメニュー｜距離順・ステージ順 <span id="v213MenuVersion" style="display:inline-block;margin-left:6px;padding:3px 7px;border:1px solid rgba(126,239,255,.38);border-radius:999px;color:#bff8ff;font:1000 9px/1 system-ui;vertical-align:middle">v317</span></strong>
       <button id="v150JumpClose" type="button" aria-label="閉じる">×</button>
     </div>
     <button id="v214BlackHoleDirect" type="button" style="margin:0 14px 10px;width:calc(100% - 28px);padding:12px;border:1px solid rgba(190,150,255,.42);border-radius:14px;background:linear-gradient(180deg,rgba(58,32,83,.86),rgba(7,5,15,.94));color:#fff;font:1000 12px/1.2 system-ui;text-align:left">⚫ ブラックホール（テスト）<small style="display:block;margin-top:4px;opacity:.70;font-size:9px">通常プレイではエアレンデルだけ｜出口で元の星へ戻る</small></button>
@@ -30453,11 +30593,11 @@ window.__v316TestStartFlower=()=>v316StartFlower();
 </style>
 <script id="v204-version-script">
 (function(){
-  window.INUBOSHI_GAME_VERSION='v316';
+  window.INUBOSHI_GAME_VERSION='v317';
   function install(){
     const devCard=document.querySelector('#v62EndingDev .v62DevCard');
     if(devCard&&!document.getElementById('v204GameVersion')){
-      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v316<small>EARENDEL MAIN CLEAR / DEBUG BONUS FIX / 2026-09-07</small>';devCard.prepend(el);
+      const el=document.createElement('div');el.id='v204GameVersion';el.innerHTML='GAME VERSION　v317<small>EARENDEL MAIN CLEAR / DEBUG BONUS FIX / 2026-09-07</small>';devCard.prepend(el);
     }
     /* v213: version is already printed once in the jump menu. */
   }
